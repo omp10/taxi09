@@ -381,7 +381,13 @@ const BikeRentalHome = () => {
       // Ignore storage failures and continue with navigation state.
     }
 
-    navigate('/rental/vehicle', { state: payload });
+    navigate('/rental/vehicle', {
+      state: {
+        duration: payload.duration,
+        detailMode: payload.detailMode,
+        selectedSubscriptionPlanId: payload.selectedSubscriptionPlanId,
+      },
+    });
   };
 
   useEffect(() => {
@@ -1417,7 +1423,10 @@ const BikeRentalHome = () => {
                       key={car.id}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => {
-                        toast(`Selected ${car.brand} ${car.name} for subscription plan`, { icon: '🚗' });
+                        openVehicleDetail(car.rawVehicle || car, {
+                          detailMode: 'subscription',
+                          selectedSubscriptionPlanId: car.subscriptionPlan?.id || '',
+                        });
                       }}
                       className="bg-white border border-slate-100 rounded-3xl p-3.5 shadow-[0_6px_20px_rgba(15,23,42,0.03)] flex flex-col justify-between h-[180px] cursor-pointer hover:shadow-md transition-shadow group relative overflow-hidden"
                     >

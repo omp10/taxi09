@@ -140,7 +140,7 @@ const RentalDeposit = () => {
   const vehicle = useMemo(() => vehicleSnapshot || {}, [vehicleSnapshot]);
   const advancePayment = vehicle.advancePayment || {};
   const advancePaymentMode = String(advancePayment.paymentMode || 'percentage').toLowerCase();
-  const payableNow = useMemo(
+  const computedPayableNow = useMemo(
     () => {
       if (!advancePayment.enabled) return 0;
       if (advancePaymentMode === 'full') return Number(totalCost || 0);
@@ -154,7 +154,11 @@ const RentalDeposit = () => {
     },
     [advancePayment.amount, advancePayment.enabled, advancePaymentMode, totalCost],
   );
-  const advancePaymentLabel = advancePayment.label || 'Advance booking payment';
+  const payableNow = Number(state.payableNowOverride || computedPayableNow || 0);
+  const advancePaymentLabel =
+    state.advancePaymentLabelOverride ||
+    advancePayment.label ||
+    'Advance booking payment';
   const bookingReference = useMemo(
     () => state.bookingReference || `RNT-${Date.now().toString(36).slice(-6).toUpperCase()}`,
     [state.bookingReference],

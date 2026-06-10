@@ -28,6 +28,7 @@ import { userService } from '../../services/userService';
 
 const MAP_CONTAINER_STYLE = { width: '100%', height: '100%' };
 const RENTAL_SELECTED_VEHICLE_STORAGE_KEY = 'selectedRentalVehicleDetail';
+const RENTAL_SCHEDULE_STATE_KEY = 'taxi:rental-schedule-pending';
 const WEEK_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const TIME_OPTIONS = [
   '06:00',
@@ -120,6 +121,47 @@ const formatPickerSummary = (value) => {
     minute: '2-digit',
   });
 };
+const formatCurrency = (value) =>
+  new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0,
+  }).format(Number(value || 0));
+const formatSubscriptionDuration = (days) => {
+  const value = Number(days || 0);
+  if (!value) return 'Plan';
+  if (value === 1) return '1 day';
+  if (value < 30) return `${value} days`;
+  if (value % 30 === 0) {
+    const months = value / 30;
+    return `${months} Month${months > 1 ? 's' : ''}`;
+  }
+  if (value % 365 === 0) {
+    const years = value / 365;
+    return `${years} Year${years > 1 ? 's' : ''}`;
+  }
+  return `${value} days`;
+};
+const getVehicleFuelLabel = (vehicle) =>
+  vehicle?.fuel ||
+  vehicle?.fuelType ||
+  (String(vehicle?.shortDescription || '').split('·')[0] || '').trim() ||
+  'Petrol';
+const getVehicleTransmissionLabel = (vehicle) => {
+  if (vehicle?.transmission) return vehicle.transmission;
+  const pieces = String(vehicle?.shortDescription || '')
+    .split('·')
+    .map((item) => item.trim())
+    .filter(Boolean);
+  return pieces[1] || 'Manual';
+};
+const getVehicleVariantLabel = (vehicle) =>
+  vehicle?.variant ||
+  vehicle?.color ||
+  vehicle?.vehicleColor ||
+  vehicle?.subCategory ||
+  vehicle?.rentalSubcategoryName ||
+  'As per availability';
 
 const DateTimePickerModal = ({
   open,
@@ -459,6 +501,11 @@ const RentalVehicleDetail = () => {
   const storedUserInfo = useMemo(() => readStoredUserInfo(), []);
   const initialVehicle = location.state?.vehicle || storedDetail?.vehicle || null;
   const duration = location.state?.duration || storedDetail?.duration || 'Hourly';
+  const detailMode = location.state?.detailMode || storedDetail?.detailMode || 'rental';
+  const initialSubscriptionPlanId =
+    location.state?.selectedSubscriptionPlanId ||
+    storedDetail?.selectedSubscriptionPlanId ||
+    '';
   const [vehicle, setVehicle] = useState(initialVehicle);
 
   const [selectedImage, setSelectedImage] = useState(
@@ -493,6 +540,10 @@ const RentalVehicleDetail = () => {
   const [quotePickerMonth, setQuotePickerMonth] = useState(() => getMonthStart(new Date()));
   const [quotePickerDate, setQuotePickerDate] = useState(() => startOfDay(new Date()));
   const [quotePickerTime, setQuotePickerTime] = useState('10:00');
+  const [selectedSubscriptionPlanId, setSelectedSubscriptionPlanId] = useState(initialSubscriptionPlanId);
+  const [subscriptionStartDate, setSubscriptionStartDate] = useState(() =>
+    formatDateTimeValue(new Date(), '10:00'),
+  );
 
   useEffect(() => {
     setVehicle(initialVehicle);
@@ -561,12 +612,17 @@ const RentalVehicleDetail = () => {
     try {
       window.sessionStorage.setItem(
         RENTAL_SELECTED_VEHICLE_STORAGE_KEY,
-        JSON.stringify({ vehicle, duration }),
+        JSON.stringify({
+          vehicle,
+          duration,
+          detailMode,
+          selectedSubscriptionPlanId,
+        }),
       );
     } catch {
       // Ignore storage failures and continue rendering with route state only.
     }
-  }, [duration, vehicle]);
+  }, [detailMode, duration, selectedSubscriptionPlanId, vehicle]);
 
   if (!vehicle) {
     navigate('/rental');
@@ -597,6 +653,31 @@ const RentalVehicleDetail = () => {
           (a, b) => Number(a.durationHours || 0) - Number(b.durationHours || 0),
         )
       : [];
+  const subscriptionPlans = useMemo(
+    () =>
+      (Array.isArray(vehicle.subscription?.plans) ? vehicle.subscription.plans : [])
+        .filter((plan) => plan?.active !== false && Number(plan?.price || 0) > 0)
+        .sort((left, right) => Number(left.durationDays || 0) - Number(right.durationDays || 0)),
+    [vehicle.subscription?.plans],
+  );
+  const selectedSubscriptionPlan = useMemo(
+    () =>
+      subscriptionPlans.find((plan) => String(plan.id) === String(selectedSubscriptionPlanId)) ||
+      subscriptionPlans[0] ||
+      null,
+    [selectedSubscriptionPlanId, subscriptionPlans],
+  );
+  const subscriptionFuelLabel = useMemo(() => getVehicleFuelLabel(vehicle), [vehicle]);
+  const subscriptionTransmissionLabel = useMemo(
+    () => getVehicleTransmissionLabel(vehicle),
+    [vehicle],
+  );
+  const subscriptionVariantLabel = useMemo(() => getVehicleVariantLabel(vehicle), [vehicle]);
+  const subscriptionStrikePrice = useMemo(() => {
+    const currentPrice = Number(selectedSubscriptionPlan?.price || 0);
+    if (!currentPrice) return 0;
+    return Math.ceil(currentPrice * 1.18);
+  }, [selectedSubscriptionPlan?.price]);
 
   const defaultPackage = useMemo(() => {
     if (!pricingRows.length) return null;
@@ -702,6 +783,21 @@ const RentalVehicleDetail = () => {
       setSelectedPackageId(String(defaultPackage.id));
     }
   }, [defaultPackage]);
+
+  useEffect(() => {
+    if (!subscriptionPlans.length) {
+      setSelectedSubscriptionPlanId('');
+      return;
+    }
+
+    setSelectedSubscriptionPlanId((current) => {
+      if (current && subscriptionPlans.some((plan) => String(plan.id) === String(current))) {
+        return current;
+      }
+
+      return String(subscriptionPlans[0]?.id || '');
+    });
+  }, [subscriptionPlans]);
 
   useEffect(() => {
     if (!isMapLoaded || !mapRef.current || !window.google?.maps || !mapMarkers.length) {
@@ -983,12 +1079,16 @@ const RentalVehicleDetail = () => {
 
   const openQuotePicker = (field) => {
     const now = new Date();
+    const currentValue =
+      field === 'subscriptionStartDate' ? subscriptionStartDate : quoteForm[field];
     const fallbackDate =
       field === 'returnDateTime' && quoteForm.pickupDateTime
         ? parseDateTimeValue(quoteForm.pickupDateTime) || now
-        : now;
+        : field === 'subscriptionStartDate'
+          ? parseDateTimeValue(subscriptionStartDate) || now
+          : now;
     const fallbackTime = field === 'returnDateTime' ? '12:00' : '10:00';
-    const { date, time } = splitDateTimeValue(quoteForm[field], fallbackDate, fallbackTime);
+    const { date, time } = splitDateTimeValue(currentValue, fallbackDate, fallbackTime);
 
     setActiveQuotePicker(field);
     setQuotePickerDate(date);
@@ -1004,6 +1104,12 @@ const RentalVehicleDetail = () => {
     if (!activeQuotePicker) return;
 
     const nextValue = formatDateTimeValue(quotePickerDate, quotePickerTime);
+    if (activeQuotePicker === 'subscriptionStartDate') {
+      setSubscriptionStartDate(nextValue);
+      setActiveQuotePicker(null);
+      return;
+    }
+
     setQuoteForm((current) => {
       const nextForm = {
         ...current,
@@ -1046,6 +1152,51 @@ const RentalVehicleDetail = () => {
   }, [pickerMinDate, quotePickerDate]);
 
   const handleProceed = () => {
+    if (detailMode === 'subscription') {
+      if (!selectedSubscriptionPlan) {
+        toast.error('Select a subscription tenure first.');
+        return;
+      }
+
+      if (!subscriptionStartDate) {
+        toast.error('Select your delivery date to continue.');
+        return;
+      }
+
+      if (!selectedServiceLocation) {
+        toast.error('Choose a delivery location to continue.');
+        return;
+      }
+
+      const nextState = {
+          vehicle,
+          duration: 'Subscription',
+          detailMode,
+          selectedPackage: {
+            id: selectedSubscriptionPlan.id,
+            label: selectedSubscriptionPlan.label || formatSubscriptionDuration(selectedSubscriptionPlan.durationDays),
+            durationHours: Math.max(24, Number(selectedSubscriptionPlan.durationDays || 1) * 24),
+            includedKm: Number(selectedSubscriptionPlan.includedKm || 0),
+            price: Number(selectedSubscriptionPlan.price || 0),
+            extraKmPrice: Number(selectedSubscriptionPlan.extraKmPrice || 0),
+            deposit: Number(selectedSubscriptionPlan.deposit || 0),
+          },
+          selectedSubscriptionPlan,
+          subscriptionStartDate,
+          serviceLocation: selectedServiceLocation,
+          userCoordinates,
+        };
+
+      try {
+        window.sessionStorage.setItem(RENTAL_SCHEDULE_STATE_KEY, JSON.stringify(nextState));
+      } catch {
+        // Ignore storage failures and rely on route state when possible.
+      }
+
+      navigate('/rental/schedule');
+      return;
+    }
+
     if (!selectedPackage) {
       toast.error('Select an hourly rental package first.');
       return;
@@ -1061,19 +1212,39 @@ const RentalVehicleDetail = () => {
       return;
     }
 
-    navigate('/rental/schedule', {
-      state: {
+    const nextState = {
         vehicle,
         duration,
         selectedPackage,
         serviceLocation: selectedServiceLocation,
         userCoordinates,
-      },
-    });
+      };
+
+    try {
+      window.sessionStorage.setItem(RENTAL_SCHEDULE_STATE_KEY, JSON.stringify(nextState));
+    } catch {
+      // Ignore storage failures and rely on route state when possible.
+    }
+
+    navigate('/rental/schedule');
   };
 
+  const isSubscriptionMode = detailMode === 'subscription';
+  const subscriptionProceedDisabled =
+    !selectedSubscriptionPlan ||
+    !subscriptionStartDate ||
+    locationsLoading ||
+    !selectedServiceLocation;
+  const rentalProceedDisabled =
+    !selectedPackage ||
+    (selectionStep === 'location' && (locationsLoading || !selectedServiceLocation));
+
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#F8FAFC_0%,#F3F4F6_38%,#EEF2F7_100%)] max-w-lg mx-auto font-sans pb-36 relative overflow-hidden">
+    <div className={`min-h-screen max-w-lg mx-auto font-sans relative overflow-hidden ${
+      isSubscriptionMode
+        ? 'bg-[linear-gradient(180deg,#FAFAF9_0%,#F7F7F5_36%,#F1F5F9_100%)] pb-36'
+        : 'bg-[linear-gradient(180deg,#F8FAFC_0%,#F3F4F6_38%,#EEF2F7_100%)] pb-36'
+    }`}>
       <div className="absolute -top-16 right-[-40px] h-44 w-44 rounded-full bg-orange-100/60 blur-3xl pointer-events-none" />
 
       <motion.header
@@ -1082,10 +1253,19 @@ const RentalVehicleDetail = () => {
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className="sticky top-0 z-30 w-full"
       >
-        <div className="bg-white/85 backdrop-blur-2xl px-5 pt-12 pb-5 border-b border-white/40 shadow-[0_8px_32px_rgba(15,23,42,0.06)] relative overflow-hidden">
-          {/* Subtle accent gradients */}
-          <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-orange-400/5 blur-[40px] pointer-events-none" />
-          <div className="absolute top-0 left-0 h-24 w-24 rounded-full bg-blue-400/5 blur-[40px] pointer-events-none" />
+        <div
+          className={`px-5 pt-12 pb-5 relative overflow-hidden ${
+            isSubscriptionMode
+              ? 'bg-[linear-gradient(90deg,#147A9C_0%,#2AB0A7_100%)] shadow-[0_8px_28px_rgba(20,122,156,0.22)]'
+              : 'bg-white/85 backdrop-blur-2xl border-b border-white/40 shadow-[0_8px_32px_rgba(15,23,42,0.06)]'
+          }`}
+        >
+          {!isSubscriptionMode ? (
+            <>
+              <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-orange-400/5 blur-[40px] pointer-events-none" />
+              <div className="absolute top-0 left-0 h-24 w-24 rounded-full bg-blue-400/5 blur-[40px] pointer-events-none" />
+            </>
+          ) : null}
 
           <div className="relative flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
@@ -1093,14 +1273,28 @@ const RentalVehicleDetail = () => {
                 whileHover={{ x: -2 }}
                 whileTap={{ scale: 0.92 }}
                 onClick={() => navigate(-1)}
-                className="w-10 h-10 rounded-2xl bg-slate-900 flex items-center justify-center shadow-[0_4px_12px_rgba(15,23,42,0.15)] shrink-0 group transition-all"
+                className={`w-10 h-10 flex items-center justify-center shrink-0 group transition-all ${
+                  isSubscriptionMode
+                    ? 'rounded-full bg-white/10 text-white'
+                    : 'rounded-2xl bg-slate-900 shadow-[0_4px_12px_rgba(15,23,42,0.15)]'
+                }`}
               >
-                <ArrowLeft size={20} className="text-white group-hover:opacity-80 transition-opacity" strokeWidth={2.5} />
+                <ArrowLeft
+                  size={20}
+                  className={`${isSubscriptionMode ? 'text-white' : 'text-white'} group-hover:opacity-80 transition-opacity`}
+                  strokeWidth={2.5}
+                />
               </motion.button>
               <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500/60 leading-none mb-1.5">Vehicle Details</p>
-                <h1 className="text-[22px] font-[900] tracking-tight text-slate-950 leading-none truncate max-w-[200px]">
-                  {vehicle.name}
+                <p className={`text-[10px] font-bold uppercase tracking-[0.18em] leading-none mb-1.5 ${
+                  isSubscriptionMode ? 'text-white/70' : 'text-slate-500/60'
+                }`}>
+                  {isSubscriptionMode ? 'Subscription details' : 'Vehicle Details'}
+                </p>
+                <h1 className={`text-[22px] font-[900] tracking-tight leading-none truncate max-w-[220px] ${
+                  isSubscriptionMode ? 'text-white' : 'text-slate-950'
+                }`}>
+                  {isSubscriptionMode ? 'Subscription details' : vehicle.name}
                 </h1>
               </div>
             </div>
@@ -1109,6 +1303,241 @@ const RentalVehicleDetail = () => {
       </motion.header>
 
       <div className="px-5 pt-5 space-y-4">
+        {isSubscriptionMode ? (
+          <>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 }}
+              className="overflow-hidden rounded-[26px] bg-white shadow-[0_14px_36px_rgba(15,23,42,0.08)]"
+            >
+              <div className="relative flex items-center justify-center px-6 py-6">
+                {selectedImage ? (
+                  <img src={selectedImage} alt={vehicle.name} className="h-44 object-contain drop-shadow-[0_18px_24px_rgba(15,23,42,0.12)]" />
+                ) : (
+                  <div className="flex h-44 w-full items-center justify-center text-slate-300">
+                    <Car size={56} />
+                  </div>
+                )}
+              </div>
+
+              {gallery.length > 1 ? (
+                <div className="flex items-center justify-center gap-2 pb-2">
+                  {gallery.slice(0, 5).map((image) => (
+                    <button
+                      key={image}
+                      type="button"
+                      onClick={() => setSelectedImage(image)}
+                      className={`h-2.5 w-2.5 rounded-full transition-all ${
+                        selectedImage === image ? 'bg-[#F97316] ring-2 ring-[#FDBA74]/50' : 'bg-slate-300'
+                      }`}
+                    />
+                  ))}
+                </div>
+              ) : null}
+
+              <div className="border-t border-slate-100 px-5 py-4">
+                <h2 className="text-[28px] font-black tracking-tight text-slate-950">{vehicle.name}</h2>
+                <div className="mt-4 grid grid-cols-3 gap-3 text-left">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">Variant/color</p>
+                    <p className="mt-1 text-[13px] font-bold text-slate-700">{subscriptionVariantLabel}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">Transmission</p>
+                    <p className="mt-1 text-[13px] font-bold text-slate-700">{subscriptionTransmissionLabel}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">Fuel type</p>
+                    <p className="mt-1 text-[13px] font-bold text-slate-700">{subscriptionFuelLabel}</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.08 }}
+              className="rounded-[26px] bg-white px-4 py-5 shadow-[0_12px_30px_rgba(15,23,42,0.06)]"
+            >
+              <h3 className="text-[24px] font-black tracking-tight text-slate-950">Subscription tenure</h3>
+
+              <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
+                {subscriptionPlans.map((plan) => {
+                  const isSelected = String(selectedSubscriptionPlanId) === String(plan.id);
+                  return (
+                    <button
+                      key={plan.id}
+                      type="button"
+                      onClick={() => setSelectedSubscriptionPlanId(String(plan.id))}
+                      className={`min-w-[72px] rounded-2xl border px-3 py-3 text-center transition-all ${
+                        isSelected
+                          ? 'border-[#EF6C3E] bg-[#EF6C3E] text-white shadow-[0_10px_22px_rgba(239,108,62,0.24)]'
+                          : 'border-slate-200 bg-white text-slate-600'
+                      }`}
+                    >
+                      <p className="text-[22px] font-black leading-none">
+                        {Number(plan.durationDays || 0) >= 30
+                          ? Number(plan.durationDays || 0) % 30 === 0
+                            ? Number(plan.durationDays || 0) / 30
+                            : Number(plan.durationDays || 0)
+                          : Number(plan.durationDays || 0)}
+                      </p>
+                      <p className={`mt-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+                        isSelected ? 'text-white/80' : 'text-slate-400'
+                      }`}>
+                        {Number(plan.durationDays || 0) >= 30
+                          ? Number(plan.durationDays || 0) / 30 > 1
+                            ? 'Months'
+                            : 'Month'
+                          : 'days'}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="mt-5">
+                <p className="text-[12px] font-bold text-slate-500">Starting from</p>
+                <div className="mt-1 flex items-end gap-2">
+                  <p className="text-[38px] font-black leading-none tracking-tight text-slate-950">
+                    {formatCurrency(selectedSubscriptionPlan?.price)}
+                  </p>
+                  {subscriptionStrikePrice ? (
+                    <p className="pb-1 text-[16px] font-bold text-slate-400 line-through">
+                      {formatCurrency(subscriptionStrikePrice)}
+                    </p>
+                  ) : null}
+                </div>
+                <p className="mt-2 text-[12px] font-semibold text-slate-500">
+                  Inclusive of insurance and maintenance
+                </p>
+                {selectedSubscriptionPlan?.includedKm ? (
+                  <p className="mt-1 text-[12px] font-semibold text-slate-500">
+                    Includes {selectedSubscriptionPlan.includedKm} km for the selected tenure
+                  </p>
+                ) : null}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="rounded-[26px] bg-white px-4 py-5 shadow-[0_12px_30px_rgba(15,23,42,0.06)]"
+            >
+              <p className="text-[13px] font-bold text-[#D0604D]">Select delivery date to proceed</p>
+
+              <div className="mt-3 rounded-[20px] border border-[#D66D57] bg-[#F8FBFD] p-4">
+                <div className="flex items-center gap-2 text-[#0B84A6]">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#0B84A6] text-[11px] font-black text-white">i</div>
+                  <p className="text-[13px] font-black">Check exact price for your dates</p>
+                </div>
+                <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400">
+                  Select Delivery Date
+                </p>
+                <button
+                  type="button"
+                  onClick={() => openQuotePicker('subscriptionStartDate')}
+                  className="mt-2 flex w-full items-center gap-3 rounded-[16px] border border-slate-200 bg-white px-4 py-3 text-left"
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400">
+                      Tap to choose
+                    </p>
+                    <p className="mt-1 truncate text-[15px] font-bold text-slate-700">
+                      {subscriptionStartDate
+                        ? formatPickerSummary(subscriptionStartDate)
+                        : 'Choose delivery date'}
+                    </p>
+                  </div>
+                  <Calendar size={18} className="shrink-0 text-slate-400" />
+                </button>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.12 }}
+              className="rounded-[26px] bg-white px-4 py-5 shadow-[0_12px_30px_rgba(15,23,42,0.06)]"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-slate-400">Place of delivery</p>
+                  <p className="mt-1 text-[14px] font-bold text-slate-600">
+                    Choose the nearest pickup or delivery point for this subscription.
+                  </p>
+                </div>
+                {selectedServiceLocation?.distanceLabel ? (
+                  <span className="rounded-full bg-emerald-50 px-3 py-1 text-[10px] font-bold text-emerald-700">
+                    {selectedServiceLocation.distanceLabel}
+                  </span>
+                ) : null}
+              </div>
+
+              <div className="mt-4 space-y-3">
+                {locationsLoading ? (
+                  <div className="flex items-center justify-center gap-2 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-6 text-[12px] font-bold text-slate-500">
+                    <Loader2 size={16} className="animate-spin" />
+                    Loading delivery points...
+                  </div>
+                ) : locationError ? (
+                  <div className="rounded-2xl border border-rose-100 bg-rose-50 px-4 py-4 text-[12px] font-bold text-rose-500">
+                    {locationError}
+                  </div>
+                ) : serviceLocations.length === 0 ? (
+                  <div className="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-6 text-[12px] font-bold text-slate-500">
+                    No delivery points are available for this vehicle right now.
+                  </div>
+                ) : (
+                  serviceLocations.map((item, index) => {
+                    const isSelected = String(selectedServiceLocationId) === String(item.id);
+
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => setSelectedServiceLocationId(String(item.id))}
+                        className={`w-full rounded-[20px] border px-4 py-3 text-left transition-all ${
+                          isSelected
+                            ? 'border-[#0B94A4] bg-[#ECF9FB] shadow-[0_10px_24px_rgba(11,148,164,0.10)]'
+                            : 'border-slate-200 bg-white'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <p className="text-[14px] font-black text-slate-900">{item.name}</p>
+                              {index === 0 && userCoordinates ? (
+                                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-700">
+                                  Closest
+                                </span>
+                              ) : null}
+                            </div>
+                            <p className="mt-1 text-[12px] font-bold text-slate-600">
+                              {item.pickupLabel || item.address || `${appName} delivery point`}
+                            </p>
+                            <p className="mt-0.5 text-[11px] font-semibold text-slate-400">
+                              {item.address || 'Pickup and delivery support available'}
+                            </p>
+                          </div>
+                          <div className={`mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${
+                            isSelected ? 'border-[#0B94A4] bg-[#0B94A4] text-white' : 'border-slate-300 text-transparent'
+                          }`}>
+                            <CheckCircle2 size={14} />
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })
+                )}
+              </div>
+            </motion.div>
+          </>
+        ) : (
+          <>
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -1611,7 +2040,13 @@ const RentalVehicleDetail = () => {
         </AnimatePresence>
         <DateTimePickerModal
           open={Boolean(activeQuotePicker)}
-          title={activeQuotePicker === 'returnDateTime' ? 'Select End Date & Time' : 'Select Start Date & Time'}
+          title={
+            activeQuotePicker === 'returnDateTime'
+              ? 'Select End Date & Time'
+              : activeQuotePicker === 'subscriptionStartDate'
+                ? 'Select Delivery Date'
+                : 'Select Start Date & Time'
+          }
           monthDate={quotePickerMonth}
           selectedDate={quotePickerDate}
           selectedTime={quotePickerTime}
@@ -1623,25 +2058,30 @@ const RentalVehicleDetail = () => {
           onClose={closeQuotePicker}
           onApply={applyQuotePicker}
         />
+          </>
+        )}
       </div>
 
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg px-5 pb-6 pt-3 bg-gradient-to-t from-[#EEF2F7] via-[#F3F4F6]/95 to-transparent pointer-events-none z-30">
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={handleProceed}
-          disabled={
-            !selectedPackage ||
-            (selectionStep === 'location' &&
-              (locationsLoading || !selectedServiceLocation))
-          }
+          disabled={isSubscriptionMode ? subscriptionProceedDisabled : rentalProceedDisabled}
           className={`pointer-events-auto w-full py-4 rounded-[18px] text-[15px] font-black text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 transition-all ${
-            !selectedPackage ||
-            (selectionStep === 'location' && (locationsLoading || !selectedServiceLocation))
-              ? 'bg-slate-300'
-              : 'bg-slate-900'
+            isSubscriptionMode
+              ? subscriptionProceedDisabled
+                ? 'bg-slate-300'
+                : 'bg-[linear-gradient(90deg,#8FD2E0_0%,#6ED0C5_100%)]'
+              : rentalProceedDisabled
+                ? 'bg-slate-300'
+                : 'bg-slate-900'
           }`}
         >
-          {selectionStep === 'package' ? 'Proceed to Service Location' : 'Select Date & Time'}
+          {isSubscriptionMode
+            ? 'Proceed'
+            : selectionStep === 'package'
+              ? 'Proceed to Service Location'
+              : 'Select Date & Time'}
           <ChevronRight size={17} strokeWidth={3} className="opacity-50" />
         </motion.button>
       </div>

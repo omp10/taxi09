@@ -5,6 +5,8 @@ import { ArrowLeft, Upload, CheckCircle2, ChevronRight, ShieldCheck, X } from 'l
 import { uploadService } from '../../../../shared/services/uploadService';
 
 const IS_KYC_DONE = false;
+const RENTAL_KYC_STATE_KEY = 'taxi:rental-kyc-pending';
+const RENTAL_DEPOSIT_STATE_KEY = 'taxi:rental-deposit-pending';
 
 const fileToDataUrl = (file) =>
   new Promise((resolve, reject) => {
@@ -17,7 +19,18 @@ const fileToDataUrl = (file) =>
 const RentalKYC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const state = location.state || {};
+  const routeState = location.state && Object.keys(location.state).length > 0 ? location.state : null;
+  const restoredState = useMemo(() => {
+    if (routeState) return routeState;
+
+    try {
+      const raw = window.sessionStorage.getItem(RENTAL_KYC_STATE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  }, [routeState]);
+  const state = routeState || restoredState;
   if (!state.vehicle) { navigate('/rental'); return null; }
 
   const existingKycDocuments = useMemo(() => state.rentalKyc?.documents || {}, [state.rentalKyc]);
@@ -245,15 +258,23 @@ const RentalKYC = () => {
 
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg px-5 pb-6 pt-3 bg-gradient-to-t from-[#EEF2F7] via-[#F3F4F6]/95 to-transparent pointer-events-none z-30">
         <motion.button whileTap={{ scale: 0.98 }} disabled={!done}
-          onClick={() => navigate('/rental/deposit', {
-            state: {
+          onClick={() => {
+            const nextState = {
               ...state,
               rentalKyc: {
                 completedAt: new Date().toISOString(),
                 documents: uploadedDocuments,
               },
-            },
-          })}
+            };
+
+            try {
+              window.sessionStorage.setItem(RENTAL_DEPOSIT_STATE_KEY, JSON.stringify(nextState));
+            } catch {
+              // Ignore storage failures and continue navigation.
+            }
+
+            navigate('/rental/deposit');
+          }}
           className={`pointer-events-auto w-full py-4 rounded-[18px] text-[15px] font-bold text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 transition-all ${done ? 'bg-slate-900' : 'bg-slate-300'}`}>
           Continue to Deposit <ChevronRight size={17} strokeWidth={2.5} className="opacity-50" />
         </motion.button>
