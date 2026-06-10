@@ -8,9 +8,12 @@ import marutiSwiftImg from '@/assets/images/maruti_swift_nobg.png';
 import marutiBalenoImg from '@/assets/images/maruti_baleno_nobg.png';
 import hyundaiAuraImg from '@/assets/images/hyundai_aura_nobg.png';
 import toast from 'react-hot-toast';
+
 const DURATION_TABS = ['Hourly', 'Half-Day', 'Daily'];
 const RENTAL_SELECTED_VEHICLE_STORAGE_KEY = 'selectedRentalVehicleDetail';
 const RENTAL_PAGE_SIZE = 10;
+const RENTAL_ROUTE_PATH = '/taxi/user/rental';
+const SUBSCRIPTION_ROUTE_PATH = '/taxi/user/rental/subscriptions';
 const CATEGORY_FILTERS = [
   { id: 'all', label: 'All', Icon: Star },
   { id: 'car', label: 'Cars', Icon: Car },
@@ -213,6 +216,7 @@ const LOCATION_SUGGESTIONS = [
 const BikeRentalHome = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const isSubscriptionRoute = location.pathname === SUBSCRIPTION_ROUTE_PATH;
   const [selectedDuration, setSelectedDuration] = useState('Hourly');
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -227,7 +231,7 @@ const BikeRentalHome = () => {
     return 'all';
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeSegment, setActiveSegment] = useState('rentals'); // 'rentals' or 'subscriptions'
+  const [activeSegment, setActiveSegment] = useState(isSubscriptionRoute ? 'subscriptions' : 'rentals'); // 'rentals' or 'subscriptions'
   const [subCategory, setSubCategory] = useState('Hatchbacks'); // 'Hatchbacks', 'Sedans', 'SUVs' for subscriptions
   const [isAddressEntered, setIsAddressEntered] = useState(false);
   const [activeFaqIndex, setActiveFaqIndex] = useState(null);
@@ -236,6 +240,21 @@ const BikeRentalHome = () => {
   const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
   const [banners, setBanners] = useState([]);
   const [bannersLoading, setBannersLoading] = useState(true);
+
+  useEffect(() => {
+    setActiveSegment(isSubscriptionRoute ? 'subscriptions' : 'rentals');
+  }, [isSubscriptionRoute]);
+
+  const navigateToSegment = (segment) => {
+    setIsAddressEntered(false);
+
+    if (segment === 'subscriptions') {
+      navigate(SUBSCRIPTION_ROUTE_PATH);
+      return;
+    }
+
+    navigate(RENTAL_ROUTE_PATH);
+  };
 
   const resolveImageUrl = (img) => {
     if (!img) return null;
@@ -817,10 +836,7 @@ const BikeRentalHome = () => {
           {/* Sticky Bottom Navbar */}
           <div className="fixed bottom-0 inset-x-0 bg-white border-t border-slate-100 py-2.5 px-4 shadow-[0_-8px_30px_rgba(15,23,42,0.06)] z-40 max-w-lg mx-auto flex items-center justify-between">
             <button
-              onClick={() => {
-                setIsAddressEntered(false);
-                setActiveSegment('rentals');
-              }}
+              onClick={() => navigateToSegment('rentals')}
               className="flex flex-col items-center gap-1 flex-1 py-1 text-[#0B94A4]"
             >
               <div className="w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 border-[#0B94A4] bg-[#0B94A4]/5">
@@ -830,10 +846,7 @@ const BikeRentalHome = () => {
             </button>
             
             <button
-              onClick={() => {
-                setIsAddressEntered(false);
-                setActiveSegment('subscriptions');
-              }}
+              onClick={() => navigateToSegment('subscriptions')}
               className="flex flex-col items-center gap-1 flex-1 py-1 relative text-slate-400 hover:text-slate-600"
             >
               <span className="absolute top-[-10px] bg-rose-500 text-[6.5px] font-black text-white px-1.5 py-0.5 rounded-[4px] uppercase tracking-wide border border-white">
@@ -900,7 +913,7 @@ const BikeRentalHome = () => {
           {/* Row 2: Segment Selector Tabs */}
           <div className="bg-[#097E8B]/80 backdrop-blur-md rounded-2xl p-1.5 flex border border-white/10 shadow-inner mb-6 relative">
             <button
-              onClick={() => setActiveSegment('rentals')}
+              onClick={() => navigateToSegment('rentals')}
               className={`relative flex-1 py-2.5 rounded-[14px] text-[12px] font-extrabold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center outline-none ${
                 activeSegment === 'rentals' ? 'bg-white text-slate-900 shadow-md' : 'text-white/80 hover:bg-white/5'
               }`}
@@ -912,7 +925,7 @@ const BikeRentalHome = () => {
               )}
             </button>
             <button
-              onClick={() => setActiveSegment('subscriptions')}
+              onClick={() => navigateToSegment('subscriptions')}
               className={`relative flex-1 py-2.5 rounded-[14px] text-[12px] font-extrabold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center outline-none ${
                 activeSegment === 'subscriptions' ? 'bg-white text-slate-900 shadow-md' : 'text-white/80 hover:bg-white/5'
               }`}
@@ -1459,7 +1472,7 @@ const BikeRentalHome = () => {
         {/* Stick Bottom Navigation Menu */}
         <div className="fixed bottom-0 inset-x-0 bg-white border-t border-slate-100 py-2.5 px-4 shadow-[0_-8px_30px_rgba(15,23,42,0.06)] z-40 max-w-lg mx-auto flex items-center justify-between">
           <button
-            onClick={() => setActiveSegment('rentals')}
+            onClick={() => navigateToSegment('rentals')}
             className={`flex flex-col items-center gap-1 flex-1 py-1 ${activeSegment === 'rentals' ? 'text-[#0B94A4]' : 'text-slate-400 hover:text-slate-600'}`}
           >
             <div className={`w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 ${activeSegment === 'rentals' ? 'border-[#0B94A4] bg-[#0B94A4]/5' : 'border-slate-400'}`}>
@@ -1469,7 +1482,7 @@ const BikeRentalHome = () => {
           </button>
           
           <button
-            onClick={() => setActiveSegment('subscriptions')}
+            onClick={() => navigateToSegment('subscriptions')}
             className={`flex flex-col items-center gap-1 flex-1 py-1 relative ${activeSegment === 'subscriptions' ? 'text-[#0B94A4]' : 'text-slate-400 hover:text-slate-600'}`}
           >
             <span className="absolute top-[-10px] bg-rose-500 text-[6.5px] font-black text-white px-1.5 py-0.5 rounded-[4px] uppercase tracking-wide border border-white">

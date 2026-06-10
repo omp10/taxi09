@@ -875,6 +875,7 @@ function App() {
               <Route path="/taxi/user/rental/bike-categories" element={<BikeCategoriesSelection />} />
               <Route path="/taxi/user/rental/bikes-list" element={<BikeCategoryList />} />
               <Route path="/taxi/user/rental" element={<BikeRentalHome />} />
+              <Route path="/taxi/user/rental/subscriptions" element={<BikeRentalHome />} />
               <Route
                 path="/taxi/user/rental/vehicle"
                 element={<RentalVehicleDetail />}
