@@ -1,0 +1,11 @@
+node_modules/
+**/node_modules/
+dist/
+build/
+.DS_Store
+Thumbs.db
+Taxi09_flutter_shell/
+Taxi09_driver_webview/
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
