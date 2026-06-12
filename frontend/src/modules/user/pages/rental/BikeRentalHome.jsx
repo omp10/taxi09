@@ -240,6 +240,8 @@ const BikeRentalHome = () => {
   const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
   const [banners, setBanners] = useState([]);
   const [bannersLoading, setBannersLoading] = useState(true);
+  const [offers, setOffers] = useState([]);
+  const [offersLoading, setOffersLoading] = useState(true);
 
   useEffect(() => {
     setActiveSegment(isSubscriptionRoute ? 'subscriptions' : 'rentals');
@@ -263,7 +265,7 @@ const BikeRentalHome = () => {
     return `${baseUrl}/${img.startsWith('/') ? img.slice(1) : img}`;
   };
 
-  const revvCars = useMemo(() => {
+  const taxi09Cars = useMemo(() => {
     const realCars = vehicles.filter(v => v.normalizedCategory === 'car');
     if (realCars.length > 0) {
       return realCars.map((car, idx) => ({
@@ -283,7 +285,7 @@ const BikeRentalHome = () => {
 
     return [
       {
-        id: 'revv-1',
+        id: 'taxi09-1',
         name: 'XUV 700 AT',
         brand: 'Mahindra',
         image: rentalCarImg,
@@ -295,7 +297,7 @@ const BikeRentalHome = () => {
         year: '2024-25'
       },
       {
-        id: 'revv-2',
+        id: 'taxi09-2',
         name: 'Swift 2024-25',
         brand: 'Maruti',
         image: rentalCarImg,
@@ -307,7 +309,7 @@ const BikeRentalHome = () => {
         year: '2024-25'
       },
       {
-        id: 'revv-3',
+        id: 'taxi09-3',
         name: 'Alto 800 VXI',
         brand: 'Maruti',
         image: rentalCarImg,
@@ -319,7 +321,7 @@ const BikeRentalHome = () => {
         year: '2023-24'
       },
       {
-        id: 'revv-4',
+        id: 'taxi09-4',
         name: 'Alto K10',
         brand: 'Maruti',
         image: rentalCarImg,
@@ -331,7 +333,7 @@ const BikeRentalHome = () => {
         year: '2024'
       },
       {
-        id: 'revv-5',
+        id: 'taxi09-5',
         name: 'Verna 1.5',
         brand: 'Hyundai',
         image: rentalCarImg,
@@ -348,7 +350,7 @@ const BikeRentalHome = () => {
   const subscriptionVehicles = useMemo(() => {
     return vehicles
       .filter((vehicle) => vehicle.subscription?.enabled && vehicle.subscription?.plans?.length)
-      .map((vehicle) => {
+      .map((vehicle, index) => {
         const primaryPlan = vehicle.subscription?.primaryPlan || vehicle.subscription?.plans?.[0] || null;
         const brandParts = String(vehicle.name || '').trim().split(' ').filter(Boolean);
         const brand = brandParts[0] || vehicle.vehicleCategory || 'Vehicle';
@@ -371,7 +373,11 @@ const BikeRentalHome = () => {
           },
           fuel: vehicle.fuel,
           features: vehicle.features || [],
-          categoryType: normalizeRentalCategory(vehicle.vehicleCategory) === 'bike' ? 'Bikes' : 'Cars',
+          categoryType: normalizeRentalCategory(vehicle.vehicleCategory) === 'bike'
+            ? 'Bikes'
+            : Number(vehicle.capacity || 0) <= 5
+            ? (index % 2 === 0 ? 'Hatchbacks' : 'Sedans')
+            : 'SUVs',
           year: primaryPlan ? `${primaryPlan.durationDays} day plan` : 'Subscription',
           rawVehicle: vehicle,
           subscriptionPlan: primaryPlan,
@@ -381,10 +387,18 @@ const BikeRentalHome = () => {
 
   const displayedCars = useMemo(() => {
     if (activeSegment === 'rentals') {
-      return revvCars.filter(c => c.prices?.Daily > 0);
+      return taxi09Cars.filter(c => c.prices?.Daily > 0);
     }
-    return subscriptionVehicles;
-  }, [revvCars, activeSegment, subscriptionVehicles]);
+    return subscriptionVehicles.filter(c => c.categoryType === subCategory);
+  }, [taxi09Cars, activeSegment, subscriptionVehicles, subCategory]);
+
+  const rentalBanners = useMemo(() => {
+    return banners.filter(b => b.type === 'rental' || !b.type);
+  }, [banners]);
+
+  const subscriptionBanners = useMemo(() => {
+    return banners.filter(b => b.type === 'subscription');
+  }, [banners]);
 
   const openVehicleDetail = (vehicle, options = {}) => {
     const payload = {
@@ -464,6 +478,35 @@ const BikeRentalHome = () => {
       mounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadOffers = async () => {
+      try {
+        setOffersLoading(true);
+        const response = await userService.getActiveRentalCoupons();
+        const results = response?.data?.data || response?.data?.results || response?.data || [];
+        if (mounted) {
+          setOffers(results.filter(o => o.active !== false));
+        }
+      } catch (error) {
+        console.error('Failed to load offers', error);
+      } finally {
+        if (mounted) {
+          setOffersLoading(false);
+        }
+      }
+    };
+    loadOffers();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const handleCopyCode = (code) => {
+    navigator.clipboard.writeText(code);
+    toast.success(`Coupon code "${code}" copied!`, { icon: '📋' });
+  };
 
   const availableCountLabel = useMemo(() => {
     const bikes = vehicles.filter(
@@ -569,7 +612,7 @@ const BikeRentalHome = () => {
     setCurrentPage((previousPage) => Math.min(previousPage, totalPages));
   }, [totalPages]);
 
-  // If selectedCategoryFilter is 'car', render the custom Revv UI
+  // If selectedCategoryFilter is 'car', render the custom Taxi09 UI
   const searchResultCars = useMemo(() => {
     return [
       {
@@ -615,8 +658,8 @@ const BikeRentalHome = () => {
     ];
   }, []);
 
-  if (selectedCategoryFilter === 'car') {
-    if (isAddressEntered) {
+  if (activeSegment === 'subscriptions' || (activeSegment === 'rentals' && selectedCategoryFilter === 'car')) {
+    if (activeSegment === 'rentals' && isAddressEntered) {
       // 2. Render Search Results View (Indore Listing)
       return (
         <div className="min-h-screen bg-[#F3F4F6] max-w-lg mx-auto font-sans relative pb-24 flex flex-col justify-between overflow-x-hidden no-scrollbar">
@@ -708,7 +751,7 @@ const BikeRentalHome = () => {
                 <p>
                   Morning 9am to 9am will be considered as one day
                 </p>
-                <span className="text-teal-700 font-bold mt-1.5 inline-flex items-center hover:underline cursor-pointer">
+                <span className="text-indigo-650 hover:text-indigo-800 transition-colors font-bold mt-1.5 inline-flex items-center hover:underline cursor-pointer">
                   Know more &gt;
                 </span>
               </div>
@@ -797,7 +840,7 @@ const BikeRentalHome = () => {
                     {/* Bottom row */}
                     <div className="flex items-center justify-between text-[11px] font-medium text-slate-500 select-none py-0.5">
                       <div className="flex items-center gap-1.5 text-slate-600">
-                        <div className="w-4.5 h-4.5 rounded-full border border-teal-500/20 bg-teal-50 text-teal-600 flex items-center justify-center shrink-0">
+                        <div className="w-4.5 h-4.5 rounded-full border border-indigo-500/20 bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
                           <Check size={10} strokeWidth={3} />
                         </div>
                         <span className="font-semibold text-slate-700">Home delivery</span>
@@ -810,7 +853,7 @@ const BikeRentalHome = () => {
                           Pick from
                         </span>
                         <div className="flex items-center gap-1">
-                          <svg className="w-3.5 h-3.5 text-teal-600 rotate-45" viewBox="0 0 24 24" fill="currentColor">
+                          <svg className="w-3.5 h-3.5 text-indigo-600 rotate-45" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M21 3L3 10.53v.98l6.84 2.65L12.48 21h.98L21 3z" />
                           </svg>
                           <span className="font-bold text-slate-700">{car.distance}</span>
@@ -886,12 +929,12 @@ const BikeRentalHome = () => {
       );
     }
 
-    // 1. Render Revv Dashboard View (Teal header, featured list)
+    // 1. Render Taxi09 Dashboard View (Teal header, featured list)
     return (
       <div className="min-h-screen bg-[linear-gradient(180deg,#F8FAFC_0%,#F1F5F9_40%,#E2E8F0_100%)] max-w-lg mx-auto font-sans relative pb-24 flex flex-col justify-between overflow-x-hidden no-scrollbar">
         {/* Teal Header Block */}
         <div className="bg-gradient-to-br from-[#0B94A4] via-[#097E8B] to-[#055E6B] text-white px-5 pt-12 pb-6 rounded-b-[40px] shadow-[0_10px_30px_rgba(11,148,164,0.15)] relative shrink-0 z-20">
-          <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-white/5 blur-[40px] pointer-events-none" />
+          <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-indigo-500/10 blur-[40px] pointer-events-none" />
           
           {/* Row 1: Back Arrow & Logo */}
           <div className="relative flex items-center justify-between mb-6">
@@ -904,8 +947,8 @@ const BikeRentalHome = () => {
               <ArrowLeft size={18} strokeWidth={2.5} />
             </motion.button>
             <div className="flex flex-col items-center select-none text-center">
-              <span className="text-[26px] font-[900] tracking-tight leading-none text-white italic drop-shadow-[0_2px_4px_rgba(0,0,0,0.1)]">revv</span>
-              <span className="text-[8px] font-extrabold text-white/70 tracking-widest uppercase mt-1">by CARS24 Group</span>
+              <span className="text-[26px] font-[900] tracking-tight leading-none text-white italic drop-shadow-[0_2px_10px_rgba(99,102,241,0.5)]">Taxi09</span>
+              <span className="text-[8px] font-extrabold text-white/70 tracking-widest uppercase mt-1">Premium Self-Drive</span>
             </div>
             <div className="w-10 h-10" />
           </div>
@@ -1044,7 +1087,7 @@ const BikeRentalHome = () => {
                       }}
                       className="px-4 py-3 hover:bg-slate-50 flex items-center gap-3 cursor-pointer transition-colors border-b border-slate-50 last:border-b-0"
                     >
-                      <MapPin size={14} className="text-teal-600 shrink-0" />
+                      <MapPin size={14} className="text-indigo-600 shrink-0" />
                       <span className="text-[13px] font-semibold text-slate-700">{loc}</span>
                     </div>
                   ))}
@@ -1077,8 +1120,8 @@ const BikeRentalHome = () => {
                 <h3 className="text-[20px] font-black text-slate-400 tracking-tight select-none">Featured</h3>
                 
                 <div className="flex gap-4 overflow-x-auto no-scrollbar pb-1">
-                  {banners.length > 0 ? (
-                    banners.map((banner) => (
+                  {rentalBanners.length > 0 ? (
+                    rentalBanners.map((banner) => (
                       <motion.div
                         key={banner.id || banner._id}
                         whileHover={{ y: -4, scale: 1.02 }}
@@ -1105,7 +1148,7 @@ const BikeRentalHome = () => {
                       <div className="w-[280px] h-[130px] rounded-3xl bg-gradient-to-r from-[#E0F7FA] to-[#80DEEA] p-4 flex items-center justify-between shadow-sm shrink-0 border border-teal-100/20 relative overflow-hidden group">
                         <div className="space-y-1 relative z-10 max-w-[55%]">
                           <span className="text-[15px] font-black text-slate-900 block leading-tight">7 DAYS</span>
-                          <span className="text-[13px] font-black text-teal-800 block leading-tight">Rental Package</span>
+                          <span className="text-[13px] font-black text-indigo-750 block leading-tight">Rental Package</span>
                           <button 
                             onClick={() => toast('Weekly discount pricing applied', { icon: '💰' })}
                             className="mt-4 flex items-center gap-1 text-[10px] font-extrabold uppercase text-slate-900/90 tracking-wider hover:opacity-80"
@@ -1217,59 +1260,109 @@ const BikeRentalHome = () => {
               <div className="space-y-3 px-1 select-none">
                 <h3 className="text-[19px] font-bold text-slate-700 tracking-tight">Offers</h3>
                 <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
-                  {/* Offer 1 */}
-                  <motion.div 
-                    whileHover={{ y: -6 }} 
-                    whileTap={{ scale: 0.98 }} 
-                    className="w-[280px] rounded-3xl bg-white border border-slate-100/80 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex flex-col justify-between overflow-hidden shrink-0 cursor-pointer"
-                  >
-                    <div className="p-4 flex-1">
-                      <div className="flex justify-between items-start">
-                        <h4 className="text-[14px] font-bold text-slate-800">Short Trip Offer</h4>
-                        <span className="text-[13px] font-bold text-teal-600">5% OFF</span>
-                      </div>
-                      <p className="text-[11.5px] text-slate-400 mt-1.5 leading-normal font-medium">
-                        Use code STMB5 and get 5% off upto ₹500
-                      </p>
-                    </div>
-                    <div className="bg-gradient-to-r from-[#0B94A4] to-[#097E8B] px-4 py-3 flex items-center justify-between relative overflow-hidden border-t border-dashed border-slate-100/20">
-                      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-teal-500/30 via-transparent to-transparent pointer-events-none" />
-                      <span className="bg-white text-slate-700 text-[11px] font-bold px-3 py-1 rounded-lg border border-slate-100 shadow-sm">
-                        STMB5
-                      </span>
-                      <span className="text-[10px] text-white/80 font-medium cursor-pointer hover:underline">• T&C</span>
-                    </div>
-                  </motion.div>
+                  {offers.length > 0 ? (
+                    offers.map((offer) => {
+                      const isPercent = offer.type === 'percent';
+                      const formattedDiscount = isPercent ? `${offer.amount}% OFF` : `₹${offer.amount} OFF`;
+                      const desc = offer.description || (isPercent
+                        ? `Get ${offer.amount}% off${offer.cap > 0 ? ` up to ₹${offer.cap}` : ''}${offer.min_booking_amount > 0 ? ` on bookings above ₹${offer.min_booking_amount}` : ''}`
+                        : `Get flat ₹${offer.amount} off${offer.min_booking_amount > 0 ? ` on bookings above ₹${offer.min_booking_amount}` : ''}`
+                      );
+                      const hasRestrictions = offer.vehicle_ids && offer.vehicle_ids.length > 0;
+                      
+                      return (
+                        <motion.div 
+                          key={offer._id || offer.id}
+                          whileHover={{ y: -6 }} 
+                          whileTap={{ scale: 0.98 }} 
+                          onClick={() => handleCopyCode(offer.code)}
+                          className="w-[280px] rounded-3xl bg-white border border-slate-100/80 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex flex-col justify-between overflow-hidden shrink-0 cursor-pointer"
+                        >
+                          <div className="p-4 flex-1 flex flex-col justify-between">
+                            <div>
+                              <div className="flex justify-between items-start gap-2">
+                                <h4 className="text-[14px] font-bold text-slate-800 truncate max-w-[170px]">{offer.code}</h4>
+                                <span className="text-[13px] font-bold text-indigo-600 shrink-0">{formattedDiscount}</span>
+                              </div>
+                              <p className="text-[11.5px] text-slate-400 mt-1.5 leading-normal font-medium">
+                                {desc}
+                              </p>
+                            </div>
+                            {hasRestrictions && (
+                              <div className="mt-3 text-[9.5px] font-bold text-amber-600 bg-amber-50 border border-amber-100 rounded-lg py-1.5 px-2.5">
+                                Applicable only on: {offer.vehicle_ids.map(v => v.name).join(', ')}
+                              </div>
+                            )}
+                          </div>
+                          <div className="bg-gradient-to-r from-[#0B94A4] to-[#097E8B] px-4 py-3 flex items-center justify-between relative overflow-hidden border-t border-dashed border-slate-100/20">
+                            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/30 via-transparent to-transparent pointer-events-none" />
+                            <span className="bg-white text-slate-700 text-[11px] font-bold px-3 py-1 rounded-lg border border-slate-100 shadow-sm uppercase">
+                              {offer.code}
+                            </span>
+                            <span className="text-[10px] text-white/80 font-medium hover:underline">• Copy Code</span>
+                          </div>
+                        </motion.div>
+                      );
+                    })
+                  ) : (
+                    <>
+                      {/* Offer 1 */}
+                      <motion.div 
+                        whileHover={{ y: -6 }} 
+                        whileTap={{ scale: 0.98 }} 
+                        onClick={() => handleCopyCode('STMB5')}
+                        className="w-[280px] rounded-3xl bg-white border border-slate-100/80 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex flex-col justify-between overflow-hidden shrink-0 cursor-pointer"
+                      >
+                        <div className="p-4 flex-1">
+                          <div className="flex justify-between items-start">
+                            <h4 className="text-[14px] font-bold text-slate-800">Short Trip Offer</h4>
+                            <span className="text-[13px] font-bold text-indigo-600">5% OFF</span>
+                          </div>
+                          <p className="text-[11.5px] text-slate-400 mt-1.5 leading-normal font-medium">
+                            Use code STMB5 and get 5% off upto ₹500
+                          </p>
+                        </div>
+                        <div className="bg-gradient-to-r from-[#0B94A4] to-[#097E8B] px-4 py-3 flex items-center justify-between relative overflow-hidden border-t border-dashed border-slate-100/20">
+                          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/30 via-transparent to-transparent pointer-events-none" />
+                          <span className="bg-white text-slate-700 text-[11px] font-bold px-3 py-1 rounded-lg border border-slate-100 shadow-sm">
+                            STMB5
+                          </span>
+                          <span className="text-[10px] text-white/80 font-medium hover:underline">• Copy Code</span>
+                        </div>
+                      </motion.div>
 
-                  {/* Offer 2 */}
-                  <motion.div 
-                    whileHover={{ y: -6 }} 
-                    whileTap={{ scale: 0.98 }} 
-                    className="w-[280px] rounded-3xl bg-white border border-slate-100/80 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex flex-col justify-between overflow-hidden shrink-0 cursor-pointer"
-                  >
-                    <div className="p-4 flex-1">
-                      <div className="flex justify-between items-start">
-                        <h4 className="text-[14px] font-bold text-slate-800">Weekend Special</h4>
-                        <span className="text-[13px] font-bold text-teal-600">10% OFF</span>
-                      </div>
-                      <p className="text-[11.5px] text-slate-400 mt-1.5 leading-normal font-medium">
-                        Get 10% off up to ₹1,000 on weekend bookings
-                      </p>
-                    </div>
-                    <div className="bg-gradient-to-r from-[#0B94A4] to-[#097E8B] px-4 py-3 flex items-center justify-between relative overflow-hidden border-t border-dashed border-slate-100/20">
-                      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-teal-500/30 via-transparent to-transparent pointer-events-none" />
-                      <span className="bg-white text-slate-700 text-[11px] font-bold px-3 py-1 rounded-lg border border-slate-100 shadow-sm">
-                        WKND10
-                      </span>
-                      <span className="text-[10px] text-white/80 font-medium cursor-pointer hover:underline">• T&C</span>
-                    </div>
-                  </motion.div>
+                      {/* Offer 2 */}
+                      <motion.div 
+                        whileHover={{ y: -6 }} 
+                        whileTap={{ scale: 0.98 }} 
+                        onClick={() => handleCopyCode('WKND10')}
+                        className="w-[280px] rounded-3xl bg-white border border-slate-100/80 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex flex-col justify-between overflow-hidden shrink-0 cursor-pointer"
+                      >
+                        <div className="p-4 flex-1">
+                          <div className="flex justify-between items-start">
+                            <h4 className="text-[14px] font-bold text-slate-800">Weekend Special</h4>
+                            <span className="text-[13px] font-bold text-indigo-600">10% OFF</span>
+                          </div>
+                          <p className="text-[11.5px] text-slate-400 mt-1.5 leading-normal font-medium">
+                            Get 10% off up to ₹1,000 on weekend bookings
+                          </p>
+                        </div>
+                        <div className="bg-gradient-to-r from-[#0B94A4] to-[#097E8B] px-4 py-3 flex items-center justify-between relative overflow-hidden border-t border-dashed border-slate-100/20">
+                          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/30 via-transparent to-transparent pointer-events-none" />
+                          <span className="bg-white text-slate-700 text-[11px] font-bold px-3 py-1 rounded-lg border border-slate-100 shadow-sm">
+                            WKND10
+                          </span>
+                          <span className="text-[10px] text-white/80 font-medium hover:underline">• Copy Code</span>
+                        </div>
+                      </motion.div>
+                    </>
+                  )}
                 </div>
               </div>
 
-              {/* Why Revv? Section */}
+              {/* Why Taxi09? Section */}
               <div className="space-y-3 px-1 select-none">
-                <h3 className="text-[19px] font-bold text-slate-700 tracking-tight">Why Revv?</h3>
+                <h3 className="text-[19px] font-bold text-slate-700 tracking-tight">Why Taxi09?</h3>
                 <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
                   {/* Card 1 */}
                   <motion.div 
@@ -1277,8 +1370,8 @@ const BikeRentalHome = () => {
                     whileTap={{ scale: 0.98 }} 
                     className="w-[280px] rounded-3xl bg-white border border-slate-100/80 p-4 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex gap-3.5 shrink-0 cursor-default"
                   >
-                    <div className="w-12 h-12 rounded-full bg-[#E0F2F1] text-teal-600 flex items-center justify-center shrink-0">
-                      <Home size={22} className="stroke-teal-600" />
+                    <div className="w-12 h-12 rounded-full bg-[#E0F2F1] text-indigo-600 flex items-center justify-center shrink-0">
+                      <Home size={22} className="stroke-indigo-600" />
                     </div>
                     <div className="space-y-1 min-w-0">
                       <h4 className="text-[13.5px] font-bold text-slate-800">Home delivery & return</h4>
@@ -1325,7 +1418,7 @@ const BikeRentalHome = () => {
                     </button>
                     {activeFaqIndex === 0 && (
                       <p className="text-[12px] text-slate-500 mt-2 leading-relaxed animate-fadeIn">
-                        Revv allows up to 125 km/hr. However, it is always recommended to adhere to local speed limits as specified by road authorities.
+                        Taxi09 allows up to 125 km/hr. However, it is always recommended to adhere to local speed limits as specified by road authorities.
                       </p>
                     )}
                   </div>
@@ -1371,29 +1464,55 @@ const BikeRentalHome = () => {
                 <h3 className="text-[20px] font-black text-slate-400 tracking-tight select-none">Why subscriptions</h3>
                 
                 <div className="flex gap-4 overflow-x-auto no-scrollbar pb-1">
-                  <div className="w-[240px] h-[130px] rounded-3xl bg-slate-950 shadow-sm shrink-0 border border-slate-800 relative overflow-hidden group cursor-pointer flex items-center justify-center">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-900/40 to-slate-900/60 z-0" />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-60 z-0">
-                      <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center text-white">
-                        <Car size={32} />
+                  {subscriptionBanners.length > 0 ? (
+                    subscriptionBanners.map((banner) => (
+                      <motion.div
+                        key={banner.id || banner._id}
+                        whileHover={{ y: -4, scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                          if (banner.redirect_url) {
+                            window.open(banner.redirect_url, '_blank');
+                          } else {
+                            toast('Promotion loaded', { icon: '✨' });
+                          }
+                        }}
+                        className="w-[280px] h-[130px] rounded-3xl bg-slate-100 shadow-sm shrink-0 border border-slate-200/40 relative overflow-hidden group cursor-pointer"
+                      >
+                        <img
+                          src={resolveImageUrl(banner.image)}
+                          alt={banner.title || "Featured banner"}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </motion.div>
+                    ))
+                  ) : (
+                    <>
+                      <div className="w-[240px] h-[130px] rounded-3xl bg-slate-950 shadow-sm shrink-0 border border-slate-800 relative overflow-hidden group cursor-pointer flex items-center justify-center">
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/40 to-slate-900/60 z-0" />
+                        <div className="absolute inset-0 flex items-center justify-center opacity-60 z-0">
+                          <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center text-white">
+                            <Car size={32} />
+                          </div>
+                        </div>
+                        <div className="relative z-10 w-12 h-12 rounded-full bg-white/95 shadow-md flex items-center justify-center text-[#0B94A4] group-hover:scale-110 transition-transform duration-300">
+                          <svg className="w-5 h-5 fill-current ml-0.5" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
                       </div>
-                    </div>
-                    <div className="relative z-10 w-12 h-12 rounded-full bg-white/95 shadow-md flex items-center justify-center text-[#0B94A4] group-hover:scale-110 transition-transform duration-300">
-                      <svg className="w-5 h-5 fill-current ml-0.5" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                  </div>
 
-                  <div className="w-[220px] h-[130px] rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50/50 p-4 flex items-center gap-3 shadow-sm shrink-0 border border-amber-100/50 select-none">
-                    <div className="w-14 h-14 rounded-full bg-amber-100/60 flex items-center justify-center text-amber-800 font-extrabold text-[22px] tracking-tighter shrink-0 shadow-inner">
-                      ₹0
-                    </div>
-                    <div className="space-y-0.5">
-                      <span className="text-[13.5px] font-black text-slate-900 block leading-tight">No down</span>
-                      <span className="text-[13.5px] font-black text-slate-900 block leading-tight">payment</span>
-                    </div>
-                  </div>
+                      <div className="w-[220px] h-[130px] rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50/50 p-4 flex items-center gap-3 shadow-sm shrink-0 border border-amber-100/50 select-none">
+                        <div className="w-14 h-14 rounded-full bg-amber-100/60 flex items-center justify-center text-amber-800 font-extrabold text-[22px] tracking-tighter shrink-0 shadow-inner">
+                          ₹0
+                        </div>
+                        <div className="space-y-0.5">
+                          <span className="text-[13.5px] font-black text-slate-900 block leading-tight">No down</span>
+                          <span className="text-[13.5px] font-black text-slate-900 block leading-tight">payment</span>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 

@@ -868,6 +868,7 @@ const AdminLayout = () => {
               { label: 'Rental Requests', path: '/admin/pricing/rental-requests', permission: 'rental.view' },
               { label: 'Rental Quote Requests', path: '/admin/pricing/rental-quotes', permission: 'rental.view' },
               { label: 'Rental Package Types', path: '/admin/pricing/rental-packages', permission: 'rental.view' },
+              { label: 'Rental Coupons', path: '/admin/pricing/rental-coupons', permission: 'rental.view' },
               { label: 'Package Pricing', path: '/admin/pricing/package-pricing', permission: 'rental.view' },
               { label: 'Banner Image', path: '/admin/promotions/banner-image', permission: 'rental.view' },
             ],

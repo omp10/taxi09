@@ -1,5 +1,6 @@
 import { ApiError } from '../../../../utils/ApiError.js';
 import { listAvailablePromosForUser, validatePromoForContext } from '../../services/promoService.js';
+export { validateRentalCoupon, getActiveRentalCoupons } from '../../admin/controllers/rentalCouponController.js';
 
 export const validatePromo = async (req, res) => {
   const { code, fare, service_location_id, transport_type } = req.body || {};

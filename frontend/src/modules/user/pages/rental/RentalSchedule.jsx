@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   Tag,
 } from 'lucide-react';
+import { userService } from '../../services/userService';
 
 const RENTAL_SCHEDULE_STATE_KEY = 'taxi:rental-schedule-pending';
 const RENTAL_KYC_STATE_KEY = 'taxi:rental-kyc-pending';
@@ -290,6 +291,7 @@ const RentalSchedule = () => {
   const [returnMonthDate, setReturnMonthDate] = useState(startOfDay(defaultReturnDateTime));
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromo, setAppliedPromo] = useState(null);
+  const [promoError, setPromoError] = useState('');
 
   const pickup = useMemo(
     () => formatDateTimeValue(pickupDate, pickupTime),
@@ -403,24 +405,44 @@ const RentalSchedule = () => {
       })
     : 'Date not selected';
 
-  const handleApplyPromo = () => {
+  const handleApplyPromo = async () => {
     const normalized = String(promoCode || '').trim().toUpperCase();
     if (!normalized) {
       setAppliedPromo(null);
+      setPromoError('');
       return;
     }
 
-    if (normalized === 'SUB500') {
-      setAppliedPromo({ code: normalized, type: 'flat', amount: 500 });
-      return;
-    }
+    try {
+      const response = await userService.validateRentalCoupon({
+        code: normalized,
+        bookingAmount: subscriptionBookingCharges,
+        vehicleId: vehicle._id || vehicle.id,
+      });
 
-    if (normalized === 'WELCOME10') {
-      setAppliedPromo({ code: normalized, type: 'percent', amount: 10, cap: 1200 });
-      return;
+      if (response && response.data && response.data.success) {
+        const result = response.data.data;
+        if (result.valid) {
+          setAppliedPromo({
+            code: result.coupon.code,
+            type: result.coupon.type,
+            amount: result.coupon.amount,
+            cap: result.coupon.cap,
+          });
+          setPromoError('');
+        } else {
+          setAppliedPromo({ code: '', type: 'flat', amount: 0, invalid: true });
+          setPromoError(result.message || 'Promo code is not valid.');
+        }
+      } else {
+        setAppliedPromo({ code: '', type: 'flat', amount: 0, invalid: true });
+        setPromoError(response?.data?.message || 'Promo code is not valid.');
+      }
+    } catch (error) {
+      console.error(error);
+      setAppliedPromo({ code: '', type: 'flat', amount: 0, invalid: true });
+      setPromoError(error?.response?.data?.message || error?.message || 'Could not validate promo code.');
     }
-
-    setAppliedPromo({ code: '', type: 'flat', amount: 0, invalid: true });
   };
 
   const proceedSubscriptionPayment = (paymentVariant) => {
@@ -570,7 +592,7 @@ const RentalSchedule = () => {
                   </button>
                 </div>
                 {appliedPromo?.invalid ? (
-                  <p className="mt-2 text-[12px] font-bold text-rose-500">Promo code is not valid.</p>
+                  <p className="mt-2 text-[12px] font-bold text-rose-500">{promoError || 'Promo code is not valid.'}</p>
                 ) : appliedPromo?.code ? (
                   <p className="mt-2 text-[12px] font-bold text-emerald-600">
                     {appliedPromo.code} applied. You saved {formatCurrency(promoDiscount)}.

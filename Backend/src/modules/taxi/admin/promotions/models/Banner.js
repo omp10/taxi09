@@ -39,6 +39,13 @@ const bannerSchema = new mongoose.Schema(
       default: true,
       index: true,
     },
+    type: {
+      type: String,
+      enum: ['rental', 'subscription'],
+      default: 'rental',
+      trim: true,
+      index: true,
+    },
     push_count: {
       type: Number,
       default: 0,

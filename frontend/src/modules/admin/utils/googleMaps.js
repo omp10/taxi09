@@ -10,7 +10,26 @@ export const HAS_VALID_GOOGLE_MAPS_KEY =
 export const INDIA_CENTER = { lat: 22.7196, lng: 75.8577 };
 export const DELHI_CENTER = { lat: 28.6139, lng: 77.209 };
 export const GOOGLE_MAPS_LOADER_ID = 'appzeto-google-maps';
-export const GOOGLE_MAPS_LIBRARIES = ['drawing', 'places'];
+export const GOOGLE_MAPS_LIBRARIES = ['places'];
+export const GOOGLE_MAPS_LOADER_SIGNATURE = JSON.stringify({
+  id: GOOGLE_MAPS_LOADER_ID,
+  libraries: GOOGLE_MAPS_LIBRARIES,
+});
+
+if (typeof window !== 'undefined') {
+  const previousSignature = window.__APP_GOOGLE_MAPS_LOADER_SIGNATURE__;
+
+  if (
+    previousSignature &&
+    previousSignature !== GOOGLE_MAPS_LOADER_SIGNATURE &&
+    !window.__APP_GOOGLE_MAPS_LOADER_RELOADING__
+  ) {
+    window.__APP_GOOGLE_MAPS_LOADER_RELOADING__ = true;
+    window.location.reload();
+  }
+
+  window.__APP_GOOGLE_MAPS_LOADER_SIGNATURE__ = GOOGLE_MAPS_LOADER_SIGNATURE;
+}
 
 export const getLatLng = (source, fallback = INDIA_CENTER) => {
   const lat = Number(source?.lat ?? source?.latitude);

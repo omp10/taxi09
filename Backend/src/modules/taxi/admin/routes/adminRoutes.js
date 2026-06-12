@@ -226,6 +226,13 @@ import {
 } from '../controllers/poolingController.js';
 import { promotionsRouter } from '../promotions/routes/index.js';
 import { listSafetyAlerts, resolveSafetyAlert } from '../../safety/controllers/safetyController.js';
+import {
+  getRentalCoupons,
+  createRentalCoupon,
+  updateRentalCoupon,
+  deleteRentalCoupon,
+  toggleRentalCouponStatus,
+} from '../controllers/rentalCouponController.js';
 
 export const adminRouter = Router();
 
@@ -376,6 +383,12 @@ adminRouter.patch('/admin/types/rental-packages/:id', updateRentalPackageType);
 adminRouter.delete('/admin/types/rental-packages/:id', deleteRentalPackageType);
 adminRouter.get('/admin/types/transport-types', getTransportTypes);
 adminRouter.get('/admin/vehicle_preference', getVehiclePreferenceOptions);
+
+adminRouter.get('/admin/rental-coupons', getRentalCoupons);
+adminRouter.post('/admin/rental-coupons', createRentalCoupon);
+adminRouter.patch('/admin/rental-coupons/:id', updateRentalCoupon);
+adminRouter.delete('/admin/rental-coupons/:id', deleteRentalCoupon);
+adminRouter.patch('/admin/rental-coupons/:id/toggle', toggleRentalCouponStatus);
 
 adminRouter.get('/admin/owner-management/manage-owners', getOwners);
 adminRouter.post('/admin/owner-management/manage-owners', createOwner);

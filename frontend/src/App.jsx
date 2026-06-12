@@ -225,6 +225,7 @@ const AdminReferralTranslation = lazy(() => import('./modules/admin/pages/referr
 const AdminPromoCodes = lazy(() => import('./modules/admin/pages/promotions/PromoCodes'));
 const AdminSendNotification = lazy(() => import('./modules/admin/pages/promotions/SendNotification'));
 const AdminBannerImage = lazy(() => import('./modules/admin/pages/promotions/BannerImage'));
+const AdminRentalCoupons = lazy(() => import('./modules/admin/pages/promotions/RentalCoupons'));
 
 // Price Management
 const AdminServiceLocation = lazy(() => import('./modules/admin/pages/price-management/ServiceLocation'));
@@ -1523,6 +1524,18 @@ function App() {
                   <Route
                     path="rental-packages/edit/:id"
                     element={<AdminRentalPackageTypes mode="edit" />}
+                  />
+                  <Route
+                    path="rental-coupons"
+                    element={<AdminRentalCoupons />}
+                  />
+                  <Route
+                    path="rental-coupons/create"
+                    element={<AdminRentalCoupons mode="create" />}
+                  />
+                  <Route
+                    path="rental-coupons/edit/:id"
+                    element={<AdminRentalCoupons mode="edit" />}
                   />
                   <Route path="set-price" element={<AdminSetPrices />} />
                   <Route

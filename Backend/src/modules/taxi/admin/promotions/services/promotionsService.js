@@ -118,6 +118,7 @@ const serializePromoCode = (item) => ({
   active: item.active !== false,
   createdAt: item.createdAt,
   updatedAt: item.updatedAt,
+
 });
 
 const serializeNotification = (item) => ({
@@ -145,14 +146,17 @@ const serializeBanner = (item) => ({
   active: item.active !== false,
   push_count: Number(item.push_count || 0),
   last_pushed_at: item.last_pushed_at || null,
+  type: item.type || 'rental',
   createdAt: item.createdAt,
   updatedAt: item.updatedAt,
 });
 
 const serializeBannerMinimal = (item) => ({
   _id: item._id,
+  title: item.title || '',
   image: item.image || '',
   active: item.active !== false,
+  type: item.type || 'rental',
 });
 
 const serializeBannerFromPayload = (item, payload = {}) => {
@@ -185,6 +189,9 @@ const serializeBannerFromPayload = (item, payload = {}) => {
   }
   if (keys.has('redirect_url') || keys.has('target_route_url')) {
     response.redirect_url = item.redirect_url || item.external_link || item.deep_link || '';
+  }
+  if (keys.has('type')) {
+    response.type = item.type || 'rental';
   }
 
   return response;
@@ -380,8 +387,13 @@ const normalizeBannerPayload = async (payload, existing = null) => {
     payload.redirect_url ?? payload.external_link ?? payload.deep_link ?? payload.target_route_url ?? existing?.redirect_url,
   );
   const active = normalizeBoolean(payload.active ?? payload.status, existing?.active ?? true);
+  const type = normalizeText(payload.type ?? existing?.type ?? 'rental');
   if (!image) {
     throw new ApiError(400, 'Banner image is required');
+  }
+
+  if (type && !['rental', 'subscription'].includes(type)) {
+    throw new ApiError(400, 'Banner type must be rental or subscription');
   }
 
   // If image is a data URL (base64), upload it to Cloudinary
@@ -410,12 +422,12 @@ const normalizeBannerPayload = async (payload, existing = null) => {
     deep_link: linkType === 'deep_link' ? redirectUrl : '',
     redirect_url: redirectUrl,
     active,
+    type,
   };
 };
 
 export const listPromoCodes = async ({ page = 1, limit = 50, search, service_location_id, transport_type, active }) => {
   const query = {};
-
   if (search) {
     const safeSearch = normalizeText(search);
     query.code = { $regex: safeSearch, $options: 'i' };
@@ -563,10 +575,13 @@ export const deleteNotification = async (id) => {
   return true;
 };
 
-export const listBanners = async ({ page = 1, limit = 50, active }) => {
+export const listBanners = async ({ page = 1, limit = 50, active, type }) => {
   const query = {};
   if (active !== undefined) {
     query.active = normalizeBoolean(active);
+  }
+  if (type) {
+    query.type = type;
   }
 
   const safePage = Math.max(1, Number(page) || 1);

@@ -81,6 +81,14 @@ export const userService = {
     const response = await api.post('/promos/validate', payload);
     return response;
   },
+  validateRentalCoupon: async (payload) => {
+    const response = await api.post('/promos/rental/validate', payload);
+    return response;
+  },
+  getActiveRentalCoupons: async () => {
+    const response = await api.get('/promos/rental/active');
+    return response;
+  },
   searchPoolingRoutes: async (params) => {
     const response = await api.get('/users/pooling/search', { params });
     return response;

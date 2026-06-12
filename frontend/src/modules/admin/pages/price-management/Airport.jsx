@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Autocomplete, DrawingManager, GoogleMap, MarkerF, Polygon } from '@react-google-maps/api';
+import { Autocomplete, GoogleMap, MarkerF, Polygon, Polyline } from '@react-google-maps/api';
 import { 
   ArrowLeft, 
   Edit2, 
@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { adminService } from '../../services/adminService';
 import { DELHI_CENTER, useAppGoogleMapsLoader } from '../../utils/googleMaps';
+import { getLatLngFromMapClick } from '../../utils/mapDrawing';
 
 const inputClass = "w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-800 bg-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-colors";
 const labelClass = "block text-xs font-semibold text-gray-500 mb-1.5";
@@ -66,6 +67,8 @@ const Airport = ({ mode: initialMode = "list" }) => {
   const [mapCenter, setMapCenter] = useState(DELHI_CENTER);
   const [autocomplete, setAutocomplete] = useState(null);
   const [boundaryCoords, setBoundaryCoords] = useState([]);
+  const [isDrawingBoundary, setIsDrawingBoundary] = useState(false);
+  const [boundaryDraftCoords, setBoundaryDraftCoords] = useState([]);
   const [filters, setFilters] = useState({
     service_location_id: '',
     status: '',
@@ -84,6 +87,8 @@ const Airport = ({ mode: initialMode = "list" }) => {
     setSelectedAirportId(null);
     setFormData({ ...defaultFormData, service_location_id: serviceLocationId });
     setBoundaryCoords([]);
+    setBoundaryDraftCoords([]);
+    setIsDrawingBoundary(false);
     if (serviceLocation) {
       const lat = Number(serviceLocation.latitude);
       const lng = Number(serviceLocation.longitude);
@@ -161,7 +166,17 @@ const Airport = ({ mode: initialMode = "list" }) => {
     setMapCenter({ lat: nextLat, lng: nextLng });
   };
 
-  const handleMapClick = (event) => updatePinnedLocation(event.latLng?.lat(), event.latLng?.lng());
+  const handleMapClick = (event) => {
+    const point = getLatLngFromMapClick(event);
+    if (!point) return;
+
+    if (isDrawingBoundary) {
+      setBoundaryDraftCoords((current) => [...current, point]);
+      return;
+    }
+
+    updatePinnedLocation(point.lat, point.lng);
+  };
   const handleMarkerDragEnd = (event) => updatePinnedLocation(event.latLng?.lat(), event.latLng?.lng());
 
   const handlePlaceChanged = () => {
@@ -215,6 +230,8 @@ const Airport = ({ mode: initialMode = "list" }) => {
       status: airport.status || 'active',
     });
     setBoundaryCoords(Array.isArray(airport.boundary_coordinates) ? airport.boundary_coordinates : []);
+    setBoundaryDraftCoords([]);
+    setIsDrawingBoundary(false);
     if (airport.latitude && airport.longitude) setMapCenter({ lat: Number(airport.latitude), lng: Number(airport.longitude) });
   };
 
@@ -255,12 +272,28 @@ const Airport = ({ mode: initialMode = "list" }) => {
     }
   };
 
-  const handleBoundaryComplete = (polygon) => {
-    setBoundaryCoords(polygon.getPath().getArray().map(p => ({ lat: p.lat(), lng: p.lng() })));
-    polygon.setMap(null);
+  const startBoundaryDrawing = () => {
+    setBoundaryCoords([]);
+    setBoundaryDraftCoords([]);
+    setIsDrawingBoundary(true);
   };
 
-  const clearBoundary = () => { setBoundaryCoords([]); };
+  const finishBoundaryDrawing = () => {
+    if (boundaryDraftCoords.length < 3) return;
+    setBoundaryCoords(boundaryDraftCoords);
+    setBoundaryDraftCoords([]);
+    setIsDrawingBoundary(false);
+  };
+
+  const undoBoundaryPoint = () => {
+    setBoundaryDraftCoords((current) => current.slice(0, -1));
+  };
+
+  const clearBoundary = () => {
+    setBoundaryCoords([]);
+    setBoundaryDraftCoords([]);
+    setIsDrawingBoundary(false);
+  };
   const clearFilters = () => setFilters({ service_location_id: '', status: '' });
 
   return (
@@ -607,15 +640,48 @@ const Airport = ({ mode: initialMode = "list" }) => {
                             </div>
                           </div>
 
-                          {boundaryCoords.length > 0 ? (
+                          <div className="flex flex-wrap gap-2 self-start">
                             <button
                               type="button"
-                              onClick={clearBoundary}
-                              className="self-start rounded-xl bg-white px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-rose-600 shadow-xl transition-all border border-gray-100 hover:bg-rose-50 active:scale-95"
+                              onClick={startBoundaryDrawing}
+                              className={`rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest shadow-xl transition-all border ${
+                                isDrawingBoundary
+                                  ? 'border-indigo-200 bg-indigo-50 text-indigo-700'
+                                  : 'border-gray-100 bg-white text-slate-700 hover:bg-slate-50'
+                              }`}
                             >
-                              Clear Boundary
+                              {isDrawingBoundary ? 'Drawing Active' : 'Draw Boundary'}
                             </button>
-                          ) : null}
+                            {isDrawingBoundary ? (
+                              <button
+                                type="button"
+                                onClick={undoBoundaryPoint}
+                                disabled={boundaryDraftCoords.length === 0}
+                                className="rounded-xl border border-gray-100 bg-white px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-700 shadow-xl transition-all hover:bg-slate-50 disabled:opacity-40"
+                              >
+                                Undo Point
+                              </button>
+                            ) : null}
+                            {isDrawingBoundary ? (
+                              <button
+                                type="button"
+                                onClick={finishBoundaryDrawing}
+                                disabled={boundaryDraftCoords.length < 3}
+                                className="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-emerald-700 shadow-xl transition-all hover:bg-emerald-100 disabled:opacity-40"
+                              >
+                                Finish Shape
+                              </button>
+                            ) : null}
+                            {(boundaryCoords.length > 0 || boundaryDraftCoords.length > 0) ? (
+                              <button
+                                type="button"
+                                onClick={clearBoundary}
+                                className="rounded-xl bg-white px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-rose-600 shadow-xl transition-all border border-gray-100 hover:bg-rose-50 active:scale-95"
+                              >
+                                Clear Boundary
+                              </button>
+                            ) : null}
+                          </div>
                        </div>
                        
                        <GoogleMap
@@ -633,6 +699,12 @@ const Airport = ({ mode: initialMode = "list" }) => {
                             fullscreenControl: true
                          }}
                        >
+                         {boundaryDraftCoords.length > 0 ? (
+                           <Polyline
+                             path={boundaryDraftCoords}
+                             options={{ strokeColor: '#4f46e5', strokeOpacity: 0.9, strokeWeight: 3 }}
+                           />
+                         ) : null}
                          {boundaryCoords.length > 0 && <Polygon paths={boundaryCoords} options={{ fillColor: '#4f46e5', strokeColor: '#4f46e5', fillOpacity: 0.1, strokeWeight: 2 }} />}
                          
                          <MarkerF 
@@ -647,18 +719,6 @@ const Airport = ({ mode: initialMode = "list" }) => {
                               strokeWeight: 2
                             } : undefined}
                          />
-
-                         <DrawingManager
-                            onPolygonComplete={handleBoundaryComplete}
-                            options={{
-                              drawingControl: true,
-                              drawingControlOptions: {
-                                position: window.google ? window.google.maps.ControlPosition.RIGHT_TOP : 6,
-                                drawingModes: ['polygon']
-                              },
-                              polygonOptions: { fillColor: '#4f46e5', strokeColor: '#4f46e5', fillOpacity: 0.1, strokeWeight: 2 }
-                            }}
-                         />
                        </GoogleMap>
                     </div>
                   ) : (
@@ -671,7 +731,7 @@ const Airport = ({ mode: initialMode = "list" }) => {
                 <div className="mt-6 bg-indigo-50 border border-indigo-100 rounded-xl p-4 flex items-start gap-3">
                    <Info size={18} className="text-indigo-600 shrink-0 mt-0.5" />
                    <p className="text-xs text-indigo-900 leading-relaxed font-medium">
-                     Use the polygon tool at the top of the map to define the precise operational boundary for this airport. This allows for automated geofencing of ride requests.
+                     Click `Draw Boundary`, place points on the map, then use `Finish Shape` to save the airport geofence. Normal map clicks still move the airport pin when boundary drawing is off.
                    </p>
                 </div>
               </div>

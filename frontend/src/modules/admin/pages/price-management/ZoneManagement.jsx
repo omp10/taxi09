@@ -24,10 +24,10 @@ import {
 } from "lucide-react";
 import {
   GoogleMap,
-  DrawingManager,
   Circle,
   Polygon,
   Autocomplete,
+  Polyline,
 } from "@react-google-maps/api";
 import { useAppGoogleMapsLoader } from "../../utils/googleMaps";
 import { adminService } from "../../services/adminService";
@@ -36,6 +36,7 @@ import {
   normalizeBoundaryRings,
   isDriverAvailable,
 } from "../../utils/mapUtils";
+import { getDistanceMeters, getLatLngFromMapClick } from "../../utils/mapDrawing";
 
 const inputClass = "w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-800 bg-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-colors";
 const labelClass = "block text-xs font-semibold text-gray-500 mb-1.5";
@@ -71,8 +72,11 @@ const ZoneManagement = ({ mode: initialMode = "list" }) => {
   // Map & Drawing States
   const [boundaryMode, setBoundaryMode] = useState('polygon');
   const [polygonCoords, setPolygonCoords] = useState([]);
+  const [polygonDraftCoords, setPolygonDraftCoords] = useState([]);
+  const [isPolygonDrawing, setIsPolygonDrawing] = useState(false);
   const [circleCenter, setCircleCenter] = useState(null);
   const [circleRadiusMeters, setCircleRadiusMeters] = useState('');
+  const [circlePlacementStep, setCirclePlacementStep] = useState('center');
   const { isLoaded, loadError } = useAppGoogleMapsLoader();
 
   // Form State
@@ -187,30 +191,6 @@ const ZoneManagement = ({ mode: initialMode = "list" }) => {
     }
   };
 
-  const onPolygonComplete = (polygon) => {
-    const coords = polygon.getPath().getArray().map(p => ({
-      lat: p.lat(),
-      lng: p.lng()
-    }));
-    setBoundaryMode('polygon');
-    setPolygonCoords(coords);
-    setCircleCenter(null);
-    setCircleRadiusMeters('');
-    polygon.setMap(null);
-  };
-
-  const onCircleComplete = (circle) => {
-    const center = circle.getCenter();
-    setBoundaryMode('circle');
-    setCircleCenter({
-      lat: center.lat(),
-      lng: center.lng(),
-    });
-    setCircleRadiusMeters(String(Math.round(circle.getRadius())));
-    setPolygonCoords([]);
-    circle.setMap(null);
-  };
-
   const syncPolygonState = () => {
     const polygon = polygonRef.current;
     if (!polygon) {
@@ -282,6 +262,34 @@ const ZoneManagement = ({ mode: initialMode = "list" }) => {
     }
   };
 
+  const handleZoneMapClick = (event) => {
+    const point = getLatLngFromMapClick(event);
+    if (!point) {
+      return;
+    }
+
+    if (boundaryMode === 'polygon') {
+      if (!isPolygonDrawing) {
+        return;
+      }
+
+      setPolygonDraftCoords((current) => [...current, point]);
+      return;
+    }
+
+    if (circlePlacementStep === 'center' || !circleCenter) {
+      setCircleCenter(point);
+      setCircleRadiusMeters('');
+      setCirclePlacementStep('radius');
+      return;
+    }
+
+    const nextRadius = Math.round(getDistanceMeters(circleCenter, point));
+    if (nextRadius > 0) {
+      setCircleRadiusMeters(String(nextRadius));
+    }
+  };
+
   const handleSave = async () => {
     const syncedPolygonCoords = boundaryMode === 'polygon' ? syncPolygonState() : polygonCoords;
     const syncedCircle = boundaryMode === 'circle'
@@ -346,8 +354,11 @@ const ZoneManagement = ({ mode: initialMode = "list" }) => {
     });
     setBoundaryMode('polygon');
     setPolygonCoords([]);
+    setPolygonDraftCoords([]);
+    setIsPolygonDrawing(false);
     setCircleCenter(null);
     setCircleRadiusMeters('');
+    setCirclePlacementStep('center');
     setCountryBoundaryPaths([]);
   };
 
@@ -410,6 +421,8 @@ const ZoneManagement = ({ mode: initialMode = "list" }) => {
     const nextBoundaryMode = zone.boundary_mode === 'circle' ? 'circle' : 'polygon';
     setBoundaryMode(nextBoundaryMode);
     setPolygonCoords(parsedCoords);
+    setPolygonDraftCoords([]);
+    setIsPolygonDrawing(false);
     setCircleCenter(
       zone.circle_center && Number.isFinite(Number(zone.circle_center?.lat)) && Number.isFinite(Number(zone.circle_center?.lng))
         ? {
@@ -423,6 +436,7 @@ const ZoneManagement = ({ mode: initialMode = "list" }) => {
         ? String(zone.circle_radius_meters)
         : '',
     );
+    setCirclePlacementStep(zone.boundary_mode === 'circle' && zone.circle_center ? 'radius' : 'center');
   };
 
   const handleExplore = (zone) => {
@@ -457,6 +471,49 @@ const ZoneManagement = ({ mode: initialMode = "list" }) => {
     loadCountryBoundary();
     return () => { cancelled = true; };
   }, [selectedCountry, view]);
+
+  const startPolygonDrawing = () => {
+    setBoundaryMode('polygon');
+    setPolygonCoords([]);
+    setPolygonDraftCoords([]);
+    setCircleCenter(null);
+    setCircleRadiusMeters('');
+    setCirclePlacementStep('center');
+    setIsPolygonDrawing(true);
+  };
+
+  const finishPolygonDrawing = () => {
+    if (polygonDraftCoords.length < 3) {
+      return;
+    }
+
+    setPolygonCoords(polygonDraftCoords);
+    setPolygonDraftCoords([]);
+    setIsPolygonDrawing(false);
+  };
+
+  const undoPolygonPoint = () => {
+    setPolygonDraftCoords((current) => current.slice(0, -1));
+  };
+
+  const prepareCircleCenterSelection = () => {
+    setBoundaryMode('circle');
+    setPolygonCoords([]);
+    setPolygonDraftCoords([]);
+    setIsPolygonDrawing(false);
+    setCircleCenter(null);
+    setCircleRadiusMeters('');
+    setCirclePlacementStep('center');
+  };
+
+  const clearMapBoundary = () => {
+    setPolygonCoords([]);
+    setPolygonDraftCoords([]);
+    setIsPolygonDrawing(false);
+    setCircleCenter(null);
+    setCircleRadiusMeters('');
+    setCirclePlacementStep(boundaryMode === 'circle' ? 'center' : circlePlacementStep);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 lg:p-8 animate-in fade-in duration-500">
@@ -722,7 +779,14 @@ const ZoneManagement = ({ mode: initialMode = "list" }) => {
                             <button
                               key={option.id}
                               type="button"
-                              onClick={() => setBoundaryMode(option.id)}
+                              onClick={() => {
+                                setBoundaryMode(option.id);
+                                if (option.id === 'polygon') {
+                                  setCirclePlacementStep('center');
+                                } else {
+                                  setIsPolygonDrawing(false);
+                                }
+                              }}
                               className={`rounded-lg border px-4 py-3 text-sm font-semibold transition-colors ${
                                 boundaryMode === option.id
                                   ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
@@ -800,16 +864,57 @@ const ZoneManagement = ({ mode: initialMode = "list" }) => {
                       </div>
 
                       <div className="flex flex-wrap items-center justify-between gap-3 md:justify-end">
-                        <div className="rounded-full bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-500">
-                          State and city labels remain visible while you draw zone boundaries.
+                        <div className="flex flex-wrap items-center justify-end gap-2">
+                          <div className="rounded-full bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-500">
+                            State and city labels remain visible while you draw zone boundaries.
+                          </div>
+                          {boundaryMode === 'polygon' ? (
+                            <>
+                              <button
+                                type="button"
+                                onClick={startPolygonDrawing}
+                                className={`rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest shadow-sm transition-all border ${
+                                  isPolygonDrawing
+                                    ? 'border-indigo-200 bg-indigo-50 text-indigo-700'
+                                    : 'border-gray-200 bg-white text-slate-700 hover:bg-slate-50'
+                                }`}
+                              >
+                                {isPolygonDrawing ? 'Drawing Active' : 'Draw Polygon'}
+                              </button>
+                              {isPolygonDrawing ? (
+                                <button
+                                  type="button"
+                                  onClick={undoPolygonPoint}
+                                  disabled={polygonDraftCoords.length === 0}
+                                  className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-700 shadow-sm transition-all hover:bg-slate-50 disabled:opacity-40"
+                                >
+                                  Undo Point
+                                </button>
+                              ) : null}
+                              {isPolygonDrawing ? (
+                                <button
+                                  type="button"
+                                  onClick={finishPolygonDrawing}
+                                  disabled={polygonDraftCoords.length < 3}
+                                  className="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-emerald-700 shadow-sm transition-all hover:bg-emerald-100 disabled:opacity-40"
+                                >
+                                  Finish Shape
+                                </button>
+                              ) : null}
+                            </>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={prepareCircleCenterSelection}
+                              className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-700 shadow-sm transition-all hover:bg-slate-50"
+                            >
+                              {circleCenter ? 'Reset Circle Center' : 'Pick Circle Center'}
+                            </button>
+                          )}
                         </div>
                         <button 
                           type="button"
-                          onClick={() => {
-                            setPolygonCoords([]);
-                            setCircleCenter(null);
-                            setCircleRadiusMeters('');
-                          }}
+                          onClick={clearMapBoundary}
                           className="flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-rose-600 shadow-sm transition-all border border-gray-200 hover:bg-rose-50 active:scale-95"
                         >
                           <X size={14} />
@@ -825,6 +930,7 @@ const ZoneManagement = ({ mode: initialMode = "list" }) => {
                            mapContainerStyle={{ width: '100%', height: '100%' }}
                            center={mapCenter} zoom={12}
                            onLoad={m => { mapRef.current = m; }}
+                           onClick={handleZoneMapClick}
                            options={{
                               mapTypeId: 'roadmap',
                               disableDefaultUI: false,
@@ -834,34 +940,12 @@ const ZoneManagement = ({ mode: initialMode = "list" }) => {
                               fullscreenControl: true
                            }}
                          >
-                           <DrawingManager
-                             onPolygonComplete={onPolygonComplete}
-                             options={{
-                               drawingControl: true,
-                               drawingControlOptions: {
-                                 position: window.google.maps.ControlPosition.TOP_RIGHT,
-                                 drawingModes: [
-                                   window.google.maps.drawing.OverlayType.POLYGON,
-                                   window.google.maps.drawing.OverlayType.CIRCLE,
-                                 ],
-                               },
-                               polygonOptions: {
-                                 fillColor: '#4f46e5',
-                                 fillOpacity: 0.15,
-                                 strokeColor: '#4f46e5',
-                                 strokeWeight: 2,
-                                 editable: true,
-                               },
-                               circleOptions: {
-                                 fillColor: '#0f766e',
-                                 fillOpacity: 0.12,
-                                 strokeColor: '#0f766e',
-                                 strokeWeight: 2,
-                                 editable: true,
-                               },
-                             }}
-                             onCircleComplete={onCircleComplete}
-                           />
+                           {polygonDraftCoords.length > 0 ? (
+                             <Polyline
+                               path={polygonDraftCoords}
+                               options={{ strokeColor: '#4f46e5', strokeOpacity: 0.9, strokeWeight: 3 }}
+                             />
+                           ) : null}
                            {boundaryMode === 'polygon' && polygonCoords.length > 0 && (
                              <Polygon
                                paths={polygonCoords}
@@ -942,7 +1026,7 @@ const ZoneManagement = ({ mode: initialMode = "list" }) => {
                     <Maximize2 className="absolute -right-4 -bottom-4 text-white/10" size={120} />
                     <h4 className="text-sm font-semibold mb-2">Instructions</h4>
                     <p className="text-xs text-indigo-100 leading-relaxed">
-                      Use the polygon or circle tool at the top of the map to define your zone boundary. Click to place polygon vertices and close the shape, or drop a circle and adjust its radius for a radial market boundary. The red dashed line represents the country boundary for reference.
+                      Use `Draw Polygon` to place zone vertices, then finish the shape when you have at least three points. For circles, pick the center with one click and set the radius with the next click or by typing meters manually. The red dashed line represents the country boundary for reference.
                     </p>
                 </div>
               </div>

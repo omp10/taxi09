@@ -21,6 +21,7 @@ const createInitialFormData = () => ({
   image: null,
   image_url: '',
   use_url: false,
+  type: 'rental',
 });
 
 const BannerImage = () => {
@@ -141,6 +142,7 @@ const BannerImage = () => {
         image: imageData,
         image_url: formData.image_url.trim(),
         use_url: formData.use_url,
+        type: formData.type || 'rental',
       };
 
       const res = await fetch(`${baseUrl}/banners`, {
@@ -269,6 +271,7 @@ const BannerImage = () => {
                   <thead className="bg-gray-50">
                     <tr className="text-[13px] font-bold text-gray-700">
                       <th className="px-6 py-4">Icon</th>
+                      <th className="px-6 py-4">Type</th>
                       <th className="px-6 py-4">Status</th>
                       <th className="px-6 py-4">Action</th>
                     </tr>
@@ -276,13 +279,13 @@ const BannerImage = () => {
                   <tbody className="divide-y divide-gray-100">
                     {loading ? (
                       <tr>
-                        <td colSpan="3" className="px-6 py-14 text-center text-sm text-gray-400">
+                        <td colSpan="4" className="px-6 py-14 text-center text-sm text-gray-400">
                           Loading banners...
                         </td>
                       </tr>
                     ) : rows.length === 0 ? (
                       <tr>
-                        <td colSpan="3" className="px-6 py-14 text-center text-sm text-gray-400">
+                        <td colSpan="4" className="px-6 py-14 text-center text-sm text-gray-400">
                           No banners found.
                         </td>
                       </tr>
@@ -303,6 +306,13 @@ const BannerImage = () => {
                                 </div>
                               )}
                             </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold uppercase ${
+                              item.type === 'subscription' ? 'bg-purple-50 text-purple-700 border border-purple-100' : 'bg-blue-50 text-blue-700 border border-blue-100'
+                            }`}>
+                              {item.type === 'subscription' ? 'Subscription' : 'Rental'}
+                            </span>
                           </td>
                           <td className="px-6 py-4">
                             <button
@@ -431,6 +441,20 @@ const BannerImage = () => {
                     />
                   </div>
                 ) : null}
+              </div>
+
+              <div className="space-y-2 max-w-xl">
+                <label className="block text-[14px] font-semibold text-gray-900 mb-2">
+                  Banner Placement Type
+                </label>
+                <select
+                  value={formData.type || 'rental'}
+                  onChange={(e) => setFormData((current) => ({ ...current, type: e.target.value }))}
+                  className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-800 bg-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-colors"
+                >
+                  <option value="rental">Standard Rental (Featured Banners)</option>
+                  <option value="subscription">Subscription ("Why subscription" Banners)</option>
+                </select>
               </div>
             </div>
 

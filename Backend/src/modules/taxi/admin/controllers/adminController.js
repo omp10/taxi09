@@ -660,8 +660,8 @@ export const getPublicRentalVehicleCatalog = asyncHandler(async (_req, res) =>
 export const getPublicRentalVehicleSubcategories = asyncHandler(async (_req, res) =>
   ok(res, { results: await adminService.listPublicRentalVehicleSubcategories() }),
 );
-export const getPublicBanners = asyncHandler(async (_req, res) => {
-  const result = await promotionsService.listBanners({ active: true, limit: 100 });
+export const getPublicBanners = asyncHandler(async (req, res) => {
+  const result = await promotionsService.listBanners({ active: true, limit: 100, type: req.query.type });
   ok(res, { results: result.results });
 });
 export const getVehiclePreferenceOptions = asyncHandler(async (_req, res) =>
