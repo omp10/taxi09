@@ -72,7 +72,7 @@ const getVehicleMarkerOffset = (width, height) => ({
   y: -(height / 2),
 });
 
-const RotatingVehicleMarker = ({ position, iconUrl = carIcon, heading = 0, title = 'Driver' }) => (
+const RotatingVehicleMarker = ({ position, iconUrl = carIcon, fallbackIconUrl = carIcon, heading = 0, title = 'Driver' }) => (
   <OverlayViewF
     position={position}
     mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
@@ -88,6 +88,13 @@ const RotatingVehicleMarker = ({ position, iconUrl = carIcon, heading = 0, title
           alt={title}
           className="h-12 w-12 object-contain drop-shadow-[0_8px_10px_rgba(15,23,42,0.35)]"
           draggable={false}
+          onError={(event) => {
+            const nextIcon = fallbackIconUrl || carIcon;
+            if (event.currentTarget.src === nextIcon) {
+              return;
+            }
+            event.currentTarget.src = nextIcon;
+          }}
         />
       </div>
     </div>
@@ -105,8 +112,25 @@ const getTrackingVehicleIcon = (ride, driver) => {
     '',
   ).trim();
 
-  if (customIcon) return customIcon;
+  const serviceType = String(ride?.serviceType || ride?.type || '').toLowerCase();
+  const iconType = String(ride?.vehicleIconType || driver?.vehicleIconType || driver?.vehicleType || '').toLowerCase();
+  const fallbackIcon =
+    serviceType === 'parcel'
+      ? deliveryIcon
+      : iconType.includes('bike')
+      ? bikeIcon
+      : iconType.includes('auto')
+      ? autoIcon
+      : carIcon;
 
+  if (customIcon) {
+    return resolveAssetUrl(customIcon) || fallbackIcon;
+  }
+
+  return fallbackIcon;
+};
+
+const getTrackingVehicleFallbackIcon = (ride, driver) => {
   const serviceType = String(ride?.serviceType || ride?.type || '').toLowerCase();
   const iconType = String(ride?.vehicleIconType || driver?.vehicleIconType || driver?.vehicleType || '').toLowerCase();
 
@@ -406,6 +430,7 @@ const RideTracking = () => {
   const waitingChargeableMinutes = Math.max(0, Math.ceil(waitingElapsedSeconds / 60) - freeWaitingBeforeMinutes);
   const isWaitingForOtp = Boolean(waitingStartedAt) && !['started', 'ongoing', 'arrived', 'completed', 'cancelled', 'delivered'].includes(tripStatus);
   const vehicleIcon = getTrackingVehicleIcon(trackingSnapshot, driver);
+  const vehicleFallbackIcon = getTrackingVehicleFallbackIcon(trackingSnapshot, driver);
   const displayDriverHeading = useMemo(() => {
     if (Number.isFinite(Number(rideRealtime?.driverLocation?.heading))) {
       return normalizeHeading(rideRealtime.driverLocation.heading);
@@ -1254,6 +1279,7 @@ const RideTracking = () => {
                 position={driverPosition}
                 title="Driver"
                 iconUrl={vehicleIcon}
+                fallbackIconUrl={vehicleFallbackIcon}
                 heading={displayDriverHeading}
               />
             ) : null}

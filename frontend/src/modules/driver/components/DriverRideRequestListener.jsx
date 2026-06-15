@@ -29,6 +29,74 @@ const ignoredRoutes = new Set([
 
 const DEFAULT_MAP_COORDS = [75.8577, 22.7196];
 
+const sanitizeRouteStateValue = (value, seen = new WeakSet()) => {
+    if (value == null) {
+        return value;
+    }
+
+    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+        return value;
+    }
+
+    if (typeof value === 'bigint') {
+        return String(value);
+    }
+
+    if (value instanceof Date) {
+        return value.toISOString();
+    }
+
+    if (Array.isArray(value)) {
+        return value
+            .map((item) => sanitizeRouteStateValue(item, seen))
+            .filter((item) => item !== undefined);
+    }
+
+    if (typeof value !== 'object') {
+        return undefined;
+    }
+
+    if (seen.has(value)) {
+        return undefined;
+    }
+
+    if (value instanceof Map) {
+        return Array.from(value.entries())
+            .map(([key, entryValue]) => {
+                const sanitizedKey = sanitizeRouteStateValue(key, seen);
+                const sanitizedValue = sanitizeRouteStateValue(entryValue, seen);
+                return sanitizedKey !== undefined && sanitizedValue !== undefined
+                    ? [sanitizedKey, sanitizedValue]
+                    : undefined;
+            })
+            .filter(Boolean);
+    }
+
+    if (value instanceof Set) {
+        return Array.from(value.values())
+            .map((item) => sanitizeRouteStateValue(item, seen))
+            .filter((item) => item !== undefined);
+    }
+
+    const prototype = Object.getPrototypeOf(value);
+    if (prototype !== Object.prototype && prototype !== null) {
+        return undefined;
+    }
+
+    seen.add(value);
+    const sanitized = {};
+
+    Object.entries(value).forEach(([key, entryValue]) => {
+        const nextValue = sanitizeRouteStateValue(entryValue, seen);
+        if (nextValue !== undefined) {
+            sanitized[key] = nextValue;
+        }
+    });
+
+    seen.delete(value);
+    return sanitized;
+};
+
 const unwrapApiPayload = (response) => response?.data?.data || response?.data || response;
 
 const withDriverAuthorization = (token) => (
@@ -303,25 +371,27 @@ const DriverRideRequestListener = () => {
             if (isScheduledRideForFuture(scheduledAt)) {
               return;
             }
-            navigate('/taxi/driver/active-trip', {
-                state: {
-                    type: nextType,
+            const nextRouteState = sanitizeRouteStateValue({
+                type: nextType,
+                rideId: currentJob?.rideId || payload.rideId,
+                otp: currentJob?.otp || payload?.otp || activeRequest?.raw?.otp || '',
+                request: {
+                    ...activeRequest,
                     rideId: currentJob?.rideId || payload.rideId,
                     otp: currentJob?.otp || payload?.otp || activeRequest?.raw?.otp || '',
-                    request: {
-                        ...activeRequest,
-                        rideId: currentJob?.rideId || payload.rideId,
-                        otp: currentJob?.otp || payload?.otp || activeRequest?.raw?.otp || '',
-                        raw: currentJob || {
-                            ...(activeRequest?.raw || {}),
-                            otp: payload?.otp || activeRequest?.raw?.otp || '',
-                            status: payload.status,
-                            liveStatus: payload.liveStatus,
-                            acceptedAt: payload.acceptedAt,
-                        },
+                    raw: currentJob || {
+                        ...(activeRequest?.raw || {}),
+                        otp: payload?.otp || activeRequest?.raw?.otp || '',
+                        status: payload.status,
+                        liveStatus: payload.liveStatus,
+                        acceptedAt: payload.acceptedAt,
                     },
-                    currentDriverCoords,
                 },
+                currentDriverCoords,
+            });
+
+            navigate('/taxi/driver/active-trip', {
+                state: nextRouteState,
             });
         };
 
