@@ -34,6 +34,7 @@ import api from '../../../shared/api/axiosInstance';
 import { useSettings } from '../../../shared/context/SettingsContext';
 import { uploadService } from '../../../shared/services/uploadService';
 import { BACKEND_ORIGIN } from '../../../shared/api/runtimeConfig';
+import { toHistorySafeState } from '../../../shared/utils/historyState';
 
 // Vehicle Icons for Map
 import BikeIcon from '@/assets/icons/bike.png';
@@ -72,74 +73,6 @@ const DEFAULT_MAP_CENTER = {
 };
 
 const DEFAULT_MAP_COORDS = [75.8577, 22.7196];
-
-const sanitizeRouteStateValue = (value, seen = new WeakSet()) => {
-    if (value == null) {
-        return value;
-    }
-
-    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-        return value;
-    }
-
-    if (typeof value === 'bigint') {
-        return String(value);
-    }
-
-    if (value instanceof Date) {
-        return value.toISOString();
-    }
-
-    if (Array.isArray(value)) {
-        return value
-            .map((item) => sanitizeRouteStateValue(item, seen))
-            .filter((item) => item !== undefined);
-    }
-
-    if (typeof value !== 'object') {
-        return undefined;
-    }
-
-    if (seen.has(value)) {
-        return undefined;
-    }
-
-    if (value instanceof Map) {
-        return Array.from(value.entries())
-            .map(([key, entryValue]) => {
-                const sanitizedKey = sanitizeRouteStateValue(key, seen);
-                const sanitizedValue = sanitizeRouteStateValue(entryValue, seen);
-                return sanitizedKey !== undefined && sanitizedValue !== undefined
-                    ? [sanitizedKey, sanitizedValue]
-                    : undefined;
-            })
-            .filter(Boolean);
-    }
-
-    if (value instanceof Set) {
-        return Array.from(value.values())
-            .map((item) => sanitizeRouteStateValue(item, seen))
-            .filter((item) => item !== undefined);
-    }
-
-    const prototype = Object.getPrototypeOf(value);
-    if (prototype !== Object.prototype && prototype !== null) {
-        return undefined;
-    }
-
-    seen.add(value);
-    const sanitized = {};
-
-    Object.entries(value).forEach(([key, entryValue]) => {
-        const nextValue = sanitizeRouteStateValue(entryValue, seen);
-        if (nextValue !== undefined) {
-            sanitized[key] = nextValue;
-        }
-    });
-
-    seen.delete(value);
-    return sanitized;
-};
 
 const getGeoLocationErrorMessage = (error, { purpose = 'generic' } = {}) => {
     const code = Number(error?.code);
@@ -348,6 +281,8 @@ const formatFareLabel = (value) => {
 
     return `Rs ${amount}`;
 };
+
+const formatWalletThresholdLabel = (value) => `Rs ${Math.max(0, Number(value || 0)).toLocaleString('en-IN')}`;
 
 const normalizeTodaySummary = (value = {}) => ({
     dateKey: String(value?.dateKey || ''),
@@ -752,7 +687,7 @@ const DriverHome = () => {
             return {
                 title: walletAlertState.belowMinimumBalance ? 'Top up to go online' : 'Cash limit reached',
                 message: walletAlertState.belowMinimumBalance
-                    ? `Keep your wallet at or above Rs ${Math.max(0, walletAlertState.minimumBalanceForOrders)} to receive orders.`
+                    ? `Keep your wallet at or above ${formatWalletThresholdLabel(walletAlertState.minimumBalanceForOrders)} to receive orders.`
                     : 'Add money to keep receiving ride requests.',
                 tone: 'danger',
             };
@@ -1235,9 +1170,9 @@ const DriverHome = () => {
         }
 
         if (walletAlertState.isBlocked) {
-            setStatusMessage(
-                walletAlertState.belowMinimumBalance
-                    ? 'Wallet balance must be above Rs 0 to go online.'
+                setStatusMessage(
+                    walletAlertState.belowMinimumBalance
+                    ? `Wallet balance must be above ${formatWalletThresholdLabel(walletAlertState.minimumBalanceForOrders)} to go online.`
                     : 'Cash limit exceeded. Please top up your wallet to go online.',
             );
             return;
@@ -1390,9 +1325,9 @@ const DriverHome = () => {
         }
 
         if (walletAlertState.isBlocked) {
-            setStatusMessage(
-                walletAlertState.belowMinimumBalance
-                    ? 'Wallet balance must be above Rs 0 to go online.'
+                setStatusMessage(
+                    walletAlertState.belowMinimumBalance
+                    ? `Wallet balance must be above ${formatWalletThresholdLabel(walletAlertState.minimumBalanceForOrders)} to go online.`
                     : 'Cash limit exceeded. Please top up your wallet to go online.',
             );
             return;
@@ -1787,7 +1722,7 @@ const DriverHome = () => {
                     return;
                 }
 
-                const nextRouteState = sanitizeRouteStateValue({
+                const nextRouteState = toHistorySafeState({
                     type: nextType,
                     rideId: currentJob?.rideId || payload.rideId,
                     otp: currentJob?.otp || payload?.otp || activeRequest?.raw?.otp || '',
@@ -1825,7 +1760,7 @@ const DriverHome = () => {
                         stopRideRequestAlertSound();
                         setStatusMessage(
                             nextWalletAlertState.belowMinimumBalance
-                                ? 'Wallet balance must be above Rs 0 to receive new ride requests.'
+                                ? `Wallet balance must be above ${formatWalletThresholdLabel(nextWalletAlertState.minimumBalanceForOrders)} to receive new ride requests.`
                                 : 'Cash limit exceeded. Top up to receive new ride requests.',
                         );
                     } else if (nextWalletAlertState.isWarning) {

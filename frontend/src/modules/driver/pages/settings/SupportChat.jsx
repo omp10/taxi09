@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { withHistorySafeStateOptions } from '../../../../shared/utils/historyState';
 import SupportChatPanel from '../../../shared/components/SupportChatPanel';
 
 const SupportChat = () => {
@@ -14,7 +15,7 @@ const SupportChat = () => {
     <div className="flex min-h-screen flex-col bg-white font-sans">
       <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-slate-200 bg-white px-4 py-4 shadow-sm">
         <button
-          onClick={() => navigate(backPath, backState ? { state: backState } : undefined)}
+          onClick={() => navigate(backPath, backState ? withHistorySafeStateOptions({ state: backState }) : undefined)}
           className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-100 bg-white shadow-sm"
         >
           <ArrowLeft size={18} />

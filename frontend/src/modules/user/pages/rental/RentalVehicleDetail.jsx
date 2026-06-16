@@ -25,6 +25,7 @@ import toast from 'react-hot-toast';
 import { useSettings } from '../../../../shared/context/SettingsContext';
 import { HAS_VALID_GOOGLE_MAPS_KEY, INDIA_CENTER, useAppGoogleMapsLoader } from '../../../admin/utils/googleMaps';
 import { userService } from '../../services/userService';
+import { withHistorySafeStateOptions } from '../../../../shared/utils/historyState';
 
 const MAP_CONTAINER_STYLE = { width: '100%', height: '100%' };
 const RENTAL_SELECTED_VEHICLE_STORAGE_KEY = 'selectedRentalVehicleDetail';
@@ -1193,7 +1194,7 @@ const RentalVehicleDetail = () => {
         // Ignore storage failures and rely on route state when possible.
       }
 
-      navigate('/rental/schedule');
+      navigate('/rental/schedule', withHistorySafeStateOptions({ state: nextState }));
       return;
     }
 
@@ -1226,7 +1227,7 @@ const RentalVehicleDetail = () => {
       // Ignore storage failures and rely on route state when possible.
     }
 
-    navigate('/rental/schedule');
+    navigate('/rental/schedule', withHistorySafeStateOptions({ state: nextState }));
   };
 
   const isSubscriptionMode = detailMode === 'subscription';

@@ -1678,6 +1678,191 @@ const resolveAuthenticatedOwner = async (req) => {
   return resolveOwnerForFleet(requester);
 };
 
+const parseOwnerFleetDriverSalary = (payload = {}) => {
+  const rawValue =
+    payload?.salary ??
+    payload?.monthly_salary ??
+    payload?.monthlySalary ??
+    0;
+
+  if (rawValue === null || rawValue === undefined || String(rawValue).trim() === "") {
+    return 0;
+  }
+
+  const salaryValue = Number(rawValue);
+  if (!Number.isFinite(salaryValue) || salaryValue < 0) {
+    throw new ApiError(400, "A valid non-negative salary is required");
+  }
+
+  return Math.round(salaryValue * 100) / 100;
+};
+
+const serializeOwnerFleetZone = (zone = {}) => ({
+  id: String(zone?._id || zone?.id || ""),
+  name: String(zone?.name || "").trim(),
+  serviceLocationId: String(zone?.service_location_id?._id || zone?.service_location_id || ""),
+});
+
+const serializeAssignedFleetVehicle = (vehicle = {}) => {
+  const vehicleType = vehicle?.vehicle_type_id || {};
+  const licensePlateNumber = String(vehicle?.license_plate_number || "").trim();
+  const brand = String(vehicle?.car_brand || "").trim();
+  const model = String(vehicle?.car_model || "").trim();
+
+  return {
+    id: String(vehicle?._id || vehicle?.id || ""),
+    vehicleTypeId: String(vehicleType?._id || vehicleType || ""),
+    vehicleTypeName: String(vehicleType?.name || vehicleType?.type_name || "").trim(),
+    vehicleIconType: String(vehicleType?.icon_types || "").trim(),
+    vehicleMake: brand,
+    vehicleModel: model,
+    vehicleNumber: licensePlateNumber,
+    vehicleColor: String(vehicle?.car_color || "").trim(),
+    transportType: String(vehicle?.transport_type || "taxi").trim().toLowerCase(),
+    status: String(vehicle?.status || "pending").trim().toLowerCase(),
+    label: [brand, model, licensePlateNumber].filter(Boolean).join(" • "),
+  };
+};
+
+const getGenericFleetDriverVehicleType = (vehicleType = {}) => {
+  const rawValue = String(
+    vehicleType?.icon_types ||
+    vehicleType?.transport_type ||
+    vehicleType?.name ||
+    vehicleType?.type_name ||
+    "",
+  ).trim().toLowerCase();
+
+  if (rawValue.includes("bike") || rawValue.includes("scooty")) {
+    return "bike";
+  }
+
+  if (rawValue.includes("auto")) {
+    return "auto";
+  }
+
+  return "car";
+};
+
+const listOwnerFleetZones = async (owner = {}) => {
+  if (!owner?._id) {
+    return [];
+  }
+
+  const exactZones = owner.service_location_id
+    ? await Zone.find({
+        service_location_id: owner.service_location_id,
+        active: { $ne: false },
+        status: { $ne: "inactive" },
+      })
+        .select("_id name service_location_id")
+        .sort({ name: 1, createdAt: -1 })
+        .lean()
+    : [];
+
+  if (exactZones.length > 0) {
+    return exactZones;
+  }
+
+  return Zone.find({
+    active: { $ne: false },
+    status: { $ne: "inactive" },
+  })
+    .select("_id name service_location_id")
+    .sort({ name: 1, createdAt: -1 })
+    .lean();
+};
+
+const resolveOwnerFleetZone = async (owner = {}, zoneId) => {
+  const normalizedZoneId = String(zoneId || "").trim();
+  if (!normalizedZoneId) {
+    return null;
+  }
+
+  if (!mongoose.isValidObjectId(normalizedZoneId)) {
+    throw new ApiError(400, "A valid zone is required");
+  }
+
+  const availableZones = await listOwnerFleetZones(owner);
+  const zone = availableZones.find((item) => String(item._id) === normalizedZoneId);
+
+  if (!zone) {
+    throw new ApiError(400, "Selected zone is not available for this owner");
+  }
+
+  return zone;
+};
+
+const resolveOwnerFleetVehicleAssignment = async ({
+  owner,
+  assignedFleetVehicleId,
+  currentDriverId = null,
+}) => {
+  const normalizedVehicleId = String(assignedFleetVehicleId || "").trim();
+
+  if (!normalizedVehicleId) {
+    return { fleetVehicle: null, conflictingDriver: null };
+  }
+
+  if (!mongoose.isValidObjectId(normalizedVehicleId)) {
+    throw new ApiError(400, "A valid assigned fleet vehicle is required");
+  }
+
+  const fleetVehicle = await FleetVehicle.findOne({
+    _id: normalizedVehicleId,
+    owner_id: owner?._id,
+    active: true,
+  })
+    .populate("vehicle_type_id", "name type_name transport_type icon_types")
+    .lean();
+
+  if (!fleetVehicle) {
+    throw new ApiError(404, "Assigned fleet vehicle not found for this owner");
+  }
+
+  const conflictingDriver = await Driver.findOne({
+    owner_id: owner?._id,
+    assignedFleetVehicleId: fleetVehicle._id,
+    deletedAt: null,
+    ...(currentDriverId ? { _id: { $ne: currentDriverId } } : {}),
+  })
+    .select("_id name phone")
+    .lean();
+
+  if (conflictingDriver) {
+    throw new ApiError(409, "This fleet vehicle is already assigned to another driver");
+  }
+
+  return { fleetVehicle, conflictingDriver: null };
+};
+
+const applyAssignedFleetVehicleToDriver = (driver, fleetVehicle) => {
+  if (!driver) {
+    return;
+  }
+
+  if (!fleetVehicle?._id) {
+    driver.assignedFleetVehicleId = null;
+    driver.vehicleTypeId = null;
+    driver.vehicleMake = "";
+    driver.vehicleModel = "";
+    driver.vehicleNumber = "";
+    driver.vehicleColor = "";
+    driver.vehicleIconType = "";
+    return;
+  }
+
+  const vehicleType = fleetVehicle.vehicle_type_id || {};
+  driver.assignedFleetVehicleId = fleetVehicle._id;
+  driver.vehicleTypeId = vehicleType?._id || vehicleType || null;
+  driver.vehicleMake = String(fleetVehicle.car_brand || "").trim();
+  driver.vehicleModel = String(fleetVehicle.car_model || "").trim();
+  driver.vehicleNumber = String(fleetVehicle.license_plate_number || "").trim();
+  driver.vehicleColor = String(fleetVehicle.car_color || "").trim();
+  driver.vehicleIconType = String(vehicleType?.icon_types || driver.vehicleIconType || "").trim();
+  driver.vehicleType = getGenericFleetDriverVehicleType(vehicleType);
+};
+
 const serializeOwnerProfile = (owner = {}) => ({
   id: owner._id,
   name: owner.owner_name || owner.name || owner.company_name || "Owner",
@@ -2751,12 +2936,16 @@ export const goOnline = async (req, res) => {
   const { location, selfieImageUrl } = req.body;
 
   const coordinates = normalizePoint(location, "location");
-  const zone = await findZoneByPickup(coordinates);
   const existingDriver = await Driver.findById(req.auth.sub);
 
   if (!existingDriver) {
     throw new ApiError(404, "Driver not found");
   }
+
+  const zone =
+    existingDriver.owner_id && existingDriver.zoneId
+      ? { _id: existingDriver.zoneId }
+      : await findZoneByPickup(coordinates);
 
   const todayKey = new Date().toISOString().slice(0, 10);
   const hasTodaySelfie =
@@ -2793,6 +2982,7 @@ export const goOnline = async (req, res) => {
       zoneId: zone?._id || null,
       location: toPoint(coordinates, "location"),
       onlineSelfie: nextOnlineSelfie,
+      "wallet.isBlocked": false,
       incentiveTracking: {
         ...trackingBeforeOnline,
         currentOnlineStartedAt: new Date(),
@@ -2894,7 +3084,16 @@ export const getCurrentDriver = async (req, res) => {
     return;
   }
 
-  const driver = await Driver.findById(req.auth.sub);
+  const driver = await Driver.findById(req.auth.sub)
+    .populate("zoneId", "name service_location_id")
+    .populate({
+      path: "assignedFleetVehicleId",
+      select: "vehicle_type_id car_brand car_model license_plate_number car_color status transport_type",
+      populate: {
+        path: "vehicle_type_id",
+        select: "name type_name transport_type icon_types",
+      },
+    });
 
   if (!driver) {
     throw new ApiError(404, "Driver not found");
@@ -2942,7 +3141,18 @@ export const getCurrentDriver = async (req, res) => {
       isOnRide: driver.isOnRide,
       onlineSelfie: driver.onlineSelfie || {},
       location: driver.location,
-      zoneId: driver.zoneId,
+      zoneId: driver.zoneId?._id || driver.zoneId || null,
+      zone: driver.zoneId
+        ? {
+            id: String(driver.zoneId?._id || driver.zoneId || ""),
+            name: String(driver.zoneId?.name || "").trim(),
+          }
+        : null,
+      assignedFleetVehicleId:
+        driver.assignedFleetVehicleId?._id || driver.assignedFleetVehicleId || null,
+      assignedVehicle: driver.assignedFleetVehicleId
+        ? serializeAssignedFleetVehicle(driver.assignedFleetVehicleId)
+        : null,
       routeBooking: serializeDriverRouteBooking(driver.routeBooking),
       documents: driver.documents || {},
       emergencyContacts: Array.isArray(driver.emergencyContacts)
@@ -7053,6 +7263,16 @@ export const getOwnerFleetVehicles = async (req, res) => {
     .populate("vehicle_type_id", "name type_name transport_type icon_types")
     .sort({ createdAt: -1 })
     .lean();
+  const assignedDrivers = await Driver.find({
+    owner_id: owner._id,
+    deletedAt: null,
+    assignedFleetVehicleId: { $in: vehicles.map((vehicle) => vehicle._id) },
+  })
+    .select("name phone assignedFleetVehicleId")
+    .lean();
+  const assignedDriverMap = new Map(
+    assignedDrivers.map((driver) => [String(driver.assignedFleetVehicleId || ""), driver]),
+  );
 
   res.json({
     success: true,
@@ -7078,10 +7298,37 @@ export const getOwnerFleetVehicles = async (req, res) => {
           vehicle.documents?.file ||
           "",
         transport_type: vehicle.transport_type || "taxi",
+        assignedDriver: assignedDriverMap.has(String(vehicle._id))
+          ? {
+              id: String(assignedDriverMap.get(String(vehicle._id))._id || ""),
+              name: assignedDriverMap.get(String(vehicle._id)).name || "",
+              phone: assignedDriverMap.get(String(vehicle._id)).phone || "",
+            }
+          : null,
         active: vehicle.active,
         createdAt: vehicle.createdAt,
         updatedAt: vehicle.updatedAt,
       })),
+    },
+  });
+};
+
+export const getOwnerFleetZones = async (req, res) => {
+  const owner = await resolveAuthenticatedOwner(req);
+
+  if (!owner?._id) {
+    throw new ApiError(
+      403,
+      "Fleet zone access is only available for owner accounts",
+    );
+  }
+
+  const zones = await listOwnerFleetZones(owner);
+
+  res.json({
+    success: true,
+    data: {
+      results: zones.map(serializeOwnerFleetZone),
     },
   });
 };
@@ -7399,7 +7646,16 @@ export const getOwnerFleetDrivers = async (req, res) => {
 
   const drivers = await Driver.find({ owner_id: owner._id, deletedAt: null })
     .sort({ createdAt: -1 })
-    .select("name phone email city salary approve status isOnline isOnRide createdAt")
+    .select("name phone email city salary approve status isOnline isOnRide createdAt zoneId assignedFleetVehicleId vehicleTypeId vehicleMake vehicleModel vehicleNumber vehicleColor vehicleIconType")
+    .populate("zoneId", "name service_location_id")
+    .populate({
+      path: "assignedFleetVehicleId",
+      select: "vehicle_type_id car_brand car_model license_plate_number car_color status transport_type",
+      populate: {
+        path: "vehicle_type_id",
+        select: "name type_name transport_type icon_types",
+      },
+    })
     .lean();
 
   res.json({
@@ -7412,6 +7668,14 @@ export const getOwnerFleetDrivers = async (req, res) => {
         email: driver.email || "",
         city: driver.city || "",
         salary: Number(driver.salary || 0),
+        zoneId: driver.zoneId?._id || driver.zoneId || null,
+        zone_name: driver.zoneId?.name || "",
+        zone: driver.zoneId ? serializeOwnerFleetZone(driver.zoneId) : null,
+        assignedFleetVehicleId:
+          driver.assignedFleetVehicleId?._id || driver.assignedFleetVehicleId || null,
+        assignedVehicle: driver.assignedFleetVehicleId
+          ? serializeAssignedFleetVehicle(driver.assignedFleetVehicleId)
+          : null,
         approve: driver.approve,
         status: driver.status,
         isOnline: Boolean(driver.isOnline),
@@ -7437,6 +7701,7 @@ export const createOwnerFleetDriver = async (req, res) => {
   const email = String(req.body?.email || "")
     .trim()
     .toLowerCase();
+  const salaryValue = parseOwnerFleetDriverSalary(req.body || {});
 
   if (!name) {
     throw new ApiError(400, "name is required");
@@ -7450,6 +7715,15 @@ export const createOwnerFleetDriver = async (req, res) => {
   if (existing) {
     throw new ApiError(409, "Phone number is already registered");
   }
+
+  const zone = await resolveOwnerFleetZone(owner, req.body?.zoneId);
+  const { fleetVehicle } = await resolveOwnerFleetVehicleAssignment({
+    owner,
+    assignedFleetVehicleId:
+      req.body?.assignedFleetVehicleId ||
+      req.body?.fleetVehicleId ||
+      req.body?.vehicleId,
+  });
 
   const serviceLocation = owner.service_location_id
     ? await ServiceLocation.findById(owner.service_location_id).lean()
@@ -7487,10 +7761,14 @@ export const createOwnerFleetDriver = async (req, res) => {
     vehicleNumber: "",
     vehicleColor: "",
     city,
+    zoneId: zone?._id || null,
     approve: false,
     status: "pending",
     location: toPoint(coordinates, "location"),
   });
+
+  applyAssignedFleetVehicleToDriver(driver, fleetVehicle);
+  await driver.save();
 
   res.status(201).json({
     success: true,
@@ -8476,9 +8754,7 @@ export const updateOwnerFleetDriver = async (req, res) => {
   const email = String(req.body?.email || "")
     .trim()
     .toLowerCase();
-  const salaryValue = Number(
-    req.body?.salary ?? req.body?.monthly_salary ?? req.body?.monthlySalary ?? 0,
-  );
+  const salaryValue = parseOwnerFleetDriverSalary(req.body || {});
   const city = String(req.body?.city || req.body?.address || "").trim();
 
   if (!name) {
@@ -8489,10 +8765,6 @@ export const updateOwnerFleetDriver = async (req, res) => {
     throw new ApiError(400, "A valid 10-digit mobile number is required");
   }
 
-  if (!Number.isFinite(salaryValue) || salaryValue < 0) {
-    throw new ApiError(400, "A valid non-negative salary is required");
-  }
-
   const existing = await Driver.findOne({
     phone,
     _id: { $ne: driver._id },
@@ -8501,13 +8773,35 @@ export const updateOwnerFleetDriver = async (req, res) => {
     throw new ApiError(409, "Phone number is already registered");
   }
 
+  const zone = await resolveOwnerFleetZone(owner, req.body?.zoneId);
+  const { fleetVehicle } = await resolveOwnerFleetVehicleAssignment({
+    owner,
+    assignedFleetVehicleId:
+      req.body?.assignedFleetVehicleId ||
+      req.body?.fleetVehicleId ||
+      req.body?.vehicleId,
+    currentDriverId: driver._id,
+  });
+
   driver.name = name;
   driver.phone = phone;
   driver.email = email;
   driver.city = city || driver.city || "";
   driver.salary = salaryValue;
+  driver.zoneId = zone?._id || null;
+  applyAssignedFleetVehicleToDriver(driver, fleetVehicle);
 
   await driver.save();
+
+  await driver.populate("zoneId", "name service_location_id");
+  await driver.populate({
+    path: "assignedFleetVehicleId",
+    select: "vehicle_type_id car_brand car_model license_plate_number car_color status transport_type",
+    populate: {
+      path: "vehicle_type_id",
+      select: "name type_name transport_type icon_types",
+    },
+  });
 
   res.json({
     success: true,
@@ -8519,6 +8813,14 @@ export const updateOwnerFleetDriver = async (req, res) => {
       email: driver.email || "",
       city: driver.city || "",
       salary: Number(driver.salary || 0),
+      zoneId: driver.zoneId?._id || driver.zoneId || null,
+      zone_name: driver.zoneId?.name || "",
+      zone: driver.zoneId ? serializeOwnerFleetZone(driver.zoneId) : null,
+      assignedFleetVehicleId:
+        driver.assignedFleetVehicleId?._id || driver.assignedFleetVehicleId || null,
+      assignedVehicle: driver.assignedFleetVehicleId
+        ? serializeAssignedFleetVehicle(driver.assignedFleetVehicleId)
+        : null,
       approve: driver.approve,
       status: driver.status,
       isOnline: Boolean(driver.isOnline),

@@ -15,6 +15,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { getOwnerFleetDrivers } from "../../services/registrationService";
 import DriverBottomNav from "../../../shared/components/DriverBottomNav";
+import { withHistorySafeStateOptions } from "../../../../shared/utils/historyState";
 
 const ManageDrivers = () => {
   const navigate = useNavigate();
@@ -50,6 +51,14 @@ const ManageDrivers = () => {
             email: item.email || "-",
             address: item.city || "-",
             salary: Number(item.salary || 0),
+            zoneId: item.zoneId || item.zone?.id || '',
+            zoneName: item.zone?.name || item.zone_name || "",
+            assignedFleetVehicleId: item.assignedFleetVehicleId || item.assignedVehicle?.id || '',
+            assignedVehicleLabel:
+              item.assignedVehicle?.label ||
+              item.assignedVehicle?.vehicleNumber ||
+              item.assignedVehicle?.licensePlateNumber ||
+              "",
             status:
               item.approve === true ||
               item.approve === 1 ||
@@ -175,12 +184,12 @@ const ManageDrivers = () => {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() =>
-                          navigate(`${routePrefix}/edit-driver/${d.id}`, {
+                          navigate(`${routePrefix}/edit-driver/${d.id}`, withHistorySafeStateOptions({
                             state: {
                               driver: d,
                               returnTo: `${routePrefix}/manage-drivers`,
                             },
-                          })
+                          }))
                         }
                         className="p-2 bg-slate-50 rounded-lg text-slate-400 hover:text-slate-900 transition-colors">
                         <Edit3 size={14} />
@@ -218,6 +227,22 @@ const ManageDrivers = () => {
                         {d.address}
                       </span>
                     </div>
+                    {d.zoneName ? (
+                      <div className="flex items-center gap-2 text-slate-400">
+                        <MapPin size={12} strokeWidth={2.5} />
+                        <span className="text-[10px] font-bold text-slate-600 uppercase tracking-tighter">
+                          Zone {d.zoneName}
+                        </span>
+                      </div>
+                    ) : null}
+                    {d.assignedVehicleLabel ? (
+                      <div className="flex items-center gap-2 text-slate-400">
+                        <Briefcase size={12} strokeWidth={2.5} />
+                        <span className="text-[10px] font-bold text-slate-600 uppercase tracking-tighter">
+                          {d.assignedVehicleLabel}
+                        </span>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               ))
