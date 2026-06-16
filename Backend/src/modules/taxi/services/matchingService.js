@@ -37,24 +37,31 @@ const buildDriverMatchFilters = ({ zoneId, serviceLocationId, vehicleTypeId, veh
   const normalizedVehicleTypeKeys = Array.isArray(vehicleTypeKeys)
     ? [...new Set(vehicleTypeKeys.map(normalizeVehicleKey).filter(Boolean))]
     : [];
-  const vehicleTypeClauses = [
-    ...(normalizedVehicleTypeIds.length ? [{ vehicleTypeId: { $in: normalizedVehicleTypeIds } }] : []),
-    ...(normalizedVehicleTypeKeys.length
-      ? [
-          { vehicleType: { $in: normalizedVehicleTypeKeys } },
-          { vehicleIconType: { $in: normalizedVehicleTypeKeys } },
-        ]
-      : []),
-  ];
+  const vehicleTypeClauses = normalizedVehicleTypeIds.length
+    ? [{ vehicleTypeId: { $in: normalizedVehicleTypeIds } }]
+    : [
+        ...(normalizedVehicleTypeKeys.length
+          ? [
+              { vehicleType: { $in: normalizedVehicleTypeKeys } },
+              { vehicleIconType: { $in: normalizedVehicleTypeKeys } },
+            ]
+          : []),
+      ];
   const vehicleTypeFilter =
     vehicleTypeClauses.length > 1
       ? { $or: vehicleTypeClauses }
       : vehicleTypeClauses[0] || {};
 
   return {
+    deletedAt: null,
     isOnline: true,
     isOnRide: false,
-    'wallet.isBlocked': { $ne: true },
+    approve: { $ne: false },
+    status: { $nin: ['pending', 'rejected', 'inactive', 'blocked'] },
+    $or: [
+      { owner_id: { $ne: null } },
+      { 'wallet.isBlocked': { $ne: true } },
+    ],
     ...(zoneId ? { zoneId } : {}),
     ...(serviceLocationId ? { service_location_id: serviceLocationId } : {}),
     ...vehicleTypeFilter,

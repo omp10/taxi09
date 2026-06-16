@@ -208,6 +208,7 @@ Processing Time: Refunds are typically credited back to the original payment met
         return parts.length > 0 ? parts.join(' - ') : 'N/A';
     }, [driver?.registerFor, driver?.vehicleType]);
     const driverLocation = useMemo(() => driver?.city || 'N/A', [driver?.city]);
+    const driverZone = useMemo(() => driver?.zone?.name || 'N/A', [driver?.zone?.name]);
     const driverNumber = useMemo(() => driver?.vehicleNumber || 'N/A', [driver?.vehicleNumber]);
     const driverColor = useMemo(() => driver?.vehicleColor || 'N/A', [driver?.vehicleColor]);
     const driverRating = useMemo(() => Number(driver?.rating || 0), [driver?.rating]);
@@ -417,6 +418,10 @@ Processing Time: Refunds are typically credited back to the original payment met
                             <div>
                                 <p className="text-[10px] font-medium text-slate-400">City</p>
                                 <p className="text-[12px] font-bold text-slate-900">{driverLocation}</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] font-medium text-slate-400">Assigned Zone</p>
+                                <p className="text-[12px] font-bold text-slate-900">{driverZone}</p>
                             </div>
                             <div>
                                 <p className="text-[10px] font-medium text-slate-400">Vehicle No.</p>
