@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, UserPlus, CheckCircle2, ChevronRight, Upload, X, ShieldCheck, Mail, Phone, MapPin, IndianRupee } from 'lucide-react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { createOwnerFleetDriver, getOwnerFleetDrivers, updateOwnerFleetDriver } from '../../services/registrationService';
+import { createOwnerFleetDriver, getOwnerFleetDrivers, getOwnerFleetVehicles, getOwnerFleetZones, updateOwnerFleetDriver } from '../../services/registrationService';
 
 const AddDriver = () => {
     const navigate = useNavigate();
@@ -12,7 +12,10 @@ const AddDriver = () => {
     const isEditMode = Boolean(driverId);
     const [submitting, setSubmitting] = useState(false);
     const [loadingDriver, setLoadingDriver] = useState(false);
+    const [loadingOptions, setLoadingOptions] = useState(false);
     const [error, setError] = useState('');
+    const [vehicles, setVehicles] = useState([]);
+    const [zones, setZones] = useState([]);
     const [step, setStep] = useState(1); // 1: Details, 2: Documents, 3: Success
     const [formData, setFormData] = useState({
         name: '',
@@ -20,6 +23,8 @@ const AddDriver = () => {
         email: '',
         address: '',
         salary: '',
+        zoneId: '',
+        assignedFleetVehicleId: '',
         adhaarFile: null,
         licenseFile: null
     });
@@ -36,6 +41,8 @@ const AddDriver = () => {
                 email: stateDriver.email || '',
                 address: stateDriver.address || '',
                 salary: stateDriver.salary ? String(stateDriver.salary) : '',
+                zoneId: stateDriver.zoneId || '',
+                assignedFleetVehicleId: stateDriver.assignedFleetVehicleId || '',
             }));
             return;
         }
@@ -61,6 +68,8 @@ const AddDriver = () => {
                     email: match.email || '',
                     address: match.city || '',
                     salary: match.salary ? String(match.salary) : '',
+                    zoneId: match.zoneId || '',
+                    assignedFleetVehicleId: match.assignedFleetVehicleId || '',
                 }));
             })
             .catch((err) => {
@@ -75,6 +84,39 @@ const AddDriver = () => {
             active = false;
         };
     }, [driverId, isEditMode, location.state]);
+
+    useEffect(() => {
+        let active = true;
+
+        const loadOptions = async () => {
+            setLoadingOptions(true);
+
+            try {
+                const [vehiclesResponse, zonesResponse] = await Promise.all([
+                    getOwnerFleetVehicles(),
+                    getOwnerFleetZones(),
+                ]);
+
+                if (!active) return;
+
+                const vehiclePayload = vehiclesResponse?.data?.data || vehiclesResponse?.data || vehiclesResponse;
+                const zonePayload = zonesResponse?.data?.data || zonesResponse?.data || zonesResponse;
+                setVehicles(vehiclePayload?.results || []);
+                setZones(zonePayload?.results || []);
+            } catch (err) {
+                if (!active) return;
+                setError((current) => current || err?.message || 'Unable to load assignment options');
+            } finally {
+                if (active) setLoadingOptions(false);
+            }
+        };
+
+        loadOptions();
+
+        return () => {
+            active = false;
+        };
+    }, []);
 
     const handleFileUpload = (field, e) => {
         const file = e.target.files[0];
@@ -105,6 +147,8 @@ const AddDriver = () => {
                 address: formData.address,
                 city: formData.address,
                 salary: Number(formData.salary || 0),
+                zoneId: formData.zoneId || '',
+                assignedFleetVehicleId: formData.assignedFleetVehicleId || '',
             };
 
             if (isEditMode) {
@@ -212,6 +256,50 @@ const AddDriver = () => {
                                         className="w-full bg-transparent border-none p-0 text-[13px] font-black text-slate-900 focus:outline-none focus:ring-0 placeholder:text-slate-200"
                                     />
                                 </div>
+
+                                <div className="bg-slate-50 p-3.5 rounded-2xl shadow-sm">
+                                    <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest block mb-2">Assigned Zone</label>
+                                    <select
+                                        value={formData.zoneId}
+                                        onChange={(e) => setFormData((p) => ({ ...p, zoneId: e.target.value }))}
+                                        className="w-full bg-transparent border-none p-0 text-[13px] font-black text-slate-900 focus:outline-none focus:ring-0"
+                                    >
+                                        <option value="">Select zone</option>
+                                        {zones.map((zone) => (
+                                            <option key={zone.id || zone._id} value={zone.id || zone._id}>
+                                                {zone.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="bg-slate-50 p-3.5 rounded-2xl shadow-sm">
+                                    <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest block mb-2">Assigned Vehicle</label>
+                                    <select
+                                        value={formData.assignedFleetVehicleId}
+                                        onChange={(e) => setFormData((p) => ({ ...p, assignedFleetVehicleId: e.target.value }))}
+                                        className="w-full bg-transparent border-none p-0 text-[13px] font-black text-slate-900 focus:outline-none focus:ring-0"
+                                    >
+                                        <option value="">Select vehicle</option>
+                                        {vehicles.map((vehicle) => {
+                                            const vehicleId = vehicle.id || vehicle._id;
+                                            const assignedDriverId = vehicle.assignedDriver?.id || '';
+                                            const isAssignedElsewhere =
+                                                assignedDriverId &&
+                                                String(assignedDriverId) !== String(driverId || '');
+                                            const label =
+                                                [vehicle.car_brand, vehicle.car_model, vehicle.license_plate_number]
+                                                    .filter(Boolean)
+                                                    .join(' • ') || vehicle.license_plate_number || 'Fleet vehicle';
+
+                                            return (
+                                                <option key={vehicleId} value={vehicleId} disabled={Boolean(isAssignedElsewhere)}>
+                                                    {isAssignedElsewhere ? `${label} (assigned)` : label}
+                                                </option>
+                                            );
+                                        })}
+                                    </select>
+                                </div>
                             </div>
 
                             <div className="fixed bottom-0 left-0 right-0 p-5 bg-white border-t border-slate-50">
@@ -223,9 +311,9 @@ const AddDriver = () => {
                                         }
                                         setStep(2);
                                     }}
-                                    disabled={submitting || loadingDriver || !formData.name || !formData.mobile}
+                                    disabled={submitting || loadingDriver || loadingOptions || !formData.name || !formData.mobile}
                                     className={`w-full h-14 rounded-2xl flex items-center justify-center gap-2 text-[13px] font-black uppercase tracking-widest shadow-lg transition-all ${
-                                        (formData.name && formData.mobile && !loadingDriver) 
+                                        (formData.name && formData.mobile && !loadingDriver && !loadingOptions) 
                                         ? 'bg-slate-900 text-white shadow-slate-900/10' 
                                         : 'bg-slate-100 text-slate-300 pointer-events-none'
                                     }`}

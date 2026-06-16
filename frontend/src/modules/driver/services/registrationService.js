@@ -497,6 +497,9 @@ export const getDriverApprovalStatus = () => {
 export const getOwnerFleetDrivers = () =>
   api.get("/drivers/fleet/drivers", withDriverAuth());
 
+export const getOwnerFleetZones = () =>
+  api.get("/drivers/fleet/zones", withDriverAuth());
+
 export const getOwnerFleetDashboard = () =>
   api.get("/drivers/fleet/dashboard", withDriverAuth());
 
