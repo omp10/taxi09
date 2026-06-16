@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MapPin, Search, Wallet } from 'lucide-react';
+import { MapPin, Search, User, Menu, ChevronDown } from 'lucide-react';
 import { DEFAULT_LOCATION_LABEL, getSavedLocationLabel, LOCATION_UPDATED_EVENT } from '../services/locationStore';
-
-const fallingCoins = [
-  { id: 1, left: '24%', delay: 0 },
-  { id: 2, left: '50%', delay: 0.65 },
-  { id: 3, left: '72%', delay: 1.2 },
-];
-
 import { useSettings } from '../../../shared/context/SettingsContext';
 
 const HeaderGreeting = () => {
@@ -39,117 +32,72 @@ const HeaderGreeting = () => {
   }, []);
 
   return (
-    <div className="px-5 pt-6">
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3">
-          <motion.div
-            initial={{ opacity: 0, y: -8, scale: 0.94 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.45, ease: 'easeOut' }}
-            className="relative inline-flex items-center bg-transparent px-1.5 py-1"
-          >
-            <motion.div
-              aria-hidden="true"
-              className="absolute inset-x-2 inset-y-1 rounded-full bg-emerald-100/55 blur-md"
-              animate={{ opacity: [0.3, 0.75, 0.3], scale: [0.92, 1.06, 0.92] }}
-              transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
-            />
+    <div className="relative w-full">
+      {/* Top Yellow Bar */}
+      <div className="bg-[#FFC107] pt-6 pb-12 px-5">
+        <div className="flex items-center justify-between">
+          <button className="p-2 -ml-2 rounded-full hover:bg-black/5 transition-colors">
+            <Menu size={26} className="text-black" strokeWidth={2.5} />
+          </button>
+          
+          <div className="flex-1 flex justify-center">
             {appLogo ? (
-              <motion.img
-                key={appLogo}
-                src={appLogo}
-                alt={appName}
-                className="relative z-10 h-9 object-contain drop-shadow-sm"
-                animate={{ y: [0, -2, 0], scale: [1, 1.02, 1] }}
-                transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
-              />
+              <img src={appLogo} alt={appName} className="h-8 object-contain" />
             ) : showBrandingSkeleton ? (
-              <div className="relative z-10 h-10 min-w-[40px] animate-pulse rounded-full bg-slate-200/90" />
+              <div className="h-8 w-24 bg-black/10 animate-pulse rounded-md" />
             ) : (
-              <div className="relative z-10 flex h-10 min-w-[40px] items-center justify-center rounded-full bg-slate-900 px-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-white">
-                {appName.slice(0, 2)}
-              </div>
+              <span className="font-black text-[22px] italic tracking-widest text-black">
+                {appName.toUpperCase()}
+              </span>
             )}
-          </motion.div>
-
-          <motion.button
-            type="button"
-            initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: 0.03, ease: 'easeOut' }}
-            whileTap={{ scale: 0.99 }}
-            onClick={() => navigate(`${routePrefix}/ride/select-category`)}
-            className="group flex min-w-0 flex-1 items-center gap-2 rounded-lg bg-transparent px-0 py-0 text-left transition-opacity active:opacity-80"
+          </div>
+          
+          <button 
+            onClick={() => navigate('/taxi/user/profile')}
+            className="w-10 h-10 bg-black/10 rounded-full flex items-center justify-center hover:bg-black/15 transition-colors"
           >
-            <MapPin size={16} className="text-slate-500 transition-colors group-hover:text-slate-700" strokeWidth={2.5} />
-
-            <div className="min-w-0 flex-1">
-              <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-400">Location</p>
-              <p className="truncate text-[11px] font-medium text-slate-800">{locationLabel}</p>
-            </div>
-          </motion.button>
+            <User size={22} className="text-black" strokeWidth={2.5} />
+          </button>
         </div>
-
-        <button
-          onClick={() => navigate('/wallet')}
-          className="relative w-12 h-12 overflow-hidden rounded-full border border-white/80 bg-white/95 flex items-center justify-center shadow-[0_12px_30px_rgba(15,23,42,0.08)] shrink-0 active:scale-95 transition-transform"
-        >
-          <motion.div
-            className="absolute inset-x-2 top-1 h-3 rounded-full bg-gradient-to-b from-amber-200/50 to-transparent"
-            animate={{ opacity: [0.15, 0.35, 0.15] }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-          />
-
-          {fallingCoins.map((coin) => (
-            <motion.span
-              key={coin.id}
-              aria-hidden="true"
-              className="absolute top-1 block h-1.5 w-1.5 rounded-full bg-gradient-to-br from-amber-300 to-yellow-500 shadow-[0_1px_4px_rgba(245,158,11,0.45)]"
-              style={{ left: coin.left }}
-              animate={{
-                y: [0, 10, 16],
-                opacity: [0, 1, 1, 0],
-                scale: [0.85, 1, 0.92],
-              }}
-              transition={{
-                duration: 1.8,
-                delay: coin.delay,
-                repeat: Infinity,
-                repeatDelay: 0.8,
-                ease: 'easeIn',
-              }}
-            />
-          ))}
-
-          <motion.div
-            className="relative z-10"
-            animate={{ y: [0, -1, 0], rotate: [0, -2, 0] }}
-            transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <Wallet size={20} className="text-gray-900" strokeWidth={2.5} />
-          </motion.div>
-        </button>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.05, ease: 'easeOut' }}
-        className="mt-3 space-y-2.5"
-      >
-        <motion.button
-          type="button"
-          whileTap={{ scale: 0.99 }}
-          onClick={() => navigate(`${routePrefix}/ride/select-category`)}
-          className="flex w-full items-center gap-2 rounded-[18px] border border-white/80 bg-white/92 px-3.5 py-3 text-left shadow-[0_12px_26px_rgba(15,23,42,0.06)]"
+      {/* Overlapping White Card */}
+      <div className="px-4 -mt-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-[24px] p-4 shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-slate-100"
         >
-          <Search size={16} className="text-slate-500" strokeWidth={2.5} />
-          <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-slate-500">
-            Search destination
-          </span>
-          <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-600">Go</span>
-        </motion.button>
-      </motion.div>
+          {/* Location row */}
+          <button 
+            onClick={() => navigate(`${routePrefix}/ride/select-category`)}
+            className="w-full flex items-center gap-3 mb-4 text-left group"
+          >
+            <div className="w-12 h-12 bg-[#FFC107] rounded-[14px] flex items-center justify-center shrink-0 group-active:scale-95 transition-transform">
+              <MapPin size={24} className="text-white" strokeWidth={2.5} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] font-black uppercase tracking-wider text-[#FFC107]">Location</p>
+              <p className="text-[12px] font-semibold text-slate-800 mt-0.5 truncate">{locationLabel}</p>
+            </div>
+            <ChevronDown size={20} className="text-slate-800 shrink-0" strokeWidth={2.5} />
+          </button>
+
+          {/* Search row */}
+          <button 
+            onClick={() => navigate(`${routePrefix}/ride/select-category`)}
+            className="w-full flex items-center gap-3 bg-white border border-slate-100 rounded-[20px] p-2 pl-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] group-active:scale-[0.99] transition-transform"
+          >
+            <Search size={18} className="text-slate-400 shrink-0" strokeWidth={2.5} />
+            <span className="flex-1 text-left text-[14px] font-medium text-slate-400 truncate">
+              Search destination
+            </span>
+            <div className="bg-[#FFC107] text-white px-6 py-2.5 rounded-[16px] text-[13px] font-bold shadow-sm">
+              Go
+            </div>
+          </button>
+        </motion.div>
+      </div>
     </div>
   );
 };

@@ -6,59 +6,70 @@ import { ArrowRight, Clock3, ShieldCheck, Sparkles } from 'lucide-react';
 const rotatingCards = [
   {
     icon: Clock3,
-    iconClass: 'text-orange-600',
+    iconColor: 'text-amber-500',
+    iconBg: 'bg-amber-50/80',
     title: 'In a hurry?',
     description: 'Auto for shorter wait times.',
-    actionClass: 'bg-orange-50 text-orange-500',
+    buttonBorder: 'border border-amber-300',
+    buttonIconColor: 'text-amber-500',
+    sweepClass: 'bg-amber-50/60',
+    shadowColor: 'shadow-[0_12px_24px_rgba(245,158,11,0.15)]',
+    borderColor: 'border-amber-400',
     path: '/taxi/user/ride/select-location',
     state: { selectedCategory: 'auto' },
-    images: [
-      { src: '/2_AutoRickshaw.png', alt: 'Auto' },
-      { src: '/1_Bike.png', alt: 'Bike' },
-    ],
+    image: '/2_AutoRickshaw.png',
   },
   {
     icon: ShieldCheck,
-    iconClass: 'text-blue-600',
+    iconColor: 'text-blue-500',
+    iconBg: 'bg-blue-50/80',
     title: 'Need more space?',
     description: 'Cab for luggage or comfort.',
-    actionClass: 'bg-blue-50 text-blue-500',
+    buttonBorder: 'border border-blue-200',
+    buttonIconColor: 'text-blue-500',
+    sweepClass: 'bg-blue-50/60',
+    shadowColor: 'shadow-[0_12px_24px_rgba(59,130,246,0.15)]',
+    borderColor: 'border-blue-400',
     path: '/taxi/user/ride/select-location',
     state: { selectedCategory: 'car' },
-    images: [
-      { src: '/4_Taxi.png', alt: 'Taxi' },
-      { src: '/white_sedan_banner_car.png', alt: 'Sedan' },
-    ],
+    image: '/4_Taxi.png',
   },
 ];
 
-const ImageCarousel = ({ images, className }) => {
-  const activeImage = images?.[0];
-
-  if (!activeImage) return null;
-
-  return (
-    <div className={className}>
-      <img src={activeImage.src} alt={activeImage.alt} className="w-full object-contain drop-shadow-xl" />
-    </div>
-  );
-};
-
-const PromoCard = ({ icon: Icon, iconClass, title, description, actionClass, path, state, images, onNavigate }) => (
+const PromoCard = ({ icon: Icon, iconColor, iconBg, title, description, buttonBorder, buttonIconColor, sweepClass, shadowColor, borderColor, path, state, image, onNavigate }) => (
   <motion.div
+    whileHover={{ y: -2, scale: 1.01 }}
     whileTap={{ scale: 0.98 }}
     onClick={() => onNavigate(path, { state })}
-    className="relative min-h-[140px] overflow-hidden rounded-2xl border border-white/80 bg-white/88 p-3.5 shadow-[0_12px_28px_rgba(15,23,42,0.07)] cursor-pointer"
+    className={`relative flex flex-col min-h-[180px] overflow-hidden rounded-[20px] border ${borderColor || 'border-slate-300'} bg-white p-3.5 cursor-pointer group transition-all duration-300 ${shadowColor}`}
   >
-    <div className={`flex items-center gap-2 ${iconClass}`}>
-      <Icon size={11} strokeWidth={2.5} />
+    {/* Background Sweep Shape at bottom right */}
+    <div className={`absolute -right-8 -bottom-8 w-[130%] h-[75%] rounded-tl-[100px] z-0 pointer-events-none ${sweepClass}`} />
+    
+    <div className="relative z-10 flex-1 flex flex-col">
+      {/* Top Left Icon Circle */}
+      <div className={`flex h-8 w-8 items-center justify-center rounded-full mb-3 ${iconBg}`}>
+        <Icon size={15} strokeWidth={2.5} className={iconColor} />
+      </div>
+
+      <h3 className="text-[16px] font-bold leading-tight tracking-tight text-slate-900 mb-1 pr-1">{title}</h3>
+      <p className="text-[11.5px] font-medium leading-snug text-slate-500 pr-[70px]">{description}</p>
+      
+      <div className="flex-1" /> {/* Spacer to push button to bottom */}
+      
+      {/* Bottom Elements: Arrow Button & 3D Image */}
+      <div className="relative flex items-end justify-between mt-3 z-10 w-full">
+        {/* Arrow Button */}
+        <div className={`flex h-8 w-8 items-center justify-center rounded-full bg-white/90 backdrop-blur shadow-sm transition-transform group-hover:scale-105 ${buttonBorder}`}>
+          <ArrowRight size={15} strokeWidth={2.5} className={buttonIconColor} />
+        </div>
+
+        {/* Floating 3D Image */}
+        <div className="absolute -bottom-2.5 -right-2 w-[80px] h-[80px] pointer-events-none select-none flex items-end justify-end">
+          <img src={image} alt="" className="w-full h-full object-contain drop-shadow-[0_4px_12px_rgba(15,23,42,0.1)] transform group-hover:scale-105 group-hover:-translate-x-1 group-hover:-translate-y-1 transition-all duration-300 origin-bottom-right" />
+        </div>
+      </div>
     </div>
-    <h3 className="mt-2.5 text-[17px] font-black leading-snug tracking-tight text-gray-900">{title}</h3>
-    <p className="mt-1 max-w-[132px] text-[10px] font-bold leading-snug text-gray-500">{description}</p>
-    <div className={`mt-3 inline-flex h-8 w-8 items-center justify-center rounded-full ${actionClass}`}>
-      <ArrowRight size={15} strokeWidth={2.5} />
-    </div>
-    <ImageCarousel images={images} className="absolute bottom-1 right-1 w-[74px] opacity-95 pointer-events-none" />
   </motion.div>
 );
 
@@ -68,59 +79,17 @@ const PromoBanners = () => {
   const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
 
   return (
-    <div className="px-5 space-y-4">
-      <div className="mb-1 ml-1">
-        <h2 className="text-[19px] font-black text-gray-900 tracking-tight">Recommended for you</h2>
-      </div>
-
+    <div className="px-5 mt-0 mb-4">
       <div className="grid grid-cols-2 gap-3">
         {rotatingCards.map((card, index) => (
-          <PromoCard 
-            key={`${String(card.title || '').trim() || 'promo'}-${index}`} 
-            {...card} 
+          <PromoCard
+            key={index}
+            {...card}
             path={routePrefix ? `${routePrefix}/ride/select-location` : '/ride/select-location'}
-            onNavigate={navigate} 
+            onNavigate={navigate}
           />
         ))}
       </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: 'easeOut' }}
-        className="relative overflow-hidden rounded-2xl border border-white/80 bg-gradient-to-br from-slate-900 to-slate-800 p-4 shadow-[0_18px_44px_rgba(15,23,42,0.12)]"
-      >
-        <div className="absolute inset-0 bg-[radial-gradient(240px_160px_at_20%_25%,rgba(56,189,248,0.16),transparent_60%)]" aria-hidden="true" />
-        <div className="absolute inset-0 bg-[radial-gradient(260px_180px_at_85%_85%,rgba(251,191,36,0.10),transparent_62%)]" aria-hidden="true" />
-
-        <div className="relative z-10 flex min-h-[168px] items-end justify-between gap-4">
-          <div className="max-w-[62%]">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-white/85">
-              <Sparkles size={12} strokeWidth={2.5} className="text-cyan-200" />
-              Savings
-            </div>
-
-            <h3 className="mt-3 text-[20px] font-black leading-tight tracking-tight text-white">
-              Better savings on your next ride.
-            </h3>
-            <p className="mt-1.5 text-[11px] font-bold leading-relaxed text-white/70">Book quickly and save more.</p>
-
-            <motion.button
-              type="button"
-              whileTap={{ scale: 0.98 }}
-              onClick={() => navigate(`${routePrefix}/ride/select-category`)}
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[12px] font-black text-slate-900 shadow-lg shadow-black/15 active:scale-95"
-            >
-              Ride Now
-              <ArrowRight size={14} strokeWidth={3} />
-            </motion.button>
-          </div>
-
-          <div className="pointer-events-none w-[140px] shrink-0 opacity-95">
-            <img src="/ride_now_banner.png" alt="Promo" className="w-full drop-shadow-2xl" />
-          </div>
-        </div>
-      </motion.div>
     </div>
   );
 };

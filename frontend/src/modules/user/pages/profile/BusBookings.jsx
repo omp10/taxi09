@@ -142,7 +142,7 @@ const BusBookings = () => {
   return (
     <div className="min-h-screen bg-slate-50 max-w-lg mx-auto font-sans pb-32">
       {/* Header */}
-      <div className="bg-white px-5 pt-10 pb-4 sticky top-0 z-20 border-b border-slate-100 shadow-sm">
+      <div className="bg-white px-5 pt-6 pb-4 sticky top-0 z-20 border-b border-slate-100 shadow-sm">
         <div className="flex items-center gap-4">
           <button
             type="button"

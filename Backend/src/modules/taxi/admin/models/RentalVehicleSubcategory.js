@@ -36,6 +36,10 @@ const rentalVehicleSubcategorySchema = new mongoose.Schema(
       default: '',
       trim: true,
     },
+    images: [{
+      type: String,
+      trim: true,
+    }],
     bgClass: {
       type: String,
       default: '',

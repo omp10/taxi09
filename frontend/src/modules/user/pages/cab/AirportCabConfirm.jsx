@@ -25,7 +25,7 @@ const AirportCabConfirm = () => {
       <div className="absolute top-40 left-[-60px] h-40 w-40 rounded-full bg-emerald-100/40 blur-3xl pointer-events-none" />
 
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-md px-5 pt-10 pb-4 sticky top-0 z-20 border-b border-white/80 shadow-[0_4px_20px_rgba(15,23,42,0.05)]">
+      <header className="bg-white/90 backdrop-blur-md px-5 pt-6 pb-4 sticky top-0 z-20 border-b border-white/80 shadow-[0_4px_20px_rgba(15,23,42,0.05)]">
         <div className="flex items-center gap-3">
           <button onClick={() => navigate('/')} className="w-9 h-9 rounded-[12px] border border-white/80 bg-white/90 flex items-center justify-center shadow-sm active:scale-95 transition-all">
             <ArrowLeft size={18} className="text-slate-900" strokeWidth={2.5} />
@@ -37,7 +37,7 @@ const AirportCabConfirm = () => {
         </div>
       </header>
 
-      <div className="px-5 pt-10 flex flex-col items-center">
+      <div className="px-5 pt-6 flex flex-col items-center">
         <motion.div 
           initial={{ scale: 0, opacity: 0 }} 
           animate={{ scale: mounted ? 1 : 0, opacity: mounted ? 1 : 0 }} 

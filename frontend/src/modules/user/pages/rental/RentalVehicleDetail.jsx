@@ -1254,7 +1254,7 @@ const RentalVehicleDetail = () => {
         className="sticky top-0 z-30 w-full"
       >
         <div
-          className={`px-5 pt-12 pb-5 relative overflow-hidden ${
+          className={`px-5 pt-6 pb-5 relative overflow-hidden ${
             isSubscriptionMode
               ? 'bg-[linear-gradient(90deg,#147A9C_0%,#2AB0A7_100%)] shadow-[0_8px_28px_rgba(20,122,156,0.22)]'
               : 'bg-white/85 backdrop-blur-2xl border-b border-white/40 shadow-[0_8px_32px_rgba(15,23,42,0.06)]'

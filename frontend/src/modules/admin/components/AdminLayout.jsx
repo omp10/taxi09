@@ -870,6 +870,7 @@ const AdminLayout = () => {
               { label: 'Rental Package Types', path: '/admin/pricing/rental-packages', permission: 'rental.view' },
               { label: 'Rental Coupons', path: '/admin/pricing/rental-coupons', permission: 'rental.view' },
               { label: 'Package Pricing', path: '/admin/pricing/package-pricing', permission: 'rental.view' },
+              { label: 'Rental Sub Categories', path: '/admin/pricing/rental-vehicle-subcategories', permission: 'rental.view' },
               { label: 'Banner Image', path: '/admin/promotions/banner-image', permission: 'rental.view' },
             ],
           },

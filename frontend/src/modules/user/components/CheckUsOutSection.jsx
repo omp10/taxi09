@@ -5,20 +5,24 @@ import checkUsOutImg from '@/assets/check_us_out.jpg';
 
 const CheckUsOutSection = () => {
   return (
-    <div className="px-5 pb-10">
-      <div className="mb-4 ml-1">
-        <h2 className="text-[20px] font-black text-gray-900 tracking-tight">Check us out</h2>
+    <div className="px-5 mt-2 mb-8">
+      <motion.section
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.45, ease: 'easeOut' }}
+        className="bg-white/70 backdrop-blur-md rounded-[28px] p-4 shadow-sm border border-white/80"
+      >
+        <div className="mb-4 ml-1">
+          <h2 className="text-[20px] font-black text-gray-900 tracking-tight">Check us out</h2>
         <p className="mt-1 text-[11px] font-black uppercase tracking-[0.18em] text-gray-400">
           Join our growing community
         </p>
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="relative overflow-hidden rounded-[32px] bg-white border border-white/80 shadow-[0_20px_50px_rgba(15,23,42,0.08)] group"
+        className="relative overflow-hidden rounded-[20px] bg-white border border-white/80 shadow-[0_20px_50px_rgba(15,23,42,0.08)] group"
       >
         {/* Main Image Container */}
         <div className="relative h-[220px] overflow-hidden">
@@ -82,7 +86,8 @@ const CheckUsOutSection = () => {
         {/* Decorative elements */}
         <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-emerald-100/30 blur-3xl pointer-events-none" />
         <div className="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-blue-100/30 blur-3xl pointer-events-none" />
-      </motion.div>
+        </motion.div>
+      </motion.section>
     </div>
   );
 };

@@ -72,7 +72,7 @@ const BusPreview = () => {
 
   return (
     <div className="min-h-screen max-w-lg mx-auto bg-[linear-gradient(180deg,#fff7ed_0%,#ffffff_18%,#f8fafc_100%)] font-sans pb-28">
-      <header className="sticky top-0 z-20 border-b border-white/80 bg-white/90 px-5 pb-4 pt-10 shadow-[0_4px_20px_rgba(15,23,42,0.05)] backdrop-blur-md">
+      <header className="sticky top-0 z-20 border-b border-white/80 bg-white/90 px-5 pb-4 pt-6 shadow-[0_4px_20px_rgba(15,23,42,0.05)] backdrop-blur-md">
         <div className="flex items-center gap-3">
           <button
             type="button"

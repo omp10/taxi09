@@ -147,7 +147,7 @@ const CabSharing = () => {
   return (
     <div className="min-h-screen bg-[#F8F9FB] max-w-lg mx-auto font-sans pb-10">
       {/* Header */}
-      <div className="bg-white px-5 pt-10 pb-5 sticky top-0 z-20 shadow-sm border-b border-gray-50">
+      <div className="bg-white px-5 pt-6 pb-5 sticky top-0 z-20 shadow-sm border-b border-gray-50">
         <div className="flex items-center gap-4">
           <button onClick={() => navigate(-1)} className="p-2 -ml-2 active:scale-90 transition-all">
             <ArrowLeft size={24} className="text-gray-900" strokeWidth={2.5} />

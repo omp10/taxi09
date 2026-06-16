@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, Loader2 } from 'lucide-react';
 import { userService } from '../../services/userService';
 import motorcycleImg from '@/assets/images/motorcycle_category.png';
@@ -17,6 +17,47 @@ const SkylineSVG = () => (
     <path d="M0 100h400V45h-10v15h-8V30H360v40h-8V20h-20v45h-6V10h-25v50h-10V35H260v35h-8V15h-22v50h-5V5h-25v60h-10V25H160v40h-8V10h-22v45h-6V30H100v45h-10V15H70v50h-8V25H40v40h-5V5H10v95z" />
   </svg>
 );
+
+const ImageCarousel = ({ images, title, imageScale }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (!images || images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 2500); // changes every 2.5 seconds
+    return () => clearInterval(interval);
+  }, [images]);
+
+  if (!images || images.length === 0) return null;
+
+  if (images.length === 1) {
+    return (
+      <motion.img
+        src={images[0]}
+        alt={title}
+        className={`h-full max-h-[125px] object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105 ${imageScale}`}
+      />
+    );
+  }
+
+  return (
+    <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+      <AnimatePresence mode="wait">
+        <motion.img
+          key={currentIndex}
+          src={images[currentIndex]}
+          alt={`${title} - ${currentIndex}`}
+          initial={{ opacity: 0, x: -80 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 80 }}
+          transition={{ duration: 0.4, ease: 'easeInOut' }}
+          className={`absolute h-full max-h-[125px] object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105 ${imageScale}`}
+        />
+      </AnimatePresence>
+    </div>
+  );
+};
 
 const BikeCategoriesSelection = () => {
   const navigate = useNavigate();
@@ -52,6 +93,7 @@ const BikeCategoriesSelection = () => {
       id: 'motorcycles',
       title: 'MOTORCYCLES',
       image: motorcycleImg,
+      images: [motorcycleImg],
       bgClass: 'bg-gradient-to-br from-[#FFEBE6] to-[#FFF0E6]',
       borderClass: 'border-[#FFDCD2]/40',
       imageScale: 'scale-115'
@@ -60,6 +102,7 @@ const BikeCategoriesSelection = () => {
       id: 'scooters',
       title: 'SCOOTERS',
       image: scooterImg,
+      images: [scooterImg],
       bgClass: 'bg-gradient-to-br from-[#E8ECEF] to-[#DCE2E7]',
       borderClass: 'border-[#CFD9E1]/40',
       imageScale: 'scale-110'
@@ -68,6 +111,7 @@ const BikeCategoriesSelection = () => {
       id: 'ev',
       title: 'EV',
       image: evImg,
+      images: [evImg],
       bgClass: 'bg-gradient-to-br from-[#E2ECE9] to-[#D5E5E0]',
       borderClass: 'border-[#C8DDD7]/40',
       imageScale: 'scale-110'
@@ -88,6 +132,9 @@ const BikeCategoriesSelection = () => {
           id: cat.id || cat._id,
           title: cat.name.toUpperCase(),
           image: cat.image || fallbackImg,
+          images: Array.isArray(cat.images) && cat.images.length > 0 
+                    ? cat.images 
+                    : (cat.image ? [cat.image] : [fallbackImg]),
           bgClass: cat.bgClass || 'bg-gradient-to-br from-[#FFEBE6] to-[#FFF0E6]',
           borderClass: cat.borderClass || 'border-[#FFDCD2]/40',
           imageScale: cat.imageScale || 'scale-110'
@@ -109,7 +156,7 @@ const BikeCategoriesSelection = () => {
   return (
     <div className="min-h-screen bg-white max-w-lg mx-auto font-sans relative overflow-x-hidden pb-12 flex flex-col no-scrollbar">
       {/* Header */}
-      <div className="px-4 pt-10 pb-4 flex items-center gap-4 border-b border-slate-50 shrink-0 sticky top-0 bg-white z-30">
+      <div className="px-4 pt-6 pb-4 flex items-center gap-4 border-b border-slate-50 shrink-0 sticky top-0 bg-white z-30">
         <button
           onClick={() => navigate('/taxi/user/rental/type')}
           className="text-slate-800 hover:opacity-75 transition-opacity py-1 pr-1 shrink-0"
@@ -143,11 +190,7 @@ const BikeCategoriesSelection = () => {
 
             {/* Vehicle Image - Centered & Blended */}
             <div className="w-full h-full pt-6 flex items-center justify-center z-10 select-none pointer-events-none">
-              <motion.img
-                src={cat.image}
-                alt={cat.title}
-                className={`h-full max-h-[125px] object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105 ${cat.imageScale}`}
-              />
+              <ImageCarousel images={cat.images} title={cat.title} imageScale={cat.imageScale} />
             </div>
           </motion.div>
         ))}

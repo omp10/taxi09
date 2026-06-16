@@ -666,7 +666,7 @@ const BikeRentalHome = () => {
           {/* Sticky Header block containing Header, Filters, Search input */}
           <div className="sticky top-0 z-30 bg-white shadow-sm flex flex-col shrink-0">
             {/* Header */}
-            <div className="bg-[#F3F4F6] px-4 pt-10 pb-3 flex items-center justify-between">
+            <div className="bg-[#F3F4F6] px-4 pt-6 pb-3 flex items-center justify-between">
               <div className="flex items-center gap-3.5">
                 <button
                   onClick={() => setIsAddressEntered(false)}

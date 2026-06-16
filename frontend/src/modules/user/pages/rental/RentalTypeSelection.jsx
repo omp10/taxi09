@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Car, Bike, Check } from 'lucide-react';
 import rentalBikeImg from '@/assets/images/rental_bike.png';
 import rentalCarImg from '@/assets/images/rental_car.png';
 
@@ -19,49 +19,56 @@ const RentalTypeSelection = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#F8FAFC_0%,#F3F4F6_38%,#EEF2F7_100%)] max-w-lg mx-auto font-sans relative overflow-hidden pb-12 flex flex-col justify-between">
+    <div className="min-h-screen bg-[#F8FAFC] max-w-lg mx-auto font-sans relative overflow-hidden pb-8 flex flex-col justify-between">
       {/* Decorative background glows */}
-      <div className="absolute -top-16 right-[-40px] h-44 w-44 rounded-full bg-orange-100/60 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-28 right-[-40px] h-40 w-40 rounded-full bg-blue-100/60 blur-3xl pointer-events-none" />
+      <div className="absolute top-[-100px] right-[-100px] h-[300px] w-[300px] rounded-full bg-orange-50 blur-[80px] pointer-events-none" />
 
       {/* Header */}
       <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full bg-white/85 backdrop-blur-2xl px-5 pt-12 pb-5 border-b border-white/40 shadow-[0_8px_32px_rgba(15,23,42,0.06)] sticky top-0 z-30"
+        className="w-full bg-white/80 backdrop-blur-xl px-6 pt-3 pb-4 border-b border-slate-200/60 shadow-[0_4px_24px_rgba(15,23,42,0.04)] sticky top-0 z-30"
       >
         <div className="flex items-center gap-4">
           <motion.button
             whileHover={{ x: -2 }}
             whileTap={{ scale: 0.92 }}
             onClick={() => navigate('/taxi/user')}
-            className="w-10 h-10 rounded-2xl bg-slate-900 flex items-center justify-center shadow-[0_4px_12px_rgba(15,23,42,0.15)] shrink-0 group transition-all"
+            className="w-10 h-10 rounded-full bg-[#FFC107] flex items-center justify-center shadow-md shrink-0 group transition-all"
           >
-            <ArrowLeft size={20} className="text-white group-hover:opacity-80 transition-opacity" strokeWidth={2.5} />
+            <ArrowLeft size={22} className="text-slate-900" strokeWidth={2.5} />
           </motion.button>
-          <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500/60 leading-none mb-1.5">Self-drive rentals</p>
-            <h1 className="text-[20px] font-bold tracking-tight text-slate-900 leading-none">Choose Rental Type</h1>
+          <div className="min-w-0 pt-1">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 leading-none mb-1.5">Self-drive rentals</p>
+            <h1 className="text-[24px] font-black tracking-tight text-[#1E293B] leading-none">Choose Rental Type</h1>
           </div>
         </div>
       </motion.header>
 
       {/* Main Content */}
-      <div className="px-5 pt-12 flex-1 flex flex-col justify-center space-y-6">
+      <div className="px-6 pt-3 flex-1 flex flex-col justify-center space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
-          className="text-center space-y-2 mb-4"
+          className="text-center space-y-2 mb-2 flex flex-col items-center"
         >
-          <h2 className="text-[22px] font-bold text-slate-900 tracking-tight">Select vehicle category</h2>
-          <p className="text-[13px] font-medium text-slate-400 max-w-[280px] mx-auto leading-relaxed">
+          <div className="relative mb-2">
+            <div className="w-[68px] h-[68px] rounded-full border-[6px] border-white flex items-center justify-center bg-amber-50 shadow-[0_8px_16px_rgba(0,0,0,0.03)]">
+              <Car size={32} className="text-[#1E293B]" strokeWidth={2.5} />
+            </div>
+            <div className="absolute top-0 right-0 w-6 h-6 rounded-full bg-[#FFC107] border-[3px] border-white flex items-center justify-center">
+              <Check size={14} className="text-white" strokeWidth={4} />
+            </div>
+          </div>
+          <h2 className="text-[20px] font-black text-[#1E293B] tracking-tight">Select vehicle category</h2>
+          <p className="text-[13px] font-semibold text-slate-500 max-w-[240px] mx-auto leading-relaxed">
             Choose the vehicle type that best suits your journey
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 mt-2">
           {/* 2 Wheeler Card */}
           <motion.button
             initial={{ opacity: 0, scale: 0.95 }}
@@ -70,18 +77,27 @@ const RentalTypeSelection = () => {
             whileHover={{ y: -6, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => handleSelectCategory('bike')}
-            className="flex flex-col items-center justify-between rounded-[32px] border border-slate-100 bg-white shadow-[0_12px_30px_rgba(15,23,42,0.04)] text-center h-[210px] relative overflow-hidden group w-full"
+            className="flex flex-col items-center justify-start rounded-[28px] bg-white shadow-[0_8px_30px_rgba(15,23,42,0.04)] text-center h-[260px] relative overflow-hidden group w-full pt-6 pb-6"
           >
-            <div className="relative w-full h-[135px] flex items-center justify-center bg-white overflow-hidden p-3">
+            <div className="relative w-full h-[120px] flex items-center justify-center bg-white">
+              <div className="absolute inset-0 m-auto w-[110px] h-[110px] rounded-full bg-amber-50" />
+              <div className="absolute top-0 left-6 grid grid-cols-3 gap-1.5 opacity-40">
+                {[...Array(9)].map((_, i) => <div key={i} className="w-1 h-1 rounded-full bg-[#FFC107]" />)}
+              </div>
               <motion.img
                 src={rentalBikeImg}
                 alt="2 Wheeler"
-                className="w-full h-full object-contain mix-blend-multiply relative z-10 transition-transform duration-300 group-hover:scale-110"
+                className="w-[85%] h-full object-contain relative z-10 mix-blend-multiply transition-transform duration-300 group-hover:scale-110 drop-shadow-xl"
               />
             </div>
-            <div className="w-full pb-5">
-              <span className="text-[16px] font-bold text-slate-900 tracking-tight block">2 Wheeler</span>
-              <span className="text-[11px] font-medium text-slate-500 block mt-0.5">Bikes & Scooters</span>
+            
+            <div className="flex flex-col items-center w-full relative z-20 mt-auto">
+              <div className="w-8 h-8 rounded-full bg-[#FFD54F] border-[3px] border-white flex items-center justify-center mb-2 shadow-sm">
+                <Bike size={14} className="text-[#1E293B]" strokeWidth={2.5} />
+              </div>
+              <span className="text-[16px] font-black text-[#1E293B] tracking-tight block">2 Wheeler</span>
+              <div className="w-6 h-[2px] bg-[#FFC107] mt-2 mb-2" />
+              <span className="text-[11px] font-bold text-slate-500 block">Bikes & Scooters</span>
             </div>
           </motion.button>
 
@@ -93,35 +109,51 @@ const RentalTypeSelection = () => {
             whileHover={{ y: -6, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => handleSelectCategory('car')}
-            className="flex flex-col items-center justify-between rounded-[32px] border border-slate-100 bg-white shadow-[0_12px_30px_rgba(15,23,42,0.04)] text-center h-[210px] relative overflow-hidden group w-full"
+            className="flex flex-col items-center justify-start rounded-[28px] bg-white shadow-[0_8px_30px_rgba(15,23,42,0.04)] text-center h-[260px] relative overflow-hidden group w-full pt-6 pb-6"
           >
-            <div className="relative w-full h-[135px] flex items-center justify-center bg-white overflow-hidden p-3">
+            <div className="relative w-full h-[120px] flex items-center justify-center bg-white">
+              <div className="absolute inset-0 m-auto w-[110px] h-[110px] rounded-full bg-blue-50" />
+              <div className="absolute top-0 right-6 grid grid-cols-3 gap-1.5 opacity-40">
+                {[...Array(9)].map((_, i) => <div key={i} className="w-1 h-1 rounded-full bg-blue-300" />)}
+              </div>
               <motion.img
                 src={rentalCarImg}
                 alt="4 Wheeler"
-                className="w-full h-full object-contain mix-blend-multiply relative z-10 transition-transform duration-300 group-hover:scale-110"
+                className="w-[85%] h-full object-contain relative z-10 mix-blend-multiply transition-transform duration-300 group-hover:scale-110 drop-shadow-xl"
               />
             </div>
-            <div className="w-full pb-5">
-              <span className="text-[16px] font-bold text-slate-900 tracking-tight block">4 Wheeler</span>
-              <span className="text-[11px] font-medium text-slate-500 block mt-0.5">Cars & SUVs</span>
+            
+            <div className="flex flex-col items-center w-full relative z-20 mt-auto">
+              <div className="w-8 h-8 rounded-full bg-blue-100 border-[3px] border-white flex items-center justify-center mb-2 shadow-sm">
+                <Car size={14} className="text-[#1E293B]" strokeWidth={2.5} />
+              </div>
+              <span className="text-[16px] font-black text-[#1E293B] tracking-tight block">4 Wheeler</span>
+              <div className="w-6 h-[2px] bg-blue-300 mt-2 mb-2" />
+              <span className="text-[11px] font-bold text-slate-500 block">Cars & SUVs</span>
             </div>
           </motion.button>
         </div>
       </div>
 
       {/* Footer view all button */}
-      <div className="px-5 mt-auto pt-8">
+      <div className="px-6 mt-auto pt-8">
         <motion.button
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
           type="button"
           onClick={() => handleSelectCategory('all')}
-          className="w-full py-4 rounded-2xl bg-slate-950 text-white text-[12px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-[0_8px_24px_rgba(15,23,42,0.18)] hover:bg-black transition-colors"
+          className="w-full h-[60px] rounded-[16px] bg-[#1a2035] text-white flex items-center justify-between px-3 shadow-[0_12px_24px_rgba(26,32,53,0.25)] hover:bg-slate-900 transition-colors"
         >
-          Explore Entire Fleet
-          <ChevronRight size={14} strokeWidth={3} className="opacity-70" />
+          <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+             <Car size={20} className="text-[#FFC107]" strokeWidth={2.5} />
+          </div>
+          <span className="text-[13px] font-bold uppercase tracking-[0.12em] pl-2 flex-1 text-center">
+            Explore Entire Fleet
+          </span>
+          <div className="w-10 h-10 flex items-center justify-end pr-1">
+            <ChevronRight size={20} strokeWidth={3} className="text-[#FFC107]" />
+          </div>
         </motion.button>
       </div>
     </div>

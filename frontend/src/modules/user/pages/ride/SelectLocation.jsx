@@ -917,7 +917,7 @@ const SelectLocation = () => {
             className="fixed inset-0 z-[100] bg-white flex flex-col max-w-lg mx-auto"
           >
             {/* Map Header */}
-            <div className="absolute top-0 left-0 right-0 z-20 px-5 pt-10 pb-4 bg-gradient-to-b from-white via-white/80 to-transparent">
+            <div className="absolute top-0 left-0 right-0 z-20 px-5 pt-6 pb-4 bg-gradient-to-b from-white via-white/80 to-transparent">
                <div className="flex items-center gap-3">
                   <button 
                     onClick={handleMapBack}

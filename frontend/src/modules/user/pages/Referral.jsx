@@ -189,7 +189,7 @@ const Referral = () => {
 
   return (
     <div className="min-h-screen bg-[#f5f7fb] max-w-lg mx-auto font-sans pb-28">
-      <header className="bg-white px-5 pt-10 pb-4 sticky top-0 z-20 border-b border-gray-100">
+      <header className="bg-white px-5 pt-6 pb-4 sticky top-0 z-20 border-b border-gray-100">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}

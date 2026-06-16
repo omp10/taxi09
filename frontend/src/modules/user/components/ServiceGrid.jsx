@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useSettings, normalizeAssetUrl } from '../../../shared/context/SettingsContext';
-import toast from 'react-hot-toast';
+import { ArrowRight, SlidersHorizontal } from 'lucide-react';
 
-const ServiceTile = ({ icon, label, description, path, accentClass, loading }) => {
+const ServiceTile = ({ icon, label, description, path, accentClass, shadowClass, borderClass, loading }) => {
   const navigate = useNavigate();
 
   if (loading) {
     return (
-      <div className="flex w-full min-h-[112px] items-center justify-center">
-        <div className="flex h-[100px] w-[90%] animate-pulse flex-col items-center justify-center gap-2 rounded-[16px] border border-white/20 bg-white/65 px-1 py-1.5">
-        <div className="h-[72px] w-[72px] rounded-[16px] bg-gray-200" />
-          <div className="h-3 w-12 rounded-full bg-gray-200" />
+      <div className="flex w-full min-h-[110px] items-center justify-center">
+        <div className="flex h-full w-full animate-pulse flex-col items-center justify-center gap-2 rounded-[18px] border border-white/20 bg-white/65 p-2">
+          <div className="h-[55px] w-[55px] rounded-full bg-slate-200" />
+          <div className="h-3 w-16 rounded-full bg-slate-200 mt-1" />
         </div>
       </div>
     );
@@ -21,21 +21,35 @@ const ServiceTile = ({ icon, label, description, path, accentClass, loading }) =
   return (
     <motion.button
       type="button"
-      whileHover={{ y: -1.5 }}
+      whileHover={{ y: -2 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => path && navigate(path)}
-      className="flex h-full min-h-[112px] w-full items-center justify-center transition-transform"
+      className={`flex flex-col overflow-hidden rounded-[18px] bg-white border ${borderClass || 'border-slate-300'} w-full transition-all hover:scale-[1.02] cursor-pointer shadow-lg ${shadowClass}`}
     >
-      <div className="flex h-[108px] w-[92%] flex-col items-center justify-center gap-1.5 px-1 py-1">
-        <div className={`flex h-[82px] w-[82px] items-center justify-center rounded-[18px] ${accentClass || 'bg-gray-50'}`}>
-          <img src={icon} alt={label} className="h-[70px] w-[70px] object-contain drop-shadow-sm" />
+      {/* Top half with image (Compact) */}
+      <div className="relative flex h-[85px] w-full items-center justify-center pt-2.5">
+        {/* Circle background */}
+        <div className={`absolute h-[68px] w-[68px] rounded-full ${accentClass}`} />
+        <img src={icon} alt="" className="relative z-10 h-[80px] w-[80px] object-contain drop-shadow-md transform scale-110" />
+      </div>
+
+      {/* Bottom half with text and icons (Compact) */}
+      <div className="flex w-full items-center justify-between px-2 pb-2.5">
+        {/* Small circle icon */}
+        <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${accentClass}`}>
+          <img src={icon} alt="" className="h-3 w-3 object-contain" />
         </div>
 
-        <div className="flex flex-col items-center gap-0.5 text-center">
-          <span className="min-h-[24px] text-[10.5px] font-semibold leading-tight text-slate-900 line-clamp-2 uppercase">
+        {/* Label */}
+        <div className="flex-1 px-1 text-center">
+          <span className="text-[9.5px] font-bold text-slate-900 uppercase leading-tight line-clamp-2">
             {label}
           </span>
-          <span className="sr-only">{description}</span>
+        </div>
+
+        {/* Right Arrow */}
+        <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary shadow-sm">
+          <ArrowRight size={10} strokeWidth={3.5} className="text-white" />
         </div>
       </div>
     </motion.button>
@@ -68,7 +82,6 @@ const ServiceGrid = () => {
       return '/taxi/user/bus';
     }
 
-    // Regular ride-hailing modules should always start from category selection.
     if (
       ['normal', 'taxi', 'ride', 'ride_hailing', 'ride-hailing'].includes(serviceType) ||
       ['taxi', 'both'].includes(transportType) ||
@@ -82,15 +95,15 @@ const ServiceGrid = () => {
   };
 
   const getAccent = (index) => {
-    const accnets = [
-      'bg-[linear-gradient(135deg,#FFF7ED_0%,#FFE5C2_100%)]', // Orange
-      'bg-[linear-gradient(135deg,#FEFCE8_0%,#FDE68A_100%)]', // Yellow
-      'bg-[linear-gradient(135deg,#EFF6FF_0%,#DBEAFE_100%)]', // Blue
-      'bg-[linear-gradient(135deg,#F5F3FF_0%,#E9D5FF_100%)]', // Purple
-      'bg-[linear-gradient(135deg,#ECFDF5_0%,#A7F3D0_100%)]', // Green
-      'bg-[linear-gradient(135deg,#FFF1F2_0%,#FECDD3_100%)]', // Rose
+    const accents = [
+      { accentClass: 'bg-amber-100/60', shadowClass: 'shadow-amber-400/20', borderClass: 'border-amber-400' },
+      { accentClass: 'bg-orange-100/60', shadowClass: 'shadow-orange-400/20', borderClass: 'border-orange-400' },
+      { accentClass: 'bg-blue-100/60', shadowClass: 'shadow-blue-400/20', borderClass: 'border-blue-400' },
+      { accentClass: 'bg-purple-100/60', shadowClass: 'shadow-purple-400/20', borderClass: 'border-purple-400' },
+      { accentClass: 'bg-emerald-100/60', shadowClass: 'shadow-emerald-400/20', borderClass: 'border-emerald-400' },
+      { accentClass: 'bg-rose-100/60', shadowClass: 'shadow-rose-400/20', borderClass: 'border-rose-400' },
     ];
-    return accnets[index % accnets.length];
+    return accents[index % accents.length];
   };
 
   const { modules, loading: settingsLoading } = useSettings();
@@ -101,42 +114,49 @@ const ServiceGrid = () => {
     // Only show active modules
     const activeModules = (modules || []).filter(m => m.active);
     
-    const mapped = activeModules.map((m, idx) => ({
-      icon: normalizeAssetUrl(m.mobile_menu_icon),
-      label: m.name,
-      description: m.short_description,
-      path: getPath(m),
-      accentClass: getAccent(idx)
-    }));
+    const mapped = activeModules.map((m, idx) => {
+      const accent = getAccent(idx);
+      return {
+        icon: normalizeAssetUrl(m.mobile_menu_icon),
+        label: m.name,
+        description: m.short_description,
+        path: getPath(m),
+        accentClass: accent.accentClass,
+        shadowClass: accent.shadowClass,
+        borderClass: accent.borderClass
+      };
+    });
     
     setServices(mapped);
     setLoading(false);
   }, [modules, settingsLoading]);
 
   const optionCount = loading ? '...' : services.length;
-  const optionLabel = services.length === 1 ? 'option' : 'options';
 
   return (
-    <div className="px-5">
+    <div className="px-5 mt-2">
       <motion.section
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: 'easeOut' }}
-        className="py-1"
+        className="bg-white/70 backdrop-blur-md rounded-[28px] p-4 shadow-sm border border-white/80"
       >
+        {/* Header - Compact */}
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">Services</p>
-            <h2 className="mt-1 text-[18px] font-semibold text-slate-900">Choose your ride</h2>
-            <p className="mt-0.5 text-[11px] font-medium text-slate-500">Tap to start quickly.</p>
+            <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500">Services</p>
+            <h2 className="text-[20px] font-bold text-slate-900 tracking-tight leading-none mt-0.5">Choose your ride</h2>
+            <p className="mt-1 text-[12px] font-medium text-slate-400">Tap to start quickly</p>
           </div>
 
-          <div className="rounded-full border border-white/80 bg-white/90 px-3 py-2 text-[11px] font-medium text-slate-600 shadow-sm">
-            {optionCount} {optionLabel}
+          <div className="flex items-center gap-1.5 rounded-full border border-primary bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-800 shadow-sm mt-1">
+            <SlidersHorizontal size={12} className="text-primary" strokeWidth={2.5} />
+            <span>{optionCount} options</span>
           </div>
         </div>
 
-        <div className="mt-4 grid auto-rows-fr grid-cols-3 gap-3 md:grid-cols-4">
+        {/* Grid - Compact */}
+        <div className="mt-3.5 grid auto-rows-fr grid-cols-2 gap-2.5 md:grid-cols-4 lg:grid-cols-5">
           {loading ? (
              [...Array(4)].map((_, i) => <ServiceTile key={i} loading />)
           ) : (

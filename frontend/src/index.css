@@ -1,15 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
 @import "tailwindcss";
 
 :root {
-  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: #1C2833;
-  background-color: #F9F9F9;
+  color: #111827;
+  background-color: #F8F9FB;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -28,10 +28,52 @@ body {
 }
 
 @theme {
-  --color-primary: #E85D04;
-  --color-secondary: #F48C06;
-  --font-sans: 'Outfit', system-ui, sans-serif;
-  --font-display: 'Outfit', sans-serif;
+  /* Requested Theme Colors */
+  --color-primary: #FFC400;
+  --color-secondary: #0A2540;
+  --color-background: #F8F9FB;
+  --color-card: #FFFFFF;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-border-main: #E5E7EB;
+  --color-success: #22C55E;
+  --color-error: #EF4444;
+
+  /* Global Color Remapping: Overriding Tailwind Defaults to apply theme globally */
+  
+  /* Map 'slate' (previously used for all grays/text) to our new layout colors */
+  --color-slate-950: #111827;
+  --color-slate-900: #111827;
+  --color-slate-800: #0A2540; /* Maps to Secondary Deep Navy */
+  --color-slate-700: #0A2540;
+  --color-slate-600: #6B7280;
+  --color-slate-500: #6B7280;
+  --color-slate-400: #6B7280;
+  --color-slate-300: #E5E7EB;
+  --color-slate-200: #E5E7EB;
+  --color-slate-100: #F8F9FB;
+  --color-slate-50: #F8F9FB;
+
+  /* Map 'emerald' (previously the primary template color) to Taxi Yellow */
+  --color-emerald-900: #B28900;
+  --color-emerald-800: #CC9D00;
+  --color-emerald-700: #E6B100;
+  --color-emerald-600: #FFB300;
+  --color-emerald-500: #FFC400; /* Main Taxi Yellow */
+  --color-emerald-400: #FFD54F;
+  --color-emerald-300: #FFE082;
+  --color-emerald-200: #FFE082;
+  --color-emerald-100: #FFECB3;
+  --color-emerald-50: #FFF8E1;
+
+  /* Map 'orange' to Taxi Yellow variations for gradient buttons */
+  --color-orange-600: #FFB300;
+  --color-orange-500: #FFC400;
+  --color-orange-400: #FFD54F;
+  --color-orange-100: #FFECB3;
+  --color-orange-50: #FFF8E1;
+  --font-sans: 'Montserrat', system-ui, sans-serif;
+  --font-display: 'Montserrat', sans-serif;
   
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
@@ -39,6 +81,41 @@ body {
   
   --shadow-premium: 0 10px 40px -10px rgba(0,0,0,0.1);
   --shadow-soft: 0 4px 20px -2px rgba(0,0,0,0.05);
+}
+
+/* Global Typography Styles based on Design Direction */
+h1, .screen-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+h2, .section-heading {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+h3, .card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+p, .body-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+button, .button-text {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.nav-label {
+  font-size: 12px;
+  font-weight: 500;
 }
 
 /* Global scrollbar hiding for a cleaner mobile experience */
@@ -73,7 +150,7 @@ body {
     
     background-color: var(--driver-bg-soft);
     color: #0F172A;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Localize Tailwind's color mapping for the driver module */

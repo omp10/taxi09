@@ -2035,6 +2035,7 @@ const serializeRentalVehicleSubcategory = (item) => ({
   status: item.status || (item.active === false ? 'inactive' : 'active'),
   active: item.active !== false,
   image: item.image || '',
+  images: item.images || [],
   bgClass: item.bgClass || '',
   borderClass: item.borderClass || '',
   imageScale: item.imageScale || '',
@@ -9301,6 +9302,7 @@ export const getRentalTrackingDashboard = async () => {
       status,
       active: status === 'active',
       image: String(payload.image || '').trim(),
+      images: Array.isArray(payload.images) ? payload.images : [],
       bgClass: String(payload.bgClass || '').trim(),
       borderClass: String(payload.borderClass || '').trim(),
       imageScale: String(payload.imageScale || '').trim(),
@@ -9324,6 +9326,9 @@ export const getRentalTrackingDashboard = async () => {
     }
     if (payload.image !== undefined) {
       item.image = String(payload.image || '').trim();
+    }
+    if (payload.images !== undefined) {
+      item.images = Array.isArray(payload.images) ? payload.images : [];
     }
     if (payload.bgClass !== undefined) {
       item.bgClass = String(payload.bgClass || '').trim();

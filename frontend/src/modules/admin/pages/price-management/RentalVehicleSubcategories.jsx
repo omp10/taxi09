@@ -70,6 +70,7 @@ const RentalVehicleSubcategories = ({ mode: propMode }) => {
     vehicleCategory: 'Bike',
     status: 'active',
     image: '',
+    images: [],
     bgClass: 'bg-gradient-to-br from-[#FFEBE6] to-[#FFF0E6]',
     borderClass: 'border-[#FFDCD2]/40',
     imageScale: 'scale-110',
@@ -110,6 +111,7 @@ const RentalVehicleSubcategories = ({ mode: propMode }) => {
             vehicleCategory: 'Bike',
             status: selected.status || (selected.active === false ? 'inactive' : 'active'),
             image: selected.image || '',
+            images: Array.isArray(selected.images) ? selected.images : [],
             bgClass: selected.bgClass || 'bg-gradient-to-br from-[#FFEBE6] to-[#FFF0E6]',
             borderClass: selected.borderClass || 'border-[#FFDCD2]/40',
             imageScale: selected.imageScale || 'scale-110',
@@ -412,38 +414,77 @@ const RentalVehicleSubcategories = ({ mode: propMode }) => {
               </div>
 
               <div className="space-y-1.5 font-sans md:col-span-2">
-                <label className={labelClass}>Banner Image (Upload or Data URL)</label>
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                  {formData.image && (
-                    <div className="h-28 w-44 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center p-2 shrink-0 overflow-hidden relative group">
-                      <img src={formData.image} alt="Preview" className="max-h-full max-w-full object-contain" />
-                      <button
-                        type="button"
-                        onClick={() => setFormData(current => ({ ...current, image: '' }))}
-                        className="absolute top-1 right-1 p-1 bg-red-100 text-red-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-in fade-in"
-                      >
-                        <Trash2 size={12} />
-                      </button>
+                <label className={labelClass}>Vehicle Images (Upload Multiple or Data URLs)</label>
+                <div className="flex flex-col gap-4">
+                  {/* Preview Grid */}
+                  {(formData.images?.length > 0 || formData.image) && (
+                    <div className="flex flex-wrap gap-4">
+                      {/* Legacy Single Image Fallback display (if it exists and is not in images array) */}
+                      {formData.image && (!formData.images || formData.images.length === 0) && (
+                        <div className="h-28 w-44 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center p-2 shrink-0 overflow-hidden relative group">
+                          <img src={formData.image} alt="Preview" className="max-h-full max-w-full object-contain" />
+                          <button
+                            type="button"
+                            onClick={() => setFormData(current => ({ ...current, image: '' }))}
+                            className="absolute top-1 right-1 p-1 bg-red-100 text-red-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-in fade-in"
+                          >
+                            <Trash2 size={12} />
+                          </button>
+                        </div>
+                      )}
+                      
+                      {/* Array Images Display */}
+                      {formData.images?.map((imgUrl, index) => (
+                        <div key={index} className="h-28 w-44 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center p-2 shrink-0 overflow-hidden relative group">
+                          <img src={imgUrl} alt={`Preview ${index}`} className="max-h-full max-w-full object-contain" />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newImages = [...formData.images];
+                              newImages.splice(index, 1);
+                              setFormData(current => ({ ...current, images: newImages }));
+                            }}
+                            className="absolute top-1 right-1 p-1 bg-red-100 text-red-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-in fade-in shadow-sm"
+                          >
+                            <Trash2 size={12} />
+                          </button>
+                          <span className="absolute bottom-1 left-1 bg-black/60 text-white text-[9px] px-1.5 rounded-sm font-medium">
+                            {index + 1}
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   )}
+
+                  {/* Upload Controls */}
                   <div className="flex-1 w-full space-y-2">
                     <input
                       type="file"
                       accept="image/*"
+                      multiple
                       onChange={async (e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const dataUrl = await fileToDataUrl(file);
-                          setFormData(current => ({ ...current, image: dataUrl }));
+                        const files = Array.from(e.target.files || []);
+                        if (files.length > 0) {
+                          const newUrls = await Promise.all(files.map(f => fileToDataUrl(f)));
+                          setFormData(current => ({ 
+                            ...current, 
+                            images: [...(current.images || []), ...newUrls] 
+                          }));
                         }
                       }}
                       className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                     />
                     <input
-                      name="image"
-                      value={formData.image}
-                      onChange={handleInputChange}
-                      placeholder="Or paste direct image URL / base64 data..."
+                      name="image_url_add"
+                      value=""
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val && (val.startsWith('http') || val.startsWith('data:'))) {
+                          setFormData(current => ({ ...current, images: [...(current.images || []), val] }));
+                          e.target.value = '';
+                        }
+                      }}
+                      placeholder="Or paste direct image URL / base64 data here..."
                       className={inputClass}
                     />
                   </div>

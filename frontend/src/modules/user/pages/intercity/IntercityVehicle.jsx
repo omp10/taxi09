@@ -303,7 +303,7 @@ const IntercityVehicle = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 max-w-lg mx-auto pb-32">
-      <div className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur px-5 pt-10 pb-4">
+      <div className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur px-5 pt-6 pb-4">
         <div className="flex items-center gap-3">
           <motion.button
             whileTap={{ scale: 0.96 }}

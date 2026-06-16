@@ -162,7 +162,7 @@ const VerifyOTP = () => {
       </div>
 
       {/* Top Header Section */}
-      <header className="p-6 pt-10 flex items-center justify-between z-20">
+      <header className="p-6 pt-6 flex items-center justify-between z-20">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -198,7 +198,7 @@ const VerifyOTP = () => {
           initial={{ y: 100 }}
           animate={{ y: 0 }}
           transition={{ type: "spring", damping: 25, stiffness: 120 }}
-          className="bg-white rounded-t-[40px] px-8 pt-10 pb-12 shadow-[0_-20px_60px_rgba(0,0,0,0.1)] z-20 relative"
+          className="bg-white rounded-t-[40px] px-8 pt-6 pb-12 shadow-[0_-20px_60px_rgba(0,0,0,0.1)] z-20 relative"
         >
           <div className="space-y-8">
             <div className="space-y-2 text-center">

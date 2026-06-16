@@ -77,7 +77,7 @@ const SupportTicketDetail = () => {
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#F8FAFC_0%,#F3F4F6_100%)] max-w-lg mx-auto font-sans flex flex-col">
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-md px-5 pt-10 pb-4 sticky top-0 z-20 border-b border-white/80 shadow-[0_4px_20px_rgba(15,23,42,0.05)]">
+      <header className="bg-white/90 backdrop-blur-md px-5 pt-6 pb-4 sticky top-0 z-20 border-b border-white/80 shadow-[0_4px_20px_rgba(15,23,42,0.05)]">
         <div className="flex items-start gap-3">
           <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-[12px] border border-white/80 bg-white/90 flex items-center justify-center shadow-sm active:scale-95 transition-all shrink-0 mt-0.5">
             <ArrowLeft size={18} className="text-slate-900" strokeWidth={2.5} />

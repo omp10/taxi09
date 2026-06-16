@@ -231,7 +231,7 @@ const BusList = () => {
 
   return (
     <div className="min-h-screen max-w-lg mx-auto bg-[linear-gradient(180deg,#fff7ed_0%,#fffaf7_16%,#f8fafc_100%)] font-sans pb-10">
-      <div className="sticky top-0 z-20 border-b border-orange-100/70 bg-white/92 px-4 pb-4 pt-10 shadow-[0_6px_20px_rgba(15,23,42,0.05)] backdrop-blur-md">
+      <div className="sticky top-0 z-20 border-b border-orange-100/70 bg-white/92 px-4 pb-4 pt-6 shadow-[0_6px_20px_rgba(15,23,42,0.05)] backdrop-blur-md">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}

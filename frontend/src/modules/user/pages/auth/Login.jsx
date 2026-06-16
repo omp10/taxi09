@@ -122,7 +122,7 @@ const Login = () => {
         <div className="absolute inset-0 bg-black/5" />
       </div>
 
-      <header className="p-6 pt-10 flex items-center gap-3 z-20">
+      <header className="p-6 pt-6 flex items-center gap-3 z-20">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -148,7 +148,7 @@ const Login = () => {
           initial={{ y: 100 }}
           animate={{ y: 0 }}
           transition={{ type: "spring", damping: 25, stiffness: 120 }}
-          className="bg-white rounded-t-[40px] px-8 pt-10 pb-12 shadow-[0_-20px_60px_rgba(0,0,0,0.1)] z-20 relative"
+          className="bg-white rounded-t-[40px] px-8 pt-6 pb-12 shadow-[0_-20px_60px_rgba(0,0,0,0.1)] z-20 relative"
         >
           <AnimatePresence mode="wait">
             {!showInput ? (

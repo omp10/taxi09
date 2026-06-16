@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import indiaGateImg from '@/assets/india_gate_real.png';
 import jaipurImg from '@/assets/jaipur.avif';
@@ -64,12 +65,15 @@ const ExplorerSection = () => {
   };
 
   return (
-    <div className="px-5 pb-8 flex flex-col gap-10">
-      {/* Explore Indore Section */}
-      
-
-      {/* Explore India Section */}
-      <div>
+    <div className="px-5 mt-2 mb-3">
+      <motion.section
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: 'easeOut' }}
+        className="bg-white/70 backdrop-blur-md rounded-[28px] p-4 shadow-sm border border-white/80 flex flex-col gap-10"
+      >
+        {/* Explore India Section */}
+        <div>
         <div className="mb-3 ml-1">
           <h2 className="text-[19px] font-black text-gray-900 tracking-tight">Explore India</h2>
           <p className="mt-1 text-[11px] font-black uppercase tracking-[0.18em] text-gray-400">
@@ -121,7 +125,8 @@ const ExplorerSection = () => {
             <span className="text-[11px] uppercase tracking-[0.14em]">View All</span>
           </button>
         </div>
-      </div>
+        </div>
+      </motion.section>
     </div>
   );
 };

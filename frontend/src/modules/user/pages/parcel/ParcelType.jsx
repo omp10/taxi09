@@ -256,7 +256,7 @@ const ParcelType = () => {
     <div className="min-h-screen bg-[#F5F8FF] max-w-lg mx-auto flex flex-col font-sans relative overflow-x-hidden">
       
       {/* Premium Header with Wave Background */}
-      <div className="relative bg-[#0047AB] pt-10 pb-20 px-6 overflow-hidden">
+      <div className="relative bg-[#0047AB] pt-6 pb-20 px-6 overflow-hidden">
         {/* Subtle Wave SVG */}
         <div className="absolute bottom-0 left-0 right-0 h-16 opacity-20 pointer-events-none">
             <svg viewBox="0 0 1440 320" className="w-full h-full preserve-3d">

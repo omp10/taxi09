@@ -271,7 +271,7 @@ const BikeCategoryList = () => {
     <div className="min-h-screen bg-white max-w-lg mx-auto font-sans relative overflow-x-hidden pb-24 flex flex-col no-scrollbar">
       {/* Header Block */}
       <div className="sticky top-0 bg-white z-30 border-b border-slate-50 shrink-0">
-        <div className="px-4 pt-10 pb-3 flex items-center gap-4">
+        <div className="px-4 pt-6 pb-3 flex items-center gap-4">
           <button
             onClick={() => navigate('/taxi/user/rental/bike-categories')}
             className="text-slate-800 hover:opacity-75 transition-opacity py-1 pr-1 shrink-0"

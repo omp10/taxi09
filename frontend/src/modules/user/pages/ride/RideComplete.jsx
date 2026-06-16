@@ -465,7 +465,7 @@ const RideComplete = () => {
         )}
       </AnimatePresence>
 
-      <div className="px-4 pb-8 pt-10 space-y-4">
+      <div className="px-4 pb-8 pt-6 space-y-4">
         <div className="flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 shadow-[0_8px_20px_rgba(16,185,129,0.28)]">
             <CheckCircle2 size={24} className="text-white" />
