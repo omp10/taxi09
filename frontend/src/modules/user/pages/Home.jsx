@@ -5,12 +5,18 @@ import { CalendarClock, ChevronRight, Clock3, MapPin, ShieldCheck, User } from '
 import HeaderGreeting from '../components/HeaderGreeting';
 import ServiceGrid from '../components/ServiceGrid';
 import LocationMapSection from '../components/LocationMapSection';
-import ActionsSection from '../components/ActionsSection';
-import PromoBanners from '../components/PromoBanners';
-import SavingsBanner from '../components/SavingsBanner';
-import ExplorerSection from '../components/ExplorerSection';
+
+
 import CheckUsOutSection from '../components/CheckUsOutSection';
 import BottomNavbar from '../components/BottomNavbar';
+import LandingHero from '../components/landing/LandingHero';
+import ChooseRideSection from '../components/landing/ChooseRideSection';
+import HowItWorksSection from '../components/landing/HowItWorksSection';
+import FeaturedVehiclesSection from '../components/landing/FeaturedVehiclesSection';
+import WhyChooseUsSection from '../components/landing/WhyChooseUsSection';
+import TestimonialsSection from '../components/landing/TestimonialsSection';
+import AppDownloadSection from '../components/landing/AppDownloadSection';
+import FooterSection from '../components/landing/FooterSection';
 import carIcon from '../../../assets/icons/car.png';
 import bikeIcon from '../../../assets/icons/bike.png';
 import rajwadaPalaceImg from '@/assets/rajwada_palace.png';
@@ -597,13 +603,7 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-text-primary pb-24 max-w-lg mx-auto relative overflow-hidden font-sans no-scrollbar">
-      <div className="absolute -top-16 right-[-40px] h-44 w-44 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
-      <div className="absolute top-52 left-[-60px] h-52 w-52 rounded-full bg-success/10 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-28 right-[-40px] h-40 w-40 rounded-full bg-blue-100/60 blur-3xl pointer-events-none" />
-
-
-      <div className="relative z-10 space-y-4 pb-6">
+    <div className="min-h-screen bg-[#0a0a0a] text-white pb-24 md:pb-6 max-w-lg md:max-w-none mx-auto md:mx-0 relative overflow-hidden font-sans no-scrollbar">      <div className="relative z-10 space-y-4 pb-6">
         <HeaderGreeting />
 
         {isScheduledAcceptedRide && (
@@ -838,70 +838,30 @@ const Home = () => {
           );
         })()}
 
-        <ServiceGrid />
+        {/* Landing UI */}
         {showDeferredSections ? (
-          <>
-            <ActionsSection />
-            <PromoBanners />
-            <LocationMapSection />
-            <SavingsBanner />
-            <ExplorerSection />
-
-          </>
+          <div className="w-full">
+            <LandingHero />
+            <ChooseRideSection />
+            <HowItWorksSection />
+            <FeaturedVehiclesSection />
+            <WhyChooseUsSection />
+            <TestimonialsSection />
+            <AppDownloadSection />
+            <FooterSection />
+          </div>
         ) : (
-          <div className="space-y-4 px-5">
-            <div className="h-[160px] animate-pulse rounded-[24px] border border-white/80 bg-white/70 shadow-[0_10px_22px_rgba(15,23,42,0.05)]" />
-            <div className="h-[112px] animate-pulse rounded-[24px] border border-white/80 bg-white/70 shadow-[0_10px_22px_rgba(15,23,42,0.05)]" />
-            <div className="h-[170px] animate-pulse rounded-[20px] border border-white/80 bg-white/70 shadow-[0_10px_22px_rgba(15,23,42,0.05)]" />
+          <div className="w-full">
+            <LandingHero />
+            <ChooseRideSection />
+            <HowItWorksSection />
+            <FeaturedVehiclesSection />
+            <WhyChooseUsSection />
+            <TestimonialsSection />
+            <AppDownloadSection />
+            <FooterSection />
           </div>
         )}
-        <div
-          className="relative w-full"
-          style={{
-            height: 360,
-          }}
-        >
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#EEF2F7]/20 via-[#EEF2F7]/5 to-transparent" />
-            <div className="relative z-10 flex h-full items-start justify-center px-6 pt-10 text-left">
-              <div className="flex max-w-[340px] flex-col items-start px-2 py-2 -translate-x-4">
-                <div className="text-[48px] font-semibold tracking-[-0.03em] text-[#FFB300] drop-shadow-[0_10px_30px_rgba(255,179,0,0.4)] leading-none">
-                  Taxi <span className="text-slate-900">09</span>
-                </div>
-                <div className="mt-2 text-[14px] font-sans italic font-medium tracking-[0.04em] text-slate-800">
-                  Your Trusted Journey Partner
-                </div>
-                <div className="mt-2 text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400">
-                  Made for Everyone, Crafted for You.
-                  <img
-                    src="/flag-in.svg"
-                    alt="India"
-                    className="ml-0.5 inline-block h-[2.2em] w-[1.2em] align-[-0.88em]"
-                    draggable={false}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              ...footerIllustrationFadeMask,
-            }}
-          >
-            <div className="absolute inset-0" style={footerIllustrationBg} />
-            <div
-              className="absolute inset-0 opacity-55"
-              style={{
-                ...footerIllustrationBg,
-                filter: 'blur(3px)',
-                ...footerIllustrationEdgeBlurMask,
-              }}
-            />
-          </div>
-        </div>
       </div>
 
       <AnimatePresence>

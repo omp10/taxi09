@@ -375,7 +375,7 @@ const AdminSectionPlaceholder = () => {
 // A wrapper to handle conditional layouts (Mobile for User/Driver, Full for Admin)
 const MainLayout = ({ children }) => {
   const location = useLocation();
-  const staticPages = ['/', '/about', '/contact', '/support', '/faq', '/services', '/privacy', '/terms', '/refund', '/cancellation', '/blog', '/links'];
+  const staticPages = ['/about', '/contact', '/support', '/faq', '/services', '/privacy', '/terms', '/refund', '/cancellation', '/blog', '/links'];
   const isStaticPath = staticPages.includes(location.pathname);
   const isAdminPath =
     location.pathname.startsWith('/admin') ||
@@ -397,7 +397,7 @@ const MainLayout = ({ children }) => {
 
   return (
     <div className="redigo-app min-h-screen bg-gray-50/50">
-      <main className="max-w-lg mx-auto shadow-2xl bg-white min-h-screen relative overflow-x-hidden">
+      <main className="max-w-lg md:max-w-none mx-auto md:mx-0 shadow-2xl md:shadow-none bg-white min-h-screen relative overflow-x-hidden">
         {children}
       </main>
     </div>
@@ -684,7 +684,7 @@ function App() {
             <Toaster position="top-right" />
             <Routes>
               {/* Static / Public routes */}
-              <Route path="/" element={<LandingPage />} />
+              <Route path="/" element={<Navigate to="/user" replace />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/support" element={<SupportPage />} />

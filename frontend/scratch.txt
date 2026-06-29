@@ -1,0 +1,2143 @@
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, Fuel, Shield, ChevronRight, ChevronLeft, ChevronDown, SlidersHorizontal, ArrowDownUp, Star, Info, Car, Search, X, Bike, MapPin, MessageSquare, Calendar, User, Compass, Truck, Check, Headset, Home, Clock, Sun, CalendarDays, RotateCcw } from 'lucide-react';
+import { userService } from '../../services/userService';
+import HeaderGreeting from '../../components/HeaderGreeting';
+import BottomNavbar from '../../components/BottomNavbar';
+import rentalCarImg from '@/assets/images/rental_car.png';
+import marutiSwiftImg from '@/assets/images/maruti_swift_nobg.png';
+import marutiBalenoImg from '@/assets/images/maruti_baleno_nobg.png';
+import hyundaiAuraImg from '@/assets/images/hyundai_aura_nobg.png';
+import toast from 'react-hot-toast';
+
+const DURATION_TABS = ['Hourly', 'Half-Day', 'Daily'];
+const RENTAL_SELECTED_VEHICLE_STORAGE_KEY = 'selectedRentalVehicleDetail';
+const RENTAL_PAGE_SIZE = 10;
+const RENTAL_ROUTE_PATH = '/taxi/user/rental';
+const SUBSCRIPTION_ROUTE_PATH = '/taxi/user/rental/subscriptions';
+const CATEGORY_FILTERS = [
+  { id: 'all', label: 'All', Icon: Star },
+  { id: 'car', label: 'Cars', Icon: Car },
+  { id: 'bike', label: 'Bikes', Icon: Bike },
+];
+
+const infoBanner = {
+  Hourly: 'Short rentals for quick city use.',
+  'Half-Day': 'Mid-length rentals for errands and local trips.',
+  Daily: 'Full-day rentals for flexible travel and extended usage.',
+};
+
+const durationSuffix = { Hourly: '/hr', 'Half-Day': '/6hr', Daily: '/day' };
+
+const gradientPairs = [
+  ['#FFF7ED', '#FFFFFF'],
+  ['#F0FDF4', '#FFFFFF'],
+  ['#EFF6FF', '#FFFFFF'],
+  ['#FDF4FF', '#FFFFFF'],
+  ['#FEF2F2', '#FFFFFF'],
+];
+
+const normalizeSearchValue = (value = '') => String(value || '').trim().toLowerCase();
+const normalizeRentalCategory = (value = '') => {
+  const normalized = normalizeSearchValue(value);
+
+  if (normalized === 'bike') return 'bike';
+  if (['car', 'suv', 'van'].includes(normalized)) return 'car';
+
+  return normalized;
+};
+
+const findPricingBucket = (pricing = [], minHours, maxHours = Infinity) =>
+  pricing.find(
+    (item) =>
+      Number(item.durationHours || 0) >= minHours &&
+      Number(item.durationHours || 0) <= maxHours &&
+      item.active !== false,
+  );
+
+const normalizeRentalVehicle = (item = {}, index = 0) => {
+  const [gradientFrom, gradientTo] = gradientPairs[index % gradientPairs.length];
+  const pricing = Array.isArray(item.pricing) ? item.pricing : [];
+  const hourly = findPricingBucket(pricing, 1, 5) || pricing[0] || null;
+  const halfDay = findPricingBucket(pricing, 6, 12) || hourly || pricing[0] || null;
+  const daily = findPricingBucket(pricing, 24, Infinity) || pricing[pricing.length - 1] || halfDay || hourly;
+  const capacity = Number(item.capacity || 0);
+  const luggageCapacity = Number(item.luggageCapacity || 0);
+  const isBike = String(item.vehicleCategory || '').toLowerCase() === 'bike';
+
+  const featureSet = new Set(Array.isArray(item.amenities) ? item.amenities.filter(Boolean) : []);
+  if (capacity > 0) featureSet.add(`${capacity} seat${capacity === 1 ? '' : 's'}`);
+  if (luggageCapacity > 0) featureSet.add(`${luggageCapacity} bag${luggageCapacity === 1 ? '' : 's'} space`);
+  if (!featureSet.size) {
+    featureSet.add(isBike ? 'Helmet included' : 'Comfort ride');
+  }
+
+  const prices = {
+    Hourly: Number(hourly?.price || 0),
+    'Half-Day': Number(halfDay?.price || 0),
+    Daily: Number(daily?.price || 0),
+  };
+
+  const kmLimit = {
+    Hourly: `${Number(hourly?.includedKm || 0)} km`,
+    'Half-Day': `${Number(halfDay?.includedKm || 0)} km`,
+    Daily: `${Number(daily?.includedKm || 0)} km`,
+  };
+
+  const sortedPackages = [...pricing].sort(
+    (a, b) => Number(a.durationHours || 0) - Number(b.durationHours || 0),
+  );
+  const mostExpensive = sortedPackages.reduce(
+    (best, current) =>
+      Number(current.price || 0) > Number(best?.price || 0) ? current : best,
+    sortedPackages[0] || null,
+  );
+  const cheapest = sortedPackages.reduce(
+    (best, current) =>
+      Number(current.price || 0) < Number(best?.price || 0) ? current : best,
+    sortedPackages[0] || null,
+  );
+
+  let tag = `${item.vehicleCategory || 'Rental'} Ready`;
+  let tagColor = 'text-blue-600';
+  let tagBg = 'bg-blue-50 border-blue-100';
+
+  if (mostExpensive && String(mostExpensive.id) === String(daily?.id)) {
+    tag = 'Premium';
+    tagColor = 'text-purple-600';
+    tagBg = 'bg-purple-50 border-purple-100';
+  } else if (cheapest && String(cheapest.id) === String(hourly?.id)) {
+    tag = 'Best Value';
+    tagColor = 'text-emerald-600';
+    tagBg = 'bg-emerald-50 border-emerald-100';
+  } else if (isBike) {
+    tag = 'Most Popular';
+    tagColor = 'text-orange-500';
+    tagBg = 'bg-orange-50 border-orange-100';
+  }
+
+  const gallery = [
+    item.coverImage,
+    item.image,
+    ...(Array.isArray(item.galleryImages) ? item.galleryImages : []),
+    ...(Array.isArray(item.gallery) ? item.gallery : []),
+    item.map_icon,
+  ].filter((value, currentIndex, array) => value && array.indexOf(value) === currentIndex);
+
+  const activeSubscriptionPlans = Array.isArray(item.subscription?.plans)
+    ? item.subscription.plans.filter((plan) => plan?.active !== false)
+    : [];
+  const primarySubscriptionPlan = [...activeSubscriptionPlans].sort(
+    (a, b) => Number(a.durationDays || 0) - Number(b.durationDays || 0),
+  )[0] || null;
+
+  return {
+    id: item.id || item._id,
+    name: item.name || 'Rental Vehicle',
+    tag,
+    tagColor,
+    tagBg,
+    image: item.image || '',
+    rating: '4.8',
+    fuel: isBike ? 'Self-drive · License required' : 'Self-drive · Clean and sanitized',
+    prices,
+    kmLimit,
+    features: Array.from(featureSet).slice(0, 4),
+    gradientFrom,
+    gradientTo,
+    rawPricing: pricing,
+    gallery,
+    blueprint: item.blueprint || { lowerDeck: [], upperDeck: [] },
+    amenities: Array.isArray(item.amenities) ? item.amenities.filter(Boolean) : [],
+    shortDescription: item.short_description || '',
+    description: item.description || '',
+    luggageCapacity,
+    capacity,
+    vehicleCategory: item.vehicleCategory || 'Vehicle',
+    normalizedCategory: normalizeRentalCategory(item.vehicleCategory),
+    advancePayment: {
+      enabled: Boolean(item.advancePayment?.enabled),
+      paymentMode: item.advancePayment?.paymentMode || 'percentage',
+      amount: Number(item.advancePayment?.amount || 0),
+      label: item.advancePayment?.label || 'Advance booking payment',
+      notes: item.advancePayment?.notes || '',
+    },
+    subscription: {
+      enabled: Boolean(item.subscription?.enabled),
+      plans: activeSubscriptionPlans,
+      primaryPlan: primarySubscriptionPlan,
+    },
+  };
+};
+
+const RentalSkeleton = () => (
+  <div className="space-y-4">
+    {[1, 2, 3].map((i) => (
+      <div key={i} className="rounded-[24px] border border-white/80 bg-white/90 shadow-[0_8px_24px_rgba(15,23,42,0.06)] overflow-hidden">
+        <div className="px-4 pt-3.5 pb-3 flex items-center justify-between bg-slate-50/50">
+          <div className="flex-1 space-y-2">
+            <div className="h-3 w-16 skeleton rounded-full" />
+            <div className="h-5 w-32 skeleton rounded-md" />
+            <div className="h-3 w-24 skeleton rounded-md" />
+            <div className="flex gap-2">
+              <div className="h-3 w-8 skeleton rounded-full" />
+              <div className="h-3 w-12 skeleton rounded-full" />
+            </div>
+          </div>
+          <div className="h-16 w-20 skeleton rounded-2xl shrink-0" />
+        </div>
+        <div className="px-4 pb-4 pt-3 space-y-3">
+          <div className="flex gap-1">
+            <div className="h-4 w-12 skeleton rounded-full" />
+            <div className="h-4 w-12 skeleton rounded-full" />
+            <div className="h-4 w-12 skeleton rounded-full" />
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <div className="h-2 w-8 skeleton rounded-full" />
+              <div className="h-6 w-20 skeleton rounded-md" />
+            </div>
+            <div className="h-9 w-24 skeleton rounded-xl" />
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const LOCATION_SUGGESTIONS = [
+  "South Tukoganj, Indore",
+  "Indore Airport (IDR), Indore",
+  "Vijay Nagar, Indore",
+  "Palasia, Indore",
+  "Rajwada, Indore",
+  "Bhopal Junction, Bhopal"
+];
+
+const BikeRentalHome = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isSubscriptionRoute = location.pathname === SUBSCRIPTION_ROUTE_PATH;
+  const [selectedDuration, setSelectedDuration] = useState('Hourly');
+  const [vehicles, setVehicles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [searchQuery, setSearchQuery] = useState(() => {
+    return location.state?.preSelectedSearch || '';
+  });
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState(() => {
+    if (location.state?.preSelectedCategory) {
+      return location.state.preSelectedCategory;
+    }
+    return 'all';
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [activeSegment, setActiveSegment] = useState(isSubscriptionRoute ? 'subscriptions' : 'rentals'); // 'rentals' or 'subscriptions'
+  const [subCategory, setSubCategory] = useState('Hatchbacks'); // 'Hatchbacks', 'Sedans', 'SUVs' for subscriptions
+  const [isAddressEntered, setIsAddressEntered] = useState(false);
+  const [activeFaqIndex, setActiveFaqIndex] = useState(null);
+  const [locationSearchText, setLocationSearchText] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('South Tukoganj, Indore');
+  const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
+  const [banners, setBanners] = useState([]);
+  const [bannersLoading, setBannersLoading] = useState(true);
+  const [offers, setOffers] = useState([]);
+  const [offersLoading, setOffersLoading] = useState(true);
+
+  useEffect(() => {
+    setActiveSegment(isSubscriptionRoute ? 'subscriptions' : 'rentals');
+  }, [isSubscriptionRoute]);
+
+  const navigateToSegment = (segment) => {
+    setIsAddressEntered(false);
+
+    if (segment === 'subscriptions') {
+      navigate(SUBSCRIPTION_ROUTE_PATH);
+      return;
+    }
+
+    navigate(RENTAL_ROUTE_PATH);
+  };
+
+  const resolveImageUrl = (img) => {
+    if (!img) return null;
+    if (img.startsWith('data:') || img.startsWith('http')) return img;
+    const baseUrl = globalThis.__LEGACY_BACKEND_ORIGIN__ || '';
+    return `${baseUrl}/${img.startsWith('/') ? img.slice(1) : img}`;
+  };
+
+  const taxi09Cars = useMemo(() => {
+    const realCars = vehicles.filter(v => v.normalizedCategory === 'car');
+    if (realCars.length > 0) {
+      return realCars.map((car, idx) => ({
+        id: car.id,
+        name: car.name.split(' ').slice(1).join(' ') || car.name,
+        brand: car.name.split(' ')[0] || 'Car',
+        image: car.image || rentalCarImg,
+        prices: car.prices,
+        kmLimit: car.kmLimit,
+        fuel: car.fuel,
+        features: car.features || ['5 Seats', 'Automatic', 'AC'],
+        categoryType: car.capacity <= 5 ? (idx % 2 === 0 ? 'Hatchbacks' : 'Sedans') : 'SUVs',
+        year: '2024-25',
+        rawVehicle: car
+      }));
+    }
+
+    return [
+      {
+        id: 'taxi09-1',
+        name: 'XUV 700 AT',
+        brand: 'Mahindra',
+        image: rentalCarImg,
+        prices: { Hourly: 240, 'Half-Day': 1400, Daily: 5832 },
+        kmLimit: { Daily: '120 km' },
+        fuel: 'Diesel · Automatic',
+        features: ['SUV', 'Automatic', '7 Seats'],
+        categoryType: 'SUVs',
+        year: '2024-25'
+      },
+      {
+        id: 'taxi09-2',
+        name: 'Swift 2024-25',
+        brand: 'Maruti',
+        image: rentalCarImg,
+        prices: { Hourly: 120, 'Half-Day': 700, Daily: 2592 },
+        kmLimit: { Daily: '120 km' },
+        fuel: 'Petrol · Manual',
+        features: ['Hatchback', 'Manual', '5 Seats'],
+        categoryType: 'Hatchbacks',
+        year: '2024-25'
+      },
+      {
+        id: 'taxi09-3',
+        name: 'Alto 800 VXI',
+        brand: 'Maruti',
+        image: rentalCarImg,
+        prices: { Hourly: 90, 'Half-Day': 500, Daily: 1800 },
+        kmLimit: { Daily: '120 km' },
+        fuel: 'Petrol · Manual',
+        features: ['Hatchback', 'Manual', '5 Seats'],
+        categoryType: 'Hatchbacks',
+        year: '2023-24'
+      },
+      {
+        id: 'taxi09-4',
+        name: 'Alto K10',
+        brand: 'Maruti',
+        image: rentalCarImg,
+        prices: { Hourly: 95, 'Half-Day': 550, Daily: 1950 },
+        kmLimit: { Daily: '120 km' },
+        fuel: 'Petrol · Manual',
+        features: ['Hatchback', 'Manual', '5 Seats'],
+        categoryType: 'Hatchbacks',
+        year: '2024'
+      },
+      {
+        id: 'taxi09-5',
+        name: 'Verna 1.5',
+        brand: 'Hyundai',
+        image: rentalCarImg,
+        prices: { Hourly: 160, 'Half-Day': 900, Daily: 3200 },
+        kmLimit: { Daily: '120 km' },
+        fuel: 'Petrol · Automatic',
+        features: ['Sedan', 'Automatic', '5 Seats'],
+        categoryType: 'Sedans',
+        year: '2024'
+      }
+    ];
+  }, [vehicles]);
+
+  const subscriptionVehicles = useMemo(() => {
+    return vehicles
+      .filter((vehicle) => vehicle.subscription?.enabled && vehicle.subscription?.plans?.length)
+      .map((vehicle, index) => {
+        const primaryPlan = vehicle.subscription?.primaryPlan || vehicle.subscription?.plans?.[0] || null;
+        const brandParts = String(vehicle.name || '').trim().split(' ').filter(Boolean);
+        const brand = brandParts[0] || vehicle.vehicleCategory || 'Vehicle';
+        const displayName = brandParts.slice(1).join(' ') || vehicle.name || 'Subscription Vehicle';
+
+        return {
+          id: vehicle.id,
+          brand,
+          name: displayName,
+          image: vehicle.image || rentalCarImg,
+          prices: {
+            Hourly: Number(primaryPlan?.price || 0),
+            'Half-Day': Number(primaryPlan?.price || 0),
+            Daily: Number(primaryPlan?.price || 0),
+          },
+          kmLimit: {
+            Hourly: `${Number(primaryPlan?.includedKm || 0)} km`,
+            'Half-Day': `${Number(primaryPlan?.includedKm || 0)} km`,
+            Daily: `${Number(primaryPlan?.includedKm || 0)} km`,
+          },
+          fuel: vehicle.fuel,
+          features: vehicle.features || [],
+          categoryType: normalizeRentalCategory(vehicle.vehicleCategory) === 'bike'
+            ? 'Bikes'
+            : Number(vehicle.capacity || 0) <= 5
+            ? (index % 2 === 0 ? 'Hatchbacks' : 'Sedans')
+            : 'SUVs',
+          year: primaryPlan ? `${primaryPlan.durationDays} day plan` : 'Subscription',
+          rawVehicle: vehicle,
+          subscriptionPlan: primaryPlan,
+        };
+      });
+  }, [vehicles]);
+
+  const displayedCars = useMemo(() => {
+    if (activeSegment === 'rentals') {
+      return taxi09Cars.filter(c => c.prices?.Daily > 0);
+    }
+    return subscriptionVehicles.filter(c => c.categoryType === subCategory);
+  }, [taxi09Cars, activeSegment, subscriptionVehicles, subCategory]);
+
+  const rentalBanners = useMemo(() => {
+    return banners.filter(b => b.type === 'rental' || !b.type);
+  }, [banners]);
+
+  const subscriptionBanners = useMemo(() => {
+    return banners.filter(b => b.type === 'subscription');
+  }, [banners]);
+
+  const openVehicleDetail = (vehicle, options = {}) => {
+    const payload = {
+      vehicle,
+      duration: selectedDuration,
+      detailMode: options.detailMode || 'rental',
+      selectedSubscriptionPlanId: options.selectedSubscriptionPlanId || '',
+    };
+
+    try {
+      window.sessionStorage.setItem(RENTAL_SELECTED_VEHICLE_STORAGE_KEY, JSON.stringify(payload));
+    } catch {
+      // Ignore storage failures and continue with navigation state.
+    }
+
+    navigate('/rental/vehicle', {
+      state: {
+        duration: payload.duration,
+        detailMode: payload.detailMode,
+        selectedSubscriptionPlanId: payload.selectedSubscriptionPlanId,
+      },
+    });
+  };
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadVehicles = async () => {
+      setLoading(true);
+      setErrorMessage('');
+      try {
+        const response = await userService.getRentalVehicles();
+        const results = response?.data?.results || response?.results || [];
+
+        if (!mounted) return;
+
+        setVehicles(
+          results
+            .map((item, index) => normalizeRentalVehicle(item, index))
+            .filter((item) => Object.values(item.prices).some((price) => Number(price) > 0)),
+        );
+      } catch (error) {
+        if (mounted) {
+          setErrorMessage(error?.message || 'Could not load rental vehicles.');
+        }
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    loadVehicles();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadBanners = async () => {
+      try {
+        setBannersLoading(true);
+        const response = await userService.getBanners();
+        const results = response?.data?.results || response?.results || [];
+        if (mounted) {
+          setBanners(results.filter(b => b.active !== false));
+        }
+      } catch (error) {
+        console.error('Failed to load banners', error);
+      } finally {
+        if (mounted) {
+          setBannersLoading(false);
+        }
+      }
+    };
+    loadBanners();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadOffers = async () => {
+      try {
+        setOffersLoading(true);
+        const response = await userService.getActiveRentalCoupons();
+        const results = response?.data?.data || response?.data?.results || response?.data || [];
+        if (mounted) {
+          setOffers(results.filter(o => o.active !== false));
+        }
+      } catch (error) {
+        console.error('Failed to load offers', error);
+      } finally {
+        if (mounted) {
+          setOffersLoading(false);
+        }
+      }
+    };
+    loadOffers();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const handleCopyCode = (code) => {
+    navigator.clipboard.writeText(code);
+    toast.success(`Coupon code "${code}" copied!`, { icon: '📋' });
+  };
+
+  const availableCountLabel = useMemo(() => {
+    const bikes = vehicles.filter(
+      (item) => String(item.vehicleCategory || '').toLowerCase() === 'bike',
+    ).length;
+
+    if (bikes === vehicles.length && vehicles.length > 0) {
+      return `${vehicles.length} bikes`;
+    }
+
+    return `${vehicles.length} vehicles`;
+  }, [vehicles]);
+
+  const rentalSuggestions = useMemo(() => {
+    const seen = new Set();
+    const suggestions = [];
+
+    vehicles.forEach((vehicle) => {
+      [vehicle.name, vehicle.vehicleCategory, ...(vehicle.amenities || []), ...(vehicle.features || [])]
+        .map((item) => String(item || '').trim())
+        .filter(Boolean)
+        .forEach((item) => {
+          const key = item.toLowerCase();
+          if (!seen.has(key)) {
+            seen.add(key);
+            suggestions.push(item);
+          }
+        });
+    });
+
+    return suggestions;
+  }, [vehicles]);
+
+  const visibleSuggestions = useMemo(() => {
+    const query = normalizeSearchValue(searchQuery);
+
+    if (!query) {
+      return rentalSuggestions.slice(0, 6);
+    }
+
+    return rentalSuggestions
+      .filter((item) => normalizeSearchValue(item).includes(query))
+      .slice(0, 6);
+  }, [rentalSuggestions, searchQuery]);
+
+  const categoryCounts = useMemo(() => {
+    return vehicles.reduce(
+      (accumulator, vehicle) => {
+        const category = normalizeRentalCategory(vehicle.normalizedCategory || vehicle.vehicleCategory);
+        if (category === 'car') accumulator.car += 1;
+        if (category === 'bike') accumulator.bike += 1;
+        accumulator.all += 1;
+        return accumulator;
+      },
+      { all: 0, car: 0, bike: 0 },
+    );
+  }, [vehicles]);
+
+  const filteredVehicles = useMemo(() => {
+    const query = normalizeSearchValue(searchQuery);
+
+    return vehicles.filter((vehicle) => {
+      const matchesCategory =
+        selectedCategoryFilter === 'all' ||
+        normalizeRentalCategory(vehicle.normalizedCategory || vehicle.vehicleCategory) === selectedCategoryFilter;
+
+      if (!matchesCategory) {
+        return false;
+      }
+
+      if (!query) {
+        return true;
+      }
+
+      const haystack = [
+        vehicle.name,
+        vehicle.vehicleCategory,
+        vehicle.shortDescription,
+        vehicle.description,
+        vehicle.fuel,
+        ...(vehicle.amenities || []),
+        ...(vehicle.features || []),
+      ]
+        .join(' ')
+        .toLowerCase();
+
+      return haystack.includes(query);
+    });
+  }, [searchQuery, selectedCategoryFilter, vehicles]);
+
+  const filteredCountLabel = `${filteredVehicles.length} result${filteredVehicles.length === 1 ? '' : 's'}`;
+  const totalPages = Math.max(1, Math.ceil(filteredVehicles.length / RENTAL_PAGE_SIZE));
+  const paginatedVehicles = useMemo(() => {
+    const startIndex = (currentPage - 1) * RENTAL_PAGE_SIZE;
+    return filteredVehicles.slice(startIndex, startIndex + RENTAL_PAGE_SIZE);
+  }, [currentPage, filteredVehicles]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCategoryFilter]);
+
+  useEffect(() => {
+    setCurrentPage((previousPage) => Math.min(previousPage, totalPages));
+  }, [totalPages]);
+
+  // If selectedCategoryFilter is 'car', render the custom Taxi09 UI
+  const searchResultCars = useMemo(() => {
+    return [
+      {
+        id: 'search-1',
+        brand: 'Maruti',
+        name: 'Swift 2024-25',
+        fuel: 'Petrol · Manual',
+        capacity: 5,
+        price: 4896,
+        image: marutiSwiftImg,
+        distance: '7 km | Lake view..'
+      },
+      {
+        id: 'search-2',
+        brand: 'Maruti',
+        name: 'Baleno 2024-25',
+        fuel: 'Petrol · Manual',
+        capacity: 5,
+        price: 5088,
+        image: marutiBalenoImg,
+        distance: '7 km | Lake view..'
+      },
+      {
+        id: 'search-3',
+        brand: 'Hyundai',
+        name: 'Aura 2024-25 (P)',
+        fuel: 'Petrol · Manual',
+        capacity: 5,
+        price: 4992,
+        image: hyundaiAuraImg,
+        distance: '7 km | Lake view..'
+      },
+      {
+        id: 'search-4',
+        brand: 'Mahindra',
+        name: 'XUV 700 AT',
+        fuel: 'Diesel · Automatic',
+        capacity: 7,
+        price: 5832,
+        image: rentalCarImg,
+        distance: '10 km | Indore Airport'
+      }
+    ];
+  }, []);
+
+  if (activeSegment === 'subscriptions' || (activeSegment === 'rentals' && selectedCategoryFilter === 'car')) {
+    if (activeSegment === 'rentals' && isAddressEntered) {
+      // 2. Render Search Results View (Indore Listing)
+      return (
+        <div className="min-h-screen bg-[#0a0a0a] text-white max-w-lg md:max-w-none md:mx-0 w-full mx-auto font-sans relative pb-24 md:pt-24 flex flex-col justify-between overflow-x-hidden no-scrollbar">
+          {/* Sticky Header block containing Header, Filters, Search input */}
+          <div className="sticky top-0 z-30 bg-[#111] border-b border-white/10 shadow-sm flex flex-col shrink-0">
+            {/* Header */}
+            <div className="bg-[#111] px-4 pt-6 pb-3 flex items-center justify-between">
+              <div className="flex items-center gap-3.5">
+                <button
+                  onClick={() => setIsAddressEntered(false)}
+                  className="text-white hover:text-[#FFC107] transition-colors py-1 pr-1 shrink-0"
+                >
+                  <ChevronLeft size={24} strokeWidth={2} />
+                </button>
+                <div className="min-w-0" onClick={() => {
+                  setIsAddressEntered(false);
+                  setLocationSearchText('');
+                  setShowLocationSuggestions(true);
+                }}>
+                  <h1 className="text-[16px] font-bold text-white tracking-tight leading-tight flex items-center gap-1 cursor-pointer">
+                    {selectedLocation}
+                  </h1>
+                  <p className="text-[11px] font-medium text-gray-400 mt-0.5 leading-none">
+                    04 Jun <span className="text-gray-300 font-semibold">08:00 am Thu</span> — 05 Jun <span className="text-gray-300 font-semibold">09:00 pm Fri</span>
+                  </p>
+                </div>
+              </div>
+              <button className="text-gray-400 hover:text-white p-1">
+                <ChevronDown size={20} strokeWidth={2} />
+              </button>
+            </div>
+
+            {/* Filters Row */}
+            <div className="px-4 py-3 flex gap-2 overflow-x-auto no-scrollbar border-b border-white/10 bg-[#1a1a1a]">
+              <button className="bg-[#FFC107] text-black flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-semibold shrink-0">
+                <SlidersHorizontal size={14} strokeWidth={2} />
+                Filter
+              </button>
+              
+              <button className="bg-[#FFC107] text-black p-1.5 rounded-lg shrink-0 flex items-center justify-center w-8.5 h-8.5">
+                <ArrowDownUp size={14} strokeWidth={2} />
+              </button>
+
+              <button className="border border-white/20 bg-white/5 text-gray-300 px-3 py-1.5 rounded-full text-[13px] font-medium shrink-0 hover:bg-white/10">
+                Delivery only
+              </button>
+              <button className="border border-white/20 bg-white/5 text-gray-300 px-3 py-1.5 rounded-full text-[13px] font-medium shrink-0 hover:bg-white/10">
+                SUV
+              </button>
+              <button className="border border-white/20 bg-white/5 text-gray-300 px-3 py-1.5 rounded-full text-[13px] font-medium shrink-0 hover:bg-white/10">
+                With...
+              </button>
+            </div>
+
+            {/* Search filter input */}
+            <div className="bg-[#1a1a1a] px-4 py-2 border-b border-white/10">
+              <div className="relative">
+                <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400">
+                  <Search size={16} strokeWidth={2} />
+                </span>
+                <input
+                  type="text"
+                  placeholder="Search by Car Model or Brand"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-[#2a2a2a] border border-white/10 rounded-lg pl-9 pr-4 py-2 text-[13px] font-medium text-white placeholder:text-gray-500 focus:outline-none focus:border-[#FFC107] transition-colors shadow-sm"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Scrollable content list */}
+          <div className="flex-1 overflow-y-auto bg-[#0a0a0a] pb-12 no-scrollbar">
+            {/* Results Header */}
+            <div className="flex items-center justify-between px-4 py-3.5 select-none bg-[#0a0a0a]">
+              <h3 className="text-[17px] font-bold text-white">16 cars available</h3>
+              <span className="text-[12px] font-medium text-gray-400">Duration: 1 Day, 13 Hrs</span>
+            </div>
+
+            {/* Notice Banner */}
+            <div className="mx-4 mb-4 bg-white/5 rounded-2xl p-4 flex gap-4 border border-white/10 select-none">
+              <div className="w-[55%]">
+                <h4 className="text-[14px] font-bold text-white leading-tight">
+                  Rentals will be chargeable on per day basis <br />
+                  <span className="font-semibold text-[#FFC107] text-[11px] block mt-1">(Only in {selectedLocation.split(',').pop().trim()})</span>
+                </h4>
+              </div>
+              <div className="w-[45%] flex flex-col justify-between text-[11px] text-gray-300 leading-snug">
+                <p>
+                  Morning 9am to 9am will be considered as one day
+                </p>
+                <span className="text-[#FFC107] hover:text-white transition-colors font-bold mt-1.5 inline-flex items-center hover:underline cursor-pointer">
+                  Know more &gt;
+                </span>
+              </div>
+            </div>
+
+            {/* Cars List */}
+            <div className="px-4 space-y-4">
+              {searchResultCars
+                .filter(car => {
+                  if (!searchQuery) return true;
+                  return `${car.brand} ${car.name}`.toLowerCase().includes(searchQuery.toLowerCase());
+                })
+                .map((car) => (
+                  <div
+                    key={car.id}
+                    onClick={() => {
+                      openVehicleDetail(normalizeRentalVehicle({
+                        id: car.id,
+                        name: `${car.brand} ${car.name}`,
+                        vehicleCategory: 'car',
+                        coverImage: car.image,
+                        fuel: car.fuel,
+                        capacity: car.capacity,
+                        pricing: [
+                          { durationHours: 24, price: car.price, includedKm: 120, active: true }
+                        ]
+                      }));
+                    }}
+                    className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-4 flex flex-col gap-3 relative overflow-hidden cursor-pointer hover:border-[#FFC107] transition-all group animate-fadeIn"
+                  >
+                    {/* Top row */}
+                    <div className="flex justify-between items-start">
+                      {/* Left: Image & Badge */}
+                      <div className="w-[40%] flex flex-col items-center">
+                        <img
+                          src={car.image}
+                          alt={car.name}
+                          className="h-16 object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-lg"
+                        />
+                        <span className="bg-[#FFC107] text-black text-[7.5px] font-extrabold px-2 py-0.5 rounded-full mt-2 text-center whitespace-nowrap block shadow-sm leading-none">
+                          Selling Fast for the selected dates
+                        </span>
+                      </div>
+
+                      {/* Right: metadata */}
+                      <div className="flex-1 pl-4 flex flex-col justify-between min-h-[90px]">
+                        <div>
+                          <span className="text-[10px] font-bold text-[#FFC107] block uppercase leading-none">{car.brand}</span>
+                          <h4 className="text-[15.5px] font-bold text-white tracking-tight leading-tight mt-1">{car.name}</h4>
+                          
+                          {/* Details list with icons */}
+                          <div className="flex items-center gap-2 text-[10px] font-medium text-gray-400 mt-2">
+                            <div className="flex items-center gap-0.5">
+                              <Fuel size={11} className="text-[#FFC107]" />
+                              <span>{car.fuel.split(' · ')[0]}</span>
+                            </div>
+                            <span>·</span>
+                            <div className="flex items-center gap-0.5">
+                              <svg className="w-3 h-3 text-[#FFC107]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                                <path d="M6 3v18M12 3v18M18 3v18M6 12h12" />
+                              </svg>
+                              <span>{car.fuel.split(' · ')[1]}</span>
+                            </div>
+                            <span>·</span>
+                            <div className="flex items-center gap-0.5">
+                              <svg className="w-3 h-3 text-[#FFC107]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M7 10c0-1.1.9-2 2-2h6a2 2 0 0 1 2 2v10H7V10z" />
+                                <path d="M5 21h14" />
+                              </svg>
+                              <span>{car.capacity} Seats</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Price & arrow */}
+                        <div className="mt-3 flex items-center justify-end text-[#FFC107] font-bold">
+                          <span className="text-[18px] leading-none">₹{car.price.toLocaleString('en-IN')}</span>
+                          <ChevronRight size={18} strokeWidth={2.5} className="ml-0.5 opacity-80" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="h-px bg-white/10 w-full" />
+
+                    {/* Bottom row */}
+                    <div className="flex items-center justify-between text-[11px] font-medium text-gray-400 select-none py-0.5">
+                      <div className="flex items-center gap-1.5 text-gray-300">
+                        <div className="w-4.5 h-4.5 rounded-full border border-[#FFC107]/40 bg-[#FFC107]/10 text-[#FFC107] flex items-center justify-center shrink-0">
+                          <Check size={10} strokeWidth={3} />
+                        </div>
+                        <span className="font-semibold text-white">Home delivery</span>
+                      </div>
+                      
+                      <span className="text-[9.5px] font-bold text-gray-500">or</span>
+
+                      <div className="flex items-center gap-1.5 text-gray-300">
+                        <span className="border border-white/20 bg-white/5 text-[10px] font-semibold text-gray-400 px-2 py-0.5 rounded-md">
+                          Pick from
+                        </span>
+                        <div className="flex items-center gap-1">
+                          <svg className="w-3.5 h-3.5 text-[#FFC107] rotate-45" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M21 3L3 10.53v.98l6.84 2.65L12.48 21h.98L21 3z" />
+                          </svg>
+                          <span className="font-bold text-white">{car.distance}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+
+          {/* Floating headset button */}
+          <div 
+            onClick={() => {
+              navigate('/taxi/user/support');
+              toast('Connecting to Support Chat...', { icon: '💬' });
+            }}
+            className="fixed bottom-24 right-5 w-14 h-14 rounded-full bg-[#0B94A4] flex items-center justify-center text-white shadow-xl z-50 cursor-pointer hover:bg-[#097E8B] transition-colors"
+          >
+            <Headset size={22} strokeWidth={2.2} />
+          </div>
+
+          {/* Sticky Bottom Navbar */}
+          <div className="fixed bottom-0 inset-x-0 bg-[#0a0a0a] border-t border-white/10 py-2.5 px-4 shadow-[0_-8px_30px_rgba(0,0,0,0.5)] z-40 max-w-lg md:max-w-none w-full md:w-[calc(100%-16rem)] md:left-64 md:px-8 mx-auto flex items-center justify-between">
+            <button
+              onClick={() => navigateToSegment('rentals')}
+              className={`flex flex-col items-center gap-1 flex-1 py-1 ${activeSegment === 'rentals' ? 'text-[#FFC107]' : 'text-gray-500 hover:text-gray-300'}`}
+            >
+              <div className={`w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 ${activeSegment === 'rentals' ? 'border-[#FFC107] bg-[#FFC107]/10' : 'border-gray-500'}`}>
+                R
+              </div>
+              <span className="text-[9.5px] font-bold tracking-wide uppercase">Rentals</span>
+            </button>
+            
+            <button
+              onClick={() => navigateToSegment('subscriptions')}
+              className={`flex flex-col items-center gap-1 flex-1 py-1 relative ${activeSegment === 'subscriptions' ? 'text-[#FFC107]' : 'text-gray-500 hover:text-gray-300'}`}
+            >
+              <span className="absolute top-[-10px] bg-rose-500 text-[6.5px] font-black text-white px-1.5 py-0.5 rounded-[4px] uppercase tracking-wide border border-rose-600">
+                NEW
+              </span>
+              <div className={`w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 ${activeSegment === 'subscriptions' ? 'border-[#FFC107] bg-[#FFC107]/10' : 'border-gray-500'}`}>
+                S
+              </div>
+              <span className="text-[9.5px] font-bold tracking-wide uppercase">Subscriptions</span>
+            </button>
+
+            <button
+              onClick={() => navigate('/taxi/user/activity')}
+              className="flex flex-col items-center gap-1 flex-1 py-1 text-gray-500 hover:text-[#FFC107] transition-colors"
+            >
+              <Calendar size={20} strokeWidth={2.4} />
+              <span className="text-[9.5px] font-bold tracking-wide uppercase">Bookings</span>
+            </button>
+
+            <button
+              onClick={() => navigate('/taxi/user/support')}
+              className="flex flex-col items-center gap-1 flex-1 py-1 text-gray-500 hover:text-[#FFC107] transition-colors"
+            >
+              <MessageSquare size={20} strokeWidth={2.4} />
+              <span className="text-[9.5px] font-bold tracking-wide uppercase">Support</span>
+            </button>
+
+            <button
+              onClick={() => navigate('/taxi/user/profile')}
+              className="flex flex-col items-center gap-1 flex-1 py-1 text-gray-500 hover:text-[#FFC107] transition-colors"
+            >
+              <User size={20} strokeWidth={2.4} />
+              <span className="text-[9.5px] font-bold tracking-wide uppercase">More</span>
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // 1. Render Taxi09 Dashboard View (Dark header, featured list)
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] text-white max-w-lg md:max-w-none md:mx-0 w-full mx-auto font-sans relative pb-24 md:pt-0 flex flex-col justify-between overflow-x-hidden no-scrollbar">
+        <HeaderGreeting />
+        
+        {/* Dark Header Block */}
+        <div className="bg-[#0a0a0a] border-b border-white/10 text-white px-5 pt-4 pb-6 rounded-b-[40px] shadow-lg relative shrink-0 z-20">
+          <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-[#FFC107]/5 blur-[40px] pointer-events-none" />
+          
+          <div className="flex items-center gap-4 mb-6">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/taxi/user/rental/type')}
+              className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white transition-all shrink-0"
+            >
+              <ArrowLeft size={18} strokeWidth={2.5} />
+            </motion.button>
+            <div className="min-w-0">
+              <h1 className="text-[20px] font-black tracking-tight text-white leading-none">Rental Services</h1>
+            </div>
+          </div>
+
+          {/* Row 2: Segment Selector Tabs */}
+          <div className="bg-white/5 backdrop-blur-md rounded-2xl p-1.5 flex border border-white/10 shadow-inner mb-6 relative">
+            <button
+              onClick={() => navigateToSegment('rentals')}
+              className={`relative flex-1 py-2.5 rounded-[14px] text-[12px] font-extrabold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center outline-none ${
+                activeSegment === 'rentals' ? 'bg-[#FFC107] text-black shadow-md' : 'text-white/80 hover:bg-white/5'
+              }`}
+            >
+              <span className="text-[13px] font-black">Rentals</span>
+              <span className={`text-[8px] font-bold mt-0.5 ${activeSegment === 'rentals' ? 'text-black/70' : 'text-white/60'}`}>For hours & days</span>
+              {activeSegment === 'rentals' && (
+                <div className="absolute bottom-[-10px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#FFC107]" />
+              )}
+            </button>
+            <button
+              onClick={() => navigateToSegment('subscriptions')}
+              className={`relative flex-1 py-2.5 rounded-[14px] text-[12px] font-extrabold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center outline-none ${
+                activeSegment === 'subscriptions' ? 'bg-[#FFC107] text-black shadow-md' : 'text-white/80 hover:bg-white/5'
+              }`}
+            >
+              <span className="text-[13px] font-black">Subscriptions</span>
+              <span className={`text-[8px] font-bold mt-0.5 ${activeSegment === 'subscriptions' ? 'text-black/70' : 'text-white/60'}`}>For months & years</span>
+              {activeSegment === 'subscriptions' && (
+                <div className="absolute bottom-[-10px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#FFC107]" />
+              )}
+            </button>
+          </div>
+
+          {/* Row 3: Horizontal Pills Grid */}
+          <div className="flex gap-2 overflow-x-auto no-scrollbar mb-5">
+            {activeSegment === 'rentals' ? (
+              <>
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-white/20 bg-white/10 text-[11px] font-bold text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/15">
+                  <Star size={12} className="fill-white" /> Brand New Cars
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-white/20 bg-white/10 text-[11px] font-bold text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/15">
+                  <Info size={12} /> 24*7 Support
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-white/20 bg-white/10 text-[11px] font-bold text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/15">
+                  <Truck size={12} /> Home Delivery
+                </motion.div>
+              </>
+            ) : (
+              <>
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-white/20 bg-white/10 text-[11px] font-bold text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/15">
+                  <Compass size={12} /> Flexible tenure
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-white/20 bg-white/10 text-[11px] font-bold text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/15">
+                  <Star size={12} className="fill-white" /> Brand new cars
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-white/20 bg-white/10 text-[11px] font-bold text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/15">
+                  <Shield size={12} /> Extended warranty
+                </motion.div>
+              </>
+            )}
+          </div>
+
+          {/* Row 4: Company Fleet Claim Badge */}
+          <div className="flex items-center gap-2 mb-5 select-none justify-center bg-white/5 border border-white/10 py-1.5 px-4 rounded-full w-fit mx-auto shadow-sm backdrop-blur-sm">
+            <div className="w-4 h-4 rounded-full bg-yellow-400 flex items-center justify-center text-slate-900 shadow-sm shrink-0">
+              <Check size={10} strokeWidth={3} />
+            </div>
+            <span className="text-[11px] font-extrabold text-white tracking-wide">Largest company-owned fleet in India</span>
+          </div>
+
+          {/* Row 5: Search Bar */}
+          <div className="relative z-20">
+            {/* Backdrop overlay to close suggestions when clicking outside */}
+            {showLocationSuggestions && (
+              <div 
+                className="fixed inset-0 z-10 bg-transparent" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowLocationSuggestions(false);
+                }}
+              />
+            )}
+            
+            <div 
+              className="bg-[#1a1a1a] rounded-3xl p-2 shadow-lg flex items-center gap-3 border border-white/10 relative z-20 transition-all duration-300"
+            >
+              <div className="w-10 h-10 rounded-full bg-[#FFC107] flex items-center justify-center text-black shrink-0 shadow-md">
+                <MapPin size={16} strokeWidth={2.5} />
+              </div>
+              <input
+                type="text"
+                placeholder={activeSegment === 'rentals' ? "City, address, airport or hotel" : "Select city to search"}
+                value={locationSearchText}
+                onChange={(e) => {
+                  setLocationSearchText(e.target.value);
+                  setShowLocationSuggestions(true);
+                }}
+                onFocus={() => setShowLocationSuggestions(true)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && locationSearchText.trim()) {
+                    setSelectedLocation(locationSearchText);
+                    setShowLocationSuggestions(false);
+                    setIsAddressEntered(true);
+                  }
+                }}
+                className="flex-1 text-[13.5px] font-bold text-white placeholder:text-gray-500 focus:outline-none bg-transparent"
+              />
+              {locationSearchText && (
+                <button 
+                  onClick={() => {
+                    setLocationSearchText('');
+                    setShowLocationSuggestions(false);
+                  }} 
+                  className="text-gray-400 hover:text-white px-1 shrink-0"
+                >
+                  <X size={16} strokeWidth={2.5} />
+                </button>
+              )}
+              <div className="w-7 h-7 flex items-center justify-center shrink-0 pr-1 text-[#FFC107]">
+                <ChevronRight size={22} strokeWidth={3} />
+              </div>
+            </div>
+
+            {/* Location Suggestions Dropdown */}
+            {showLocationSuggestions && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-[#1a1a1a] rounded-2xl border border-white/10 shadow-xl z-30 max-h-60 overflow-y-auto no-scrollbar py-2">
+                {LOCATION_SUGGESTIONS
+                  .filter(loc => !locationSearchText || loc.toLowerCase().includes(locationSearchText.toLowerCase()))
+                  .map((loc, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => {
+                        setSelectedLocation(loc);
+                        setLocationSearchText(loc);
+                        setShowLocationSuggestions(false);
+                        setIsAddressEntered(true);
+                      }}
+                      className="px-4 py-3 hover:bg-white/5 flex items-center gap-3 cursor-pointer transition-colors border-b border-white/5 last:border-b-0"
+                    >
+                      <MapPin size={14} className="text-[#FFC107] shrink-0" />
+                      <span className="text-[13px] font-semibold text-white">{loc}</span>
+                    </div>
+                  ))}
+                {LOCATION_SUGGESTIONS.filter(loc => !locationSearchText || loc.toLowerCase().includes(locationSearchText.toLowerCase())).length === 0 && (
+                  <div 
+                    onClick={() => {
+                      if (locationSearchText.trim()) {
+                        setSelectedLocation(locationSearchText);
+                        setShowLocationSuggestions(false);
+                        setIsAddressEntered(true);
+                      }
+                    }}
+                    className="px-4 py-3 hover:bg-white/5 flex items-center gap-3 cursor-pointer text-gray-400 font-semibold text-[13px] border-t border-white/5"
+                  >
+                    <Search size={14} className="text-[#FFC107] shrink-0" />
+                    <span>Search "{locationSearchText}"</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Dynamic Scrollable Content */}
+        <div className="flex-1 overflow-y-auto px-5 pt-6 pb-12 space-y-7 no-scrollbar">
+          {activeSegment === 'rentals' ? (
+            <>
+              {/* Rentals - Featured Section */}
+              <div className="space-y-3.5">
+                <h3 className="text-[20px] font-black text-gray-500 tracking-tight select-none">Featured</h3>
+                
+                <div className="flex gap-4 overflow-x-auto no-scrollbar pb-1">
+                  {rentalBanners.length > 0 ? (
+                    rentalBanners.map((banner) => (
+                      <motion.div
+                        key={banner.id || banner._id}
+                        whileHover={{ y: -4, scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                          if (banner.redirect_url) {
+                            window.open(banner.redirect_url, '_blank');
+                          } else {
+                            toast('Promotion loaded', { icon: '✨' });
+                          }
+                        }}
+                        className="w-[280px] h-[130px] rounded-3xl bg-[#1a1a1a] shadow-sm shrink-0 border border-white/10 relative overflow-hidden group cursor-pointer"
+                      >
+                        <img
+                          src={resolveImageUrl(banner.image)}
+                          alt={banner.title || "Featured banner"}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </motion.div>
+                    ))
+                  ) : (
+                    <>
+                      {/* Banner 1 */}
+                      <div className="w-[280px] h-[130px] rounded-3xl bg-gradient-to-r from-[#FFC107] to-[#FFD54F] p-4 flex items-center justify-between shadow-sm shrink-0 border border-yellow-500/20 relative overflow-hidden group">
+                        <div className="space-y-1 relative z-10 max-w-[55%]">
+                          <span className="text-[15px] font-black text-black block leading-tight">7 DAYS</span>
+                          <span className="text-[13px] font-black text-black/80 block leading-tight">Rental Package</span>
+                          <button 
+                            onClick={() => toast('Weekly discount pricing applied', { icon: '💰' })}
+                            className="mt-4 flex items-center gap-1 text-[10px] font-extrabold uppercase text-black/90 tracking-wider hover:opacity-80"
+                          >
+                            Lowest Price Ever <ChevronRight size={12} strokeWidth={3} />
+                          </button>
+                        </div>
+                        <div className="h-full w-[45%] flex items-end justify-center relative shrink-0">
+                          <div className="absolute bottom-2 right-2 w-14 h-22 bg-black/5 rounded-lg border border-black/10 flex items-center justify-center text-black/40 text-[8px] font-bold">
+                            <Calendar size={18} className="opacity-40" />
+                          </div>
+                          <img src={rentalCarImg} alt="" className="h-14 w-full object-contain relative z-10 -ml-4 drop-shadow-md" />
+                        </div>
+                      </div>
+
+                      {/* Banner 2 */}
+                      <div className="w-[240px] h-[130px] rounded-3xl bg-[#1a1a1a] p-4 flex flex-col justify-between shadow-sm shrink-0 relative overflow-hidden group border border-white/10">
+                        <div className="absolute top-[-30px] right-[-30px] w-24 h-24 rounded-full bg-[#FFC107]/10 blur-2xl" />
+                        <div className="space-y-1">
+                          <span className="text-[14px] font-black text-white block">Rental pass</span>
+                          <p className="text-[11px] font-semibold text-gray-400 leading-tight">Get Rental Pass and</p>
+                          <p className="text-[14px] font-black text-[#FFC107] leading-none">Save 25% <span className="text-[10px] font-bold text-gray-500">on bookings</span></p>
+                        </div>
+                        <button 
+                          onClick={() => toast('Rental Pass applied successfully!', { icon: '🎫' })}
+                          className="text-[10px] font-extrabold text-[#FFC107] uppercase tracking-widest text-left"
+                        >
+                          Get Pass Now
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Rentals - Top Selling Section */}
+              <div className="space-y-3.5 pb-4">
+                <h3 className="text-[20px] font-black text-gray-500 tracking-tight select-none">Top selling cars in India</h3>
+                
+                <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+                  {displayedCars.map((car) => (
+                    <motion.div
+                      key={car.id}
+                      whileHover={{ y: -6, scale: 1.01 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        if (car.rawVehicle) {
+                          openVehicleDetail(
+                            car.rawVehicle,
+                            activeSegment === 'subscriptions'
+                              ? {
+                                  detailMode: 'subscription',
+                                  selectedSubscriptionPlanId: car.subscriptionPlan?.id || '',
+                                }
+                              : {},
+                          );
+                        } else {
+                          openVehicleDetail(
+                            normalizeRentalVehicle({
+                              id: car.id,
+                              name: `${car.brand} ${car.name}`,
+                              vehicleCategory: 'car',
+                              coverImage: car.image,
+                              pricing: [
+                                { durationHours: 24, price: car.prices.Daily, includedKm: 120, active: true }
+                              ]
+                            }),
+                            activeSegment === 'subscriptions' ? { detailMode: 'subscription' } : {},
+                          );
+                        }
+                      }}
+                      className="w-[290px] h-[155px] bg-[#1a1a1a] border border-white/10 rounded-3xl p-4 flex items-center justify-between shrink-0 relative overflow-hidden cursor-pointer hover:border-[#FFC107] transition-all duration-300 group"
+                    >
+                      <div className="flex flex-col justify-between h-full max-w-[60%]">
+                        <div className="space-y-0.5">
+                          <p className="text-[11.5px] font-bold text-gray-400 leading-none">
+                            {car.name} <span className="opacity-70 font-medium">{car.year || '2024-25'}</span>
+                          </p>
+                          <h4 className="text-[18px] font-black text-white tracking-tight">{car.brand}</h4>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {car.features.map((feature, i) => (
+                              <span key={i} className="text-[8.5px] font-bold bg-white/5 border border-white/10 text-gray-300 px-1.5 py-0.5 rounded">
+                                {feature}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="mt-2 leading-none">
+                          <div className="flex items-baseline gap-0.5">
+                            <span className="text-[18px] font-black text-[#FFC107]">₹{car.prices.Daily}</span>
+                            <span className="text-[10px] font-bold text-gray-500 ml-0.5">per day</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="w-[42%] h-full flex items-center justify-center relative shrink-0">
+                        <motion.img
+                          src={car.image}
+                          alt={car.name}
+                          className="w-full object-contain mix-blend-multiply relative z-10 transition-transform duration-300 group-hover:scale-108 drop-shadow-md"
+                        />
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Offers Section */}
+              <div className="space-y-3 px-1 select-none">
+                <h3 className="text-[19px] font-bold text-white tracking-tight">Offers</h3>
+                <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+                  {offers.length > 0 ? (
+                    offers.map((offer) => {
+                      const isPercent = offer.type === 'percent';
+                      const formattedDiscount = isPercent ? `${offer.amount}% OFF` : `₹${offer.amount} OFF`;
+                      const desc = offer.description || (isPercent
+                        ? `Get ${offer.amount}% off${offer.cap > 0 ? ` up to ₹${offer.cap}` : ''}${offer.min_booking_amount > 0 ? ` on bookings above ₹${offer.min_booking_amount}` : ''}`
+                        : `Get flat ₹${offer.amount} off${offer.min_booking_amount > 0 ? ` on bookings above ₹${offer.min_booking_amount}` : ''}`
+                      );
+                      const hasRestrictions = offer.vehicle_ids && offer.vehicle_ids.length > 0;
+                      
+                      return (
+                        <motion.div 
+                          key={offer._id || offer.id}
+                          whileHover={{ y: -6 }} 
+                          whileTap={{ scale: 0.98 }} 
+                          onClick={() => handleCopyCode(offer.code)}
+                          className="w-[280px] rounded-3xl bg-[#1a1a1a] border border-white/10 hover:border-[#FFC107] transition-all duration-300 flex flex-col justify-between overflow-hidden shrink-0 cursor-pointer"
+                        >
+                          <div className="p-4 flex-1 flex flex-col justify-between">
+                            <div>
+                              <div className="flex justify-between items-start gap-2">
+                                <h4 className="text-[14px] font-bold text-white truncate max-w-[170px]">{offer.code}</h4>
+                                <span className="text-[13px] font-bold text-[#FFC107] shrink-0">{formattedDiscount}</span>
+                              </div>
+                              <p className="text-[11.5px] text-gray-400 mt-1.5 leading-normal font-medium">
+                                {desc}
+                              </p>
+                            </div>
+                            {hasRestrictions && (
+                              <div className="mt-3 text-[9.5px] font-bold text-amber-500 bg-amber-500/10 border border-amber-500/20 rounded-lg py-1.5 px-2.5">
+                                Applicable only on: {offer.vehicle_ids.map(v => v.name).join(', ')}
+                              </div>
+                            )}
+                          </div>
+                          <div className="bg-[#FFC107] px-4 py-3 flex items-center justify-between relative overflow-hidden border-t border-dashed border-black/10">
+                            <span className="bg-black text-[#FFC107] text-[11px] font-bold px-3 py-1 rounded-lg border border-black/20 shadow-sm uppercase">
+                              {offer.code}
+                            </span>
+                            <span className="text-[10px] text-black font-medium hover:underline">• Copy Code</span>
+                          </div>
+                        </motion.div>
+                      );
+                    })
+                  ) : (
+                    <>
+                      {/* Offer 1 */}
+                      <motion.div 
+                        whileHover={{ y: -6 }} 
+                        whileTap={{ scale: 0.98 }} 
+                        onClick={() => handleCopyCode('STMB5')}
+                        className="w-[280px] rounded-3xl bg-[#1a1a1a] border border-white/10 hover:border-[#FFC107] transition-all duration-300 flex flex-col justify-between overflow-hidden shrink-0 cursor-pointer"
+                      >
+                        <div className="p-4 flex-1">
+                          <div className="flex justify-between items-start">
+                            <h4 className="text-[14px] font-bold text-white">Short Trip Offer</h4>
+                            <span className="text-[13px] font-bold text-[#FFC107]">5% OFF</span>
+                          </div>
+                          <p className="text-[11.5px] text-gray-400 mt-1.5 leading-normal font-medium">
+                            Use code STMB5 and get 5% off upto ₹500
+                          </p>
+                        </div>
+                        <div className="bg-[#FFC107] px-4 py-3 flex items-center justify-between relative overflow-hidden border-t border-dashed border-black/10">
+                          <span className="bg-black text-[#FFC107] text-[11px] font-bold px-3 py-1 rounded-lg border border-black/20 shadow-sm">
+                            STMB5
+                          </span>
+                          <span className="text-[10px] text-black font-medium hover:underline">• Copy Code</span>
+                        </div>
+                      </motion.div>
+
+                      {/* Offer 2 */}
+                      <motion.div 
+                        whileHover={{ y: -6 }} 
+                        whileTap={{ scale: 0.98 }} 
+                        onClick={() => handleCopyCode('WKND10')}
+                        className="w-[280px] rounded-3xl bg-[#1a1a1a] border border-white/10 hover:border-[#FFC107] transition-all duration-300 flex flex-col justify-between overflow-hidden shrink-0 cursor-pointer"
+                      >
+                        <div className="p-4 flex-1">
+                          <div className="flex justify-between items-start">
+                            <h4 className="text-[14px] font-bold text-white">Weekend Special</h4>
+                            <span className="text-[13px] font-bold text-[#FFC107]">10% OFF</span>
+                          </div>
+                          <p className="text-[11.5px] text-gray-400 mt-1.5 leading-normal font-medium">
+                            Get 10% off up to ₹1,000 on weekend bookings
+                          </p>
+                        </div>
+                        <div className="bg-[#FFC107] px-4 py-3 flex items-center justify-between relative overflow-hidden border-t border-dashed border-black/10">
+                          <span className="bg-black text-[#FFC107] text-[11px] font-bold px-3 py-1 rounded-lg border border-black/20 shadow-sm">
+                            WKND10
+                          </span>
+                          <span className="text-[10px] text-black font-medium hover:underline">• Copy Code</span>
+                        </div>
+                      </motion.div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Why Taxi09? Section */}
+              <div className="space-y-3 px-1 select-none">
+                <h3 className="text-[19px] font-bold text-white tracking-tight">Why Taxi09?</h3>
+                <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+                  {/* Card 1 */}
+                  <motion.div 
+                    whileHover={{ y: -6 }} 
+                    whileTap={{ scale: 0.98 }} 
+                    className="w-[280px] rounded-3xl bg-[#1a1a1a] border border-white/10 p-4 hover:border-[#FFC107] transition-all duration-300 flex gap-3.5 shrink-0 cursor-default"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-[#FFC107]/10 text-[#FFC107] flex items-center justify-center shrink-0">
+                      <Home size={22} className="stroke-[#FFC107]" />
+                    </div>
+                    <div className="space-y-1 min-w-0">
+                      <h4 className="text-[13.5px] font-bold text-white">Home delivery & return</h4>
+                      <p className="text-[11px] text-gray-400 leading-normal font-medium">
+                        On-time doorstep service, at your preferred location and time
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  {/* Card 2 */}
+                  <motion.div 
+                    whileHover={{ y: -6 }} 
+                    whileTap={{ scale: 0.98 }} 
+                    className="w-[280px] rounded-3xl bg-[#1a1a1a] border border-white/10 p-4 hover:border-[#FFC107] transition-all duration-300 flex gap-3.5 shrink-0 cursor-default"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-[#FFC107]/10 text-[#FFC107] flex items-center justify-center shrink-0">
+                      <Shield size={22} className="stroke-[#FFC107]" />
+                    </div>
+                    <div className="space-y-1 min-w-0">
+                      <h4 className="text-[13.5px] font-bold text-white">Safe & sanitized</h4>
+                      <p className="text-[11px] text-gray-400 leading-normal font-medium">
+                        Deep cleaned and sanitized vehicles before every single ride
+                      </p>
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* FAQs Section */}
+              <div className="space-y-3 px-1 select-none">
+                <div className="flex justify-between items-baseline">
+                  <h3 className="text-[19px] font-bold text-white tracking-tight">FAQs</h3>
+                  <span className="text-[13px] font-bold text-[#FFC107] cursor-pointer hover:underline">View all</span>
+                </div>
+                <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-4 divide-y divide-white/10">
+                  {/* FAQ 1 */}
+                  <div className="pb-3 pt-0.5">
+                    <button 
+                      onClick={() => setActiveFaqIndex(activeFaqIndex === 0 ? null : 0)}
+                      className="w-full flex justify-between items-center text-left text-[13.5px] font-bold text-white outline-none hover:text-[#FFC107] transition-colors"
+                    >
+                      <span>Is there a speed limit?</span>
+                      <ChevronDown size={18} className={`text-gray-400 transition-transform duration-300 ${activeFaqIndex === 0 ? 'rotate-180 text-[#FFC107]' : ''}`} />
+                    </button>
+                    {activeFaqIndex === 0 && (
+                      <p className="text-[12px] text-gray-400 mt-2 leading-relaxed animate-fadeIn">
+                        Taxi09 allows up to 125 km/hr. However, it is always recommended to adhere to local speed limits as specified by road authorities.
+                      </p>
+                    )}
+                  </div>
+
+                  {/* FAQ 2 */}
+                  <div className="py-3">
+                    <button 
+                      onClick={() => setActiveFaqIndex(activeFaqIndex === 1 ? null : 1)}
+                      className="w-full flex justify-between items-center text-left text-[13.5px] font-bold text-white outline-none hover:text-[#FFC107] transition-colors"
+                    >
+                      <span>Can I extend/cancel/modify?</span>
+                      <ChevronDown size={18} className={`text-gray-400 transition-transform duration-300 ${activeFaqIndex === 1 ? 'rotate-180 text-[#FFC107]' : ''}`} />
+                    </button>
+                    {activeFaqIndex === 1 && (
+                      <p className="text-[12px] text-gray-400 mt-2 leading-relaxed animate-fadeIn">
+                        Yes, extensions are possible subject to vehicle availability. Cancellation charges may apply depending on how close you are to the booking start time.
+                      </p>
+                    )}
+                  </div>
+
+                  {/* FAQ 3 */}
+                  <div className="pt-3 pb-0.5">
+                    <button 
+                      onClick={() => setActiveFaqIndex(activeFaqIndex === 2 ? null : 2)}
+                      className="w-full flex justify-between items-center text-left text-[13.5px] font-bold text-white outline-none hover:text-[#FFC107] transition-colors"
+                    >
+                      <span>Booking criteria & documents?</span>
+                      <ChevronDown size={18} className={`text-gray-400 transition-transform duration-300 ${activeFaqIndex === 2 ? 'rotate-180 text-[#FFC107]' : ''}`} />
+                    </button>
+                    {activeFaqIndex === 2 && (
+                      <p className="text-[12px] text-gray-400 mt-2 leading-relaxed animate-fadeIn">
+                        To book a car, you need to be at least 21 years old and possess a valid driving license, Aadhaar card, or Passport.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Subscriptions - Banners */}
+              <div className="space-y-3.5">
+                <h3 className="text-[20px] font-black text-gray-500 tracking-tight select-none">Why subscriptions</h3>
+                
+                <div className="flex gap-4 overflow-x-auto no-scrollbar pb-1">
+                  {subscriptionBanners.length > 0 ? (
+                    subscriptionBanners.map((banner) => (
+                      <motion.div
+                        key={banner.id || banner._id}
+                        whileHover={{ y: -4, scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                          if (banner.redirect_url) {
+                            window.open(banner.redirect_url, '_blank');
+                          } else {
+                            toast('Promotion loaded', { icon: '✨' });
+                          }
+                        }}
+                        className="w-[280px] h-[130px] rounded-3xl bg-[#1a1a1a] shadow-sm shrink-0 border border-white/10 relative overflow-hidden group cursor-pointer"
+                      >
+                        <img
+                          src={resolveImageUrl(banner.image)}
+                          alt={banner.title || "Featured banner"}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </motion.div>
+                    ))
+                  ) : (
+                    <>
+                      <div className="w-[240px] h-[130px] rounded-3xl bg-slate-950 shadow-sm shrink-0 border border-slate-800 relative overflow-hidden group cursor-pointer flex items-center justify-center">
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#FFC107]/20 to-black/60 z-0" />
+                        <div className="absolute inset-0 flex items-center justify-center opacity-60 z-0">
+                          <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center text-white">
+                            <Car size={32} />
+                          </div>
+                        </div>
+                        <div className="relative z-10 w-12 h-12 rounded-full bg-[#FFC107] shadow-md flex items-center justify-center text-black group-hover:scale-110 transition-transform duration-300">
+                          <svg className="w-5 h-5 fill-current ml-0.5" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                      </div>
+
+                      <div className="w-[220px] h-[130px] rounded-3xl bg-[#1a1a1a] p-4 flex items-center gap-3 shadow-sm shrink-0 border border-white/10 select-none">
+                        <div className="w-14 h-14 rounded-full bg-[#FFC107]/20 flex items-center justify-center text-[#FFC107] font-extrabold text-[22px] tracking-tighter shrink-0 shadow-inner">
+                          ₹0
+                        </div>
+                        <div className="space-y-0.5">
+                          <span className="text-[13.5px] font-black text-white block leading-tight">No down</span>
+                          <span className="text-[13.5px] font-black text-white block leading-tight">payment</span>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Subscriptions - Tabs Grid Category */}
+              <div className="space-y-4">
+                <div className="flex gap-6 border-b border-white/10 pb-1.5">
+                  {['Hatchbacks', 'Sedans', 'SUVs'].map((cat) => {
+                    const isActive = subCategory === cat;
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => setSubCategory(cat)}
+                        className={`relative pb-2 text-[15px] font-black transition-colors ${
+                          isActive ? 'text-[#FFC107]' : 'text-gray-400 hover:text-white'
+                        }`}
+                      >
+                        {cat}
+                        {isActive && (
+                          <motion.div
+                            layoutId="subCategoryBorder"
+                            className="absolute bottom-0 left-0 right-0 h-0.75 bg-[#FFC107] rounded-full"
+                          />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Subscriptions - Cars Grid */}
+                <div className="grid grid-cols-2 gap-3.5">
+                  {displayedCars.length === 0 ? (
+                    <div className="col-span-2 rounded-3xl border border-white/10 bg-[#1a1a1a] p-5 text-center shadow-lg">
+                      <p className="text-[14px] font-black text-white">No subscription vehicles live yet</p>
+                      <p className="mt-1 text-[11px] font-semibold text-gray-400">
+                        This section will show vehicles once subscription mode is enabled in admin.
+                      </p>
+                    </div>
+                  ) : displayedCars.map((car) => (
+                    <motion.div
+                      key={car.id}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        openVehicleDetail(car.rawVehicle || car, {
+                          detailMode: 'subscription',
+                          selectedSubscriptionPlanId: car.subscriptionPlan?.id || '',
+                        });
+                      }}
+                      className="bg-[#1a1a1a] border border-white/10 rounded-3xl p-3.5 shadow-lg flex flex-col justify-between h-[180px] cursor-pointer hover:border-[#FFC107] transition-all group relative overflow-hidden"
+                    >
+                      <div className="w-full h-[85px] flex items-center justify-center relative overflow-hidden bg-white/5 rounded-2xl p-2 shrink-0">
+                        <motion.img
+                          src={car.image}
+                          alt={car.name}
+                          className="h-full object-contain relative z-10 transition-transform duration-300 group-hover:scale-108 drop-shadow-md"
+                        />
+                      </div>
+
+                      <div className="space-y-0.5 mt-2 flex-1 flex flex-col justify-end">
+                        <h4 className="text-[13px] font-black text-white leading-tight truncate">
+                          {car.brand} {car.name}
+                        </h4>
+                        <div className="flex items-center gap-1.5 text-[9px] font-bold text-[#FFC107] mt-1">
+                          <span>{car.fuel?.split(' · ')[0] || 'Petrol'}</span>
+                          <span>·</span>
+                          <span>{car.fuel?.split(' · ')[1] || 'Manual'}</span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Stick Bottom Navigation Menu */}
+        <div className="fixed bottom-0 inset-x-0 bg-[#0a0a0a] border-t border-white/10 py-2.5 px-4 shadow-[0_-8px_30px_rgba(0,0,0,0.5)] z-40 max-w-lg md:max-w-none w-full md:w-[calc(100%-16rem)] md:left-64 md:px-8 mx-auto flex items-center justify-between">
+          <button
+            onClick={() => navigateToSegment('rentals')}
+            className={`flex flex-col items-center gap-1 flex-1 py-1 ${activeSegment === 'rentals' ? 'text-[#FFC107]' : 'text-gray-500 hover:text-gray-300'}`}
+          >
+            <div className={`w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 ${activeSegment === 'rentals' ? 'border-[#FFC107] bg-[#FFC107]/10' : 'border-gray-600'}`}>
+              R
+            </div>
+            <span className="text-[9.5px] font-bold tracking-wide uppercase">Rentals</span>
+          </button>
+          
+          <button
+            onClick={() => navigateToSegment('subscriptions')}
+            className={`flex flex-col items-center gap-1 flex-1 py-1 relative ${activeSegment === 'subscriptions' ? 'text-[#FFC107]' : 'text-gray-500 hover:text-gray-300'}`}
+          >
+            <span className="absolute top-[-10px] bg-red-500 text-[6.5px] font-black text-white px-1.5 py-0.5 rounded-[4px] uppercase tracking-wide border border-[#0a0a0a]">
+              NEW
+            </span>
+            <div className={`w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 ${activeSegment === 'subscriptions' ? 'border-[#FFC107] bg-[#FFC107]/10' : 'border-gray-600'}`}>
+              S
+            </div>
+            <span className="text-[9.5px] font-bold tracking-wide uppercase">Subscriptions</span>
+          </button>
+
+          <button
+            onClick={() => navigate('/taxi/user/activity')}
+            className="flex flex-col items-center gap-1 flex-1 py-1 text-gray-500 hover:text-gray-300"
+          >
+            <Calendar size={20} strokeWidth={2.4} />
+            <span className="text-[9.5px] font-bold tracking-wide uppercase">Bookings</span>
+          </button>
+
+          <button
+            onClick={() => navigate('/taxi/user/support')}
+            className="flex flex-col items-center gap-1 flex-1 py-1 text-gray-500 hover:text-gray-300"
+          >
+            <MessageSquare size={20} strokeWidth={2.4} />
+            <span className="text-[9.5px] font-bold tracking-wide uppercase">Support</span>
+          </button>
+
+          <button
+            onClick={() => navigate('/taxi/user/profile')}
+            className="flex flex-col items-center gap-1 flex-1 py-1 text-gray-500 hover:text-gray-300"
+          >
+            <User size={20} strokeWidth={2.4} />
+            <span className="text-[9.5px] font-bold tracking-wide uppercase">More</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex min-h-screen bg-[#090E17] text-white font-sans overflow-hidden">
+      
+      {/* Desktop Sidebar (matches mockup exactly) */}
+      <aside className="hidden md:flex flex-col w-[260px] border-r border-[#1A1F2B] bg-[#090E17] shrink-0 h-screen sticky top-0 overflow-y-auto no-scrollbar py-8">
+        <div className="px-8 mb-10 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-[#FFC107] flex items-center justify-center shrink-0">
+            <Car size={22} className="text-black" strokeWidth={2.5} />
+          </div>
+          <div>
+            <h2 className="text-[20px] font-black tracking-tight leading-none text-white">DriveGo</h2>
+            <p className="text-[8px] font-bold text-gray-500 uppercase tracking-widest mt-1">Self-Drive Rentals</p>
+          </div>
+        </div>
+
+        <nav className="flex-1 px-4 space-y-1">
+          {[
+            { label: 'Choose Ride', icon: Car, active: true },
+            { label: 'My Bookings', icon: Calendar },
+            { label: 'My Trips', icon: Compass },
+            { label: 'Favourites', icon: Star },
+            { label: 'Profile', icon: User },
+            { label: 'Support', icon: Headset },
+            { label: 'Logout', icon: ArrowLeft }
+          ].map((item, idx) => (
+            <button key={idx} className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-[12px] transition-all ${item.active ? 'bg-[#141A23] text-[#FFC107]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>
+              <item.icon size={18} className={item.active ? 'text-[#FFC107]' : ''} />
+              <span className="text-[13px] font-bold">{item.label}</span>
+            </button>
+          ))}
+        </nav>
+
+        <div className="px-6 mt-auto pt-6">
+          <div className="rounded-[16px] overflow-hidden relative bg-[#141A23] h-56 flex flex-col justify-end shadow-lg border border-white/5">
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-10" />
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=400&auto=format&fit=crop')] bg-cover bg-center opacity-40 mix-blend-luminosity" />
+            <div className="relative p-4 z-20">
+              <h4 className="text-[15px] font-black text-white mb-1.5 leading-tight">Enjoy the freedom<br/><span className="text-[#FFC107]">of the open road</span></h4>
+              <p className="text-[11px] text-gray-400 font-medium mb-4 leading-snug">Book your perfect<br/>ride in minutes.</p>
+              <button className="w-full py-2.5 bg-[#FFC107] text-black text-[12px] font-bold rounded-[8px] flex items-center justify-center gap-1 hover:bg-[#FFD54F] transition-colors">
+                Explore Now <ChevronRight size={14} strokeWidth={3} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <div className="flex-1 w-full max-w-lg md:max-w-none md:mx-0 mx-auto relative overflow-y-auto overflow-x-hidden pb-12 h-screen no-scrollbar">
+        <div className="absolute -top-16 right-[-40px] h-44 w-44 rounded-full bg-[#FFC107]/5 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-28 right-[-40px] h-40 w-40 rounded-full bg-[#FFC107]/5 blur-3xl pointer-events-none" />
+
+        <motion.header
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="sticky top-0 z-30 w-full bg-[#090E17]"
+        >
+          <div className="bg-[#090E17] px-5 pt-12 pb-5 border-b border-[#1A1F2B] relative overflow-hidden">
+          {/* Subtle accent gradients */}
+          <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-[#FFC107]/5 blur-[40px] pointer-events-none" />
+          <div className="absolute top-0 left-0 h-24 w-24 rounded-full bg-[#FFC107]/5 blur-[40px] pointer-events-none" />
+
+          <div className="relative flex items-center justify-between gap-4 mb-6 md:px-2">
+            <div className="flex items-center gap-4">
+              <motion.button
+                whileHover={{ x: -2 }}
+                whileTap={{ scale: 0.92 }}
+                onClick={() => navigate(-1)}
+                className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center shadow-lg shrink-0 group transition-all md:hidden"
+              >
+                <ArrowLeft size={20} className="text-black group-hover:opacity-80 transition-opacity" strokeWidth={2.5} />
+              </motion.button>
+              <div className="min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500 leading-none mb-1.5 md:mb-2">Self-drive rentals</p>
+                <h1 className="text-[24px] md:text-[36px] font-[900] tracking-tight text-white leading-none">Choose Ride</h1>
+                <p className="hidden md:block text-[14px] font-medium text-gray-400 mt-2">Find the perfect ride for your journey</p>
+              </div>
+            </div>
+            <div className="flex flex-col items-end">
+              <span className="px-3 py-1 md:px-5 md:py-2 rounded-full bg-[#FFC107] md:bg-transparent md:border md:border-[#FFC107]/30 text-[10px] md:text-[13px] font-bold text-black md:text-[#FFC107] shadow-sm uppercase tracking-wider flex items-center gap-2">
+                <Car size={16} className="hidden md:block text-[#FFC107]" />
+                {availableCountLabel}
+              </span>
+            </div>
+          </div>
+
+          <div className="relative mb-5 md:mb-6">
+            <div className="flex gap-1.5 md:gap-0 bg-[#141A23] md:bg-transparent p-1.5 md:p-0 rounded-[20px] md:rounded-[14px] border border-white/10 md:border-[#1A1F2B] shadow-inner md:overflow-hidden md:flex-row flex-col sm:flex-row">
+              {DURATION_TABS.map((tab) => {
+                const isActive = selectedDuration === tab;
+                return (
+                  <button
+                    key={tab}
+                    onClick={() => setSelectedDuration(tab)}
+                    className={`relative flex-1 py-2.5 md:py-4 rounded-[14px] md:rounded-none text-[11px] md:text-[13px] font-[800] uppercase tracking-wider transition-all duration-300 outline-none md:border-r md:border-[#1A1F2B] last:border-r-0 ${isActive ? 'md:bg-[#090E17]' : 'md:bg-[#141A23] md:hover:bg-white/5'}`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeTab"
+                        className="absolute inset-0 bg-white md:bg-transparent rounded-[14px] md:rounded-none shadow-sm md:shadow-none"
+                        transition={{ type: 'spring', bounce: 0.25, duration: 0.5 }}
+                      >
+                        <div className="hidden md:block absolute top-0 left-0 right-0 h-[2px] bg-[#FFC107]" />
+                      </motion.div>
+                    )}
+                    <span className={`relative z-10 flex items-center justify-center transition-colors duration-300 ${isActive ? 'text-black md:text-[#FFC107]' : 'text-gray-400'}`}>
+                      {tab === 'Hourly' && <Clock size={16} className="hidden md:block mr-2" />}
+                      {tab === 'Half-Day' && <Sun size={16} className="hidden md:block mr-2" />}
+                      {tab === 'Daily' && <CalendarDays size={16} className="hidden md:block mr-2" />}
+                      {tab}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="relative group flex-1">
+              <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                <Search size={18} className="text-gray-500 group-focus-within:text-[#FFC107] transition-colors" strokeWidth={2.5} />
+              </div>
+              <input
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Search by vehicle, category or brand..."
+                className="w-full h-full bg-[#1a1a1a] md:bg-[#141A23] border border-white/10 md:border-[#1A1F2B] focus:border-[#FFC107] focus:bg-[#1A2230] rounded-[20px] md:rounded-[12px] pl-11 pr-11 py-3.5 text-[14px] font-bold text-white placeholder:text-gray-600 focus:outline-none transition-all"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute inset-y-0 right-3 flex items-center pr-1"
+                >
+                  <div className="h-7 w-7 flex items-center justify-center rounded-full bg-white/10 text-gray-400 hover:bg-white/20 transition-colors">
+                    <X size={14} strokeWidth={3} />
+                  </div>
+                </button>
+              )}
+            </div>
+            
+            <button className="hidden md:flex items-center justify-center gap-2 px-6 py-3.5 bg-[#141A23] border border-[#1A1F2B] rounded-[12px] text-[13px] font-bold text-gray-300 hover:text-white hover:border-white/30 transition-all shrink-0">
+              <SlidersHorizontal size={16} /> Filters
+            </button>
+          </div>
+
+          {/* Active Filters Row (Desktop only mockup feature) */}
+          <div className="hidden md:flex items-center justify-between mt-5 pb-2">
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-2 px-4 py-2 bg-[#141A23] border border-[#1A1F2B] rounded-[8px] text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                Honda Activa <X size={12} className="text-gray-500 cursor-pointer hover:text-white" />
+              </span>
+              <span className="px-4 py-2 bg-[#141A23] border border-[#1A1F2B] rounded-[8px] text-[11px] font-bold text-gray-400 uppercase tracking-wider">Bike</span>
+              <span className="px-4 py-2 bg-[#141A23] border border-[#1A1F2B] rounded-[8px] text-[11px] font-bold text-gray-400 uppercase tracking-wider">1 Seat</span>
+              <span className="px-4 py-2 bg-[#141A23] border border-[#1A1F2B] rounded-[8px] text-[11px] font-bold text-gray-400 uppercase tracking-wider">1 Bag Space</span>
+              <span className="px-4 py-2 bg-[#141A23] border border-[#1A1F2B] rounded-[8px] text-[11px] font-bold text-gray-400 uppercase tracking-wider">1.20</span>
+              <span className="px-4 py-2 bg-[#141A23] border border-[#1A1F2B] rounded-[8px] text-[11px] font-bold text-gray-400 uppercase tracking-wider">Car</span>
+            </div>
+            <button className="flex items-center gap-2 text-[12px] font-bold text-gray-400 hover:text-white transition-colors uppercase tracking-wider">
+              <RotateCcw size={14} /> Clear All
+            </button>
+          </div>
+
+          {visibleSuggestions.length > 0 && !searchQuery && (
+            <motion.div 
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex gap-2 overflow-x-auto no-scrollbar pt-4 pb-1 md:hidden"
+            >
+              {visibleSuggestions.map((suggestion) => (
+                <button
+                  key={suggestion}
+                  type="button"
+                  onClick={() => setSearchQuery(suggestion)}
+                  className="shrink-0 rounded-full border border-white/10 bg-[#1a1a1a] px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-gray-400 shadow-sm hover:border-[#FFC107] hover:text-[#FFC107] transition-colors"
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </div>
+      </motion.header>
+
+      <div className="px-5 md:px-8 pt-6 space-y-5">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={selectedDuration}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="flex items-center gap-3 rounded-[20px] md:rounded-[12px] border border-white/10 md:border-[#1A1F2B] bg-[#1a1a1a] md:bg-[#141A23] px-4 py-3.5 md:py-4 shadow-lg"
+          >
+            <Info size={18} className="text-[#FFC107] md:opacity-80" />
+            <p className="text-[13px] font-[700] md:font-medium text-gray-300 tracking-tight md:tracking-normal leading-tight">
+              {infoBanner[selectedDuration]}
+            </p>
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="relative pt-2">
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-[10px] font-[800] uppercase tracking-[0.2em] text-[#FFC107]">Available Near You</p>
+          </div>
+          <div className="flex items-center justify-between">
+            <h2 className="text-[20px] md:text-[28px] font-[900] tracking-tight text-white">Explore Fleet</h2>
+            <button className="hidden md:flex items-center gap-1.5 text-[#FFC107] text-[13px] font-bold hover:underline">
+              <MapPin size={16} strokeWidth={2.5} /> View on Map
+            </button>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex justify-between items-center w-full">
+            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+              {CATEGORY_FILTERS.map(({ id, label, Icon }) => {
+                const isActive = selectedCategoryFilter === id;
+                const count = categoryCounts[id] || 0;
+
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setSelectedCategoryFilter(id)}
+                    className={`shrink-0 rounded-[12px] border px-4 py-3 transition-all min-w-[140px] md:min-w-[180px] ${
+                      isActive
+                        ? 'border-[#FFC107] bg-[#141A23] shadow-lg'
+                        : 'border-[#1A1F2B] bg-[#141A23] hover:border-[#2A313C]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-[10px] ${isActive ? 'bg-[#FFC107]/10 text-[#FFC107]' : 'bg-white/5 text-gray-400'}`}>
+                        <Icon size={18} strokeWidth={2.4} />
+                      </div>
+                      <div className="text-left">
+                        <p className={`text-[12px] md:text-[13px] font-black uppercase tracking-wider ${isActive ? 'text-white' : 'text-gray-300'}`}>
+                          {label}
+                        </p>
+                        <p className={`text-[12px] font-medium ${isActive ? 'text-[#FFC107]' : 'text-gray-500'}`}>
+                          {count} available
+                        </p>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+            
+            {/* Desktop right summary */}
+            <div className="hidden md:flex bg-[#141A23] border border-[#1A1F2B] rounded-[12px] h-[68px] divide-x divide-[#1A1F2B] shrink-0 ml-4">
+              <div className="flex flex-col justify-center px-6 min-w-[100px]">
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#FFC107]">Fleet</span>
+                <span className="text-[16px] font-black text-[#FFC107] leading-tight">5</span>
+              </div>
+              <div className="flex flex-col justify-center px-6 min-w-[100px]">
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#5C85D6]">Cars</span>
+                <span className="text-[16px] font-black text-[#5C85D6] leading-tight">4</span>
+              </div>
+              <div className="flex flex-col justify-center px-6 min-w-[100px]">
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#4CAF50]">Bikes</span>
+                <span className="text-[16px] font-black text-[#4CAF50] leading-tight">1</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 md:hidden">
+            <div className="rounded-[18px] border border-white/10 bg-[#1a1a1a] px-3 py-3 shadow-sm">
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-gray-500">Fleet</p>
+              <p className="mt-1 text-[17px] font-black text-white">{categoryCounts.all}</p>
+            </div>
+            <div className="rounded-[18px] border border-[#FFC107]/20 bg-[#FFC107]/10 px-3 py-3 shadow-sm">
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#FFC107]">Cars</p>
+              <p className="mt-1 text-[17px] font-black text-[#FFC107]">{categoryCounts.car}</p>
+            </div>
+            <div className="rounded-[18px] border border-yellow-500/20 bg-yellow-500/10 px-3 py-3 shadow-sm">
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-yellow-400">Bikes</p>
+              <p className="mt-1 text-[17px] font-black text-yellow-400">{categoryCounts.bike}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-5 pt-4 pb-12 space-y-4">
+        <AnimatePresence mode="wait">
+          {loading ? (
+            <motion.div
+              key="skeleton"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <RentalSkeleton />
+            </motion.div>
+          ) : errorMessage ? (
+            <motion.div
+              key="error"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="rounded-[24px] border border-rose-100 bg-rose-50/90 p-5 text-[13px] font-bold text-rose-500 shadow-[0_8px_24px_rgba(15,23,42,0.04)]"
+            >
+              {errorMessage}
+            </motion.div>
+          ) : vehicles.length === 0 ? (
+            <motion.div
+              key="empty-all"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="rounded-[24px] border border-white/10 bg-[#1a1a1a] p-6 text-center shadow-lg"
+            >
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[16px] bg-white/5 text-gray-400">
+                <Car size={22} />
+              </div>
+              <p className="mt-4 text-[15px] font-black text-white">No rental vehicles available</p>
+              <p className="mt-1 text-[12px] font-bold text-gray-500">Admin has not published any active rental vehicles yet.</p>
+            </motion.div>
+          ) : filteredVehicles.length === 0 ? (
+            <motion.div
+              key="empty-search"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="rounded-[24px] border border-white/10 bg-[#1a1a1a] p-6 text-center shadow-lg"
+            >
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[16px] bg-white/5 text-gray-400">
+                <Search size={22} />
+              </div>
+              <p className="mt-4 text-[15px] font-black text-white">No rentals matched your search</p>
+              <p className="mt-1 text-[12px] font-bold text-gray-500">Try another vehicle name, category, amenity, or switch the car and bike filter.</p>
+            </motion.div>
+          ) : (
+          paginatedVehicles.map((v, idx) => (
+            <motion.div
+              key={v.id}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.38, delay: idx * 0.07, ease: 'easeOut' }}
+              className="rounded-[24px] md:rounded-[16px] border border-white/10 md:border-[#1A1F2B] bg-[#1a1a1a] md:bg-[#141A23] shadow-lg overflow-hidden md:flex md:flex-row md:items-center md:p-4 md:gap-6 group transition-all hover:border-white/20"
+            >
+              <div
+                className="px-4 pt-3.5 pb-3 flex items-center justify-between md:hidden"
+                style={{ background: `linear-gradient(135deg, ${v.gradientFrom} 0%, ${v.gradientTo} 100%)` }}
+              >
+                <div className="flex-1 min-w-0 pr-2 space-y-1 mix-blend-plus-lighter">
+                  <span className={`inline-block text-[9px] font-bold px-2 py-0.5 rounded-full border border-black/10 bg-black/20 text-black shadow-sm backdrop-blur-md`}>
+                    {v.tag}
+                  </span>
+                  <h3 className="text-[16px] font-extrabold text-slate-950 leading-tight tracking-tight">{v.name}</h3>
+                  {v.shortDescription ? (
+                    <p className="text-[11px] font-medium text-slate-800/80">{v.shortDescription}</p>
+                  ) : null}
+                  <div className="flex items-center gap-1">
+                    <Star size={10} className="text-yellow-600 fill-yellow-500" />
+                    <span className="text-[11px] font-bold text-slate-800">{v.rating}</span>
+                    <span className="text-[10px] font-medium text-slate-700">· {v.kmLimit[selectedDuration]} limit</span>
+                  </div>
+                </div>
+                {v.image ? (
+                  <img src={v.image} alt={v.name} className="h-20 w-24 object-contain drop-shadow-xl shrink-0 -mt-2 -mb-2" />
+                ) : (
+                  <div className="flex h-20 w-24 items-center justify-center rounded-[20px] bg-black/10 text-slate-800 shadow-sm shrink-0 backdrop-blur-sm">
+                    <Car size={28} />
+                  </div>
+                )}
+              </div>
+
+              {/* Desktop Image Section */}
+              <div 
+                className="hidden md:flex relative w-[240px] h-[160px] rounded-[16px] items-center justify-center shrink-0 border border-white/5 overflow-hidden bg-white/5"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#E2E8F0] to-[#94A3B8] opacity-80" />
+                <button className="absolute top-3 left-3 w-8 h-8 rounded-full bg-black/10 hover:bg-black/20 flex items-center justify-center transition-colors z-10">
+                  <span className="text-white text-lg leading-none mb-0.5">♡</span>
+                </button>
+                <span className="absolute bottom-3 left-3 bg-[#1B5E20]/90 text-white border border-[#4CAF50]/30 text-[10px] font-bold px-3 py-1 rounded-full backdrop-blur-sm shadow-lg z-10">
+                  Available
+                </span>
+                {v.image ? (
+                  <img src={v.image} alt={v.name} className="h-[140px] w-full object-contain drop-shadow-2xl transition-transform duration-300 group-hover:scale-105 relative z-10" />
+                ) : (
+                  <Car size={48} className="text-black/20 relative z-10" />
+                )}
+              </div>
+
+              {/* Desktop Middle Details & Mobile Bottom Section */}
+              <div className="px-4 pb-4 pt-3 space-y-2.5 border-t border-white/5 md:border-t-0 md:p-0 md:flex-1 md:space-y-3">
+                <div className="hidden md:block space-y-1">
+                  <h3 className="text-[20px] font-black text-white leading-tight tracking-tight">{v.name}</h3>
+                  <p className="text-[13px] font-medium text-gray-400">
+                    {v.vehicleCategory === 'bike' ? 'Scooty' : 'Hatchback'} {/* Fallback names */}
+                  </p>
+                  <div className="flex items-center gap-1.5 mt-2">
+                    <Star size={12} className="text-[#FFC107] fill-[#FFC107]" />
+                    <span className="text-[12px] font-bold text-gray-300">{v.rating}</span>
+                    <span className="text-[12px] font-medium text-gray-500">· {v.kmLimit[selectedDuration]} limit</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-1 md:gap-2">
+                  {v.features.map((feature) => (
+                    <span key={feature} className="text-[9px] md:text-[11px] font-bold bg-white/5 md:bg-[#090E17] text-gray-400 px-2 py-0.5 md:px-3 md:py-1 rounded-full border border-white/10 md:border-[#1A1F2B]">
+                      {feature}
+                    </span>
+                  ))}
+                  <span className="hidden md:inline-block text-[11px] font-bold bg-[#090E17] text-gray-400 px-3 py-1 rounded-full border border-[#1A1F2B]">AC</span>
+                </div>
+
+                <div className="flex items-center gap-1.5 md:mt-2">
+                  <Fuel size={11} className="text-gray-500 shrink-0 md:hidden" />
+                  <span className="text-[11px] font-bold text-gray-400 md:hidden">{v.fuel}</span>
+                  <div className="hidden md:flex items-center gap-1 text-[12px] text-gray-400 font-medium">
+                    <Shield size={14} className="text-gray-500" />
+                    Self-drive · License required
+                  </div>
+                </div>
+
+                {/* Mobile Price & Booking Button */}
+                <div className="flex items-center justify-between md:hidden">
+                  <div>
+                    <span className="text-[8px] font-bold text-gray-500 uppercase tracking-[0.15em] block">Price</span>
+                    <div className="flex items-baseline gap-0.5">
+                      <span className="text-[24px] font-extrabold text-[#FFC107] tracking-tighter leading-none">₹{v.prices[selectedDuration]}</span>
+                      <span className="text-[11px] font-bold text-gray-500 ml-0.5">{durationSuffix[selectedDuration]}</span>
+                    </div>
+                  </div>
+                  <motion.button
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => openVehicleDetail(v)}
+                    className="bg-[#FFC107] text-black px-4 py-2.5 rounded-[12px] text-[11px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-md hover:bg-[#FFD54F] transition-all"
+                  >
+                    Book Now <ChevronRight size={13} strokeWidth={3} className="opacity-80 text-black" />
+                  </motion.button>
+                </div>
+              </div>
+
+              {/* Desktop Right Price & Button */}
+              <div className="hidden md:flex flex-col justify-center items-end pr-4 pl-6 border-l border-white/5 h-full space-y-4 min-w-[180px]">
+                <div className="text-right">
+                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] block mb-1">Price</span>
+                  <div className="flex items-baseline gap-0.5 justify-end">
+                    <span className="text-[32px] font-black text-[#FFC107] tracking-tighter leading-none">₹{v.prices[selectedDuration]}</span>
+                    <span className="text-[14px] font-bold text-gray-500 ml-1">{durationSuffix[selectedDuration]}</span>
+                  </div>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.96 }}
+                  onClick={() => openVehicleDetail(v)}
+                  className="bg-[#FFC107] w-full justify-center text-black px-6 py-3 rounded-[12px] text-[12px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md hover:bg-[#FFD54F] transition-all"
+                >
+                  Book Now <ChevronRight size={14} strokeWidth={3} className="opacity-80 text-black" />
+                </motion.button>
+              </div>
+            </motion.div>
+          ))
+        )}
+        </AnimatePresence>
+
+        {!loading && !errorMessage && filteredVehicles.length > RENTAL_PAGE_SIZE ? (
+          <div className="flex items-center justify-between gap-3 rounded-[20px] border border-white/10 bg-[#1a1a1a] px-4 py-3.5 shadow-lg">
+            <button
+              type="button"
+              onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+              disabled={currentPage === 1}
+              className="rounded-[12px] border border-white/20 bg-white/5 px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-white disabled:opacity-40"
+            >
+              Previous
+            </button>
+            <div className="text-center">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Page</p>
+              <p className="mt-1 text-[13px] font-black text-white">{currentPage} / {totalPages}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+              disabled={currentPage === totalPages}
+              className="rounded-[12px] border border-[#FFC107] bg-[#FFC107] px-4 py-2 text-[11px] font-bold uppercase tracking-widest text-black disabled:opacity-40"
+            >
+              Next
+            </button>
+          </div>
+        ) : null}
+
+        <div className="flex items-center gap-3 rounded-[16px] border border-white/10 bg-[#1a1a1a] px-4 py-3.5 shadow-lg">
+          <div className="w-8 h-8 rounded-[10px] bg-white/5 flex items-center justify-center shrink-0">
+            <Shield size={15} className="text-gray-400" strokeWidth={2} />
+          </div>
+          <p className="text-[11px] font-bold text-gray-400 leading-relaxed">
+            All rental vehicles shown here come from the admin catalog. Valid driving license and verification are required before pickup.
+          </p>
+        </div>
+      </div>
+      </div>
+    </div>
+  );
+};
+
+</div></>);} return renderContent(); }; export default BikeRentalHome;
