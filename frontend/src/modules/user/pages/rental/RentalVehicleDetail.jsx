@@ -51,7 +51,7 @@ const TIME_OPTIONS = [
 ];
 
 const inputClass =
-  'w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition-all focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100/60';
+  'w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition-all focus:border-amber-400 focus:ring-4 focus:ring-amber-100/60';
 const pickerTriggerClass =
   'w-full rounded-[18px] border border-slate-200 bg-white px-4 py-3.5 text-left text-sm text-slate-800 shadow-[0_4px_12px_rgba(15,23,42,0.04)] transition-all';
 
@@ -1241,78 +1241,101 @@ const RentalVehicleDetail = () => {
     (selectionStep === 'location' && (locationsLoading || !selectedServiceLocation));
 
   return (
-    <div className={`min-h-screen max-w-lg mx-auto font-sans relative overflow-hidden ${
-      isSubscriptionMode
-        ? 'bg-[linear-gradient(180deg,#FAFAF9_0%,#F7F7F5_36%,#F1F5F9_100%)] pb-36'
-        : 'bg-[linear-gradient(180deg,#F8FAFC_0%,#F3F4F6_38%,#EEF2F7_100%)] pb-36'
+    <div className={`min-h-screen font-sans relative ${
+      isSubscriptionMode ? 'bg-slate-50 pb-36' : 'bg-slate-50 pb-12 lg:pb-24'
     }`}>
-      <div className="absolute -top-16 right-[-40px] h-44 w-44 rounded-full bg-orange-100/60 blur-3xl pointer-events-none" />
-
-      <motion.header
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="sticky top-0 z-30 w-full"
-      >
-        <div
-          className={`px-5 pt-6 pb-5 relative overflow-hidden ${
-            isSubscriptionMode
-              ? 'bg-[linear-gradient(90deg,#147A9C_0%,#2AB0A7_100%)] shadow-[0_8px_28px_rgba(20,122,156,0.22)]'
-              : 'bg-white/85 backdrop-blur-2xl border-b border-white/40 shadow-[0_8px_32px_rgba(15,23,42,0.06)]'
-          }`}
-        >
-          {!isSubscriptionMode ? (
-            <>
-              <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-orange-400/5 blur-[40px] pointer-events-none" />
-              <div className="absolute top-0 left-0 h-24 w-24 rounded-full bg-blue-400/5 blur-[40px] pointer-events-none" />
-            </>
-          ) : null}
-
-          <div className="relative flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <motion.button
-                whileHover={{ x: -2 }}
-                whileTap={{ scale: 0.92 }}
-                onClick={() => navigate(-1)}
-                className={`w-10 h-10 flex items-center justify-center shrink-0 group transition-all ${
-                  isSubscriptionMode
-                    ? 'rounded-full bg-white/10 text-white'
-                    : 'rounded-2xl bg-slate-900 shadow-[0_4px_12px_rgba(15,23,42,0.15)]'
-                }`}
-              >
-                <ArrowLeft
-                  size={20}
-                  className={`${isSubscriptionMode ? 'text-white' : 'text-white'} group-hover:opacity-80 transition-opacity`}
-                  strokeWidth={2.5}
-                />
-              </motion.button>
-              <div className="min-w-0">
-                <p className={`text-[10px] font-bold uppercase tracking-[0.18em] leading-none mb-1.5 ${
-                  isSubscriptionMode ? 'text-white/70' : 'text-slate-500/60'
-                }`}>
-                  {isSubscriptionMode ? 'Subscription details' : 'Vehicle Details'}
-                </p>
-                <h1 className={`text-[22px] font-[900] tracking-tight leading-none truncate max-w-[220px] ${
-                  isSubscriptionMode ? 'text-white' : 'text-slate-950'
-                }`}>
-                  {isSubscriptionMode ? 'Subscription details' : vehicle.name}
-                </h1>
+      {/* Desktop Header */}
+      {!isSubscriptionMode && (
+        <header className="hidden lg:flex max-w-[1200px] mx-auto items-center justify-between py-6 px-6">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#ffc400] text-white hover:bg-black transition-colors"
+            >
+              <ArrowLeft size={20} strokeWidth={2.5} />
+            </button>
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                VEHICLE DETAILS
+              </p>
+              <h1 className="text-[24px] font-black tracking-tight text-slate-900">{vehicle.name}</h1>
+            </div>
+          </div>
+          <div className="flex items-center gap-8">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FFB800]/10 text-[#FFB800]">
+                <Car size={18} strokeWidth={2.5} />
+              </div>
+              <div>
+                <p className="text-[12px] font-bold text-slate-900">Self-drive vehicles</p>
+                <p className="text-[11px] font-semibold text-slate-500">Drive at your convenience</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FFB800]/10 text-[#FFB800]">
+                <Shield size={18} strokeWidth={2.5} />
+              </div>
+              <div>
+                <p className="text-[12px] font-bold text-slate-900">Verified & Inspected</p>
+                <p className="text-[11px] font-semibold text-slate-500">Quality and safety assured</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FFB800]/10 text-[#FFB800]">
+                <Users size={18} strokeWidth={2.5} />
+              </div>
+              <div>
+                <p className="text-[12px] font-bold text-slate-900">24/7 Roadside Support</p>
+                <p className="text-[11px] font-semibold text-slate-500">We're here for you</p>
               </div>
             </div>
           </div>
-        </div>
-      </motion.header>
+        </header>
+      )}
 
-      <div className="px-5 pt-5 space-y-4">
+      {/* Mobile/Tablet Header (or Subscription Mode Header) */}
+      {(isSubscriptionMode || true) && (
+        <motion.header
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className={`sticky top-0 z-30 w-full ${isSubscriptionMode ? 'lg:flex' : 'lg:hidden'}`}
+        >
+          <div className="px-5 pt-6 pb-5 relative overflow-hidden bg-white/90 backdrop-blur-xl border-b border-slate-200">
+            <div className="relative flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <motion.button
+                  whileHover={{ x: -2 }}
+                  whileTap={{ scale: 0.92 }}
+                  onClick={() => navigate(-1)}
+                  className="w-10 h-10 flex items-center justify-center shrink-0 rounded-full bg-[#ffc400] text-white shadow-md transition-all"
+                >
+                  <ArrowLeft size={20} strokeWidth={2.5} />
+                </motion.button>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] leading-none mb-1.5 text-slate-500">
+                    {isSubscriptionMode ? 'Subscription details' : 'Vehicle Details'}
+                  </p>
+                  <h1 className="text-[20px] font-black tracking-tight leading-none truncate max-w-[220px] text-slate-900">
+                    {isSubscriptionMode ? 'Subscription details' : vehicle.name}
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.header>
+      )}
+
+      <main className={`mx-auto ${isSubscriptionMode ? 'max-w-lg px-5 pt-5' : 'max-w-[1200px] px-5 lg:px-6 mt-4 lg:mt-2'}`}>
         {isSubscriptionMode ? (
-          <>
+          <div className="space-y-4 pb-32">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
               className="overflow-hidden rounded-[26px] bg-white shadow-[0_14px_36px_rgba(15,23,42,0.08)]"
             >
-              <div className="relative flex items-center justify-center px-6 py-6">
+              <div className="relative flex items-center justify-center px-6 py-6 bg-gradient-to-br from-amber-50/50 to-amber-100/20">
                 {selectedImage ? (
                   <img src={selectedImage} alt={vehicle.name} className="h-44 object-contain drop-shadow-[0_18px_24px_rgba(15,23,42,0.12)]" />
                 ) : (
@@ -1323,14 +1346,14 @@ const RentalVehicleDetail = () => {
               </div>
 
               {gallery.length > 1 ? (
-                <div className="flex items-center justify-center gap-2 pb-2">
+                <div className="flex items-center justify-center gap-2 pb-2 mt-4">
                   {gallery.slice(0, 5).map((image) => (
                     <button
                       key={image}
                       type="button"
                       onClick={() => setSelectedImage(image)}
                       className={`h-2.5 w-2.5 rounded-full transition-all ${
-                        selectedImage === image ? 'bg-[#F97316] ring-2 ring-[#FDBA74]/50' : 'bg-slate-300'
+                        selectedImage === image ? 'bg-[#FFB800] ring-2 ring-[#FFB800]/50' : 'bg-slate-300'
                       }`}
                     />
                   ))}
@@ -1374,7 +1397,7 @@ const RentalVehicleDetail = () => {
                       onClick={() => setSelectedSubscriptionPlanId(String(plan.id))}
                       className={`min-w-[72px] rounded-2xl border px-3 py-3 text-center transition-all ${
                         isSelected
-                          ? 'border-[#EF6C3E] bg-[#EF6C3E] text-white shadow-[0_10px_22px_rgba(239,108,62,0.24)]'
+                          ? 'border-[#ffc400] bg-[#ffc400] text-white shadow-[0_10px_22px_rgba(17,24,39,0.24)]'
                           : 'border-slate-200 bg-white text-slate-600'
                       }`}
                     >
@@ -1503,31 +1526,28 @@ const RentalVehicleDetail = () => {
                         onClick={() => setSelectedServiceLocationId(String(item.id))}
                         className={`w-full rounded-[20px] border px-4 py-3 text-left transition-all ${
                           isSelected
-                            ? 'border-[#0B94A4] bg-[#ECF9FB] shadow-[0_10px_24px_rgba(11,148,164,0.10)]'
+                            ? 'border-[#ffc400] bg-[#ffc400] text-white shadow-[0_10px_24px_rgba(17,24,39,0.10)]'
                             : 'border-slate-200 bg-white'
                         }`}
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-2">
-                              <p className="text-[14px] font-black text-slate-900">{item.name}</p>
+                              <p className={`text-[14px] font-black ${isSelected ? 'text-[#332000]' : 'text-slate-900'}`}>{item.name}</p>
                               {index === 0 && userCoordinates ? (
-                                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-700">
+                                <span className="rounded-full bg-emerald-100/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-500">
                                   Closest
                                 </span>
                               ) : null}
                             </div>
-                            <p className="mt-1 text-[12px] font-bold text-slate-600">
+                            <p className={`mt-1 text-[12px] font-bold ${isSelected ? 'text-slate-300' : 'text-slate-600'}`}>
                               {item.pickupLabel || item.address || `${appName} delivery point`}
                             </p>
-                            <p className="mt-0.5 text-[11px] font-semibold text-slate-400">
-                              {item.address || 'Pickup and delivery support available'}
-                            </p>
                           </div>
-                          <div className={`mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${
-                            isSelected ? 'border-[#0B94A4] bg-[#0B94A4] text-white' : 'border-slate-300 text-transparent'
+                          <div className={`mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
+                            isSelected ? 'border-[#FFB800]' : 'border-slate-300 text-transparent'
                           }`}>
-                            <CheckCircle2 size={14} />
+                            {isSelected && <div className="w-2 h-2 rounded-full bg-[#FFB800]" />}
                           </div>
                         </div>
                       </button>
@@ -1536,509 +1556,445 @@ const RentalVehicleDetail = () => {
                 )}
               </div>
             </motion.div>
-          </>
+          </div>
         ) : (
-          <>
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
-          className="rounded-[24px] border border-white/80 bg-white/90 shadow-[0_8px_24px_rgba(15,23,42,0.06)] overflow-hidden"
-        >
-          <div
-            className="px-6 py-6 flex items-center justify-center"
-            style={{ background: `linear-gradient(135deg, ${vehicle.gradientFrom} 0%, ${vehicle.gradientTo} 100%)` }}
-          >
-            {selectedImage ? (
-              <img src={selectedImage} alt={vehicle.name} className="h-36 object-contain drop-shadow-xl" />
-            ) : (
-              <div className="flex h-36 w-full items-center justify-center text-slate-300">
-                <Car size={48} />
-              </div>
-            )}
-          </div>
-          <div className="px-5 py-4 space-y-3">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <span
-                  className={`inline-block text-[9px] font-bold px-2 py-0.5 rounded-full border ${vehicle.tagBg} ${vehicle.tagColor} mb-1.5`}
-                >
-                  {vehicle.tag}
-                </span>
-                <h2 className="text-[20px] font-extrabold text-slate-950 tracking-tight leading-tight">
-                  {vehicle.name}
-                </h2>
-                {vehicle.shortDescription ? (
-                  <p className="mt-1 text-[12px] font-semibold text-slate-500">
-                    {vehicle.shortDescription}
-                  </p>
-                ) : null}
-                <div className="flex items-center gap-1.5 mt-1">
-                  <Star size={12} className="text-yellow-500 fill-yellow-400" />
-                  <span className="text-[13px] font-bold text-slate-700">{vehicle.rating}</span>
-                  <span className="text-[11px] font-bold text-slate-400">
-                    {selectedPackage
-                      ? `- ${selectedPackage.includedKm} km included`
-                      : `- ${vehicle.kmLimit?.[duration] || 'Flexible km'} limit`}
-                  </span>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_420px] gap-6 lg:gap-8">
+            {/* Left Column */}
+            <div className="space-y-6">
+              {/* Image Box */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05 }}
+                className="rounded-[24px] bg-gradient-to-br from-amber-50/50 to-amber-100/20 p-6 relative shadow-sm border border-orange-100/50"
+              >
+                <div className="absolute top-6 left-6 flex items-center gap-1.5 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm">
+                  <Star size={14} className="text-yellow-500 fill-yellow-500" />
+                  <span className="text-[12px] font-bold text-amber-600">Most Popular</span>
                 </div>
-              </div>
-              <div className="text-right shrink-0">
-                <p className="text-[9px] font-bold text-slate-500 uppercase tracking-[0.12em]">
-                  Rate
-                </p>
-                <p className="text-[24px] font-extrabold text-slate-950 leading-none">
-                  Rs.{selectedPackage?.price || vehicle.prices?.[duration] || 0}
-                </p>
-                <p className="text-[11px] font-bold text-slate-400">
-                  {selectedPackage
-                    ? packageSuffix(selectedPackage.durationHours)
-                    : { Hourly: '/hr', 'Half-Day': '/6hr', Daily: '/day' }[duration] || '/hr'}
-                </p>
-              </div>
-            </div>
-
-            {gallery.length > 1 ? (
-              <div className="flex gap-2 overflow-x-auto pb-1">
-                {gallery.map((image) => (
-                  <button
-                    key={image}
-                    type="button"
-                    onClick={() => setSelectedImage(image)}
-                    className={`h-16 w-16 shrink-0 overflow-hidden rounded-2xl border ${
-                      selectedImage === image ? 'border-slate-900' : 'border-slate-200'
-                    }`}
-                  >
-                    <img src={image} alt="Vehicle gallery" className="h-full w-full object-cover" />
-                  </button>
-                ))}
-              </div>
-            ) : null}
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.08 }}
-          className="grid grid-cols-3 gap-3"
-        >
-          {summaryBadges.map(({ icon: Icon, label }) => (
-            <div
-              key={label}
-              className="rounded-[18px] border border-white/80 bg-white/90 px-3 py-3 shadow-[0_4px_14px_rgba(15,23,42,0.05)]"
-            >
-              <Icon size={15} className="text-slate-400" />
-              <p className="mt-2 text-[12px] font-bold text-slate-900">{label}</p>
-            </div>
-          ))}
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="rounded-[20px] border border-white/80 bg-white/90 shadow-[0_4px_14px_rgba(15,23,42,0.05)] px-5 py-4 space-y-3"
-        >
-          <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
-            What's included
-          </p>
-          <div className="space-y-2">
-            {(vehicle.amenities?.length ? vehicle.amenities : vehicle.features).map((feature) => (
-              <div key={feature} className="flex items-center gap-2.5">
-                <CheckCircle2 size={14} className="text-emerald-500 shrink-0" strokeWidth={2.5} />
-                <span className="text-[13px] font-bold text-slate-700">{feature}</span>
-              </div>
-            ))}
-          </div>
-          {vehicle.description ? (
-            <p className="text-[12px] font-semibold text-slate-500 leading-relaxed">
-              {vehicle.description}
-            </p>
-          ) : null}
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.12 }}
-          className="rounded-[20px] border border-white/80 bg-white/90 shadow-[0_4px_14px_rgba(15,23,42,0.05)] px-5 py-4 space-y-3"
-        >
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <Tag size={14} className="text-slate-400" />
-              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
-                Choose Hourly Rental
-              </p>
-            </div>
-            <span className="rounded-full bg-orange-50 px-3 py-1 text-[10px] font-bold text-orange-600">
-              {selectionStep === 'package' ? 'Step 1 of 2' : 'Step 2 of 2'}
-            </span>
-          </div>
-
-          <div className="space-y-3">
-            {pricingRows.map((row) => {
-              const isSelected = String(selectedPackageId) === String(row.id);
-
-              return (
-                <button
-                  key={row.id}
-                  type="button"
-                  onClick={() => setSelectedPackageId(String(row.id))}
-                  className={`w-full rounded-2xl border px-4 py-3 text-left transition-all ${
-                    isSelected
-                      ? 'border-slate-900 bg-slate-900 text-white shadow-[0_10px_24px_rgba(15,23,42,0.16)]'
-                      : 'border-slate-100 bg-slate-50 hover:border-slate-200'
-                  }`}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className={`text-sm font-bold ${isSelected ? 'text-white' : 'text-slate-900'}`}>
-                        {row.label}
-                      </p>
-                      <p className={`text-[11px] font-semibold ${isSelected ? 'text-white/75' : 'text-slate-500'}`}>
-                        {row.durationHours} hours - {row.includedKm} km included
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className={`text-lg font-bold ${isSelected ? 'text-white' : 'text-slate-900'}`}>
-                        Rs.{row.price}
-                      </p>
-                      <p className={`text-[11px] font-semibold ${isSelected ? 'text-white/75' : 'text-slate-500'}`}>
-                        {packageSuffix(row.durationHours)}
-                      </p>
-                    </div>
-                  </div>
-                  <div className={`mt-2 text-[11px] font-semibold ${isSelected ? 'text-white/80' : 'text-slate-500'}`}>
-                    Extra hour: Rs.{row.extraHourPrice || 0} - Extra km: Rs.{row.extraKmPrice || 0}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </motion.div>
-
-        <AnimatePresence mode="wait">
-          {selectionStep === 'location' ? (
-            <motion.div
-              key="location-step"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 12 }}
-              className="rounded-[20px] border border-white/80 bg-white/90 shadow-[0_4px_14px_rgba(15,23,42,0.05)] px-5 py-4 space-y-3"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
-                    Available Service Locations
+                <div className="absolute top-6 right-6 text-right">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500 mb-1">RATE</p>
+                  <p className="text-[24px] font-black text-slate-900 leading-none">
+                    Rs.{selectedPackage?.price || vehicle.prices?.[duration] || 0}
                   </p>
-                  <p className="mt-1 text-[13px] font-bold text-slate-700">
-                    Select where you want to pick up your rental.
+                  <p className="text-[13px] font-bold text-slate-500 mt-1">
+                    {selectedPackage ? packageSuffix(selectedPackage.durationHours) : '/hr'}
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setSelectionStep('package')}
-                  className="shrink-0 rounded-full border border-slate-200 px-3 py-1 text-[11px] font-bold text-slate-500"
-                >
-                  <span className="inline-flex items-center gap-1">
-                    <ChevronLeft size={12} /> Back
-                  </span>
-                </button>
-              </div>
-
-              <div className="rounded-2xl bg-slate-50 px-4 py-3 text-[12px] font-bold text-slate-500">
-                {isLocatingUser
-                  ? 'Finding your current location to sort the closest service points...'
-                  : userCoordinates
-                    ? 'Service locations are sorted by distance from your current location. The nearest option is preselected.'
-                    : 'Location access was unavailable, so service locations are shown in fallback order.'}
-              </div>
-
-              {locationsLoading ? (
-                <div className="flex items-center justify-center gap-2 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-6 text-[12px] font-bold text-slate-500">
-                  <Loader2 size={16} className="animate-spin" />
-                  Loading service locations...
-                </div>
-              ) : locationError ? (
-                <div className="rounded-2xl border border-rose-100 bg-rose-50 px-4 py-4 text-[12px] font-bold text-rose-500">
-                  {locationError}
-                </div>
-              ) : serviceLocations.length === 0 ? (
-                <div className="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-6 text-[12px] font-bold text-slate-500">
-                  No active service locations are available for this rental right now.
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <div className="overflow-hidden rounded-[22px] border border-slate-100 bg-slate-50">
-                    <div className="flex items-center justify-between gap-3 border-b border-slate-100 bg-white/80 px-4 py-3">
-                      <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
-                          Pickup Map
-                        </p>
-                        <p className="mt-0.5 text-[12px] font-bold text-slate-600">
-                          Available rental pickup points pinned on Google Maps.
-                        </p>
-                      </div>
-                      {selectedServiceLocation?.distanceLabel ? (
-                        <span className="rounded-full bg-emerald-50 px-3 py-1 text-[10px] font-bold text-emerald-700">
-                          {selectedServiceLocation.distanceLabel}
-                        </span>
-                      ) : null}
+                
+                <div className="mt-16 mb-8 flex justify-center">
+                  {selectedImage ? (
+                    <img src={selectedImage} alt={vehicle.name} className="h-48 md:h-64 object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.15)]" />
+                  ) : (
+                    <div className="flex h-48 md:h-64 w-full items-center justify-center text-slate-300">
+                      <Car size={64} />
                     </div>
+                  )}
+                </div>
 
-                    <div className="relative h-64 w-full bg-slate-200">
-                      {!HAS_VALID_GOOGLE_MAPS_KEY ? (
-                        <div className="flex h-full items-center justify-center px-6 text-center">
-                          <div className="rounded-[18px] bg-white/90 px-4 py-4 shadow-sm">
-                            <p className="text-[12px] font-bold text-slate-900">Google Maps key missing</p>
-                            <p className="mt-1 text-[11px] font-bold text-slate-500">
-                              Set `VITE_GOOGLE_MAPS_API_KEY` in `frontend/.env`.
-                            </p>
-                          </div>
-                        </div>
-                      ) : mapLoadError ? (
-                        <div className="flex h-full items-center justify-center px-6 text-center">
-                          <div className="rounded-[18px] bg-white/90 px-4 py-4 shadow-sm">
-                            <p className="text-[12px] font-bold text-slate-900">Google Maps failed to load</p>
-                            <p className="mt-1 text-[11px] font-bold text-slate-500">
-                              Check the browser key restrictions and reload.
-                            </p>
-                          </div>
-                        </div>
-                      ) : !isMapLoaded ? (
-                        <div className="flex h-full items-center justify-center">
-                          <div className="flex items-center gap-2 rounded-[16px] bg-white/90 px-4 py-3 shadow-sm">
-                            <Loader2 size={18} className="animate-spin text-slate-500" />
-                            <span className="text-[12px] font-bold text-slate-700">Loading map</span>
-                          </div>
-                        </div>
-                      ) : (
-                        <GoogleMap
-                          mapContainerStyle={MAP_CONTAINER_STYLE}
-                          center={mapCenter}
-                          zoom={12}
-                          onLoad={(map) => {
-                            mapRef.current = map;
-                          }}
-                          options={{
-                            disableDefaultUI: true,
-                            zoomControl: true,
-                            clickableIcons: false,
-                            streetViewControl: false,
-                            fullscreenControl: false,
-                            mapTypeControl: false,
-                            gestureHandling: 'greedy',
-                          }}
-                        >
-                          {mapMarkers.map((marker) => (
-                            <MarkerF
-                              key={marker.key}
-                              position={marker.position}
-                              title={marker.title}
-                              onClick={() => setSelectedServiceLocationId(String(marker.locationId))}
-                              icon={buildRentalMapPinIcon(
-                                marker.isSelected ? '#10b981' : marker.type === 'location' ? '#0f172a' : '#f59e0b',
-                                marker.isSelected || marker.isClosest,
-                              )}
-                            />
-                          ))}
-                        </GoogleMap>
-                      )}
-                    </div>
-                  </div>
-
-                  {serviceLocations.map((item, index) => {
-                    const isSelected = String(selectedServiceLocationId) === String(item.id);
-
-                    return (
+                {gallery.length > 1 && (
+                  <div className="flex items-center justify-center gap-3 mb-6">
+                    {gallery.map((image) => (
                       <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => setSelectedServiceLocationId(String(item.id))}
-                        className={`w-full rounded-2xl border px-4 py-3 text-left transition-all ${
-                          isSelected
-                            ? 'border-emerald-200 bg-emerald-50 shadow-[0_10px_24px_rgba(16,185,129,0.10)]'
-                            : 'border-slate-100 bg-white hover:border-slate-200'
+                        key={image}
+                        onClick={() => setSelectedImage(image)}
+                        className={`w-2.5 h-2.5 rounded-full transition-all ${
+                          selectedImage === image ? 'bg-[#FFB800] ring-4 ring-[#FFB800]/20' : 'bg-slate-300 hover:bg-slate-400'
                         }`}
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <p className="text-[14px] font-black text-slate-900">{item.name}</p>
-                              {index === 0 && userCoordinates ? (
-                                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-700">
-                                  Closest
-                                </span>
-                              ) : null}
-                            </div>
-                            <div className="mt-1 flex items-start gap-2">
-                              <MapPin size={13} className="mt-0.5 shrink-0 text-orange-400" />
-                              <div>
-                                {item.pickupLabel ? (
-                                  <p className="text-[12px] font-black text-slate-700">
-                                    {item.pickupLabel}
+                      />
+                    ))}
+                  </div>
+                )}
+                
+                <div>
+                  <h2 className="text-[32px] font-black text-slate-900 tracking-tight leading-tight">{vehicle.name}</h2>
+                  <p className="text-[15px] font-semibold text-slate-500 mt-1">{vehicle.vehicleCategory || vehicle.shortDescription || 'Vehicle'}</p>
+                  <div className="flex items-center gap-4 mt-4">
+                    <div className="flex items-center gap-1.5 bg-yellow-50 px-2 py-1 rounded-md">
+                      <Star size={16} className="text-yellow-500 fill-yellow-500" />
+                      <span className="text-[15px] font-bold text-slate-900">{vehicle.rating || '4.8'}</span>
+                    </div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+                    <span className="text-[15px] font-bold text-slate-600">
+                      {selectedPackage ? selectedPackage.includedKm : (vehicle.kmLimit?.[duration] || '10')} km included
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Features Grid */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.08 }}
+                className="grid grid-cols-2 md:grid-cols-4 gap-3"
+              >
+                <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
+                  <Users size={22} className="text-slate-400 mb-2" />
+                  <p className="text-[18px] font-black text-slate-900">{vehicle.capacity || 1}</p>
+                  <p className="text-[13px] font-semibold text-slate-500">Seat</p>
+                </div>
+                <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
+                  <Luggage size={22} className="text-slate-400 mb-2" />
+                  <p className="text-[18px] font-black text-slate-900">{vehicle.luggageCapacity || 1}</p>
+                  <p className="text-[13px] font-semibold text-slate-500">Bag Space</p>
+                </div>
+                <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
+                  <Car size={22} className="text-slate-400 mb-2" />
+                  <p className="text-[16px] font-black text-slate-900 truncate w-full">{vehicle.vehicleCategory || 'Bike'}</p>
+                  <p className="text-[13px] font-semibold text-slate-500">Vehicle Type</p>
+                </div>
+                <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
+                  <Fuel size={22} className="text-slate-400 mb-2" />
+                  <p className="text-[16px] font-black text-slate-900">{vehicle.fuel || '80 km/hr'}</p>
+                  <p className="text-[13px] font-semibold text-slate-500">Mileage (Approx.)</p>
+                </div>
+              </motion.div>
+
+              {/* What's Included */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="rounded-[20px] border border-slate-100 bg-white p-6 shadow-sm space-y-5"
+              >
+                <p className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-600">WHAT'S INCLUDED</p>
+                <div className="space-y-4">
+                  {(vehicle.amenities?.length ? vehicle.amenities : vehicle.features || []).map((feature) => (
+                    <div key={feature} className="flex items-center gap-3">
+                      <div className="w-5 h-5 rounded-full border-[1.5px] border-emerald-500 flex items-center justify-center text-emerald-500">
+                        <CheckCircle2 size={12} strokeWidth={3} />
+                      </div>
+                      <span className="text-[15px] font-bold text-slate-800">{feature}</span>
+                    </div>
+                  ))}
+                  {(!vehicle.amenities?.length && !vehicle.features?.length) && (
+                    <div className="text-slate-500 text-[14px] font-semibold">Standard features included.</div>
+                  )}
+                </div>
+              </motion.div>
+
+              {/* Need a different duration */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.12 }}
+                className="rounded-[20px] border border-slate-100 bg-white p-6 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm"
+              >
+                <div className="flex items-center gap-5 w-full sm:w-auto">
+                  <div className="w-14 h-14 rounded-full bg-[#FFB800] flex items-center justify-center shrink-0 shadow-[0_4px_14px_rgba(255,184,0,0.3)]">
+                    <Calendar size={24} className="text-slate-900" />
+                  </div>
+                  <div>
+                    <p className="text-[16px] font-black text-slate-900">Need a different duration?</p>
+                    <p className="text-[13px] font-semibold text-slate-500 mt-1 leading-relaxed">Contact us for custom rental packages and long-term offers.</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowQuoteForm(true)}
+                  className="w-full sm:w-auto shrink-0 rounded-[14px] border border-slate-200 bg-white px-6 py-3.5 text-[14px] font-bold text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-2 transition-colors"
+                >
+                  Contact Us <ChevronRight size={16} />
+                </button>
+              </motion.div>
+            </div>
+
+            {/* Right Column */}
+            <div className="pb-24 lg:pb-0">
+              <div className="sticky top-24 space-y-6">
+                <div className="rounded-[24px] border border-slate-100 bg-white p-6 shadow-sm">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-600">
+                      CHOOSE HOURLY RENTAL
+                    </h3>
+                    <span className="text-[13px] font-bold text-amber-600">
+                      Step {selectionStep === 'package' ? '1' : '2'} of 2
+                    </span>
+                  </div>
+
+                  {selectionStep === 'package' ? (
+                    <div className="space-y-4">
+                      {pricingRows.map((row) => {
+                        const isSelected = String(selectedPackageId) === String(row.id);
+                        return (
+                          <button
+                            key={row.id}
+                            onClick={() => setSelectedPackageId(String(row.id))}
+                            className={`w-full text-left rounded-[16px] border-2 p-5 transition-all relative ${
+                              isSelected
+                                ? 'border-[#ffc400] bg-[#ffc400] shadow-[0_8px_20px_rgba(17,24,39,0.2)]'
+                                : 'border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50'
+                            }`}
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-center gap-4">
+                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-1 ${
+                                  isSelected ? 'border-[#FFB800]' : 'border-slate-300'
+                                }`}>
+                                  {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-[#FFB800]" />}
+                                </div>
+                                <div>
+                                  <p className={`text-[16px] font-black ${isSelected ? 'text-[#332000]' : 'text-slate-900'}`}>
+                                    {row.label || `${row.durationHours} Hours`}
                                   </p>
-                                ) : null}
-                                <p className="text-[12px] font-bold text-slate-600">
-                                  {item.address || `${appName} pickup point`}
+                                  <p className={`text-[12px] font-semibold mt-1.5 ${isSelected ? 'text-[#5d3f00]' : 'text-slate-500'}`}>
+                                    {row.durationHours} hour{row.durationHours > 1 ? 's' : ''} - {row.includedKm} km included
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className={`text-[16px] font-black ${isSelected ? 'text-[#332000]' : 'text-slate-900'}`}>
+                                  Rs.{row.price}
                                 </p>
-                                <p className="mt-0.5 text-[11px] font-semibold text-slate-400">
-                                  {item.storeCount > 0
-                                    ? `${item.storeCount} pickup point${item.storeCount === 1 ? '' : 's'} available`
-                                    : 'Pickup available'}
-                                  {item.distanceLabel ? ` - ${item.distanceLabel}` : ''}
+                                <p className={`text-[12px] font-semibold mt-1.5 ${isSelected ? 'text-[#5d3f00]' : 'text-slate-500'}`}>
+                                  {packageSuffix(row.durationHours)}
                                 </p>
                               </div>
                             </div>
-                          </div>
-                          {isSelected ? (
-                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
-                              <CheckCircle2 size={16} />
+                            <div className={`mt-4 pt-4 border-t text-[11.5px] font-semibold flex gap-2 sm:gap-3 flex-wrap ${
+                              isSelected ? 'border-slate-700/60 text-slate-300' : 'border-slate-100 text-slate-500'
+                            }`}>
+                              <span>Extra hour: Rs.{row.extraHourPrice || 0}</span>
+                              <span className="hidden sm:inline">•</span>
+                              <span>Extra km: Rs.{row.extraKmPrice || 0}</span>
                             </div>
-                          ) : (
-                            <Navigation size={16} className="mt-1 shrink-0 text-slate-300" />
-                          )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between pb-2">
+                        <p className="text-[15px] font-black text-slate-900">Select Location</p>
+                        <button
+                          onClick={() => setSelectionStep('package')}
+                          className="text-[13px] font-bold text-[#FFB800] hover:text-yellow-600 transition-colors flex items-center gap-1"
+                        >
+                          <ChevronLeft size={16} /> Back
+                        </button>
+                      </div>
+                      
+                      {locationsLoading ? (
+                        <div className="py-10 text-center text-[13px] font-bold text-slate-500 flex flex-col items-center bg-slate-50 rounded-xl">
+                          <Loader2 className="animate-spin mb-3 text-slate-400" size={24} />
+                          Loading service locations...
                         </div>
-                      </button>
-                    );
-                  })}
+                      ) : locationError ? (
+                        <div className="p-5 rounded-[16px] bg-rose-50 text-rose-600 text-[13px] font-bold border border-rose-100">
+                          {locationError}
+                        </div>
+                      ) : serviceLocations.length === 0 ? (
+                        <div className="p-8 rounded-[16px] bg-slate-50 border border-slate-100 text-center text-slate-500 text-[13px] font-bold">
+                          No locations found for this vehicle.
+                        </div>
+                      ) : (
+                        <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                          {serviceLocations.map((item, index) => {
+                            const isSelected = String(selectedServiceLocationId) === String(item.id);
+                            return (
+                              <button
+                                key={item.id}
+                                onClick={() => setSelectedServiceLocationId(String(item.id))}
+                                className={`w-full text-left p-4 rounded-[16px] border-2 transition-all ${
+                                  isSelected
+                                    ? 'border-[#ffc400] bg-[#ffc400] text-[#332000] shadow-md'
+                                    : 'border-slate-100 bg-white hover:border-slate-200'
+                                }`}
+                              >
+                                <div className="flex items-start justify-between gap-3">
+                                  <div className="min-w-0 pr-2">
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                      <p className={`text-[14px] font-black truncate ${isSelected ? 'text-[#332000]' : 'text-slate-900'}`}>
+                                        {item.name}
+                                      </p>
+                                      {index === 0 && userCoordinates && (
+                                        <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                                          isSelected ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-700'
+                                        }`}>
+                                          Closest
+                                        </span>
+                                      )}
+                                    </div>
+                                    <p className={`text-[12px] mt-1.5 truncate ${isSelected ? 'text-[#5d3f00]' : 'text-slate-500'}`}>
+                                      {item.pickupLabel || item.address}
+                                    </p>
+                                  </div>
+                                  <div className={`w-5 h-5 shrink-0 rounded-full border-2 flex items-center justify-center mt-0.5 ${
+                                    isSelected ? 'border-[#FFB800]' : 'border-slate-300'
+                                  }`}>
+                                    {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-[#FFB800]" />}
+                                  </div>
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
-              )}
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
 
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.14 }}
-          className="rounded-[20px] border border-white/80 bg-white/90 shadow-[0_4px_14px_rgba(15,23,42,0.05)] px-5 py-4 space-y-3"
-        >
-          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-400">
-            Seats Layout
-          </p>
-          <SeatPreview blueprint={vehicle.blueprint} />
-        </motion.div>
+                <div className="rounded-[24px] border border-slate-100 bg-white p-6 shadow-sm">
+                  <p className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-600 mb-5">BOOKING SUMMARY</p>
+                  <div className="space-y-4 text-[14px]">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-slate-500">Base Fare</span>
+                      <span className="font-black text-slate-900">Rs.{selectedPackage?.price || 0}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-slate-500">Included Distance</span>
+                      <span className="font-black text-slate-900">{selectedPackage?.includedKm || 0} km</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-slate-500">Included Duration</span>
+                      <span className="font-black text-slate-900">{selectedPackage?.durationHours || 0} Hours</span>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-5 pt-5 border-t border-slate-100 flex justify-between items-end">
+                    <span className="text-[16px] font-black text-slate-900">Total <span className="text-[12px] font-semibold text-slate-500">(Estimated)</span></span>
+                    <div className="text-right">
+                      <span className="text-[24px] font-black text-slate-900 leading-none">Rs.{selectedPackage?.price || 0}</span>
+                      <span className="text-[12px] font-bold text-slate-500 block mt-1">/hr</span>
+                    </div>
+                  </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.16 }}
-          className="flex items-center gap-3 rounded-[16px] border border-white/80 bg-white/90 px-4 py-3.5 shadow-[0_4px_14px_rgba(15,23,42,0.04)]"
-        >
-          <div className="w-8 h-8 rounded-[10px] bg-slate-50 flex items-center justify-center shrink-0">
-            <Shield size={15} className="text-slate-400" strokeWidth={2} />
+                  <div className="mt-5 p-3.5 rounded-[14px] bg-slate-50 flex items-start gap-2.5 text-[11px] font-semibold text-slate-500 leading-relaxed border border-slate-100">
+                    <Shield size={14} className="shrink-0 mt-0.5 text-slate-400" />
+                    <p>Security deposit and taxes may apply at checkout.</p>
+                  </div>
+
+                  <div className="hidden lg:block mt-6">
+                    <button 
+                      onClick={handleProceed}
+                      disabled={rentalProceedDisabled}
+                      className="w-full rounded-[16px] bg-[#ffc400] disabled:bg-slate-200 disabled:text-slate-400 text-white py-4 px-6 text-[15px] font-black flex items-center justify-between transition-colors hover:bg-black"
+                    >
+                      {selectionStep === 'package' ? 'Proceed to Service Location' : 'Select Date & Time'}
+                      <ChevronRight size={18} strokeWidth={2.5} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <p className="text-[11px] font-bold text-slate-400 leading-relaxed">
-            Valid driving license required. Refundable security deposit collected at booking.
-          </p>
-        </motion.div>
+        )}
 
-        <motion.button
-          whileTap={{ scale: 0.98 }}
-          onClick={() => setShowQuoteForm((current) => !current)}
-          className="w-full rounded-[18px] border border-slate-200 bg-white px-5 py-4 text-[14px] font-black text-slate-900 shadow-[0_8px_24px_rgba(15,23,42,0.08)]"
-        >
-          Request Custom Quote
-        </motion.button>
-
+        {/* Custom Quote Form Modal */}
         <AnimatePresence>
-          {showQuoteForm ? (
+          {showQuoteForm && (
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 16 }}
-              className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.08)] space-y-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm"
+              onClick={() => setShowQuoteForm(false)}
             >
-              <div className="flex items-center gap-2">
-                <ImageIcon size={15} className="text-slate-400" />
-                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-400">
-                  Custom Quote Request
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="w-full max-w-md rounded-[24px] bg-white p-6 shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-[#FFB800]/20 flex items-center justify-center text-[#FFB800]">
+                      <Calendar size={14} />
+                    </div>
+                    <p className="text-[12px] font-black uppercase tracking-[0.15em] text-slate-900">
+                      Custom Quote Request
+                    </p>
+                  </div>
+                  <button onClick={() => setShowQuoteForm(false)} className="text-slate-400 hover:text-slate-600">
+                    <span className="text-xl leading-none">&times;</span>
+                  </button>
+                </div>
+                <p className="text-[13px] font-semibold text-slate-500 mb-6">
+                  Share your required hours and dates. Our admin team will review and offer a custom price.
                 </p>
-              </div>
-              <p className="text-[12px] font-semibold text-slate-500">
-                Share just the rental hours and your date range. The admin team can review and send back a custom price.
-              </p>
-              <div className="grid gap-4">
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">
-                    Hours needed
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    value={quoteForm.requestedHours}
-                    onChange={(event) =>
-                      setQuoteForm((current) => ({
-                        ...current,
-                        requestedHours: event.target.value,
-                      }))
-                    }
-                    className={inputClass}
-                    placeholder="Enter rental hours"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">
-                    Start date and time
-                  </label>
+                
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-500">
+                      Hours needed
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={quoteForm.requestedHours}
+                      onChange={(event) =>
+                        setQuoteForm((current) => ({
+                          ...current,
+                          requestedHours: event.target.value,
+                        }))
+                      }
+                      className={inputClass}
+                      placeholder="e.g., 48"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-500">
+                      Start date and time
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => openQuotePicker('pickupDateTime')}
+                      className={pickerTriggerClass}
+                    >
+                      <span className="flex items-center gap-3">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-slate-50 text-slate-600">
+                          <Calendar size={18} />
+                        </span>
+                        <span className="min-w-0 text-left">
+                          <span className="block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                            Tap to choose
+                          </span>
+                          <span className="mt-0.5 block truncate text-[14px] font-bold text-slate-900">
+                            {formatPickerSummary(quoteForm.pickupDateTime)}
+                          </span>
+                        </span>
+                      </span>
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-500">
+                      End date and time
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => openQuotePicker('returnDateTime')}
+                      className={pickerTriggerClass}
+                    >
+                      <span className="flex items-center gap-3">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-slate-50 text-slate-600">
+                          <Clock size={18} />
+                        </span>
+                        <span className="min-w-0 text-left">
+                          <span className="block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                            Tap to choose
+                          </span>
+                          <span className="mt-0.5 block truncate text-[14px] font-bold text-slate-900">
+                            {formatPickerSummary(quoteForm.returnDateTime)}
+                          </span>
+                        </span>
+                      </span>
+                    </button>
+                  </div>
                   <button
                     type="button"
-                    onClick={() => openQuotePicker('pickupDateTime')}
-                    className={pickerTriggerClass}
+                    onClick={submitQuote}
+                    disabled={submittingQuote}
+                    className="w-full mt-4 rounded-[16px] bg-[#ffc400] px-5 py-4 text-[14px] font-black text-white disabled:opacity-60 transition-colors hover:bg-black"
                   >
-                    <span className="flex items-center gap-3">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-indigo-50 text-indigo-700">
-                        <Calendar size={18} />
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">
-                          Tap to choose
-                        </span>
-                        <span className="mt-1 block truncate text-sm font-bold text-slate-800">
-                          {formatPickerSummary(quoteForm.pickupDateTime)}
-                        </span>
-                      </span>
-                    </span>
+                    {submittingQuote ? 'Sending Request...' : 'Send To Admin For Review'}
                   </button>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">
-                    End date and time
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => openQuotePicker('returnDateTime')}
-                    className={pickerTriggerClass}
-                  >
-                    <span className="flex items-center gap-3">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-sky-50 text-sky-700">
-                        <Clock size={18} />
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">
-                          Tap to choose
-                        </span>
-                        <span className="mt-1 block truncate text-sm font-bold text-slate-800">
-                          {formatPickerSummary(quoteForm.returnDateTime)}
-                        </span>
-                      </span>
-                    </span>
-                  </button>
-                </div>
-                <button
-                  type="button"
-                  onClick={submitQuote}
-                  disabled={submittingQuote}
-                  className="w-full rounded-[16px] bg-[#2e3c78] px-5 py-3 text-sm font-black text-white disabled:opacity-60"
-                >
-                  {submittingQuote ? 'Sending Request...' : 'Send To Admin For Review'}
-                </button>
-              </div>
+              </motion.div>
             </motion.div>
-          ) : null}
+          )}
         </AnimatePresence>
+
         <DateTimePickerModal
           open={Boolean(activeQuotePicker)}
           title={
@@ -2059,35 +2015,41 @@ const RentalVehicleDetail = () => {
           onClose={closeQuotePicker}
           onApply={applyQuotePicker}
         />
-          </>
-        )}
-      </div>
+      </main>
 
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg px-5 pb-6 pt-3 bg-gradient-to-t from-[#EEF2F7] via-[#F3F4F6]/95 to-transparent pointer-events-none z-30">
-        <motion.button
-          whileTap={{ scale: 0.98 }}
-          onClick={handleProceed}
-          disabled={isSubscriptionMode ? subscriptionProceedDisabled : rentalProceedDisabled}
-          className={`pointer-events-auto w-full py-4 rounded-[18px] text-[15px] font-black text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 transition-all ${
-            isSubscriptionMode
-              ? subscriptionProceedDisabled
-                ? 'bg-slate-300'
-                : 'bg-[linear-gradient(90deg,#8FD2E0_0%,#6ED0C5_100%)]'
-              : rentalProceedDisabled
-                ? 'bg-slate-300'
-                : 'bg-slate-900'
-          }`}
-        >
-          {isSubscriptionMode
-            ? 'Proceed'
-            : selectionStep === 'package'
-              ? 'Proceed to Service Location'
-              : 'Select Date & Time'}
-          <ChevronRight size={17} strokeWidth={3} className="opacity-50" />
-        </motion.button>
-      </div>
+      {/* Mobile Fixed Bottom Proceed Button */}
+      {(!isSubscriptionMode) && (
+        <div className="fixed lg:hidden bottom-0 left-0 w-full px-5 pb-6 pt-4 bg-gradient-to-t from-white via-white to-transparent pointer-events-none z-30">
+          <button
+            onClick={handleProceed}
+            disabled={rentalProceedDisabled}
+            className="pointer-events-auto w-full py-4 rounded-[16px] text-[15px] font-black text-white shadow-[0_8px_24px_rgba(17,24,39,0.2)] flex items-center justify-between px-6 transition-all bg-[#ffc400] disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none"
+          >
+            {selectionStep === 'package' ? 'Proceed to Service Location' : 'Select Date & Time'}
+            <ChevronRight size={18} strokeWidth={2.5} />
+          </button>
+        </div>
+      )}
+
+      {/* Subscription Mode Fixed Bottom Button */}
+      {isSubscriptionMode && (
+        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg px-5 pb-6 pt-3 bg-gradient-to-t from-white via-white/95 to-transparent pointer-events-none z-30">
+          <motion.button
+            whileTap={{ scale: 0.98 }}
+            onClick={handleProceed}
+            disabled={subscriptionProceedDisabled}
+            className={`pointer-events-auto w-full py-4 rounded-[16px] text-[15px] font-black text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 transition-all ${
+              subscriptionProceedDisabled ? 'bg-slate-300 shadow-none' : 'bg-[#ffc400]'
+            }`}
+          >
+            Proceed
+            <ChevronRight size={17} strokeWidth={3} className="opacity-50" />
+          </motion.button>
+        </div>
+      )}
     </div>
   );
 };
 
 export default RentalVehicleDetail;
+

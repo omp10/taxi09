@@ -41,7 +41,7 @@ const bannerSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['rental', 'subscription'],
+      enum: ['rental', 'subscription', 'top', 'bottom'],
       default: 'rental',
       trim: true,
       index: true,

@@ -39,6 +39,17 @@ body {
   --color-success: #22C55E;
   --color-error: #EF4444;
 
+  /* Custom Spacing Variables */
+  --spacing-md: 24px;
+  --spacing-margin-mobile: 20px;
+  --spacing-xs: 4px;
+  --spacing-base: 8px;
+  --spacing-lg: 40px;
+  --spacing-gutter: 16px;
+  --spacing-margin-desktop: auto;
+  --spacing-xl: 64px;
+  --spacing-sm: 12px;
+
   /* Global Color Remapping: Overriding Tailwind Defaults to apply theme globally */
   
   /* Map 'slate' (previously used for all grays/text) to our new layout colors */
@@ -231,3 +242,117 @@ button, .button-text {
     transform: translateX(100%);
   }
 }
+
+/* Premium Theme Scoped Colors */
+.premium-theme {
+  --color-primary: #d48c00;
+  --color-primary-container: #ffc400;
+  --color-secondary: #c98500;
+  --color-secondary-container: #ffd54f;
+  --color-tertiary: #006686;
+  --color-tertiary-container: #19c5ff;
+  --color-background: #faf9f5;
+  --color-on-background: #1c1b1b;
+  --color-surface: #faf9f5;
+  --color-on-surface: #1c1b1b;
+  --color-surface-container: #f2efe4;
+  --color-surface-container-low: #f7f5ec;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-high: #eae7d7;
+  --color-surface-container-highest: #e0dbcb;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #332000;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #3d2400;
+  --color-on-surface-variant: #5c5746;
+  --color-surface-variant: #e5e0cc;
+  --color-outline: #857f6a;
+  --color-outline-variant: #d8d3be;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
+  
+  /* Font Family Definitions inside premium theme */
+  font-family: 'Work Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+}
+
+.premium-theme .font-display-lg {
+  font-family: 'Manrope', sans-serif;
+  font-size: 48px;
+  line-height: 56px;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+
+.premium-theme .font-headline-lg {
+  font-family: 'Manrope', sans-serif;
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 700;
+}
+
+.premium-theme .font-headline-lg-mobile {
+  font-family: 'Manrope', sans-serif;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+}
+
+.premium-theme .font-headline-md {
+  font-family: 'Manrope', sans-serif;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+}
+
+.premium-theme .font-body-lg {
+  font-family: 'Work Sans', sans-serif;
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 400;
+}
+
+.premium-theme .font-body-md {
+  font-family: 'Work Sans', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.premium-theme .font-label-md {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+.premium-theme .font-label-sm {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+/* Mockup Specific Helper Classes */
+.copper-gradient {
+  background: linear-gradient(135deg, #FF9800 0%, #FFC400 50%, #FF9800 100%);
+}
+
+.yellow-glow {
+  box-shadow: 0 4px 20px rgba(249, 166, 26, 0.2);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

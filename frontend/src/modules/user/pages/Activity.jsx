@@ -255,7 +255,7 @@ const Activity = () => {
   const helperText = useMemo(() => getHelperText(activeTab), [activeTab]);
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-lg flex-col bg-slate-50 font-sans pb-28">
+    <div className="mx-auto flex min-h-screen max-w-lg md:max-w-none md:mx-0 w-full flex-col bg-slate-50 font-sans pb-28 md:pt-24">
       <ActivityHeader helperText={helperText} onBack={() => navigate(-1)} />
       <ActivityTabs tabs={TABS} activeTab={activeTab} onChange={setActiveTab} />
 

@@ -20,6 +20,7 @@ import './App.css';
 
 // Lazy loading pages for performance
 const UserHome = lazy(() => import('./modules/user/pages/Home'));
+const PublicHome = lazy(() => import('./modules/user/pages/PublicHome'));
 const Login = lazy(() => import('./modules/user/pages/auth/Login'));
 const VerifyOTP = lazy(() => import('./modules/user/pages/auth/VerifyOTP'));
 const Signup = lazy(() => import('./modules/user/pages/auth/Signup'));
@@ -225,6 +226,7 @@ const AdminReferralTranslation = lazy(() => import('./modules/admin/pages/referr
 const AdminPromoCodes = lazy(() => import('./modules/admin/pages/promotions/PromoCodes'));
 const AdminSendNotification = lazy(() => import('./modules/admin/pages/promotions/SendNotification'));
 const AdminBannerImage = lazy(() => import('./modules/admin/pages/promotions/BannerImage'));
+const AdminHomepageBanners = lazy(() => import('./modules/admin/pages/promotions/HomepageBanners'));
 const AdminRentalCoupons = lazy(() => import('./modules/admin/pages/promotions/RentalCoupons'));
 
 // Price Management
@@ -375,7 +377,7 @@ const AdminSectionPlaceholder = () => {
 // A wrapper to handle conditional layouts (Mobile for User/Driver, Full for Admin)
 const MainLayout = ({ children }) => {
   const location = useLocation();
-  const staticPages = ['/', '/about', '/contact', '/support', '/faq', '/services', '/privacy', '/terms', '/refund', '/cancellation', '/blog', '/links'];
+  const staticPages = ['/about', '/contact', '/support', '/faq', '/services', '/privacy', '/terms', '/refund', '/cancellation', '/blog', '/links'];
   const isStaticPath = staticPages.includes(location.pathname);
   const isAdminPath =
     location.pathname.startsWith('/admin') ||
@@ -397,7 +399,7 @@ const MainLayout = ({ children }) => {
 
   return (
     <div className="redigo-app min-h-screen bg-gray-50/50">
-      <main className="max-w-lg mx-auto shadow-2xl bg-white min-h-screen relative overflow-x-hidden">
+      <main className="max-w-lg md:max-w-none mx-auto md:mx-0 shadow-2xl md:shadow-none bg-white min-h-screen relative overflow-x-hidden">
         {children}
       </main>
     </div>
@@ -684,7 +686,7 @@ function App() {
             <Toaster position="top-right" />
             <Routes>
               {/* Static / Public routes */}
-              <Route path="/" element={<LandingPage />} />
+              <Route path="/" element={<PublicHome />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/support" element={<SupportPage />} />
@@ -1304,6 +1306,22 @@ function App() {
                 <Route
                   path="promotions/banner-image/create"
                   element={<AdminBannerImage />}
+                />
+                <Route
+                  path="homepage-banners/top"
+                  element={<AdminHomepageBanners type="top" mode="list" />}
+                />
+                <Route
+                  path="homepage-banners/top/create"
+                  element={<AdminHomepageBanners type="top" mode="create" />}
+                />
+                <Route
+                  path="homepage-banners/bottom"
+                  element={<AdminHomepageBanners type="bottom" mode="list" />}
+                />
+                <Route
+                  path="homepage-banners/bottom/create"
+                  element={<AdminHomepageBanners type="bottom" mode="create" />}
                 />
 
                 {/* Admin Management */}

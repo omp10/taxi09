@@ -144,7 +144,7 @@ const BikeCategoriesSelection = () => {
 
   if (loading && subcategories.length === 0) {
     return (
-      <div className="min-h-screen bg-white max-w-lg mx-auto flex items-center justify-center font-sans">
+      <div className="min-h-screen bg-white max-w-lg md:max-w-none md:mx-0 w-full mx-auto flex items-center justify-center font-sans">
         <div className="text-center">
           <Loader2 className="animate-spin text-indigo-600 mx-auto mb-2" size={32} />
           <p className="text-xs text-slate-500 font-semibold">Loading Categories...</p>
@@ -154,7 +154,7 @@ const BikeCategoriesSelection = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white max-w-lg mx-auto font-sans relative overflow-x-hidden pb-12 flex flex-col no-scrollbar">
+    <div className="min-h-screen bg-white max-w-lg md:max-w-none md:mx-0 w-full mx-auto font-sans relative overflow-x-hidden pb-12 md:pt-24 flex flex-col no-scrollbar">
       {/* Header */}
       <div className="px-4 pt-6 pb-4 flex items-center gap-4 border-b border-slate-50 shrink-0 sticky top-0 bg-white z-30">
         <button

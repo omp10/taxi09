@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+﻿import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Fuel, Shield, ChevronRight, ChevronLeft, ChevronDown, SlidersHorizontal, ArrowDownUp, Star, Info, Car, Search, X, Bike, MapPin, MessageSquare, Calendar, User, Compass, Truck, Check, Headset, Home } from 'lucide-react';
@@ -8,9 +8,12 @@ import marutiSwiftImg from '@/assets/images/maruti_swift_nobg.png';
 import marutiBalenoImg from '@/assets/images/maruti_baleno_nobg.png';
 import hyundaiAuraImg from '@/assets/images/hyundai_aura_nobg.png';
 import toast from 'react-hot-toast';
+
 const DURATION_TABS = ['Hourly', 'Half-Day', 'Daily'];
 const RENTAL_SELECTED_VEHICLE_STORAGE_KEY = 'selectedRentalVehicleDetail';
 const RENTAL_PAGE_SIZE = 10;
+const RENTAL_ROUTE_PATH = '/taxi/user/rental';
+const SUBSCRIPTION_ROUTE_PATH = '/taxi/user/rental/subscriptions';
 const CATEGORY_FILTERS = [
   { id: 'all', label: 'All', Icon: Star },
   { id: 'car', label: 'Cars', Icon: Car },
@@ -95,8 +98,8 @@ const normalizeRentalVehicle = (item = {}, index = 0) => {
   );
 
   let tag = `${item.vehicleCategory || 'Rental'} Ready`;
-  let tagColor = 'text-amber-600';
-  let tagBg = 'bg-amber-50 border-amber-100';
+  let tagColor = 'text-blue-600';
+  let tagBg = 'bg-blue-50 border-blue-100';
 
   if (mostExpensive && String(mostExpensive.id) === String(daily?.id)) {
     tag = 'Premium';
@@ -108,8 +111,8 @@ const normalizeRentalVehicle = (item = {}, index = 0) => {
     tagBg = 'bg-emerald-50 border-emerald-100';
   } else if (isBike) {
     tag = 'Most Popular';
-    tagColor = 'text-amber-600';
-    tagBg = 'bg-amber-50 border-amber-100';
+    tagColor = 'text-orange-500';
+    tagBg = 'bg-orange-50 border-orange-100';
   }
 
   const gallery = [
@@ -213,6 +216,7 @@ const LOCATION_SUGGESTIONS = [
 const BikeRentalHome = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const isSubscriptionRoute = location.pathname === SUBSCRIPTION_ROUTE_PATH;
   const [selectedDuration, setSelectedDuration] = useState('Hourly');
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -227,7 +231,7 @@ const BikeRentalHome = () => {
     return 'all';
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeSegment, setActiveSegment] = useState('rentals'); // 'rentals' or 'subscriptions'
+  const [activeSegment, setActiveSegment] = useState(isSubscriptionRoute ? 'subscriptions' : 'rentals'); // 'rentals' or 'subscriptions'
   const [subCategory, setSubCategory] = useState('Hatchbacks'); // 'Hatchbacks', 'Sedans', 'SUVs' for subscriptions
   const [isAddressEntered, setIsAddressEntered] = useState(false);
   const [activeFaqIndex, setActiveFaqIndex] = useState(null);
@@ -236,6 +240,23 @@ const BikeRentalHome = () => {
   const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
   const [banners, setBanners] = useState([]);
   const [bannersLoading, setBannersLoading] = useState(true);
+  const [offers, setOffers] = useState([]);
+  const [offersLoading, setOffersLoading] = useState(true);
+
+  useEffect(() => {
+    setActiveSegment(isSubscriptionRoute ? 'subscriptions' : 'rentals');
+  }, [isSubscriptionRoute]);
+
+  const navigateToSegment = (segment) => {
+    setIsAddressEntered(false);
+
+    if (segment === 'subscriptions') {
+      navigate(SUBSCRIPTION_ROUTE_PATH);
+      return;
+    }
+
+    navigate(RENTAL_ROUTE_PATH);
+  };
 
   const resolveImageUrl = (img) => {
     if (!img) return null;
@@ -329,7 +350,7 @@ const BikeRentalHome = () => {
   const subscriptionVehicles = useMemo(() => {
     return vehicles
       .filter((vehicle) => vehicle.subscription?.enabled && vehicle.subscription?.plans?.length)
-      .map((vehicle) => {
+      .map((vehicle, index) => {
         const primaryPlan = vehicle.subscription?.primaryPlan || vehicle.subscription?.plans?.[0] || null;
         const brandParts = String(vehicle.name || '').trim().split(' ').filter(Boolean);
         const brand = brandParts[0] || vehicle.vehicleCategory || 'Vehicle';
@@ -352,7 +373,11 @@ const BikeRentalHome = () => {
           },
           fuel: vehicle.fuel,
           features: vehicle.features || [],
-          categoryType: normalizeRentalCategory(vehicle.vehicleCategory) === 'bike' ? 'Bikes' : 'Cars',
+          categoryType: normalizeRentalCategory(vehicle.vehicleCategory) === 'bike'
+            ? 'Bikes'
+            : Number(vehicle.capacity || 0) <= 5
+            ? (index % 2 === 0 ? 'Hatchbacks' : 'Sedans')
+            : 'SUVs',
           year: primaryPlan ? `${primaryPlan.durationDays} day plan` : 'Subscription',
           rawVehicle: vehicle,
           subscriptionPlan: primaryPlan,
@@ -364,8 +389,16 @@ const BikeRentalHome = () => {
     if (activeSegment === 'rentals') {
       return taxi09Cars.filter(c => c.prices?.Daily > 0);
     }
-    return subscriptionVehicles;
-  }, [taxi09Cars, activeSegment, subscriptionVehicles]);
+    return subscriptionVehicles.filter(c => c.categoryType === subCategory);
+  }, [taxi09Cars, activeSegment, subscriptionVehicles, subCategory]);
+
+  const rentalBanners = useMemo(() => {
+    return banners.filter(b => b.type === 'rental' || !b.type);
+  }, [banners]);
+
+  const subscriptionBanners = useMemo(() => {
+    return banners.filter(b => b.type === 'subscription');
+  }, [banners]);
 
   const openVehicleDetail = (vehicle, options = {}) => {
     const payload = {
@@ -381,7 +414,13 @@ const BikeRentalHome = () => {
       // Ignore storage failures and continue with navigation state.
     }
 
-    navigate('/rental/vehicle', { state: payload });
+    navigate('/rental/vehicle', {
+      state: {
+        duration: payload.duration,
+        detailMode: payload.detailMode,
+        selectedSubscriptionPlanId: payload.selectedSubscriptionPlanId,
+      },
+    });
   };
 
   useEffect(() => {
@@ -439,6 +478,35 @@ const BikeRentalHome = () => {
       mounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadOffers = async () => {
+      try {
+        setOffersLoading(true);
+        const response = await userService.getActiveRentalCoupons();
+        const results = response?.data?.data || response?.data?.results || response?.data || [];
+        if (mounted) {
+          setOffers(results.filter(o => o.active !== false));
+        }
+      } catch (error) {
+        console.error('Failed to load offers', error);
+      } finally {
+        if (mounted) {
+          setOffersLoading(false);
+        }
+      }
+    };
+    loadOffers();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const handleCopyCode = (code) => {
+    navigator.clipboard.writeText(code);
+    toast.success(`Coupon code "${code}" copied!`, { icon: '≡ƒôï' });
+  };
 
   const availableCountLabel = useMemo(() => {
     const bikes = vehicles.filter(
@@ -590,15 +658,15 @@ const BikeRentalHome = () => {
     ];
   }, []);
 
-  if (selectedCategoryFilter === 'car') {
-    if (isAddressEntered) {
+  if (activeSegment === 'subscriptions' || (activeSegment === 'rentals' && selectedCategoryFilter === 'car')) {
+    if (activeSegment === 'rentals' && isAddressEntered) {
       // 2. Render Search Results View (Indore Listing)
       return (
-        <div className="min-h-screen bg-background max-w-lg mx-auto font-sans relative pb-24 flex flex-col justify-between overflow-x-hidden no-scrollbar">
+        <div className="min-h-screen bg-[#F3F4F6] max-w-lg mx-auto font-sans relative pb-24 flex flex-col justify-between overflow-x-hidden no-scrollbar">
           {/* Sticky Header block containing Header, Filters, Search input */}
           <div className="sticky top-0 z-30 bg-white shadow-sm flex flex-col shrink-0">
             {/* Header */}
-            <div className="bg-background px-4 pt-10 pb-3 flex items-center justify-between">
+            <div className="bg-[#F3F4F6] px-4 pt-6 pb-3 flex items-center justify-between">
               <div className="flex items-center gap-3.5">
                 <button
                   onClick={() => setIsAddressEntered(false)}
@@ -615,7 +683,7 @@ const BikeRentalHome = () => {
                     {selectedLocation}
                   </h1>
                   <p className="text-[11px] font-medium text-slate-400 mt-0.5 leading-none">
-                    04 Jun <span className="text-slate-500 font-semibold">08:00 am Thu</span> — 05 Jun <span className="text-slate-500 font-semibold">09:00 pm Fri</span>
+                    04 Jun <span className="text-slate-500 font-semibold">08:00 am Thu</span> ΓÇö 05 Jun <span className="text-slate-500 font-semibold">09:00 pm Fri</span>
                   </p>
                 </div>
               </div>
@@ -626,12 +694,12 @@ const BikeRentalHome = () => {
 
             {/* Filters Row */}
             <div className="px-4 py-3 flex gap-2 overflow-x-auto no-scrollbar border-b border-slate-100 bg-white">
-              <button className="bg-[#d48c00] hover:bg-[#c98500] shadow-sm transition-colors text-white flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-semibold shrink-0">
+              <button className="bg-[#0B94A4] text-white flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-semibold shrink-0">
                 <SlidersHorizontal size={14} strokeWidth={2} />
                 Filter
               </button>
               
-              <button className="bg-[#d48c00] hover:bg-[#c98500] shadow-sm transition-colors text-white p-1.5 rounded-lg shrink-0 flex items-center justify-center w-8.5 h-8.5">
+              <button className="bg-[#0B94A4] text-white p-1.5 rounded-lg shrink-0 flex items-center justify-center w-8.5 h-8.5">
                 <ArrowDownUp size={14} strokeWidth={2} />
               </button>
 
@@ -664,15 +732,15 @@ const BikeRentalHome = () => {
           </div>
 
           {/* Scrollable content list */}
-          <div className="flex-1 overflow-y-auto bg-background pb-12 no-scrollbar">
+          <div className="flex-1 overflow-y-auto bg-[#F3F4F6] pb-12 no-scrollbar">
             {/* Results Header */}
-            <div className="flex items-center justify-between px-4 py-3.5 select-none bg-background">
+            <div className="flex items-center justify-between px-4 py-3.5 select-none bg-[#F3F4F6]">
               <h3 className="text-[17px] font-bold text-slate-700">16 cars available</h3>
               <span className="text-[12px] font-medium text-slate-500">Duration: 1 Day, 13 Hrs</span>
             </div>
 
             {/* Notice Banner */}
-            <div className="mx-4 mb-4 bg-gradient-to-r from-[#ffd54f]/20 to-[#faf9f5]/50 rounded-2xl p-4 flex gap-4 border border-[#ffc400]/20 select-none">
+            <div className="mx-4 mb-4 bg-gradient-to-r from-[#B2EBF2]/80 to-[#E0F7FA]/80 rounded-2xl p-4 flex gap-4 border border-teal-100/50 select-none">
               <div className="w-[55%]">
                 <h4 className="text-[14px] font-bold text-slate-800 leading-tight">
                   Rentals will be chargeable on per day basis <br />
@@ -683,7 +751,7 @@ const BikeRentalHome = () => {
                 <p>
                   Morning 9am to 9am will be considered as one day
                 </p>
-                <span className="text-[#d48c00] hover:text-[#b27600] transition-colors font-bold mt-1.5 inline-flex items-center hover:underline cursor-pointer">
+                <span className="text-indigo-650 hover:text-indigo-800 transition-colors font-bold mt-1.5 inline-flex items-center hover:underline cursor-pointer">
                   Know more &gt;
                 </span>
               </div>
@@ -723,7 +791,7 @@ const BikeRentalHome = () => {
                           alt={car.name}
                           className="h-16 object-contain mix-blend-multiply drop-shadow-sm group-hover:scale-105 transition-transform duration-300"
                         />
-                        <span className="bg-gradient-to-r from-amber-500 to-rose-500 text-white text-[7.5px] font-bold px-2 py-0.5 rounded-full mt-2 text-center whitespace-nowrap block shadow-sm leading-none">
+                        <span className="bg-[#E75D35] text-white text-[7.5px] font-bold px-2 py-0.5 rounded-full mt-2 text-center whitespace-nowrap block shadow-sm leading-none">
                           Selling Fast for the selected dates
                         </span>
                       </div>
@@ -760,7 +828,7 @@ const BikeRentalHome = () => {
 
                         {/* Price & arrow */}
                         <div className="mt-3 flex items-center justify-end text-slate-800 font-bold">
-                          <span className="text-[18px] leading-none">₹{car.price.toLocaleString('en-IN')}</span>
+                          <span className="text-[18px] leading-none">Γé╣{car.price.toLocaleString('en-IN')}</span>
                           <ChevronRight size={18} strokeWidth={2.5} className="ml-0.5 opacity-80" />
                         </div>
                       </div>
@@ -772,7 +840,7 @@ const BikeRentalHome = () => {
                     {/* Bottom row */}
                     <div className="flex items-center justify-between text-[11px] font-medium text-slate-500 select-none py-0.5">
                       <div className="flex items-center gap-1.5 text-slate-600">
-                        <div className="w-4.5 h-4.5 rounded-full border border-[#ffc400]/20 bg-[#fffbeb] text-[#d48c00] flex items-center justify-center shrink-0">
+                        <div className="w-4.5 h-4.5 rounded-full border border-indigo-500/20 bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
                           <Check size={10} strokeWidth={3} />
                         </div>
                         <span className="font-semibold text-slate-700">Home delivery</span>
@@ -785,7 +853,7 @@ const BikeRentalHome = () => {
                           Pick from
                         </span>
                         <div className="flex items-center gap-1">
-                          <svg className="w-3.5 h-3.5 text-[#d48c00] rotate-45" viewBox="0 0 24 24" fill="currentColor">
+                          <svg className="w-3.5 h-3.5 text-indigo-600 rotate-45" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M21 3L3 10.53v.98l6.84 2.65L12.48 21h.98L21 3z" />
                           </svg>
                           <span className="font-bold text-slate-700">{car.distance}</span>
@@ -803,7 +871,7 @@ const BikeRentalHome = () => {
               navigate('/taxi/user/support');
               toast('Connecting to Support Chat...', { icon: '≡ƒÆ¼' });
             }}
-            className="fixed bottom-24 right-5 w-14 h-14 rounded-full bg-[#d48c00] hover:bg-[#c98500] shadow-sm transition-colors flex items-center justify-center text-white shadow-xl z-50 cursor-pointer hover:bg-[#c98500] transition-colors"
+            className="fixed bottom-24 right-5 w-14 h-14 rounded-full bg-[#0B94A4] flex items-center justify-center text-white shadow-xl z-50 cursor-pointer hover:bg-[#097E8B] transition-colors"
           >
             <Headset size={22} strokeWidth={2.2} />
           </div>
@@ -811,23 +879,17 @@ const BikeRentalHome = () => {
           {/* Sticky Bottom Navbar */}
           <div className="fixed bottom-0 inset-x-0 bg-white border-t border-slate-100 py-2.5 px-4 shadow-[0_-8px_30px_rgba(15,23,42,0.06)] z-40 max-w-lg mx-auto flex items-center justify-between">
             <button
-              onClick={() => {
-                setIsAddressEntered(false);
-                setActiveSegment('rentals');
-              }}
-              className="flex flex-col items-center gap-1 flex-1 py-1 text-[#d48c00]"
+              onClick={() => navigateToSegment('rentals')}
+              className="flex flex-col items-center gap-1 flex-1 py-1 text-[#0B94A4]"
             >
-              <div className="w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 border-[#d48c00] bg-[#ffc400]/5">
+              <div className="w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 border-[#0B94A4] bg-[#0B94A4]/5">
                 R
               </div>
               <span className="text-[9.5px] font-bold tracking-wide uppercase">Rentals</span>
             </button>
             
             <button
-              onClick={() => {
-                setIsAddressEntered(false);
-                setActiveSegment('subscriptions');
-              }}
+              onClick={() => navigateToSegment('subscriptions')}
               className="flex flex-col items-center gap-1 flex-1 py-1 relative text-slate-400 hover:text-slate-600"
             >
               <span className="absolute top-[-10px] bg-rose-500 text-[6.5px] font-black text-white px-1.5 py-0.5 rounded-[4px] uppercase tracking-wide border border-white">
@@ -869,10 +931,10 @@ const BikeRentalHome = () => {
 
     // 1. Render Taxi09 Dashboard View (Teal header, featured list)
     return (
-      <div className="premium-theme min-h-screen bg-background text-on-background font-body-md max-w-lg mx-auto relative pb-24 shadow-xl border-x border-surface-variant flex flex-col justify-between overflow-x-hidden no-scrollbar">
+      <div className="min-h-screen bg-[linear-gradient(180deg,#F8FAFC_0%,#F1F5F9_40%,#E2E8F0_100%)] max-w-lg mx-auto font-sans relative pb-24 flex flex-col justify-between overflow-x-hidden no-scrollbar">
         {/* Teal Header Block */}
-        <div className="bg-gradient-to-b from-[#fffbeb] to-[#fef3c7] shadow-[0_10px_30px_rgba(251,191,36,0.08)] border-b border-amber-200/40 text-slate-900 px-5 pt-12 pb-6 rounded-b-[40px] relative shrink-0 z-20">
-          <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-[#ffc400]/5 blur-[40px] pointer-events-none" />
+        <div className="bg-gradient-to-br from-[#0B94A4] via-[#097E8B] to-[#055E6B] text-white px-5 pt-12 pb-6 rounded-b-[40px] shadow-[0_10px_30px_rgba(11,148,164,0.15)] relative shrink-0 z-20">
+          <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-indigo-500/10 blur-[40px] pointer-events-none" />
           
           {/* Row 1: Back Arrow & Logo */}
           <div className="relative flex items-center justify-between mb-6">
@@ -880,39 +942,39 @@ const BikeRentalHome = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/taxi/user/rental/type')}
-              className="w-10 h-10 rounded-2xl bg-white border border-amber-200/60 flex items-center justify-center text-slate-800 transition-all shrink-0 cursor-pointer shadow-sm"
+              className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white transition-all shrink-0"
             >
               <ArrowLeft size={18} strokeWidth={2.5} />
             </motion.button>
             <div className="flex flex-col items-center select-none text-center">
-              <span className="text-[26px] font-[900] tracking-tight leading-none text-slate-950 italic">Taxi<span className="text-[#d48c00]">09</span></span>
-              <span className="text-[8px] font-extrabold text-slate-500 tracking-widest uppercase mt-1">Premium Self-Drive</span>
+              <span className="text-[26px] font-[900] tracking-tight leading-none text-white italic drop-shadow-[0_2px_10px_rgba(99,102,241,0.5)]">Taxi09</span>
+              <span className="text-[8px] font-extrabold text-white/70 tracking-widest uppercase mt-1">Premium Self-Drive</span>
             </div>
             <div className="w-10 h-10" />
           </div>
 
           {/* Row 2: Segment Selector Tabs */}
-          <div className="bg-amber-100/70 border border-amber-200/40 shadow-inner mb-6 relative p-1.5 rounded-2xl flex">
+          <div className="bg-[#097E8B]/80 backdrop-blur-md rounded-2xl p-1.5 flex border border-white/10 shadow-inner mb-6 relative">
             <button
-              onClick={() => setActiveSegment('rentals')}
+              onClick={() => navigateToSegment('rentals')}
               className={`relative flex-1 py-2.5 rounded-[14px] text-[12px] font-extrabold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center outline-none ${
-                activeSegment === 'rentals' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-600 hover:bg-white/40'
+                activeSegment === 'rentals' ? 'bg-white text-slate-900 shadow-md' : 'text-white/80 hover:bg-white/5'
               }`}
             >
               <span className="text-[13px] font-black">Rentals</span>
-              <span className={`text-[8px] font-bold mt-0.5 ${activeSegment === 'rentals' ? 'text-slate-500' : 'text-slate-400'}`}>For hours & days</span>
+              <span className={`text-[8px] font-bold mt-0.5 ${activeSegment === 'rentals' ? 'text-slate-500' : 'text-white/60'}`}>For hours & days</span>
               {activeSegment === 'rentals' && (
                 <div className="absolute bottom-[-10px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-white" />
               )}
             </button>
             <button
-              onClick={() => setActiveSegment('subscriptions')}
+              onClick={() => navigateToSegment('subscriptions')}
               className={`relative flex-1 py-2.5 rounded-[14px] text-[12px] font-extrabold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center outline-none ${
-                activeSegment === 'subscriptions' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-600 hover:bg-white/40'
+                activeSegment === 'subscriptions' ? 'bg-white text-slate-900 shadow-md' : 'text-white/80 hover:bg-white/5'
               }`}
             >
               <span className="text-[13px] font-black">Subscriptions</span>
-              <span className={`text-[8px] font-bold mt-0.5 ${activeSegment === 'subscriptions' ? 'text-slate-500' : 'text-slate-400'}`}>For months & years</span>
+              <span className={`text-[8px] font-bold mt-0.5 ${activeSegment === 'subscriptions' ? 'text-slate-500' : 'text-white/60'}`}>For months & years</span>
               {activeSegment === 'subscriptions' && (
                 <div className="absolute bottom-[-10px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-white" />
               )}
@@ -923,37 +985,37 @@ const BikeRentalHome = () => {
           <div className="flex gap-2 overflow-x-auto no-scrollbar mb-5">
             {activeSegment === 'rentals' ? (
               <>
-                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[11px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
-                  <Star size={12} className="fill-amber-600 text-amber-600" /> Brand New Cars
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-white/20 bg-white/10 text-[11px] font-bold text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/15">
+                  <Star size={12} className="fill-white" /> Brand New Cars
                 </motion.div>
-                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[11px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
-                  <Info size={12} className="text-amber-600" /> 24*7 Support
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-white/20 bg-white/10 text-[11px] font-bold text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/15">
+                  <Info size={12} /> 24*7 Support
                 </motion.div>
-                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[11px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
-                  <Truck size={12} className="text-amber-600" /> Home Delivery
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-white/20 bg-white/10 text-[11px] font-bold text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/15">
+                  <Truck size={12} /> Home Delivery
                 </motion.div>
               </>
             ) : (
               <>
-                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[11px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
-                  <Compass size={12} className="text-amber-600" /> Flexible tenure
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-white/20 bg-white/10 text-[11px] font-bold text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/15">
+                  <Compass size={12} /> Flexible tenure
                 </motion.div>
-                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[11px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
-                  <Star size={12} className="fill-amber-600 text-amber-600" /> Brand new cars
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-white/20 bg-white/10 text-[11px] font-bold text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/15">
+                  <Star size={12} className="fill-white" /> Brand new cars
                 </motion.div>
-                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[11px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
-                  <Shield size={12} className="text-amber-600" /> Extended warranty
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-white/20 bg-white/10 text-[11px] font-bold text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/15">
+                  <Shield size={12} /> Extended warranty
                 </motion.div>
               </>
             )}
           </div>
 
           {/* Row 4: Company Fleet Claim Badge */}
-          <div className="flex items-center gap-2 mb-5 select-none justify-center bg-amber-100/50 border border-amber-200/40 py-1.5 px-4 rounded-full w-fit mx-auto shadow-sm">
+          <div className="flex items-center gap-2 mb-5 select-none justify-center bg-white/5 border border-white/10 py-1.5 px-4 rounded-full w-fit mx-auto shadow-sm backdrop-blur-sm">
             <div className="w-4 h-4 rounded-full bg-yellow-400 flex items-center justify-center text-slate-900 shadow-sm shrink-0">
               <Check size={10} strokeWidth={3} />
             </div>
-            <span className="text-[11px] font-extrabold text-slate-700 tracking-wide">Largest company-owned fleet in India</span>
+            <span className="text-[11px] font-extrabold text-white tracking-wide">Largest company-owned fleet in India</span>
           </div>
 
           {/* Row 5: Search Bar */}
@@ -970,9 +1032,9 @@ const BikeRentalHome = () => {
             )}
             
             <div 
-              className="bg-white rounded-3xl p-2 shadow-[0_12px_40px_rgba(212,140,0,0.15)] flex items-center gap-3 border border-slate-100/80 relative z-20 hover:shadow-[0_16px_48px_rgba(212,140,0,0.22)] focus-within:shadow-[0_16px_48px_rgba(212,140,0,0.22)] transition-all duration-300"
+              className="bg-white rounded-3xl p-2 shadow-[0_12px_40px_rgba(11,148,164,0.15)] flex items-center gap-3 border border-slate-100/80 relative z-20 hover:shadow-[0_16px_48px_rgba(11,148,164,0.22)] focus-within:shadow-[0_16px_48px_rgba(11,148,164,0.22)] transition-all duration-300"
             >
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#ffc400] to-[#ffd54f] text-[#332000] flex items-center justify-center text-white shrink-0 shadow-md">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0B94A4] to-[#097E8B] flex items-center justify-center text-white shrink-0 shadow-md">
                 <MapPin size={16} strokeWidth={2.5} />
               </div>
               <input
@@ -1004,7 +1066,7 @@ const BikeRentalHome = () => {
                   <X size={16} strokeWidth={2.5} />
                 </button>
               )}
-              <div className="w-7 h-7 flex items-center justify-center shrink-0 pr-1 text-[#d48c00]">
+              <div className="w-7 h-7 flex items-center justify-center shrink-0 pr-1 text-[#0B94A4]">
                 <ChevronRight size={22} strokeWidth={3} />
               </div>
             </div>
@@ -1025,7 +1087,7 @@ const BikeRentalHome = () => {
                       }}
                       className="px-4 py-3 hover:bg-slate-50 flex items-center gap-3 cursor-pointer transition-colors border-b border-slate-50 last:border-b-0"
                     >
-                      <MapPin size={14} className="text-[#d48c00] shrink-0" />
+                      <MapPin size={14} className="text-indigo-600 shrink-0" />
                       <span className="text-[13px] font-semibold text-slate-700">{loc}</span>
                     </div>
                   ))}
@@ -1040,7 +1102,7 @@ const BikeRentalHome = () => {
                     }}
                     className="px-4 py-3 hover:bg-slate-50 flex items-center gap-3 cursor-pointer text-slate-500 font-semibold text-[13px] border-t border-slate-50"
                   >
-                    <Search size={14} className="text-[#d48c00] shrink-0" />
+                    <Search size={14} className="text-[#0B94A4] shrink-0" />
                     <span>Search "{locationSearchText}"</span>
                   </div>
                 )}
@@ -1058,8 +1120,8 @@ const BikeRentalHome = () => {
                 <h3 className="text-[20px] font-black text-slate-400 tracking-tight select-none">Featured</h3>
                 
                 <div className="flex gap-4 overflow-x-auto no-scrollbar pb-1">
-                  {banners.length > 0 ? (
-                    banners.map((banner) => (
+                  {rentalBanners.length > 0 ? (
+                    rentalBanners.map((banner) => (
                       <motion.div
                         key={banner.id || banner._id}
                         whileHover={{ y: -4, scale: 1.02 }}
@@ -1068,7 +1130,7 @@ const BikeRentalHome = () => {
                           if (banner.redirect_url) {
                             window.open(banner.redirect_url, '_blank');
                           } else {
-                            toast('Promotion loaded', { icon: '✨' });
+                            toast('Promotion loaded', { icon: 'Γ£¿' });
                           }
                         }}
                         className="w-[280px] h-[130px] rounded-3xl bg-slate-100 shadow-sm shrink-0 border border-slate-200/40 relative overflow-hidden group cursor-pointer"
@@ -1083,10 +1145,10 @@ const BikeRentalHome = () => {
                   ) : (
                     <>
                       {/* Banner 1 */}
-                      <div className="w-[280px] h-[130px] rounded-3xl bg-gradient-to-r from-[#fff9db] to-[#ffe57f] p-4 flex items-center justify-between shadow-sm shrink-0 border border-amber-100/20 relative overflow-hidden group">
+                      <div className="w-[280px] h-[130px] rounded-3xl bg-gradient-to-r from-[#E0F7FA] to-[#80DEEA] p-4 flex items-center justify-between shadow-sm shrink-0 border border-teal-100/20 relative overflow-hidden group">
                         <div className="space-y-1 relative z-10 max-w-[55%]">
                           <span className="text-[15px] font-black text-slate-900 block leading-tight">7 DAYS</span>
-                          <span className="text-[13px] font-black text-[#5d3f00] block leading-tight">Rental Package</span>
+                          <span className="text-[13px] font-black text-indigo-750 block leading-tight">Rental Package</span>
                           <button 
                             onClick={() => toast('Weekly discount pricing applied', { icon: '≡ƒÆ░' })}
                             className="mt-4 flex items-center gap-1 text-[10px] font-extrabold uppercase text-slate-900/90 tracking-wider hover:opacity-80"
@@ -1176,7 +1238,7 @@ const BikeRentalHome = () => {
                         </div>
                         <div className="mt-2 leading-none">
                           <div className="flex items-baseline gap-0.5">
-                            <span className="text-[18px] font-black text-slate-900">₹{car.prices.Daily}</span>
+                            <span className="text-[18px] font-black text-slate-900">Γé╣{car.prices.Daily}</span>
                             <span className="text-[10px] font-bold text-slate-400 ml-0.5">per day</span>
                           </div>
                         </div>
@@ -1198,53 +1260,103 @@ const BikeRentalHome = () => {
               <div className="space-y-3 px-1 select-none">
                 <h3 className="text-[19px] font-bold text-slate-700 tracking-tight">Offers</h3>
                 <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
-                  {/* Offer 1 */}
-                  <motion.div 
-                    whileHover={{ y: -6 }} 
-                    whileTap={{ scale: 0.98 }} 
-                    className="w-[280px] rounded-3xl bg-white border border-slate-100/80 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex flex-col justify-between overflow-hidden shrink-0 cursor-pointer"
-                  >
-                    <div className="p-4 flex-1">
-                      <div className="flex justify-between items-start">
-                        <h4 className="text-[14px] font-bold text-slate-800">Short Trip Offer</h4>
-                        <span className="text-[13px] font-bold text-[#d48c00]">5% OFF</span>
-                      </div>
-                      <p className="text-[11.5px] text-slate-400 mt-1.5 leading-normal font-medium">
-                        Use code STMB5 and get 5% off upto ₹500
-                      </p>
-                    </div>
-                    <div className="bg-gradient-to-r from-[#ffc400] to-[#d48c00] px-4 py-3 flex items-center justify-between relative overflow-hidden border-t border-dashed border-slate-100/20">
-                      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#ffc400]/30 via-transparent to-transparent pointer-events-none" />
-                      <span className="bg-white text-slate-700 text-[11px] font-bold px-3 py-1 rounded-lg border border-slate-100 shadow-sm">
-                        STMB5
-                      </span>
-                      <span className="text-[10px] text-[#332000]/80 font-black cursor-pointer hover:underline">• T&C</span>
-                    </div>
-                  </motion.div>
+                  {offers.length > 0 ? (
+                    offers.map((offer) => {
+                      const isPercent = offer.type === 'percent';
+                      const formattedDiscount = isPercent ? `${offer.amount}% OFF` : `Γé╣${offer.amount} OFF`;
+                      const desc = offer.description || (isPercent
+                        ? `Get ${offer.amount}% off${offer.cap > 0 ? ` up to Γé╣${offer.cap}` : ''}${offer.min_booking_amount > 0 ? ` on bookings above Γé╣${offer.min_booking_amount}` : ''}`
+                        : `Get flat Γé╣${offer.amount} off${offer.min_booking_amount > 0 ? ` on bookings above Γé╣${offer.min_booking_amount}` : ''}`
+                      );
+                      const hasRestrictions = offer.vehicle_ids && offer.vehicle_ids.length > 0;
+                      
+                      return (
+                        <motion.div 
+                          key={offer._id || offer.id}
+                          whileHover={{ y: -6 }} 
+                          whileTap={{ scale: 0.98 }} 
+                          onClick={() => handleCopyCode(offer.code)}
+                          className="w-[280px] rounded-3xl bg-white border border-slate-100/80 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex flex-col justify-between overflow-hidden shrink-0 cursor-pointer"
+                        >
+                          <div className="p-4 flex-1 flex flex-col justify-between">
+                            <div>
+                              <div className="flex justify-between items-start gap-2">
+                                <h4 className="text-[14px] font-bold text-slate-800 truncate max-w-[170px]">{offer.code}</h4>
+                                <span className="text-[13px] font-bold text-indigo-600 shrink-0">{formattedDiscount}</span>
+                              </div>
+                              <p className="text-[11.5px] text-slate-400 mt-1.5 leading-normal font-medium">
+                                {desc}
+                              </p>
+                            </div>
+                            {hasRestrictions && (
+                              <div className="mt-3 text-[9.5px] font-bold text-amber-600 bg-amber-50 border border-amber-100 rounded-lg py-1.5 px-2.5">
+                                Applicable only on: {offer.vehicle_ids.map(v => v.name).join(', ')}
+                              </div>
+                            )}
+                          </div>
+                          <div className="bg-gradient-to-r from-[#0B94A4] to-[#097E8B] px-4 py-3 flex items-center justify-between relative overflow-hidden border-t border-dashed border-slate-100/20">
+                            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/30 via-transparent to-transparent pointer-events-none" />
+                            <span className="bg-white text-slate-700 text-[11px] font-bold px-3 py-1 rounded-lg border border-slate-100 shadow-sm uppercase">
+                              {offer.code}
+                            </span>
+                            <span className="text-[10px] text-white/80 font-medium hover:underline">ΓÇó Copy Code</span>
+                          </div>
+                        </motion.div>
+                      );
+                    })
+                  ) : (
+                    <>
+                      {/* Offer 1 */}
+                      <motion.div 
+                        whileHover={{ y: -6 }} 
+                        whileTap={{ scale: 0.98 }} 
+                        onClick={() => handleCopyCode('STMB5')}
+                        className="w-[280px] rounded-3xl bg-white border border-slate-100/80 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex flex-col justify-between overflow-hidden shrink-0 cursor-pointer"
+                      >
+                        <div className="p-4 flex-1">
+                          <div className="flex justify-between items-start">
+                            <h4 className="text-[14px] font-bold text-slate-800">Short Trip Offer</h4>
+                            <span className="text-[13px] font-bold text-indigo-600">5% OFF</span>
+                          </div>
+                          <p className="text-[11.5px] text-slate-400 mt-1.5 leading-normal font-medium">
+                            Use code STMB5 and get 5% off upto Γé╣500
+                          </p>
+                        </div>
+                        <div className="bg-gradient-to-r from-[#0B94A4] to-[#097E8B] px-4 py-3 flex items-center justify-between relative overflow-hidden border-t border-dashed border-slate-100/20">
+                          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/30 via-transparent to-transparent pointer-events-none" />
+                          <span className="bg-white text-slate-700 text-[11px] font-bold px-3 py-1 rounded-lg border border-slate-100 shadow-sm">
+                            STMB5
+                          </span>
+                          <span className="text-[10px] text-white/80 font-medium hover:underline">ΓÇó Copy Code</span>
+                        </div>
+                      </motion.div>
 
-                  {/* Offer 2 */}
-                  <motion.div 
-                    whileHover={{ y: -6 }} 
-                    whileTap={{ scale: 0.98 }} 
-                    className="w-[280px] rounded-3xl bg-white border border-slate-100/80 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex flex-col justify-between overflow-hidden shrink-0 cursor-pointer"
-                  >
-                    <div className="p-4 flex-1">
-                      <div className="flex justify-between items-start">
-                        <h4 className="text-[14px] font-bold text-slate-800">Weekend Special</h4>
-                        <span className="text-[13px] font-bold text-[#d48c00]">10% OFF</span>
-                      </div>
-                      <p className="text-[11.5px] text-slate-400 mt-1.5 leading-normal font-medium">
-                        Get 10% off up to ₹1,000 on weekend bookings
-                      </p>
-                    </div>
-                    <div className="bg-gradient-to-r from-[#ffc400] to-[#d48c00] px-4 py-3 flex items-center justify-between relative overflow-hidden border-t border-dashed border-slate-100/20">
-                      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#ffc400]/30 via-transparent to-transparent pointer-events-none" />
-                      <span className="bg-white text-slate-700 text-[11px] font-bold px-3 py-1 rounded-lg border border-slate-100 shadow-sm">
-                        WKND10
-                      </span>
-                      <span className="text-[10px] text-[#332000]/80 font-black cursor-pointer hover:underline">• T&C</span>
-                    </div>
-                  </motion.div>
+                      {/* Offer 2 */}
+                      <motion.div 
+                        whileHover={{ y: -6 }} 
+                        whileTap={{ scale: 0.98 }} 
+                        onClick={() => handleCopyCode('WKND10')}
+                        className="w-[280px] rounded-3xl bg-white border border-slate-100/80 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex flex-col justify-between overflow-hidden shrink-0 cursor-pointer"
+                      >
+                        <div className="p-4 flex-1">
+                          <div className="flex justify-between items-start">
+                            <h4 className="text-[14px] font-bold text-slate-800">Weekend Special</h4>
+                            <span className="text-[13px] font-bold text-indigo-600">10% OFF</span>
+                          </div>
+                          <p className="text-[11.5px] text-slate-400 mt-1.5 leading-normal font-medium">
+                            Get 10% off up to Γé╣1,000 on weekend bookings
+                          </p>
+                        </div>
+                        <div className="bg-gradient-to-r from-[#0B94A4] to-[#097E8B] px-4 py-3 flex items-center justify-between relative overflow-hidden border-t border-dashed border-slate-100/20">
+                          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/30 via-transparent to-transparent pointer-events-none" />
+                          <span className="bg-white text-slate-700 text-[11px] font-bold px-3 py-1 rounded-lg border border-slate-100 shadow-sm">
+                            WKND10
+                          </span>
+                          <span className="text-[10px] text-white/80 font-medium hover:underline">ΓÇó Copy Code</span>
+                        </div>
+                      </motion.div>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -1258,8 +1370,8 @@ const BikeRentalHome = () => {
                     whileTap={{ scale: 0.98 }} 
                     className="w-[280px] rounded-3xl bg-white border border-slate-100/80 p-4 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex gap-3.5 shrink-0 cursor-default"
                   >
-                    <div className="w-12 h-12 rounded-full bg-[#ffd54f]/10 text-[#d48c00] flex items-center justify-center shrink-0">
-                      <Home size={22} className="stroke-[#d48c00]" />
+                    <div className="w-12 h-12 rounded-full bg-[#E0F2F1] text-indigo-600 flex items-center justify-center shrink-0">
+                      <Home size={22} className="stroke-indigo-600" />
                     </div>
                     <div className="space-y-1 min-w-0">
                       <h4 className="text-[13.5px] font-bold text-slate-800">Home delivery & return</h4>
@@ -1275,8 +1387,8 @@ const BikeRentalHome = () => {
                     whileTap={{ scale: 0.98 }} 
                     className="w-[280px] rounded-3xl bg-white border border-slate-100/80 p-4 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex gap-3.5 shrink-0 cursor-default"
                   >
-                    <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                      <Shield size={22} className="stroke-amber-600" />
+                    <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                      <Shield size={22} className="stroke-blue-600" />
                     </div>
                     <div className="space-y-1 min-w-0">
                       <h4 className="text-[13.5px] font-bold text-slate-800">Safe & sanitized</h4>
@@ -1292,7 +1404,7 @@ const BikeRentalHome = () => {
               <div className="space-y-3 px-1 select-none">
                 <div className="flex justify-between items-baseline">
                   <h3 className="text-[19px] font-bold text-slate-700 tracking-tight">FAQs</h3>
-                  <span className="text-[13px] font-bold text-[#d48c00] cursor-pointer hover:underline">View all</span>
+                  <span className="text-[13px] font-bold text-[#0B94A4] cursor-pointer hover:underline">View all</span>
                 </div>
                 <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-[0_4px_16px_rgba(15,23,42,0.02)] divide-y divide-slate-100">
                   {/* FAQ 1 */}
@@ -1302,7 +1414,7 @@ const BikeRentalHome = () => {
                       className="w-full flex justify-between items-center text-left text-[13.5px] font-bold text-slate-800 outline-none"
                     >
                       <span>Is there a speed limit?</span>
-                      <ChevronDown size={18} className={`text-slate-400 transition-transform duration-300 ${activeFaqIndex === 0 ? 'rotate-180 text-[#d48c00]' : ''}`} />
+                      <ChevronDown size={18} className={`text-slate-400 transition-transform duration-300 ${activeFaqIndex === 0 ? 'rotate-180 text-[#0B94A4]' : ''}`} />
                     </button>
                     {activeFaqIndex === 0 && (
                       <p className="text-[12px] text-slate-500 mt-2 leading-relaxed animate-fadeIn">
@@ -1352,29 +1464,55 @@ const BikeRentalHome = () => {
                 <h3 className="text-[20px] font-black text-slate-400 tracking-tight select-none">Why subscriptions</h3>
                 
                 <div className="flex gap-4 overflow-x-auto no-scrollbar pb-1">
-                  <div className="w-[240px] h-[130px] rounded-3xl bg-[#d48c00] shadow-sm shrink-0 border border-slate-800 relative overflow-hidden group cursor-pointer flex items-center justify-center">
-                    <div className="absolute inset-0 bg-gradient-to-r from-amber-600/30 to-slate-900/60 z-0" />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-60 z-0">
-                      <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center text-white">
-                        <Car size={32} />
+                  {subscriptionBanners.length > 0 ? (
+                    subscriptionBanners.map((banner) => (
+                      <motion.div
+                        key={banner.id || banner._id}
+                        whileHover={{ y: -4, scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                          if (banner.redirect_url) {
+                            window.open(banner.redirect_url, '_blank');
+                          } else {
+                            toast('Promotion loaded', { icon: 'Γ£¿' });
+                          }
+                        }}
+                        className="w-[280px] h-[130px] rounded-3xl bg-slate-100 shadow-sm shrink-0 border border-slate-200/40 relative overflow-hidden group cursor-pointer"
+                      >
+                        <img
+                          src={resolveImageUrl(banner.image)}
+                          alt={banner.title || "Featured banner"}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </motion.div>
+                    ))
+                  ) : (
+                    <>
+                      <div className="w-[240px] h-[130px] rounded-3xl bg-slate-950 shadow-sm shrink-0 border border-slate-800 relative overflow-hidden group cursor-pointer flex items-center justify-center">
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/40 to-slate-900/60 z-0" />
+                        <div className="absolute inset-0 flex items-center justify-center opacity-60 z-0">
+                          <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center text-white">
+                            <Car size={32} />
+                          </div>
+                        </div>
+                        <div className="relative z-10 w-12 h-12 rounded-full bg-white/95 shadow-md flex items-center justify-center text-[#0B94A4] group-hover:scale-110 transition-transform duration-300">
+                          <svg className="w-5 h-5 fill-current ml-0.5" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
                       </div>
-                    </div>
-                    <div className="relative z-10 w-12 h-12 rounded-full bg-white/95 shadow-md flex items-center justify-center text-[#d48c00] group-hover:scale-110 transition-transform duration-300">
-                      <svg className="w-5 h-5 fill-current ml-0.5" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                  </div>
 
-                  <div className="w-[220px] h-[130px] rounded-3xl bg-gradient-to-br from-amber-50 to-amber-50/50 p-4 flex items-center gap-3 shadow-sm shrink-0 border border-amber-100/50 select-none">
-                    <div className="w-14 h-14 rounded-full bg-amber-100/60 flex items-center justify-center text-amber-800 font-extrabold text-[22px] tracking-tighter shrink-0 shadow-inner">
-                      ₹0
-                    </div>
-                    <div className="space-y-0.5">
-                      <span className="text-[13.5px] font-black text-slate-900 block leading-tight">No down</span>
-                      <span className="text-[13.5px] font-black text-slate-900 block leading-tight">payment</span>
-                    </div>
-                  </div>
+                      <div className="w-[220px] h-[130px] rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50/50 p-4 flex items-center gap-3 shadow-sm shrink-0 border border-amber-100/50 select-none">
+                        <div className="w-14 h-14 rounded-full bg-amber-100/60 flex items-center justify-center text-amber-800 font-extrabold text-[22px] tracking-tighter shrink-0 shadow-inner">
+                          Γé╣0
+                        </div>
+                        <div className="space-y-0.5">
+                          <span className="text-[13.5px] font-black text-slate-900 block leading-tight">No down</span>
+                          <span className="text-[13.5px] font-black text-slate-900 block leading-tight">payment</span>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -1388,14 +1526,14 @@ const BikeRentalHome = () => {
                         key={cat}
                         onClick={() => setSubCategory(cat)}
                         className={`relative pb-2 text-[15px] font-black transition-colors ${
-                          isActive ? 'text-[#d48c00]' : 'text-slate-400 hover:text-slate-600'
+                          isActive ? 'text-[#0B94A4]' : 'text-slate-400 hover:text-slate-600'
                         }`}
                       >
                         {cat}
                         {isActive && (
                           <motion.div
                             layoutId="subCategoryBorder"
-                            className="absolute bottom-0 left-0 right-0 h-0.75 bg-[#d48c00] hover:bg-[#c98500] shadow-sm transition-colors rounded-full"
+                            className="absolute bottom-0 left-0 right-0 h-0.75 bg-[#0B94A4] rounded-full"
                           />
                         )}
                       </button>
@@ -1417,7 +1555,10 @@ const BikeRentalHome = () => {
                       key={car.id}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => {
-                        toast(`Selected ${car.brand} ${car.name} for subscription plan`, { icon: '≡ƒÜù' });
+                        openVehicleDetail(car.rawVehicle || car, {
+                          detailMode: 'subscription',
+                          selectedSubscriptionPlanId: car.subscriptionPlan?.id || '',
+                        });
                       }}
                       className="bg-white border border-slate-100 rounded-3xl p-3.5 shadow-[0_6px_20px_rgba(15,23,42,0.03)] flex flex-col justify-between h-[180px] cursor-pointer hover:shadow-md transition-shadow group relative overflow-hidden"
                     >
@@ -1450,23 +1591,23 @@ const BikeRentalHome = () => {
         {/* Stick Bottom Navigation Menu */}
         <div className="fixed bottom-0 inset-x-0 bg-white border-t border-slate-100 py-2.5 px-4 shadow-[0_-8px_30px_rgba(15,23,42,0.06)] z-40 max-w-lg mx-auto flex items-center justify-between">
           <button
-            onClick={() => setActiveSegment('rentals')}
-            className={`flex flex-col items-center gap-1 flex-1 py-1 ${activeSegment === 'rentals' ? 'text-[#d48c00]' : 'text-slate-400 hover:text-slate-600'}`}
+            onClick={() => navigateToSegment('rentals')}
+            className={`flex flex-col items-center gap-1 flex-1 py-1 ${activeSegment === 'rentals' ? 'text-[#0B94A4]' : 'text-slate-400 hover:text-slate-600'}`}
           >
-            <div className={`w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 ${activeSegment === 'rentals' ? 'border-[#d48c00] bg-[#ffc400]/5' : 'border-slate-400'}`}>
+            <div className={`w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 ${activeSegment === 'rentals' ? 'border-[#0B94A4] bg-[#0B94A4]/5' : 'border-slate-400'}`}>
               R
             </div>
             <span className="text-[9.5px] font-bold tracking-wide uppercase">Rentals</span>
           </button>
           
           <button
-            onClick={() => setActiveSegment('subscriptions')}
-            className={`flex flex-col items-center gap-1 flex-1 py-1 relative ${activeSegment === 'subscriptions' ? 'text-[#d48c00]' : 'text-slate-400 hover:text-slate-600'}`}
+            onClick={() => navigateToSegment('subscriptions')}
+            className={`flex flex-col items-center gap-1 flex-1 py-1 relative ${activeSegment === 'subscriptions' ? 'text-[#0B94A4]' : 'text-slate-400 hover:text-slate-600'}`}
           >
             <span className="absolute top-[-10px] bg-rose-500 text-[6.5px] font-black text-white px-1.5 py-0.5 rounded-[4px] uppercase tracking-wide border border-white">
               NEW
             </span>
-            <div className={`w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 ${activeSegment === 'subscriptions' ? 'border-[#d48c00] bg-[#ffc400]/5' : 'border-slate-400'}`}>
+            <div className={`w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 ${activeSegment === 'subscriptions' ? 'border-[#0B94A4] bg-[#0B94A4]/5' : 'border-slate-400'}`}>
               S
             </div>
             <span className="text-[9.5px] font-bold tracking-wide uppercase">Subscriptions</span>
@@ -1502,8 +1643,8 @@ const BikeRentalHome = () => {
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#F8FAFC_0%,#F3F4F6_38%,#EEF2F7_100%)] max-w-lg mx-auto font-sans relative overflow-hidden pb-12">
-      <div className="absolute -top-16 right-[-40px] h-44 w-44 rounded-full bg-amber-100/40 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-28 right-[-40px] h-40 w-40 rounded-full bg-amber-100/30 blur-3xl pointer-events-none" />
+      <div className="absolute -top-16 right-[-40px] h-44 w-44 rounded-full bg-orange-100/60 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-28 right-[-40px] h-40 w-40 rounded-full bg-blue-100/60 blur-3xl pointer-events-none" />
 
       <motion.header
         initial={{ opacity: 0, y: -10 }}
@@ -1513,8 +1654,8 @@ const BikeRentalHome = () => {
       >
         <div className="bg-white/85 backdrop-blur-2xl px-5 pt-12 pb-5 border-b border-white/40 shadow-[0_8px_32px_rgba(15,23,42,0.06)] relative overflow-hidden">
           {/* Subtle accent gradients */}
-          <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-amber-400/5 blur-[40px] pointer-events-none" />
-          <div className="absolute top-0 left-0 h-24 w-24 rounded-full bg-amber-400/3 blur-[40px] pointer-events-none" />
+          <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-orange-400/5 blur-[40px] pointer-events-none" />
+          <div className="absolute top-0 left-0 h-24 w-24 rounded-full bg-blue-400/5 blur-[40px] pointer-events-none" />
 
           <div className="relative flex items-center justify-between gap-4 mb-6">
             <div className="flex items-center gap-4">
@@ -1528,7 +1669,7 @@ const BikeRentalHome = () => {
               </motion.button>
               <div className="min-w-0">
                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500/60 leading-none mb-1.5">Self-drive rentals</p>
-                <h1 className="text-[24px] font-[900] tracking-tight text-on-surface leading-none">Choose Ride</h1>
+                <h1 className="text-[24px] font-[900] tracking-tight text-slate-950 leading-none">Choose Ride</h1>
               </div>
             </div>
             <div className="flex flex-col items-end">
@@ -1555,7 +1696,7 @@ const BikeRentalHome = () => {
                         transition={{ type: 'spring', bounce: 0.25, duration: 0.5 }}
                       />
                     )}
-                    <span className={`relative z-10 transition-colors duration-300 ${isActive ? 'text-on-surface' : 'text-slate-400'}`}>
+                    <span className={`relative z-10 transition-colors duration-300 ${isActive ? 'text-slate-950' : 'text-slate-400'}`}>
                       {tab}
                     </span>
                   </button>
@@ -1572,7 +1713,7 @@ const BikeRentalHome = () => {
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
               placeholder="Search by vehicle, category or brand..."
-              className="w-full bg-slate-100/50 border border-slate-200/60 focus:border-slate-900/10 focus:bg-white rounded-[20px] pl-11 pr-11 py-3.5 text-[14px] font-bold text-on-surface placeholder:text-slate-400/80 focus:outline-none focus:shadow-[0_8px_24px_rgba(15,23,42,0.04)] transition-all"
+              className="w-full bg-slate-100/50 border border-slate-200/60 focus:border-slate-900/10 focus:bg-white rounded-[20px] pl-11 pr-11 py-3.5 text-[14px] font-bold text-slate-950 placeholder:text-slate-400/80 focus:outline-none focus:shadow-[0_8px_24px_rgba(15,23,42,0.04)] transition-all"
             />
             {searchQuery && (
               <button
@@ -1618,8 +1759,8 @@ const BikeRentalHome = () => {
             transition={{ duration: 0.3, ease: 'easeOut' }}
             className="flex items-center gap-3 rounded-[20px] border border-white/80 bg-white/60 backdrop-blur-md px-4 py-3.5 shadow-[0_8px_20px_rgba(15,23,42,0.04)]"
           >
-            <div className="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center shrink-0 shadow-sm">
-              <Info size={16} className="text-amber-600" strokeWidth={2.5} />
+            <div className="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 shadow-sm">
+              <Info size={16} className="text-blue-500" strokeWidth={2.5} />
             </div>
             <p className="text-[13px] font-[700] text-slate-700 tracking-tight leading-tight">
               {infoBanner[selectedDuration]}
@@ -1634,7 +1775,7 @@ const BikeRentalHome = () => {
               <motion.span 
                 initial={{ opacity: 0 }} 
                 animate={{ opacity: 1 }}
-                className="text-[10px] font-[800] uppercase tracking-wider text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md"
+                className="text-[10px] font-[800] uppercase tracking-wider text-blue-500 bg-blue-50 px-2 py-0.5 rounded-md"
               >
                 {filteredCountLabel}
               </motion.span>
@@ -1656,8 +1797,8 @@ const BikeRentalHome = () => {
                   onClick={() => setSelectedCategoryFilter(id)}
                   className={`shrink-0 rounded-[18px] border px-3.5 py-2.5 transition-all ${
                     isActive
-                      ? 'border-[#d48c00] bg-[#d48c00] text-white shadow-[0_10px_24px_rgba(212,140,0,0.16)]'
-                      : 'border-surface-variant bg-surface-container text-on-surface-variant shadow-[0_8px_20px_rgba(0,0,0,0.02)]'
+                      ? 'border-slate-900 bg-slate-900 text-white shadow-[0_10px_24px_rgba(15,23,42,0.16)]'
+                      : 'border-white/90 bg-white/75 text-slate-600 shadow-[0_8px_20px_rgba(15,23,42,0.05)]'
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -1683,11 +1824,11 @@ const BikeRentalHome = () => {
               <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">Fleet</p>
               <p className="mt-1 text-[17px] font-black text-slate-900">{categoryCounts.all}</p>
             </div>
-            <div className="rounded-[18px] border border-amber-100 bg-gradient-to-br from-amber-50 to-white px-3 py-3 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-amber-600">Cars</p>
+            <div className="rounded-[18px] border border-orange-100 bg-gradient-to-br from-orange-50 to-white px-3 py-3 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-orange-400">Cars</p>
               <p className="mt-1 text-[17px] font-black text-slate-900">{categoryCounts.car}</p>
             </div>
-            <div className="rounded-[18px] border border-amber-100 bg-gradient-to-br from-sky-50 to-white px-3 py-3 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+            <div className="rounded-[18px] border border-sky-100 bg-gradient-to-br from-sky-50 to-white px-3 py-3 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
               <p className="text-[10px] font-black uppercase tracking-[0.18em] text-sky-500">Bikes</p>
               <p className="mt-1 text-[17px] font-black text-slate-900">{categoryCounts.bike}</p>
             </div>
@@ -1762,7 +1903,7 @@ const BikeRentalHome = () => {
                   <span className={`inline-block text-[9px] font-bold px-2 py-0.5 rounded-full border ${v.tagBg} ${v.tagColor}`}>
                     {v.tag}
                   </span>
-                  <h3 className="text-[16px] font-extrabold text-on-surface leading-tight tracking-tight">{v.name}</h3>
+                  <h3 className="text-[16px] font-extrabold text-slate-950 leading-tight tracking-tight">{v.name}</h3>
                   {v.shortDescription ? (
                     <p className="text-[11px] font-medium text-slate-500/80">{v.shortDescription}</p>
                   ) : null}
@@ -1799,14 +1940,14 @@ const BikeRentalHome = () => {
                   <div>
                     <span className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.15em] block">Price</span>
                     <div className="flex items-baseline gap-0.5">
-                      <span className="text-[24px] font-extrabold text-on-surface tracking-tighter leading-none">₹{v.prices[selectedDuration]}</span>
+                      <span className="text-[24px] font-extrabold text-slate-950 tracking-tighter leading-none">Γé╣{v.prices[selectedDuration]}</span>
                       <span className="text-[11px] font-bold text-slate-400/80 ml-0.5">{durationSuffix[selectedDuration]}</span>
                     </div>
                   </div>
                   <motion.button
                     whileTap={{ scale: 0.96 }}
                     onClick={() => openVehicleDetail(v)}
-                    className="bg-primary text-white hover:opacity-90 transition-all px-4 py-2.5 rounded-[12px] text-[11px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-[0_6px_16px_rgba(212,140,0,0.15)] active:scale-95"
+                    className="bg-slate-950 text-white px-4 py-2.5 rounded-[12px] text-[11px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-[0_6px_16px_rgba(15,23,42,0.15)] active:bg-black transition-all"
                   >
                     Book Now <ChevronRight size={13} strokeWidth={3} className="opacity-60" />
                   </motion.button>

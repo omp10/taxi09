@@ -210,7 +210,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 max-w-lg mx-auto pb-28 relative overflow-x-hidden font-['Inter']">
+    <div className="min-h-screen bg-slate-50 max-w-lg md:max-w-none w-full mx-auto md:mx-0 pb-28 md:pt-24 relative overflow-x-hidden font-['Inter']">
       {/* Premium Header Background */}
       <div className="absolute top-0 inset-x-0 h-80 bg-slate-900 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/30 via-slate-900 to-slate-900" />

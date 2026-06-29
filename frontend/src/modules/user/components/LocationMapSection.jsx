@@ -169,7 +169,7 @@ const LocationMapSection = () => {
         </motion.button>
       </div>
 
-      <div className="relative mt-4 overflow-hidden rounded-[24px] bg-white border border-amber-400 shadow-lg shadow-amber-400/20">
+      <div className="relative mt-4 overflow-hidden rounded-[24px] bg-white shadow-lg">
         <div className="relative z-10 w-full h-[180px]">
           {!HAS_VALID_GOOGLE_MAPS_KEY && (
             <div className="flex h-full w-full items-center justify-center px-5 text-center bg-slate-50">

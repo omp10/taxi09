@@ -392,8 +392,8 @@ const normalizeBannerPayload = async (payload, existing = null) => {
     throw new ApiError(400, 'Banner image is required');
   }
 
-  if (type && !['rental', 'subscription'].includes(type)) {
-    throw new ApiError(400, 'Banner type must be rental or subscription');
+  if (type && !['rental', 'subscription', 'top', 'bottom'].includes(type)) {
+    throw new ApiError(400, 'Banner type must be rental, subscription, top, or bottom');
   }
 
   // If image is a data URL (base64), upload it to Cloudinary

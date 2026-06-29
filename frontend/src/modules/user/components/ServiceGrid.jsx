@@ -3,13 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useSettings, normalizeAssetUrl } from '../../../shared/context/SettingsContext';
 import { ArrowRight, SlidersHorizontal } from 'lucide-react';
+import bikeImg from '../../../assets/realistic/bike.png';
+import parcelImg from '../../../assets/realistic/parcel.png';
+import rentalImg from '../../../assets/realistic/rental.png';
+import busImg from '../../../assets/realistic/bus.png';
+import poolingImg from '../../../assets/realistic/pooling.png';
 
 const ServiceTile = ({ icon, label, description, path, accentClass, shadowClass, borderClass, loading }) => {
   const navigate = useNavigate();
 
   if (loading) {
     return (
-      <div className="flex w-full min-h-[110px] items-center justify-center">
+      <div className="flex w-full aspect-square items-center justify-center">
         <div className="flex h-full w-full animate-pulse flex-col items-center justify-center gap-2 rounded-[18px] border border-white/20 bg-white/65 p-2">
           <div className="h-[55px] w-[55px] rounded-full bg-slate-200" />
           <div className="h-3 w-16 rounded-full bg-slate-200 mt-1" />
@@ -24,20 +29,20 @@ const ServiceTile = ({ icon, label, description, path, accentClass, shadowClass,
       whileHover={{ y: -2 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => path && navigate(path)}
-      className={`flex flex-col overflow-hidden rounded-[18px] bg-white border ${borderClass || 'border-slate-300'} w-full transition-all hover:scale-[1.02] cursor-pointer shadow-lg ${shadowClass}`}
+      className={`flex flex-col overflow-hidden rounded-[18px] bg-white w-full aspect-square transition-all hover:scale-[1.02] cursor-pointer shadow-lg ${shadowClass}`}
     >
       {/* Top half with image (Compact) */}
-      <div className="relative flex h-[85px] w-full items-center justify-center pt-2.5">
+      <div className="relative flex flex-1 w-full items-center justify-center pt-2">
         {/* Circle background */}
-        <div className={`absolute h-[68px] w-[68px] rounded-full ${accentClass}`} />
-        <img src={icon} alt="" className="relative z-10 h-[80px] w-[80px] object-contain drop-shadow-md transform scale-110" />
+        <div className={`absolute h-[75%] aspect-square rounded-full ${accentClass}`} />
+        <img src={icon} alt="" className="relative z-10 h-full w-full object-contain p-1.5 drop-shadow-md mix-blend-multiply" />
       </div>
 
       {/* Bottom half with text and icons (Compact) */}
       <div className="flex w-full items-center justify-between px-2 pb-2.5">
         {/* Small circle icon */}
         <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${accentClass}`}>
-          <img src={icon} alt="" className="h-3 w-3 object-contain" />
+          <img src={icon} alt="" className="h-3 w-3 object-contain mix-blend-multiply" />
         </div>
 
         {/* Label */}
@@ -116,8 +121,17 @@ const ServiceGrid = () => {
     
     const mapped = activeModules.map((m, idx) => {
       const accent = getAccent(idx);
+      const name = String(m.name || '').toLowerCase();
+      let realisticIcon = normalizeAssetUrl(m.mobile_menu_icon);
+      
+      if (name.includes('bike')) realisticIcon = bikeImg;
+      else if (name.includes('parcel')) realisticIcon = parcelImg;
+      else if (name.includes('rental')) realisticIcon = rentalImg;
+      else if (name.includes('bus')) realisticIcon = busImg;
+      else if (name.includes('pooling') || name.includes('cab') || name.includes('taxi')) realisticIcon = poolingImg;
+
       return {
-        icon: normalizeAssetUrl(m.mobile_menu_icon),
+        icon: realisticIcon,
         label: m.name,
         description: m.short_description,
         path: getPath(m),

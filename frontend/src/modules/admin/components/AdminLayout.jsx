@@ -42,6 +42,7 @@ import {
   Users,
   Wallet,
   Zap,
+  Image as ImageIcon,
 } from 'lucide-react';
 
 const ADMIN_MODE = 'admin';
@@ -843,6 +844,14 @@ const AdminLayout = () => {
             ],
           },
           {
+            icon: ImageIcon,
+            label: 'Homepage Banners',
+            subItems: [
+              { label: 'Top Banners', path: '/admin/homepage-banners/top', permission: 'promotions.view' },
+              { label: 'Bottom Banners', path: '/admin/homepage-banners/bottom', permission: 'promotions.view' },
+            ],
+          },
+          {
             icon: IndianRupee,
             label: 'Price Management',
             subItems: [
@@ -871,7 +880,7 @@ const AdminLayout = () => {
               { label: 'Rental Coupons', path: '/admin/pricing/rental-coupons', permission: 'rental.view' },
               { label: 'Package Pricing', path: '/admin/pricing/package-pricing', permission: 'rental.view' },
               { label: 'Rental Sub Categories', path: '/admin/pricing/rental-vehicle-subcategories', permission: 'rental.view' },
-              { label: 'Banner Image', path: '/admin/promotions/banner-image', permission: 'rental.view' },
+              { label: 'Rental Banners', path: '/admin/promotions/banner-image', permission: 'rental.view' },
             ],
           },
           {
