@@ -34,6 +34,14 @@ const buildComparableRideSnapshot = (ride = null) => {
     vehicleIconUrl: ride.vehicleIconUrl || ride.vehicle?.vehicleIconUrl || '',
     finalCharge: Number(ride.finalCharge || 0),
     finalElapsedMinutes: Number(ride.finalElapsedMinutes || 0),
+    basePrice: Number(ride.basePrice || 0),
+    extraHourRate: Number(ride.extraHourRate || 0),
+    includedHours: Number(ride.includedHours || 0),
+    requestedHours: Number(ride.requestedHours || 0),
+    selectedPackageId: ride.selectedPackage?.packageId || ride.selectedPackage?.id || '',
+    selectedPackagePrice: Number(ride.selectedPackage?.price || 0),
+    selectedPackageExtraHourPrice: Number(ride.selectedPackage?.extraHourPrice || 0),
+    fareSnapshot: Number(ride.rideMetrics?.currentCharge || ride.fare || 0),
   };
 };
 

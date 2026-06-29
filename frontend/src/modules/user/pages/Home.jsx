@@ -411,7 +411,7 @@ const Home = () => {
 
         try {
           const rentalResponse = await userService.getActiveRentalBooking();
-          const rentalRide = rentalResponse?.id ? rentalResponse : (rentalResponse?.data || null);
+          const rentalRide = unwrapApiPayload(rentalResponse);
 
           if (rentalRide?.id) {
             const status = String(rentalRide.status || '').toLowerCase();
