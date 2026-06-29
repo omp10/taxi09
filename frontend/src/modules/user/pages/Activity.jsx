@@ -146,16 +146,28 @@ const Activity = () => {
                 limit: AGGREGATE_FETCH_LIMIT,
                 page: 1,
               },
+            }).catch((err) => {
+              console.log('Failed to fetch rides in aggregate:', err);
+              return { data: { results: [] } };
             }),
             userService.getMyRentalBookings({
               page: 1,
               limit: AGGREGATE_FETCH_LIMIT,
+            }).catch((err) => {
+              console.log('Failed to fetch rentals in aggregate:', err);
+              return { data: { results: [] } };
             }),
             userBusService.getMyBookings({
               page: 1,
               limit: AGGREGATE_FETCH_LIMIT,
+            }).catch((err) => {
+              console.log('Failed to fetch bus bookings in aggregate:', err);
+              return { data: { results: [] } };
             }),
-            userService.getMyPoolingBookings(),
+            userService.getMyPoolingBookings().catch((err) => {
+              console.log('Failed to fetch pooling in aggregate:', err);
+              return { data: [] };
+            }),
           ]);
 
           const ridePayload = getPayload(ridesResponse);

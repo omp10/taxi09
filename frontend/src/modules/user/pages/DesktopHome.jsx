@@ -22,6 +22,9 @@ import bikeIcon from '../../../assets/icons/bike.png';
 import rajwadaPalaceImg from '@/assets/rajwada_palace.png';
 import autoIcon from '../../../assets/icons/auto.png';
 import deliveryIcon from '../../../assets/icons/Delivery.png';
+import selfDriveCarImg from '../../../assets/images/rental_car.png';
+import chauffeurCabImg from '../../../assets/images/yellow_ola_style_taxi.png';
+import rentalBikeImg from '../../../assets/images/rental_bike.png';
 import api from '../../../shared/api/axiosInstance';
 import { useSettings } from '../../../shared/context/SettingsContext';
 import { userService } from '../services/userService';
@@ -671,31 +674,31 @@ maskRepeat: 'no-repeat',
   };
 
   return (
-    <div className="min-h-screen bg-[#070708] text-white pt-24 pb-12 px-6 lg:px-12 font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 pt-24 pb-12 px-6 lg:px-12 font-sans relative overflow-hidden">
       {/* Background ambient light effects */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-[#FFC107]/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[#FFC107]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto space-y-10 relative z-10">
         
         {/* Welcome Section & Quick User Info */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-8">
           <div>
-            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-              Welcome Back, <span className="text-[#FFC107]">{userInfo?.name || userInfo?.phone || 'Explorer'}</span>!
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
+              Welcome Back, <span className="text-amber-600 font-extrabold">{userInfo?.name || userInfo?.phone || 'Explorer'}</span>!
             </h1>
-            <p className="text-gray-400 mt-2 text-sm md:text-base">
+            <p className="text-slate-500 mt-2 text-sm md:text-base">
               Where would you like to travel today? Select one of our premium services below.
             </p>
           </div>
           {userInfo && (
-            <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-md">
-              <div className="w-12 h-12 rounded-full bg-[#FFC107] text-black font-extrabold flex items-center justify-center text-lg shadow-lg">
+            <div className="flex items-center gap-4 bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm backdrop-blur-md">
+              <div className="w-12 h-12 rounded-full bg-[#FFC107] text-black font-extrabold flex items-center justify-center text-lg shadow-md">
                 {userInfo.name ? userInfo.name.slice(0, 2).toUpperCase() : userInfo.phone ? userInfo.phone.slice(-2) : 'EX'}
               </div>
               <div>
-                <p className="font-bold text-sm">{userInfo.name || userInfo.phone || 'User'}</p>
-                <p className="text-xs text-gray-400">{userInfo.email || userInfo.phone || ''}</p>
+                <p className="font-bold text-sm text-slate-800">{userInfo.name || userInfo.phone || 'User'}</p>
+                <p className="text-xs text-slate-500">{userInfo.email || userInfo.phone || ''}</p>
               </div>
             </div>
           )}
@@ -709,63 +712,63 @@ maskRepeat: 'no-repeat',
             animate={{ opacity: 1, y: 0 }}
             whileTap={{ scale: 0.99 }}
             onClick={() => navigate(trackingPath, { state: currentRide })}
-            className="block w-full overflow-hidden rounded-[32px] border border-emerald-500/30 bg-emerald-950/20 p-6 text-left shadow-[0_24px_48px_rgba(16,185,129,0.06)] backdrop-blur-md"
+            className="block w-full overflow-hidden rounded-[32px] border border-emerald-200/60 bg-emerald-50/70 p-6 text-left shadow-[0_12px_24px_rgba(16,185,129,0.08)] backdrop-blur-md"
           >
             <div className="flex items-center justify-between">
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-emerald-400">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-emerald-700">
                 <ShieldCheck size={12} strokeWidth={3} />
                 Confirmed
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-400">Live Status</span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-600">Live Status</span>
               </div>
             </div>
 
             <div className="mt-5 flex items-end justify-between">
               <div className="min-w-0">
-                <h2 className="text-[32px] font-semibold tracking-tight text-white leading-none">
+                <h2 className="text-[32px] font-semibold tracking-tight text-slate-900 leading-none">
                   {scheduledCountdown}
                 </h2>
-                <p className="mt-2 text-[14px] font-medium text-gray-400">
+                <p className="mt-2 text-[14px] font-medium text-slate-500">
                   {scheduledDateLabel}
                 </p>
               </div>
               <div className="relative mb-1">
                 <div className="absolute -inset-4 rounded-full bg-emerald-500/10 blur-xl animate-pulse" />
-                <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0a0a0a] shadow-2xl border border-white/10">
+                <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-md border border-slate-200">
                   <img src={currentRideIcon} alt="" className="h-10 w-10 object-contain" />
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 flex items-center justify-between rounded-2xl bg-white/5 p-3 shadow-sm border border-white/5">
+            <div className="mt-6 flex items-center justify-between rounded-2xl bg-white p-3 shadow-sm border border-slate-100">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="h-10 w-10 shrink-0 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                  <User size={20} className="text-emerald-400" />
+                <div className="h-10 w-10 shrink-0 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100">
+                  <User size={20} className="text-emerald-600" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400 leading-none">Driver & Vehicle</p>
-                  <p className="mt-1 truncate text-[13px] font-semibold text-white">{driverName} • {vehicleLabel}</p>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 leading-none">Driver & Vehicle</p>
+                  <p className="mt-1 truncate text-[13px] font-semibold text-slate-800">{driverName} • {vehicleLabel}</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400 leading-none">Fare</p>
-                <p className="mt-1 text-[13px] font-semibold text-white">₹{Number(currentRide?.fare || 0).toFixed(0)}</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 leading-none">Fare</p>
+                <p className="mt-1 text-[13px] font-semibold text-slate-800">₹{Number(currentRide?.fare || 0).toFixed(0)}</p>
               </div>
             </div>
 
-            <div className="mt-4 flex items-center gap-3 rounded-2xl bg-white/5 px-4 py-3.5 text-white border border-white/5 shadow-xl">
+            <div className="mt-4 flex items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3.5 text-slate-800 border border-slate-200/60 shadow-sm">
               <div className="min-w-0 flex-1">
-                <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-gray-400">Trip Route</p>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-400">Trip Route</p>
                 <div className="mt-1 flex items-center gap-2 text-[12px] font-medium">
-                  <span className="truncate max-w-[150px] text-white/90">{(currentRide?.pickup || 'Pickup').split(',')[0]}</span>
-                  <ChevronRight size={12} className="text-white/30" />
-                  <span className="truncate max-w-[150px] text-[#FFC107]">{(currentRide?.drop || 'Drop').split(',')[0]}</span>
+                  <span className="truncate max-w-[150px] text-slate-800">{(currentRide?.pickup || 'Pickup').split(',')[0]}</span>
+                  <ChevronRight size={12} className="text-slate-400" />
+                  <span className="truncate max-w-[150px] text-amber-700">{(currentRide?.drop || 'Drop').split(',')[0]}</span>
                 </div>
               </div>
-              <div className="h-8 w-8 shrink-0 rounded-full bg-white/10 flex items-center justify-center">
-                <ChevronRight size={18} strokeWidth={3} className="text-white" />
+              <div className="h-8 w-8 shrink-0 rounded-full bg-slate-200 flex items-center justify-center">
+                <ChevronRight size={18} strokeWidth={3} className="text-slate-700" />
               </div>
             </div>
           </motion.button>
@@ -773,21 +776,29 @@ maskRepeat: 'no-repeat',
 
         {/* Dynamic Promotional Banner Carousel (Top Banner) */}
         {topBanners.length > 0 && (
-          <div className="w-full relative overflow-hidden rounded-3xl h-[280px] border border-white/10 shadow-2xl bg-black">
+          <div className="w-full relative overflow-hidden rounded-3xl h-[280px] border border-slate-200 shadow-xl bg-slate-100">
             {topBanners.map((banner, idx) => (
               <div
                 key={banner?._id || idx}
-                className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 flex items-center px-10 md:px-16"
+                onClick={() => {
+                  if (banner?.redirect_url) {
+                    navigate(banner.redirect_url);
+                  }
+                }}
+                className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 flex items-center px-10 md:px-16 ${banner?.redirect_url ? 'cursor-pointer' : ''}`}
                 style={{
                   backgroundImage: `url('${resolveBannerImage(banner?.image)}')`,
                   opacity: idx === activeTopIndex ? 1.0 : 0,
                   zIndex: idx === activeTopIndex ? 1 : 0
                 }}
               >
-                {banner?.title && (
-                  <div className="relative z-10 max-w-lg bg-black/60 p-6 rounded-2xl border border-white/10 backdrop-blur-md">
-                    <h2 className="text-2xl font-black text-white">{banner.title}</h2>
-                    <p className="text-xs text-gray-300 mt-2">{banner.description}</p>
+                {banner?.title && !banner.title.startsWith('Banner 20') && (
+                  <div 
+                    onClick={(e) => e.stopPropagation()}
+                    className="relative z-10 max-w-lg bg-white/95 p-6 rounded-2xl border border-slate-200 shadow-lg backdrop-blur-md"
+                  >
+                    <h2 className="text-2xl font-black text-slate-900">{banner.title}</h2>
+                    <p className="text-xs text-slate-500 mt-2">{banner.description}</p>
                     {banner.redirect_url && (
                       <button
                         onClick={() => navigate(banner.redirect_url)}
@@ -806,7 +817,7 @@ maskRepeat: 'no-repeat',
                   <button
                     key={idx}
                     onClick={() => setActiveTopIndex(idx)}
-                    className={`h-2 rounded-full transition-all ${idx === activeTopIndex ? 'w-6 bg-[#FFC107]' : 'w-2 bg-white/40'}`}
+                    className={`h-2 rounded-full transition-all ${idx === activeTopIndex ? 'w-6 bg-[#FFC107]' : 'w-2 bg-slate-300'}`}
                   />
                 ))}
               </div>
@@ -818,7 +829,7 @@ maskRepeat: 'no-repeat',
         <div className="space-y-6">
           <div className="flex items-center gap-3">
             <div className="w-2 h-6 bg-[#FFC107] rounded-full" />
-            <h2 className="text-2xl font-extrabold tracking-tight">Choose Your Destination Mode</h2>
+            <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Choose Your Destination Mode</h2>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -826,31 +837,31 @@ maskRepeat: 'no-repeat',
             {/* Card 1: Cars (Self Drive) */}
             <motion.div
               whileHover={{ y: -6, scale: 1.01 }}
-              className="bg-white/[0.03] hover:bg-white/[0.06] border border-white/15 rounded-[32px] p-6 flex flex-col justify-between transition-all cursor-pointer h-[380px] shadow-lg group relative overflow-hidden"
+              className="bg-white hover:bg-slate-50/50 border border-slate-200/80 hover:border-slate-300 rounded-[32px] p-6 flex flex-col justify-between transition-all cursor-pointer h-[380px] shadow-sm hover:shadow-md group relative overflow-hidden"
               onClick={() => navigate('/taxi/user/rental/type')}
             >
               {/* Card Hover Ambient Light */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-widest text-[#FFC107] bg-[#FFC107]/10 px-3 py-1 rounded-full">
+                <span className="text-xs font-bold uppercase tracking-widest text-amber-700 bg-amber-500/10 px-3 py-1 rounded-full">
                   Self Drive
                 </span>
-                <span className="material-symbols-outlined text-gray-400 group-hover:text-white transition-colors">directions_car</span>
+                <span className="material-symbols-outlined text-slate-400 group-hover:text-slate-800 transition-colors">directions_car</span>
               </div>
               
-              <div className="my-auto flex items-center justify-center h-[140px] drop-shadow-2xl">
+              <div className="my-auto flex items-center justify-center h-[140px] drop-shadow-md">
                 <img 
-                  src={carIcon} 
+                  src={selfDriveCarImg} 
                   alt="Cars (Self Drive)" 
-                  className="h-[120px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                  className="h-[130px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-xl font-extrabold leading-tight">Cars (Self Drive)</h3>
-                  <p className="text-xs text-gray-400 mt-2">
+                  <h3 className="text-xl font-extrabold leading-tight text-slate-900">Cars (Self Drive)</h3>
+                  <p className="text-xs text-slate-500 mt-2">
                     Drive yourself on your own terms. Unlimited freedom, clean sanitized cars.
                   </p>
                 </div>
@@ -864,30 +875,30 @@ maskRepeat: 'no-repeat',
             {/* Card 2: Cars With Chauffeur */}
             <motion.div
               whileHover={{ y: -6, scale: 1.01 }}
-              className="bg-white/[0.03] hover:bg-white/[0.06] border border-white/15 rounded-[32px] p-6 flex flex-col justify-between transition-all cursor-pointer h-[380px] shadow-lg group relative overflow-hidden"
+              className="bg-white hover:bg-slate-50/50 border border-slate-200/80 hover:border-slate-300 rounded-[32px] p-6 flex flex-col justify-between transition-all cursor-pointer h-[380px] shadow-sm hover:shadow-md group relative overflow-hidden"
               onClick={() => navigate('/taxi/user/ride/select-location')}
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#FFC107]/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#FFC107]/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded-full">
+                <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 bg-emerald-500/10 px-3 py-1 rounded-full">
                   Chauffeur Driven
                 </span>
-                <span className="material-symbols-outlined text-gray-400 group-hover:text-white transition-colors">person</span>
+                <span className="material-symbols-outlined text-slate-400 group-hover:text-slate-800 transition-colors">person</span>
               </div>
               
-              <div className="my-auto flex items-center justify-center h-[140px] drop-shadow-2xl">
+              <div className="my-auto flex items-center justify-center h-[140px] drop-shadow-md">
                 <img 
-                  src={carIcon} 
+                  src={chauffeurCabImg} 
                   alt="Cars With Driver" 
-                  className="h-[120px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 brightness-125"
+                  className="h-[130px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 brightness-105"
                 />
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-xl font-extrabold leading-tight">Cabs with Driver</h3>
-                  <p className="text-xs text-gray-400 mt-2">
+                  <h3 className="text-xl font-extrabold leading-tight text-slate-900">Cabs with Driver</h3>
+                  <p className="text-xs text-slate-500 mt-2">
                     Premium standard. Local commutes, airport drop-offs, and outstation trips.
                   </p>
                 </div>
@@ -901,30 +912,30 @@ maskRepeat: 'no-repeat',
             {/* Card 3: Bikes Rentals */}
             <motion.div
               whileHover={{ y: -6, scale: 1.01 }}
-              className="bg-white/[0.03] hover:bg-white/[0.06] border border-white/15 rounded-[32px] p-6 flex flex-col justify-between transition-all cursor-pointer h-[380px] shadow-lg group relative overflow-hidden"
+              className="bg-white hover:bg-slate-50/50 border border-slate-200/80 hover:border-slate-300 rounded-[32px] p-6 flex flex-col justify-between transition-all cursor-pointer h-[380px] shadow-sm hover:shadow-md group relative overflow-hidden"
               onClick={() => navigate('/taxi/user/rental')}
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-teal-500/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-widest text-teal-400 bg-teal-400/10 px-3 py-1 rounded-full">
+                <span className="text-xs font-bold uppercase tracking-widest text-teal-700 bg-teal-500/10 px-3 py-1 rounded-full">
                   2 Wheelers
                 </span>
-                <span className="material-symbols-outlined text-gray-400 group-hover:text-white transition-colors">motorcycle</span>
+                <span className="material-symbols-outlined text-slate-400 group-hover:text-slate-800 transition-colors">motorcycle</span>
               </div>
               
-              <div className="my-auto flex items-center justify-center h-[140px] drop-shadow-2xl">
+              <div className="my-auto flex items-center justify-center h-[140px] drop-shadow-md">
                 <img 
-                  src={bikeIcon} 
+                  src={rentalBikeImg} 
                   alt="Bikes" 
-                  className="h-[120px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                  className="h-[130px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-xl font-extrabold leading-tight">Bikes & Scooters</h3>
-                  <p className="text-xs text-gray-400 mt-2">
+                  <h3 className="text-xl font-extrabold leading-tight text-slate-900">Bikes & Scooters</h3>
+                  <p className="text-xs text-slate-500 mt-2">
                     Zip through the streets. Rent scooters and sports bikes for flexible, quick rides.
                   </p>
                 </div>
@@ -945,7 +956,7 @@ maskRepeat: 'no-repeat',
           <div className="lg:col-span-8 space-y-6">
             <div className="flex items-center gap-3">
               <div className="w-2 h-6 bg-[#FFC107] rounded-full" />
-              <h2 className="text-2xl font-extrabold tracking-tight">Additional Services</h2>
+              <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Additional Services</h2>
             </div>
             
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -953,67 +964,67 @@ maskRepeat: 'no-repeat',
               {/* Monthly Subscription */}
               <button 
                 onClick={() => navigate('/taxi/user/profile/subscriptions')}
-                className="bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 hover:border-amber-400/50 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
+                className="bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
               >
-                <div className="w-12 h-12 rounded-xl bg-amber-400/10 text-[#FFC107] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-2xl">calendar_month</span>
                 </div>
-                <span className="text-xs font-extrabold text-gray-200 group-hover:text-white leading-tight">Monthly Subscription</span>
+                <span className="text-xs font-extrabold text-slate-700 group-hover:text-slate-900 leading-tight">Monthly Subscription</span>
               </button>
 
               {/* My Bookings */}
               <button 
                 onClick={() => navigate('/taxi/user/activity')}
-                className="bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 hover:border-amber-400/50 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
+                className="bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
               >
-                <div className="w-12 h-12 rounded-xl bg-amber-400/10 text-[#FFC107] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-2xl">history_edu</span>
                 </div>
-                <span className="text-xs font-extrabold text-gray-200 group-hover:text-white leading-tight">My Bookings</span>
+                <span className="text-xs font-extrabold text-slate-700 group-hover:text-slate-900 leading-tight">My Bookings</span>
               </button>
 
               {/* Travel Packages */}
               <button 
                 onClick={() => navigate('/taxi/user/cab/spiritual')}
-                className="bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 hover:border-amber-400/50 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
+                className="bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
               >
-                <div className="w-12 h-12 rounded-xl bg-amber-400/10 text-[#FFC107] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-2xl">travel_explore</span>
                 </div>
-                <span className="text-xs font-extrabold text-gray-200 group-hover:text-white leading-tight">Travel Packages</span>
+                <span className="text-xs font-extrabold text-slate-700 group-hover:text-slate-900 leading-tight">Travel Packages</span>
               </button>
 
               {/* Internship Program */}
               <button 
                 onClick={() => navigate('/taxi/user/onboarding')}
-                className="bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 hover:border-amber-400/50 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
+                className="bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
               >
-                <div className="w-12 h-12 rounded-xl bg-amber-400/10 text-[#FFC107] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-2xl">school</span>
                 </div>
-                <span className="text-xs font-extrabold text-gray-200 group-hover:text-white leading-tight">Internship Program</span>
+                <span className="text-xs font-extrabold text-slate-700 group-hover:text-slate-900 leading-tight">Internship Program</span>
               </button>
 
               {/* Attach Car */}
               <button 
                 onClick={() => navigate('/taxi/driver/login')}
-                className="bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 hover:border-amber-400/50 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
+                className="bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
               >
-                <div className="w-12 h-12 rounded-xl bg-amber-400/10 text-[#FFC107] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-2xl">add_to_drive</span>
                 </div>
-                <span className="text-xs font-extrabold text-gray-200 group-hover:text-white leading-tight">Attach Car</span>
+                <span className="text-xs font-extrabold text-slate-700 group-hover:text-slate-900 leading-tight">Attach Car</span>
               </button>
 
               {/* Driver Registration */}
               <button 
                 onClick={() => navigate('/taxi/driver/login')}
-                className="bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 hover:border-amber-400/50 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
+                className="bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
               >
-                <div className="w-12 h-12 rounded-xl bg-amber-400/10 text-[#FFC107] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-2xl">badge</span>
                 </div>
-                <span className="text-xs font-extrabold text-gray-200 group-hover:text-white leading-tight">Driver Registration</span>
+                <span className="text-xs font-extrabold text-slate-700 group-hover:text-slate-900 leading-tight">Driver Registration</span>
               </button>
 
             </div>
@@ -1023,7 +1034,7 @@ maskRepeat: 'no-repeat',
           <div className="lg:col-span-4 space-y-6">
             <div className="flex items-center gap-3">
               <div className="w-2 h-6 bg-[#FFC107] rounded-full" />
-              <h2 className="text-2xl font-extrabold tracking-tight">Recommended</h2>
+              <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Recommended</h2>
             </div>
 
             {bottomBanners.length > 0 ? (
@@ -1036,7 +1047,7 @@ maskRepeat: 'no-repeat',
                     navigate('/taxi/user/cab/spiritual');
                   }
                 }}
-                className="relative w-full rounded-3xl overflow-hidden aspect-[4/3] shadow-2xl border border-white/10 bg-[#0f0f0f] cursor-pointer group"
+                className="relative w-full rounded-3xl overflow-hidden aspect-[4/3] shadow-lg border border-slate-200 bg-slate-100 cursor-pointer group"
               >
                 {bottomBanners.map((banner, idx) => (
                   <div 
@@ -1051,11 +1062,11 @@ maskRepeat: 'no-repeat',
                 ))}
                 
                 {/* Overlay details */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent z-10 flex flex-col justify-end p-6">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent z-10 flex flex-col justify-end p-6 text-white">
                   <span className="text-[10px] text-black bg-[#FFC107] w-fit px-2.5 py-1 rounded-md mb-2 font-black uppercase tracking-wider">
                     Exclusive Package
                   </span>
-                  <h3 className="text-xl font-black text-white uppercase tracking-wide group-hover:text-[#FFC107] transition-colors leading-tight">
+                  <h3 className="text-xl font-black uppercase tracking-wide group-hover:text-[#FFC107] transition-colors leading-tight">
                     {bottomBanners[activeBottomIndex]?.title || 'Explore Holy Cities'}
                   </h3>
                   <p className="text-xs text-gray-300 mt-1">Book professional packages with one tap.</p>
@@ -1065,7 +1076,7 @@ maskRepeat: 'no-repeat',
               // Default Fallback matching mobile
               <div 
                 onClick={() => navigate('/taxi/user/cab/spiritual')}
-                className="relative w-full rounded-3xl overflow-hidden aspect-[4/3] shadow-2xl border border-white/10 bg-[#0f0f0f] cursor-pointer group"
+                className="relative w-full rounded-3xl overflow-hidden aspect-[4/3] shadow-lg border border-slate-200 bg-slate-100 cursor-pointer group"
               >
                 <div 
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" 
@@ -1075,11 +1086,11 @@ maskRepeat: 'no-repeat',
                 />
                 
                 {/* Overlay details */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent z-10 flex flex-col justify-end p-6">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent z-10 flex flex-col justify-end p-6 text-white">
                   <span className="text-[10px] text-black bg-[#FFC107] w-fit px-2.5 py-1 rounded-md mb-2 font-black uppercase tracking-wider">
                     Recommended
                   </span>
-                  <h3 className="text-xl font-black text-white uppercase tracking-wide group-hover:text-[#FFC107] transition-colors leading-tight">
+                  <h3 className="text-xl font-black uppercase tracking-wide group-hover:text-[#FFC107] transition-colors leading-tight">
                     MAHAKALESHWAR
                   </h3>
                   <p className="text-xs text-gray-300 mt-1">Darshan Tour Package</p>
@@ -1094,14 +1105,14 @@ maskRepeat: 'no-repeat',
 
       <AnimatePresence>
         {currentRide && serviceType !== 'rental' && (
-          <Motion.button
+          <motion.button
             type="button"
             initial={{ y: 24, opacity: 0, scale: 0.96 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 18, opacity: 0, scale: 0.96 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => navigate(trackingPath, { state: currentRide })}
-            className="fixed bottom-24 left-4 right-4 z-[60] mx-auto flex max-w-[calc(32rem-2rem)] items-center gap-3 rounded-[20px] border border-white/80 bg-white/95 px-4 py-3 text-left shadow-[0_12px_34px_rgba(15,23,42,0.16)] backdrop-blur-xl"
+            className="fixed bottom-24 left-4 right-4 z-[60] mx-auto flex max-w-[calc(32rem-2rem)] items-center gap-3 rounded-[20px] border border-slate-200/80 bg-white/95 px-4 py-3 text-left shadow-[0_12px_34px_rgba(15,23,42,0.12)] backdrop-blur-xl"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-slate-900 shadow-lg">
               <img src={currentRideIcon} alt={vehicleLabel} className="h-8 w-8 object-contain" draggable={false} />
@@ -1173,7 +1184,7 @@ maskRepeat: 'no-repeat',
                 <ChevronRight size={18} strokeWidth={3} />
               </div>
             </div>
-          </Motion.button>
+          </motion.button>
         )}
       </AnimatePresence>
 
