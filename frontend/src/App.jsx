@@ -20,7 +20,6 @@ import './App.css';
 
 // Lazy loading pages for performance
 const UserHome = lazy(() => import('./modules/user/pages/Home'));
-const PublicHome = lazy(() => import('./modules/user/pages/PublicHome'));
 const Login = lazy(() => import('./modules/user/pages/auth/Login'));
 const VerifyOTP = lazy(() => import('./modules/user/pages/auth/VerifyOTP'));
 const Signup = lazy(() => import('./modules/user/pages/auth/Signup'));
@@ -686,7 +685,7 @@ function App() {
             <Toaster position="top-right" />
             <Routes>
               {/* Static / Public routes */}
-              <Route path="/" element={<PublicHome />} />
+              <Route path="/" element={<LandingPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/support" element={<SupportPage />} />
