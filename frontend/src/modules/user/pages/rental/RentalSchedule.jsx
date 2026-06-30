@@ -486,7 +486,7 @@ const RentalSchedule = () => {
   };
 
   return (
-    <div className={`min-h-screen max-w-lg mx-auto font-sans pb-28 relative overflow-hidden ${
+    <div className={`min-h-screen max-w-lg md:max-w-none md:mx-0 w-full mx-auto font-sans pb-28 relative overflow-hidden ${
       isSubscriptionMode
         ? 'bg-[linear-gradient(180deg,#FAFAF9_0%,#F7F7F5_38%,#EEF2F7_100%)]'
         : 'bg-[linear-gradient(180deg,#F8FAFC_0%,#F3F4F6_38%,#EEF2F7_100%)]'
@@ -783,7 +783,7 @@ const RentalSchedule = () => {
         )}
       </div>
 
-      <div className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg px-5 pb-6 pt-3 pointer-events-none z-30 ${
+      <div className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg md:max-w-none md:mx-0 px-5 pb-6 pt-3 pointer-events-none z-30 ${
         isSubscriptionMode
           ? 'bg-gradient-to-t from-[#EEF2F7] via-[#F7F7F5]/95 to-transparent'
           : 'bg-gradient-to-t from-[#EEF2F7] via-[#F3F4F6]/95 to-transparent'

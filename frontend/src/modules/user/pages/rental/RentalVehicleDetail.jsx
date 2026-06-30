@@ -1326,7 +1326,7 @@ const RentalVehicleDetail = () => {
         </motion.header>
       )}
 
-      <main className={`mx-auto ${isSubscriptionMode ? 'max-w-lg px-5 pt-5' : 'max-w-[1200px] px-5 lg:px-6 mt-4 lg:mt-2'}`}>
+      <main className={`mx-auto ${isSubscriptionMode ? 'max-w-lg md:max-w-none md:mx-0 w-full px-5 pt-5' : 'max-w-[1200px] px-5 lg:px-6 mt-4 lg:mt-2'}`}>
         {isSubscriptionMode ? (
           <div className="space-y-4 pb-32">
             <motion.div
@@ -2033,7 +2033,7 @@ const RentalVehicleDetail = () => {
 
       {/* Subscription Mode Fixed Bottom Button */}
       {isSubscriptionMode && (
-        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg px-5 pb-6 pt-3 bg-gradient-to-t from-white via-white/95 to-transparent pointer-events-none z-30">
+        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg md:max-w-none md:mx-0 px-5 pb-6 pt-3 bg-gradient-to-t from-white via-white/95 to-transparent pointer-events-none z-30">
           <motion.button
             whileTap={{ scale: 0.98 }}
             onClick={handleProceed}

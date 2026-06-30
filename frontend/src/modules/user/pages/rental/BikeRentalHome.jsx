@@ -594,7 +594,7 @@ const BikeRentalHome = () => {
     if (isAddressEntered) {
       // 2. Render Search Results View (Indore Listing)
       return (
-        <div className="min-h-screen bg-background max-w-lg mx-auto font-sans relative pb-24 flex flex-col justify-between overflow-x-hidden no-scrollbar">
+        <div className="min-h-screen bg-background max-w-lg md:max-w-none md:mx-0 w-full mx-auto font-sans relative pb-24 flex flex-col justify-between overflow-x-hidden no-scrollbar">
           {/* Sticky Header block containing Header, Filters, Search input */}
           <div className="sticky top-0 z-30 bg-white shadow-sm flex flex-col shrink-0">
             {/* Header */}
@@ -809,7 +809,7 @@ const BikeRentalHome = () => {
           </div>
 
           {/* Sticky Bottom Navbar */}
-          <div className="fixed bottom-0 inset-x-0 bg-white border-t border-slate-100 py-2.5 px-4 shadow-[0_-8px_30px_rgba(15,23,42,0.06)] z-40 max-w-lg mx-auto flex items-center justify-between">
+          <div className="fixed bottom-0 inset-x-0 bg-white border-t border-slate-100 py-2.5 px-4 shadow-[0_-8px_30px_rgba(15,23,42,0.06)] z-40 max-w-lg md:max-w-none md:mx-0 w-full mx-auto flex items-center justify-between">
             <button
               onClick={() => {
                 setIsAddressEntered(false);
@@ -869,7 +869,7 @@ const BikeRentalHome = () => {
 
     // 1. Render Taxi09 Dashboard View (Teal header, featured list)
     return (
-      <div className="premium-theme min-h-screen bg-background text-on-background font-body-md max-w-lg mx-auto relative pb-24 shadow-xl border-x border-surface-variant flex flex-col justify-between overflow-x-hidden no-scrollbar">
+      <div className="premium-theme min-h-screen bg-background text-on-background font-body-md max-w-lg md:max-w-none md:mx-0 w-full mx-auto relative pb-24 shadow-xl border-x border-surface-variant flex flex-col justify-between overflow-x-hidden no-scrollbar">
         {/* Teal Header Block */}
         <div className="bg-gradient-to-b from-[#fffbeb] to-[#fef3c7] shadow-[0_10px_30px_rgba(251,191,36,0.08)] border-b border-amber-200/40 text-slate-900 px-5 pt-12 pb-6 rounded-b-[40px] relative shrink-0 z-20">
           <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-[#ffc400]/5 blur-[40px] pointer-events-none" />
@@ -1448,7 +1448,7 @@ const BikeRentalHome = () => {
         </div>
 
         {/* Stick Bottom Navigation Menu */}
-        <div className="fixed bottom-0 inset-x-0 bg-white border-t border-slate-100 py-2.5 px-4 shadow-[0_-8px_30px_rgba(15,23,42,0.06)] z-40 max-w-lg mx-auto flex items-center justify-between">
+        <div className="fixed bottom-0 inset-x-0 bg-white border-t border-slate-100 py-2.5 px-4 shadow-[0_-8px_30px_rgba(15,23,42,0.06)] z-40 max-w-lg md:max-w-none md:mx-0 w-full mx-auto flex items-center justify-between">
           <button
             onClick={() => setActiveSegment('rentals')}
             className={`flex flex-col items-center gap-1 flex-1 py-1 ${activeSegment === 'rentals' ? 'text-[#d48c00]' : 'text-slate-400 hover:text-slate-600'}`}
@@ -1501,7 +1501,7 @@ const BikeRentalHome = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#F8FAFC_0%,#F3F4F6_38%,#EEF2F7_100%)] max-w-lg mx-auto font-sans relative overflow-hidden pb-12">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#F8FAFC_0%,#F3F4F6_38%,#EEF2F7_100%)] max-w-lg md:max-w-none md:mx-0 w-full mx-auto font-sans relative overflow-hidden pb-12">
       <div className="absolute -top-16 right-[-40px] h-44 w-44 rounded-full bg-amber-100/40 blur-3xl pointer-events-none" />
       <div className="absolute bottom-28 right-[-40px] h-40 w-40 rounded-full bg-amber-100/30 blur-3xl pointer-events-none" />
 

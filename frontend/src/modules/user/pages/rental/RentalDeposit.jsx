@@ -538,7 +538,7 @@ const RentalDeposit = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#F8FAFC_0%,#F3F4F6_38%,#EEF2F7_100%)] max-w-lg mx-auto font-sans pb-28 relative overflow-hidden">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#F8FAFC_0%,#F3F4F6_38%,#EEF2F7_100%)] max-w-lg md:max-w-none md:mx-0 w-full mx-auto font-sans pb-28 relative overflow-hidden">
       <div className="absolute -top-16 right-[-40px] h-44 w-44 rounded-full bg-orange-100/60 blur-3xl pointer-events-none" />
 
       <Motion.header
@@ -683,7 +683,7 @@ const RentalDeposit = () => {
         </Motion.div>
       </div>
 
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg px-5 pb-6 pt-3 bg-gradient-to-t from-[#EEF2F7] via-[#F3F4F6]/95 to-transparent pointer-events-none z-30">
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg md:max-w-none md:mx-0 px-5 pb-6 pt-3 bg-gradient-to-t from-[#EEF2F7] via-[#F3F4F6]/95 to-transparent pointer-events-none z-30">
         <Motion.button
           whileTap={{ scale: 0.98 }}
           onClick={handlePay}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, CarFront, Headset, User, Key, Package } from 'lucide-react';
+import { Home, CarFront, Headset, User, Key, Package, Wallet } from 'lucide-react';
 import { useSettings, normalizeAssetUrl } from '../../../shared/context/SettingsContext';
 import busIcon from '../../../assets/3d images/AutoCab/bus.png';
 import { getLocalUserToken, clearLocalUserSession } from '../services/authService';
@@ -37,10 +37,7 @@ const BottomNavbar = () => {
   const navItems = [
     { icon: Home, label: 'Home', path: '/taxi/user' },
     { icon: CarFront, label: 'Rides', path: '/taxi/user/activity' },
-    { icon: Key, label: 'Rental', path: '/taxi/user/rental' },
-    { imageIcon: dynamicBusIcon, label: 'Busbooking', path: '/taxi/user/bus' },
-    { icon: Package, label: 'Porter', path: '/taxi/user/parcel/type' },
-    { icon: Headset, label: 'Support', path: '/taxi/user/support' },
+    { icon: Wallet, label: 'Wallet', path: '/taxi/user/wallet' },
     { icon: User, label: 'Profile', path: '/taxi/user/profile' },
   ];
 
@@ -64,7 +61,7 @@ const BottomNavbar = () => {
       {/* Mobile Bottom Navbar */}
       <nav className="fixed bottom-0 left-0 right-0 z-[100] mx-auto w-full max-w-lg px-4 pb-[max(env(safe-area-inset-bottom),16px)] pt-2 pointer-events-none md:hidden flex">
         <div className="flex w-full items-center justify-around overflow-visible rounded-[32px] border border-white/60 bg-white/95 px-2 py-2.5 shadow-[0_10px_40px_rgba(0,0,0,0.08)] backdrop-blur-2xl pointer-events-auto relative">
-          {navItems.filter(item => item.label !== 'Profile').map(({ icon: Icon, imageIcon, label, path }) => {
+          {navItems.map(({ icon: Icon, imageIcon, label, path }) => {
             const isActive =
               path === '/taxi/user'
                 ? pathname === path
@@ -83,7 +80,7 @@ const BottomNavbar = () => {
                       <motion.div
                         layoutId="active-pill"
                         transition={{ type: 'spring', stiffness: 400, damping: 32, mass: 1 }}
-                        className="absolute -inset-y-2 -inset-x-2 sm:-inset-x-4 bg-[#FFC107] rounded-[22px]"
+                        className="absolute -inset-y-1 inset-x-2 sm:inset-x-4 bg-[#FFC107] rounded-[18px]"
                       />
                     )}
                   </AnimatePresence>
@@ -95,13 +92,13 @@ const BottomNavbar = () => {
                     {imageIcon ? (
                       <img src={imageIcon} alt="" className={`h-[22px] w-[22px] object-contain transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-60 group-hover:opacity-80'}`} draggable={false} />
                     ) : (
-                      <Icon size={22} strokeWidth={isActive ? 2.5 : 2} className={`transition-colors duration-300 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-700'}`} />
+                      <Icon size={22} strokeWidth={isActive ? 2.5 : 2} className={`transition-colors duration-300 ${isActive ? 'text-slate-950' : 'text-slate-500 group-hover:text-slate-700'}`} />
                     )}
                   </motion.div>
                   <motion.span
                     animate={{ opacity: 1, y: isActive ? 2 : 1, scale: isActive ? 1 : 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className={`relative z-20 mt-1 text-[11px] font-bold transition-colors duration-300 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-900'}`}
+                    className={`relative z-20 mt-1 text-[11px] font-bold transition-colors duration-300 ${isActive ? 'text-slate-950 font-black' : 'text-slate-500 group-hover:text-slate-900'}`}
                   >
                     {label}
                   </motion.span>
@@ -112,11 +109,11 @@ const BottomNavbar = () => {
         </div>
       </nav>
 
-      {/* Desktop Top Dark Navbar */}
-      <nav className="hidden md:flex fixed top-0 left-0 right-0 z-[100] bg-[#0a0a0a] px-8 py-4 items-center justify-between border-b border-white/10">
+      {/* Desktop Top Yellow Navbar */}
+      <nav className="hidden md:flex fixed top-0 left-0 right-0 z-[100] bg-[#FFC107] px-8 py-4 items-center justify-between border-b border-amber-500/20 shadow-sm">
         <div className="flex items-center gap-6 cursor-pointer" onClick={() => navigate('/taxi/user')}>
-          <span className="font-black text-[26px] italic tracking-widest text-white">
-            TAXI<span className="text-[#FFC107]">09</span>
+          <span className="font-black text-[26px] italic tracking-widest text-slate-950">
+            TAXI<span className="text-white">09</span>
           </span>
         </div>
         <div className="flex items-center gap-8">
@@ -126,35 +123,35 @@ const BottomNavbar = () => {
               <button
                 key={item.label}
                 onClick={() => navigate(item.path)}
-                className={`text-[15px] font-bold transition-all outline-none ${isActive
-                  ? 'text-[#FFC107]'
-                  : 'text-gray-400 hover:text-white hover:scale-105'
+                className={`text-[15px] font-bold transition-all outline-none px-4 py-1.5 rounded-full ${isActive
+                  ? 'text-white bg-slate-950/90 shadow-sm'
+                  : 'text-slate-800 hover:text-slate-950 hover:bg-slate-950/5'
                   }`}
               >
                 {item.label}
               </button>
             );
           })}
-          
+
           <div className="flex items-center gap-4 ml-4">
             {isLoggedIn ? (
-              <button 
+              <button
                 onClick={handleLogout}
-                className="px-6 py-2 rounded-md border border-red-500 text-red-500 font-bold hover:bg-red-500 hover:text-white transition-colors"
+                className="px-6 py-2 rounded-md border border-slate-950 text-slate-950 font-bold hover:bg-slate-950 hover:text-white transition-colors"
               >
                 Logout
               </button>
             ) : (
               <>
-                <button 
+                <button
                   onClick={() => navigate('/taxi/user/login')}
-                  className="px-6 py-2 rounded-md border border-[#FFC107] text-[#FFC107] font-bold hover:bg-[#FFC107] hover:text-black transition-colors"
+                  className="px-6 py-2 rounded-md border border-slate-950 text-slate-950 font-bold hover:bg-slate-950 hover:text-white transition-colors"
                 >
                   Login
                 </button>
-                <button 
+                <button
                   onClick={() => navigate('/taxi/user/signup')}
-                  className="px-6 py-2 rounded-md bg-[#FFC107] text-black font-bold hover:bg-amber-400 transition-colors"
+                  className="px-6 py-2 rounded-md bg-slate-950 text-white font-bold hover:bg-slate-900 transition-colors"
                 >
                   Sign Up
                 </button>

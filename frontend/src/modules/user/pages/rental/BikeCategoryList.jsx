@@ -258,7 +258,7 @@ const BikeCategoryList = () => {
 
   if (loading && realVehicles.length === 0 && !['motorcycles', 'scooters', 'ev'].includes(categoryId)) {
     return (
-      <div className="min-h-screen bg-white max-w-lg mx-auto flex items-center justify-center font-sans">
+      <div className="min-h-screen bg-white max-w-lg md:max-w-none md:mx-0 w-full mx-auto flex items-center justify-center font-sans">
         <div className="text-center">
           <Loader2 className="animate-spin text-indigo-600 mx-auto mb-2" size={32} />
           <p className="text-xs text-slate-500 font-semibold">Loading Vehicles...</p>
@@ -268,7 +268,7 @@ const BikeCategoryList = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white max-w-lg mx-auto font-sans relative overflow-x-hidden pb-24 flex flex-col no-scrollbar">
+    <div className="min-h-screen bg-white max-w-lg md:max-w-none md:mx-0 w-full mx-auto font-sans relative overflow-x-hidden pb-24 flex flex-col no-scrollbar">
       {/* Header Block */}
       <div className="sticky top-0 bg-white z-30 border-b border-slate-50 shrink-0">
         <div className="px-4 pt-6 pb-3 flex items-center gap-4">
@@ -350,7 +350,7 @@ const BikeCategoryList = () => {
       </div>
 
       {/* Sticky Bottom Navigation Bar */}
-      <div className="fixed bottom-0 inset-x-0 bg-white border-t border-slate-100 py-3 shadow-[0_-8px_30px_rgba(15,23,42,0.06)] z-40 max-w-lg mx-auto flex items-center justify-between px-6">
+      <div className="fixed bottom-0 inset-x-0 bg-white border-t border-slate-100 py-3 shadow-[0_-8px_30px_rgba(15,23,42,0.06)] z-40 max-w-lg md:max-w-none md:mx-0 w-full mx-auto flex items-center justify-between px-6">
         <button
           onClick={() => navigate('/taxi/user')}
           className="flex flex-col items-center gap-1 text-[#E53935] hover:opacity-90 py-1"

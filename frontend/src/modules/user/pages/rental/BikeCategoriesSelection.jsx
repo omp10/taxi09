@@ -6,6 +6,7 @@ import { userService } from '../../services/userService';
 import motorcycleImg from '@/assets/images/motorcycle_category.png';
 import scooterImg from '@/assets/images/scooter_category.png';
 import evImg from '@/assets/images/ev_category.png';
+import BottomNavbar from '../../components/BottomNavbar';
 
 const SkylineSVG = () => (
   <svg 
@@ -94,8 +95,8 @@ const BikeCategoriesSelection = () => {
       title: 'MOTORCYCLES',
       image: motorcycleImg,
       images: [motorcycleImg],
-      bgClass: 'bg-gradient-to-br from-[#FFEBE6] to-[#FFF0E6]',
-      borderClass: 'border-[#FFDCD2]/40',
+      bgClass: 'bg-gradient-to-br from-[#FFF9E6] to-[#FFF1C5]',
+      borderClass: 'border-amber-200/50',
       imageScale: 'scale-115'
     },
     {
@@ -103,8 +104,8 @@ const BikeCategoriesSelection = () => {
       title: 'SCOOTERS',
       image: scooterImg,
       images: [scooterImg],
-      bgClass: 'bg-gradient-to-br from-[#E8ECEF] to-[#DCE2E7]',
-      borderClass: 'border-[#CFD9E1]/40',
+      bgClass: 'bg-gradient-to-br from-[#FFFDF0] to-[#FFF5CC]',
+      borderClass: 'border-yellow-200/50',
       imageScale: 'scale-110'
     },
     {
@@ -112,8 +113,8 @@ const BikeCategoriesSelection = () => {
       title: 'EV',
       image: evImg,
       images: [evImg],
-      bgClass: 'bg-gradient-to-br from-[#E2ECE9] to-[#D5E5E0]',
-      borderClass: 'border-[#C8DDD7]/40',
+      bgClass: 'bg-gradient-to-br from-[#FFFDEB] to-[#FFEAA8]',
+      borderClass: 'border-amber-300/40',
       imageScale: 'scale-110'
     }
   ];
@@ -122,10 +123,17 @@ const BikeCategoriesSelection = () => {
     ? subcategories.map((cat) => {
         const nameLower = cat.name.toLowerCase();
         let fallbackImg = motorcycleImg;
+        let bgClass = 'bg-gradient-to-br from-[#FFF9E6] to-[#FFF1C5]';
+        let borderClass = 'border-amber-200/50';
+        
         if (nameLower.includes('scoot')) {
           fallbackImg = scooterImg;
+          bgClass = 'bg-gradient-to-br from-[#FFFDF0] to-[#FFF5CC]';
+          borderClass = 'border-yellow-200/50';
         } else if (nameLower.includes('ev') || nameLower.includes('elect')) {
           fallbackImg = evImg;
+          bgClass = 'bg-gradient-to-br from-[#FFFDEB] to-[#FFEAA8]';
+          borderClass = 'border-amber-300/40';
         }
 
         return {
@@ -135,8 +143,8 @@ const BikeCategoriesSelection = () => {
           images: Array.isArray(cat.images) && cat.images.length > 0 
                     ? cat.images 
                     : (cat.image ? [cat.image] : [fallbackImg]),
-          bgClass: cat.bgClass || 'bg-gradient-to-br from-[#FFEBE6] to-[#FFF0E6]',
-          borderClass: cat.borderClass || 'border-[#FFDCD2]/40',
+          bgClass: bgClass,
+          borderClass: borderClass,
           imageScale: cat.imageScale || 'scale-110'
         };
       })
@@ -154,16 +162,16 @@ const BikeCategoriesSelection = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white max-w-lg md:max-w-none md:mx-0 w-full mx-auto font-sans relative overflow-x-hidden pb-12 md:pt-24 flex flex-col no-scrollbar">
+    <div className="min-h-screen bg-white max-w-lg md:max-w-none md:mx-0 w-full mx-auto font-sans relative overflow-x-hidden pb-32 md:pt-24 flex flex-col no-scrollbar">
       {/* Header */}
-      <div className="px-4 pt-6 pb-4 flex items-center gap-4 border-b border-slate-50 shrink-0 sticky top-0 bg-white z-30">
+      <div className="px-4 pt-6 pb-4 flex items-center gap-4 border-b border-amber-500/20 shrink-0 sticky top-0 bg-[#FFC107] z-30 shadow-sm text-slate-950">
         <button
           onClick={() => navigate('/taxi/user/rental/type')}
-          className="text-slate-800 hover:opacity-75 transition-opacity py-1 pr-1 shrink-0"
+          className="text-slate-950 hover:opacity-75 transition-opacity py-1 pr-1 shrink-0 flex items-center"
         >
-          <ChevronLeft size={24} strokeWidth={2} />
+          <ChevronLeft size={24} strokeWidth={2.5} />
         </button>
-        <h1 className="text-[17px] font-bold text-slate-800 tracking-tight">Explore Product</h1>
+        <h1 className="text-[17px] font-black tracking-tight uppercase">Explore Categories</h1>
       </div>
 
       {/* Categories List */}
@@ -176,7 +184,7 @@ const BikeCategoriesSelection = () => {
             transition={{ duration: 0.45, delay: idx * 0.1, ease: 'easeOut' }}
             whileHover={{ y: -4 }}
             onClick={() => handleSelectCategory(cat.id)}
-            className={`w-full h-[180px] rounded-[24px] border ${cat.borderClass} ${cat.bgClass} p-5 relative overflow-hidden flex items-center justify-center cursor-pointer group shadow-[0_8px_24px_rgba(15,23,42,0.02)] hover:shadow-lg transition-shadow duration-300`}
+            className={`w-full h-[180px] rounded-[24px] border ${cat.borderClass} ${cat.bgClass} p-5 relative overflow-hidden flex items-center justify-center cursor-pointer group shadow-[0_8px_30px_rgba(251,191,36,0.04)] hover:shadow-lg transition-shadow duration-300`}
           >
             {/* Building Skyline Background Sketch */}
             <SkylineSVG />
@@ -195,6 +203,7 @@ const BikeCategoriesSelection = () => {
           </motion.div>
         ))}
       </div>
+      <BottomNavbar />
     </div>
   );
 };

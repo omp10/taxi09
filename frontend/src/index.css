@@ -85,6 +85,8 @@ body {
   --color-orange-50: #FFF8E1;
   --font-sans: 'Montserrat', system-ui, sans-serif;
   --font-display: 'Montserrat', sans-serif;
+  --font-inter: 'Inter', system-ui, sans-serif;
+  --font-outfit: 'Outfit', system-ui, sans-serif;
   
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;

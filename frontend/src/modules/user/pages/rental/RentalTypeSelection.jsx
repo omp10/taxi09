@@ -19,7 +19,7 @@ const RentalTypeSelection = () => {
   };
 
   return (
-    <div className="premium-theme min-h-screen bg-background text-on-background font-body-md pb-8 max-w-lg mx-auto relative overflow-hidden flex flex-col justify-between shadow-xl border-x border-surface-variant">
+    <div className="premium-theme min-h-screen bg-background text-on-background font-body-md pb-8 max-w-lg md:max-w-none md:mx-0 w-full mx-auto relative overflow-hidden flex flex-col justify-between shadow-xl border-x border-surface-variant">
       
       {/* Decorative background glows */}
       <div className="absolute top-[-100px] right-[-100px] h-[300px] w-[300px] rounded-full bg-primary-container/10 blur-[80px] pointer-events-none" />

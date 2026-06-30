@@ -31,34 +31,34 @@ const menuSections = [
   {
     title: 'Personal',
     items: [
-      { icon: User, title: 'Profile Settings', sub: 'Manage your personal info', path: '/taxi/user/profile/settings', bg: 'bg-indigo-50', color: 'text-indigo-600' },
-      { icon: MapPin, title: 'Saved Addresses', sub: 'Home, office & others', path: '/taxi/user/profile/addresses', bg: 'bg-emerald-50', color: 'text-emerald-600' },
-      { icon: History, title: 'My Rides', sub: 'Rides, parcels & trips', path: '/taxi/user/activity', bg: 'bg-blue-50', color: 'text-blue-600' },
+      { icon: User, title: 'Profile Settings', sub: 'Manage your personal info', path: '/taxi/user/profile/settings', bg: 'bg-amber-50', color: 'text-amber-600' },
+      { icon: MapPin, title: 'Saved Addresses', sub: 'Home, office & others', path: '/taxi/user/profile/addresses', bg: 'bg-amber-50', color: 'text-amber-600' },
+      { icon: History, title: 'My Rides', sub: 'Rides, parcels & trips', path: '/taxi/user/activity', bg: 'bg-amber-50', color: 'text-amber-600' },
     ]
   },
   {
     title: 'Financial & Rewards',
     items: [
       { icon: Wallet, title: 'My Wallet', sub: 'Balance & transactions', path: '/taxi/user/wallet', bg: 'bg-amber-50', color: 'text-amber-600' },
-      { icon: Package, title: 'Subscriptions', sub: 'Ride plans & credits', path: '/taxi/user/profile/subscriptions', bg: 'bg-indigo-50', color: 'text-indigo-600' },
-      { icon: Gift, title: 'Refer & Earn', sub: 'Invite friends & get rewards', path: '/taxi/user/referral', bg: 'bg-rose-50', color: 'text-rose-600' },
-      { icon: BusFront, title: 'Bus Tickets', sub: 'Manage bus bookings', path: '/taxi/user/profile/bus-bookings', bg: 'bg-orange-50', color: 'text-orange-600' },
+      { icon: Package, title: 'Subscriptions', sub: 'Ride plans & credits', path: '/taxi/user/profile/subscriptions', bg: 'bg-amber-50', color: 'text-amber-600' },
+      { icon: Gift, title: 'Refer & Earn', sub: 'Invite friends & get rewards', path: '/taxi/user/referral', bg: 'bg-amber-50', color: 'text-amber-600' },
+      { icon: BusFront, title: 'Bus Tickets', sub: 'Manage bus bookings', path: '/taxi/user/profile/bus-bookings', bg: 'bg-amber-50', color: 'text-amber-600' },
     ]
   },
   {
     title: 'Preferences',
     items: [
-      { icon: Bell, title: 'Notifications', sub: 'Offers & alerts', path: '/taxi/user/profile/notifications', bg: 'bg-purple-50', color: 'text-purple-600' },
-      { icon: Shield, title: 'Security & SOS', sub: 'Trust & safety settings', path: '/safety/sos', bg: 'bg-sky-50', color: 'text-sky-600' },
-      { icon: HelpCircle, title: 'Help & Support', sub: 'Help center & tickets', path: '/taxi/user/support/tickets', bg: 'bg-slate-50', color: 'text-slate-600' },
+      { icon: Bell, title: 'Notifications', sub: 'Offers & alerts', path: '/taxi/user/profile/notifications', bg: 'bg-amber-50', color: 'text-amber-600' },
+      { icon: Shield, title: 'Security & SOS', sub: 'Trust & safety settings', path: '/safety/sos', bg: 'bg-amber-50', color: 'text-amber-600' },
+      { icon: HelpCircle, title: 'Help & Support', sub: 'Help center & tickets', path: '/taxi/user/support/tickets', bg: 'bg-amber-50', color: 'text-amber-600' },
     ]
   },
   {
     title: 'Legal',
     items: [
-      { icon: FileText, title: 'Terms & Conditions', sub: 'Read service terms', path: '/terms', bg: 'bg-orange-50', color: 'text-orange-600' },
-      { icon: Shield, title: 'Privacy Policy', sub: 'How your data is handled', path: '/privacy', bg: 'bg-emerald-50', color: 'text-emerald-600' },
-      { icon: CreditCard, title: 'Refund Policy', sub: 'Refunds and cancellations', path: '/refund', bg: 'bg-indigo-50', color: 'text-indigo-600' },
+      { icon: FileText, title: 'Terms & Conditions', sub: 'Read service terms', path: '/terms', bg: 'bg-amber-50', color: 'text-amber-600' },
+      { icon: Shield, title: 'Privacy Policy', sub: 'How your data is handled', path: '/privacy', bg: 'bg-amber-50', color: 'text-amber-600' },
+      { icon: CreditCard, title: 'Refund Policy', sub: 'Refunds and cancellations', path: '/refund', bg: 'bg-amber-50', color: 'text-amber-600' },
     ]
   }
 ];
@@ -210,24 +210,24 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 max-w-lg md:max-w-none w-full mx-auto md:mx-0 pb-28 md:pt-24 relative overflow-x-hidden font-['Inter']">
+    <div className="min-h-screen bg-slate-50 max-w-lg md:max-w-none w-full mx-auto md:mx-0 pb-28 md:pt-24 relative overflow-x-hidden font-inter">
       {/* Premium Header Background */}
-      <div className="absolute top-0 inset-x-0 h-80 bg-slate-900 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/30 via-slate-900 to-slate-900" />
-        <div className="absolute top-[-20%] right-[-10%] h-64 w-64 bg-indigo-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-[-5%] h-40 w-40 bg-emerald-500/5 rounded-full blur-2xl" />
+      <div className="absolute top-0 inset-x-0 h-80 bg-[#FFC107] overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-400/30 via-[#FFC107] to-amber-600/20" />
+        <div className="absolute top-[-20%] right-[-10%] h-64 w-64 bg-white/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-[-5%] h-40 w-40 bg-white/10 rounded-full blur-2xl" />
       </div>
 
       <div className="relative z-10">
         {/* Header Section */}
         <div className="px-6 pt-12 pb-8">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="font-['Outfit'] text-2xl font-extrabold text-white tracking-tight">Profile</h1>
+            <h1 className="font-outfit text-2xl font-extrabold text-slate-950 tracking-tight">Profile</h1>
             <MotionButton
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/taxi/user/profile/settings')}
-              className="h-10 w-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white"
+              className="h-10 w-10 rounded-xl bg-slate-950/10 backdrop-blur-md border border-slate-950/10 flex items-center justify-center text-slate-950"
             >
               <Settings size={20} />
             </MotionButton>
@@ -257,7 +257,7 @@ const Profile = () => {
                 </div>
               </div>
               <div className="flex-1 min-w-0">
-                <h2 className="font-['Outfit'] text-[22px] font-extrabold text-slate-900 truncate capitalize leading-tight">
+                <h2 className="font-outfit text-[22px] font-extrabold text-slate-900 truncate capitalize leading-tight">
                   {profile.name}
                 </h2>
                 <p className="text-[14px] font-bold text-slate-400 mt-1 flex items-center gap-1.5">
@@ -271,18 +271,18 @@ const Profile = () => {
             <div className="grid grid-cols-3 gap-3 mt-8 pt-6 border-t border-slate-50">
               <div className="text-center">
                 <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-300">Total Trips</p>
-                <p className="font-['Outfit'] text-[18px] font-extrabold text-slate-900 mt-1">{profile.stats.trips}</p>
+                <p className="font-outfit text-[18px] font-extrabold text-slate-900 mt-1">{profile.stats.trips}</p>
               </div>
               <div className="text-center border-x border-slate-50">
                 <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-300">Rating</p>
                 <div className="flex items-center justify-center gap-1 mt-1">
                   <Star size={14} className="text-amber-400 fill-amber-400" />
-                  <p className="font-['Outfit'] text-[18px] font-extrabold text-slate-900">{profile.stats.rating}</p>
+                  <p className="font-outfit text-[18px] font-extrabold text-slate-900">{profile.stats.rating}</p>
                 </div>
               </div>
               <div className="text-center">
                 <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-300">Credits</p>
-                <p className="font-['Outfit'] text-[18px] font-extrabold text-indigo-600 mt-1">₹{profile.stats.wallet}</p>
+                <p className="font-outfit text-[18px] font-extrabold text-amber-600 mt-1">₹{profile.stats.wallet}</p>
               </div>
             </div>
           </MotionDiv>
@@ -297,7 +297,7 @@ const Profile = () => {
         >
           {menuSections.map((section, sIdx) => (
             <motion.div key={sIdx} variants={itemVariants} className="space-y-4">
-              <h3 className="font-['Outfit'] text-[12px] font-black text-slate-400 uppercase tracking-[0.25em] ml-1">
+              <h3 className="font-outfit text-[12px] font-black text-slate-400 uppercase tracking-[0.25em] ml-1">
                 {section.title}
               </h3>
               
@@ -343,7 +343,7 @@ const Profile = () => {
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleLogout}
-              className="w-full h-16 rounded-[24px] bg-slate-900 text-white flex items-center justify-center gap-3 text-[15px] font-black shadow-xl shadow-slate-900/10"
+              className="w-full h-16 rounded-[24px] bg-[#FFC107] text-slate-950 flex items-center justify-center gap-3 text-[15px] font-black shadow-xl shadow-amber-500/10"
             >
               <LogOut size={18} strokeWidth={3} />
               Sign Out Securely
