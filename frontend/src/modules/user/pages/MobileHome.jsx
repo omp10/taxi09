@@ -465,7 +465,7 @@ const MobileHome = () => {
             {/* Card 1: Cars (Self Drive) */}
             <div
               onClick={() => navigate('/taxi/user/rental/type')}
-              className="bg-[#F8FAFC] border border-slate-100 rounded-3xl p-5 flex flex-col justify-between hover:shadow-md transition-shadow cursor-pointer h-[265px] relative group"
+              className="bg-[#F8FAFC] border border-slate-100 rounded-3xl p-5 flex flex-col justify-between hover:shadow-md transition-shadow cursor-pointer h-[295px] relative group"
             >
               {/* Top steering wheel icon badge */}
               <div className="w-9 h-9 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 shadow-sm shrink-0">
@@ -503,7 +503,7 @@ const MobileHome = () => {
             {/* Card 2: Cars With Driver */}
             <div
               onClick={() => navigate('/taxi/user/ride/select-location')}
-              className="bg-[#FFFDF9] border border-amber-100/50 rounded-3xl p-5 flex flex-col justify-between hover:shadow-md transition-shadow cursor-pointer h-[265px] relative group"
+              className="bg-[#FFFDF9] border border-amber-100/50 rounded-3xl p-5 flex flex-col justify-between hover:shadow-md transition-shadow cursor-pointer h-[295px] relative group"
             >
               {/* Top person icon badge */}
               <div className="w-9 h-9 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 shadow-sm shrink-0">
@@ -540,7 +540,7 @@ const MobileHome = () => {
           {/* Full Width Bikes Card */}
           <div
             onClick={() => navigate('/taxi/user/rental/bike-categories')}
-            className="bg-[#FFFDF9] border border-amber-100/50 rounded-3xl p-5 flex items-center justify-between hover:shadow-md transition-shadow cursor-pointer mt-4 group overflow-hidden relative h-[160px]"
+            className="bg-[#FFFDF9] border border-amber-100/50 rounded-3xl p-5 flex items-center justify-between hover:shadow-md transition-shadow cursor-pointer mt-8 group overflow-hidden relative h-[160px]"
           >
             <div className="flex flex-col justify-between h-full z-10 w-[55%]">
               <div>
