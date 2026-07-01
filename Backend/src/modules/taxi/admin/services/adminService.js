@@ -1217,7 +1217,7 @@ const normalizePoolingPayload = (payload = {}, existing = {}) => ({
   ),
 });
 
-const serializeRentalVehicleType = (item = {}) => ({
+export const serializeRentalVehicleType = (item = {}) => ({
   id: String(item._id || item.id || ''),
   _id: item._id,
   transport_type: item.transport_type || 'rental',
@@ -7996,7 +7996,7 @@ export const getDashboardData = async () => {
         select: 'name service_location_id',
       })
       .populate('service_location_id', 'name service_location_name country')
-      .sort({ createdAt: -1 })
+      .sort({ _id: -1 })
       .lean();
 
     const storeIds = stores.map((store) => store._id).filter(Boolean);
@@ -8607,12 +8607,7 @@ export const updateBusService = async (id, payload = {}, options = {}) => {
   };
 
   export const listRentalVehicleTypes = async () => {
-    await RentalVehicleType.updateMany(
-      { poolingEnabled: { $exists: false } },
-      { $set: { poolingEnabled: false } },
-    );
-
-    const items = await RentalVehicleType.find().sort({ createdAt: -1 }).lean();
+    const items = await RentalVehicleType.find().sort({ _id: -1 }).lean();
     return items.map((item) => serializeRentalVehicleType(item));
   };
 
@@ -9252,7 +9247,7 @@ export const getRentalTrackingDashboard = async () => {
   };
 
   export const listRentalVehicleSubcategories = async () => {
-    const items = await RentalVehicleSubcategory.find().sort({ createdAt: -1 }).lean();
+    const items = await RentalVehicleSubcategory.find().sort({ _id: -1 }).lean();
     const results = items.map(serializeRentalVehicleSubcategory);
 
     return {
