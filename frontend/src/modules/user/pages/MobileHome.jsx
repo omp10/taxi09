@@ -472,7 +472,7 @@ const MobileHome = () => {
                   <h3 className="text-sm font-black text-slate-800 leading-tight">Cars (Self Drive)</h3>
                   <p className="text-[11px] font-bold text-slate-400 leading-tight mt-0.5">Drive yourself, on your terms.</p>
                 </div>
-                <div className="w-full bg-[#f6ff00] text-slate-950 text-[12px] font-black px-4 py-3 rounded-xl flex items-center justify-between group-hover:bg-[#f6ff00] transition-colors">
+                <div className="w-full bg-[#ffdd00] text-slate-950 text-[12px] font-black px-4 py-3 rounded-xl flex items-center justify-between group-hover:bg-[#f6ff00] transition-colors">
                   <span>Book Now</span>
                   <ArrowRight size={16} className="text-slate-950 shrink-0 stroke-[3]" />
                 </div>
@@ -482,7 +482,7 @@ const MobileHome = () => {
             {/* Card 2: Cars With Driver */}
             <div
               onClick={() => navigate('/taxi/user/ride/select-location')}
-              className="bg-[#f6ff00] border border-amber-100/50 rounded-3xl p-4 flex flex-col justify-between hover:shadow-md transition-shadow cursor-pointer h-[295px] relative group"
+              className=" border border-amber-100/50 rounded-3xl p-4 flex flex-col justify-between hover:shadow-md transition-shadow cursor-pointer h-[295px] relative group"
             >
               {/* Top person icon badge */}
 
