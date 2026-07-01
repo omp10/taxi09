@@ -323,7 +323,7 @@ const MobileHome = () => {
   const userInitials = userInfo ? getInitials(userInfo.name) : 'User';
 
   return (
-    <div className="premium-theme min-h-screen bg-white text-slate-900 font-sans pb-32 max-w-lg mx-auto relative overflow-x-hidden no-scrollbar border-x border-slate-200 shadow-2xl flex flex-col justify-between">
+    <div className="premium-theme min-h-screen bg-white text-slate-900 font-sans pb-0 max-w-lg mx-auto relative overflow-x-hidden no-scrollbar border-x border-slate-200 shadow-2xl flex flex-col justify-between">
 
       {/* Top App Bar */}
       <header className="bg-[#FFC107] flex items-center justify-between px-6 h-16 w-full sticky top-0 z-50 select-none border-b border-amber-500/20 shadow-sm">
@@ -362,7 +362,7 @@ const MobileHome = () => {
       </header>
 
       {/* Main Body Content */}
-      <main className="flex-1 pb-16">
+      <main className="flex-1 pb-24">
 
         {/* Active scheduled ride or rental alerts (if any exist) */}
         {isScheduledAcceptedRide && (
@@ -452,18 +452,10 @@ const MobileHome = () => {
             {/* Card 1: Cars (Self Drive) */}
             <div
               onClick={() => navigate('/taxi/user/rental/type')}
-              className="bg-[#F8FAFC] border border-slate-100 rounded-3xl p-5 flex flex-col justify-between hover:shadow-md transition-shadow cursor-pointer h-[295px] relative group"
+              className="bg-[#F8FAFC] border border-slate-100 rounded-3xl p-4 flex flex-col justify-between hover:shadow-md transition-shadow cursor-pointer h-[295px] relative group"
             >
               {/* Top steering wheel icon badge */}
-              <div className="w-9 h-9 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 shadow-sm shrink-0">
-                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="text-amber-600">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <circle cx="12" cy="12" r="3"></circle>
-                  <line x1="12" y1="2" x2="12" y2="9"></line>
-                  <line x1="5.64" y1="18.36" x2="9.88" y2="14.12"></line>
-                  <line x1="18.36" y1="18.36" x2="14.12" y2="14.12"></line>
-                </svg>
-              </div>
+
 
               {/* Car Image */}
               <div className="my-auto flex items-center justify-center h-[100px]">
@@ -477,7 +469,7 @@ const MobileHome = () => {
               {/* Content & Action */}
               <div className="space-y-3 mt-auto">
                 <div>
-                  <h3 className="text-[15.5px] font-black text-slate-800 leading-tight">Cars (Self Drive)</h3>
+                  <h3 className="text-sm font-black text-slate-800 leading-tight">Cars (Self Drive)</h3>
                   <p className="text-[11px] font-bold text-slate-400 leading-tight mt-0.5">Drive yourself, on your terms.</p>
                 </div>
                 <div className="w-full bg-[#f6ff00] text-slate-950 text-[12px] font-black px-4 py-3 rounded-xl flex items-center justify-between group-hover:bg-[#f6ff00] transition-colors">
@@ -490,15 +482,10 @@ const MobileHome = () => {
             {/* Card 2: Cars With Driver */}
             <div
               onClick={() => navigate('/taxi/user/ride/select-location')}
-              className="bg-[#f6ff00] border border-amber-100/50 rounded-3xl p-5 flex flex-col justify-between hover:shadow-md transition-shadow cursor-pointer h-[295px] relative group"
+              className="bg-[#f6ff00] border border-amber-100/50 rounded-3xl p-4 flex flex-col justify-between hover:shadow-md transition-shadow cursor-pointer h-[295px] relative group"
             >
               {/* Top person icon badge */}
-              <div className="w-9 h-9 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 shadow-sm shrink-0">
-                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="text-amber-600">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-              </div>
+
 
               {/* Car Image */}
               <div className="my-auto flex items-center justify-center h-[100px]">
@@ -512,7 +499,7 @@ const MobileHome = () => {
               {/* Content & Action */}
               <div className="space-y-3 mt-auto">
                 <div>
-                  <h3 className="text-[15.5px] font-black text-slate-800 leading-tight">Cars With Driver</h3>
+                  <h3 className="text-sm font-black text-slate-800 leading-tight">Cars With Driver</h3>
                   <p className="text-[11px] font-bold text-slate-400 leading-tight mt-0.5">Sit back & relax, we drive.</p>
                 </div>
                 <div className="w-full bg-[#ffdd00] text-slate-950 text-[12px] font-black px-4 py-3 rounded-xl flex items-center justify-between group-hover:bg-[#FFA000] transition-colors">
@@ -529,21 +516,21 @@ const MobileHome = () => {
             onClick={() => navigate('/taxi/user/rental/bike-categories')}
             className="bg-[#FFFDF9] border border-amber-100/50 rounded-3xl p-5 flex items-center justify-between hover:shadow-md transition-shadow cursor-pointer mt-8 group overflow-hidden relative h-[160px]"
           >
-            <div className="flex flex-col justify-between h-full z-10 w-[55%]">
+            <div className="flex flex-col justify-between h-full z-10 w-[70%]">
               <div>
                 <h3 className="text-[21px] font-black text-slate-800 leading-tight">Bikes</h3>
                 <p className="text-[12px] font-bold text-slate-500 leading-tight mt-1">Quick rides. Beat the traffic.</p>
               </div>
 
               <button
-                className="bg-[#FFC107] text-slate-950 text-[12px] font-black uppercase tracking-wider px-5 py-3 rounded-xl w-fit flex items-center gap-1 hover:bg-[#FFB300] transition-colors cursor-pointer active:scale-95 transition-transform animate-pulse"
+                className="bg-[#FFC107] text-slate-950 text-[12px] font-black uppercase tracking-wider px-5 py-3 rounded-xl w-fit flex items-center gap-1"
               >
                 Book Now <ArrowRight size={14} className="shrink-0 stroke-[3]" />
               </button>
             </div>
 
             {/* Bike Image on the right */}
-            <div className="w-[45%] h-full flex items-center justify-center relative">
+            <div className="w-[30%] h-full flex items-center justify-center relative">
               <img
                 src={rentalBikeImg}
                 alt="Bikes"
