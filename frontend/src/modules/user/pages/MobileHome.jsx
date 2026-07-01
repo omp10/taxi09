@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CalendarClock, ChevronRight, Clock3, MapPin, ShieldCheck, User, Menu, Bell, ArrowRight, Calendar, History, Compass, GraduationCap, Car, UserCheck } from 'lucide-react';
+import { CalendarClock, ChevronRight, Clock3, MapPin, ShieldCheck, User, Menu, Bell, ArrowRight, Calendar, History, Compass, GraduationCap, Car, UserCheck, Briefcase, Plane, Truck } from 'lucide-react';
 import carIcon from '../../../assets/icons/car.png';
 import bikeIcon from '../../../assets/icons/bike.png';
 import autoIcon from '../../../assets/icons/auto.png';
@@ -452,29 +452,52 @@ const MobileHome = () => {
             {/* Card 1: Cars (Self Drive) */}
             <div
               onClick={() => navigate('/taxi/user/rental/type')}
-              className="bg-[#F8FAFC] border border-slate-100 rounded-3xl p-4 flex flex-col justify-between hover:shadow-md transition-shadow cursor-pointer h-[295px] relative group"
+              className="relative overflow-hidden rounded-[24px] p-3.5 flex flex-col justify-between hover:shadow-lg transition-all cursor-pointer h-[260px] group bg-gradient-to-br from-[#e6f0fa] via-[#e8ebff] to-[#eeddf7] shadow-sm border border-white/60"
             >
-              {/* Top steering wheel icon badge */}
+              {/* Decorative Curve Background */}
+              <div className="absolute top-[-25%] left-[-25%] w-[150%] h-[75%] bg-gradient-to-b from-white/70 to-white/0 rounded-[100%] pointer-events-none" />
 
+              {/* Dots Matrix */}
+              <div className="absolute top-4 right-4 grid grid-cols-4 gap-1 opacity-[0.15] pointer-events-none">
+                 {[...Array(12)].map((_, i) => (
+                   <div key={i} className="w-1 h-1 rounded-full bg-[#7c5bfa]" />
+                 ))}
+              </div>
 
               {/* Car Image */}
-              <div className="my-auto flex items-center justify-center h-[100px]">
+              <div className="relative z-10 flex items-center justify-center h-[80px] mt-1 mb-2">
                 <img
                   src={rentalCarImg}
                   alt="Cars (Self Drive)"
-                  className="h-[90px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                  className="h-[75px] w-auto object-contain scale-[1.35] transform-gpu transition-transform duration-300 group-hover:scale-[1.45] drop-shadow-lg"
                 />
               </div>
 
-              {/* Content & Action */}
-              <div className="space-y-3 mt-auto">
-                <div>
-                  <h3 className="text-sm font-black text-slate-800 leading-tight">Cars (Self Drive)</h3>
-                  <p className="text-[11px] font-bold text-slate-400 leading-tight mt-0.5">Drive yourself, on your terms.</p>
-                </div>
-                <div className="w-full bg-[#f6ff00] text-slate-950 text-[12px] font-black px-4 py-3 rounded-xl flex items-center justify-between group-hover:bg-[#f6ff00] transition-colors">
-                  <span>Book Now</span>
-                  <ArrowRight size={16} className="text-slate-950 shrink-0 stroke-[3]" />
+              {/* Icon Badge */}
+              <div className="relative z-10 w-9 h-9 rounded-[14px] bg-white/60 backdrop-blur-md shadow-sm border border-white/80 flex items-center justify-center mb-2">
+                 <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#598aff] to-[#7c5bfa] flex items-center justify-center shadow-sm">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <circle cx="12" cy="12" r="3" />
+                      <path d="M3.5 12h5.5" />
+                      <path d="M15 12h5.5" />
+                      <path d="M12 15v6.5" />
+                    </svg>
+                 </div>
+              </div>
+
+              {/* Text Content */}
+              <div className="relative z-10 mb-2">
+                <h3 className="text-[15px] font-black text-slate-900 tracking-tight leading-none mb-1">Cars (Self Drive)</h3>
+                <div className="w-6 h-[3px] bg-gradient-to-r from-[#598aff] to-[#7c5bfa] rounded-full mb-1.5"></div>
+                <p className="text-[11px] font-medium text-slate-600 leading-snug">Drive yourself, on<br/>your terms.</p>
+              </div>
+
+              {/* Action Button */}
+              <div className="relative z-10 w-full bg-gradient-to-r from-[#7c5bfa] to-[#598aff] text-white text-[12px] font-bold px-1.5 py-1 rounded-full flex items-center justify-between group-hover:shadow-md transition-all mt-auto pl-3.5">
+                <span>Book Now</span>
+                <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-sm">
+                  <ArrowRight size={14} className="text-[#598aff] shrink-0 stroke-[3]" />
                 </div>
               </div>
             </div>
@@ -482,29 +505,55 @@ const MobileHome = () => {
             {/* Card 2: Cars With Driver */}
             <div
               onClick={() => navigate('/taxi/user/ride/select-location')}
-              className="bg-[#f6ff00] border border-amber-100/50 rounded-3xl p-4 flex flex-col justify-between hover:shadow-md transition-shadow cursor-pointer h-[295px] relative group"
+              className="relative overflow-hidden rounded-[24px] p-3.5 flex flex-col justify-between hover:shadow-lg transition-all cursor-pointer h-[260px] group bg-gradient-to-br from-[#ffe866] via-[#ffcc20] to-[#ff9900] shadow-sm border border-white/40"
             >
-              {/* Top person icon badge */}
+              {/* Decorative Curve Background */}
+              <div className="absolute top-[-25%] left-[-25%] w-[150%] h-[75%] bg-gradient-to-b from-white/60 to-white/0 rounded-[100%] pointer-events-none" />
 
+              {/* Dots Matrix */}
+              <div className="absolute top-4 right-4 grid grid-cols-4 gap-1 opacity-[0.25] pointer-events-none">
+                 {[...Array(12)].map((_, i) => (
+                   <div key={i} className="w-1 h-1 rounded-full bg-orange-900" />
+                 ))}
+              </div>
 
               {/* Car Image */}
-              <div className="my-auto flex items-center justify-center h-[100px]">
+              <div className="relative z-10 flex items-center justify-center h-[80px] mt-1 mb-2">
                 <img
                   src={yellowCarImg}
                   alt="Cars With Driver"
-                  className="h-[90px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                  className="h-[75px] w-auto object-contain scale-[1.35] transform-gpu transition-transform duration-300 group-hover:scale-[1.45] drop-shadow-lg"
                 />
               </div>
 
-              {/* Content & Action */}
-              <div className="space-y-3 mt-auto">
-                <div>
-                  <h3 className="text-sm font-black text-slate-800 leading-tight">Cars With Driver</h3>
-                  <p className="text-[11px] font-bold text-slate-400 leading-tight mt-0.5">Sit back & relax, we drive.</p>
-                </div>
-                <div className="w-full bg-[#ffdd00] text-slate-950 text-[12px] font-black px-4 py-3 rounded-xl flex items-center justify-between group-hover:bg-[#FFA000] transition-colors">
-                  <span>Book Now</span>
-                  <ArrowRight size={16} className="text-slate-950 shrink-0 stroke-[3]" />
+              {/* Icon Badge */}
+              <div className="relative z-10 w-9 h-9 rounded-[14px] bg-white/50 backdrop-blur-md shadow-sm border border-white/60 flex items-center justify-center mb-2">
+                 <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#ffcc20] to-[#ff8c00] flex items-center justify-center shadow-sm">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="11" cy="6" r="2.5" />
+                      <path d="M11 8.5v6" />
+                      <path d="M11 14.5l-3 4" />
+                      <path d="M11 14.5l3 4" />
+                      <path d="M11 10.5l4-1" />
+                      <path d="M6 20V9" />
+                      <path d="M6 16h3" />
+                      <circle cx="17" cy="9" r="2" />
+                    </svg>
+                 </div>
+              </div>
+
+              {/* Text Content */}
+              <div className="relative z-10 mb-2">
+                <h3 className="text-[15px] font-black text-slate-900 tracking-tight leading-none mb-1">Cars With Driver</h3>
+                <div className="w-6 h-[3px] bg-gradient-to-r from-[#ffcc20] to-[#ff8c00] rounded-full mb-1.5"></div>
+                <p className="text-[11px] font-medium text-slate-800/80 leading-snug">Sit back & relax,<br/>we drive.</p>
+              </div>
+
+              {/* Action Button */}
+              <div className="relative z-10 w-full bg-gradient-to-r from-[#ff8c00] to-[#ff6600] text-white text-[12px] font-bold px-1.5 py-1 rounded-full flex items-center justify-between group-hover:shadow-md transition-all mt-auto pl-3.5">
+                <span>Book Now</span>
+                <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-sm">
+                  <ArrowRight size={14} className="text-[#ff8c00] shrink-0 stroke-[3]" />
                 </div>
               </div>
             </div>
@@ -545,60 +594,121 @@ const MobileHome = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[18px] font-black text-slate-800 tracking-tight">More Services</h2>
           </div>
+          
           <div className="grid grid-cols-3 gap-3">
 
             {/* Monthly Subscription */}
             <button
               onClick={() => navigate('/taxi/user/profile/subscriptions')}
-              className="bg-slate-50 hover:bg-amber-50 hover:border-amber-200 group transition-all duration-200 rounded-2xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 border border-slate-100 cursor-pointer active:scale-95 shadow-sm"
+              className="relative bg-white rounded-2xl p-2.5 pt-3 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[115px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
             >
-              <Calendar className="text-[#FFC107] w-6 h-6 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-black text-slate-700 tracking-tight leading-tight">Monthly Subscription</span>
+              <div className="w-full flex justify-center mt-1">
+                <div className="relative w-[40px] h-[18px]">
+                   <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
+                   <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
+                   <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
+                      <Calendar size={28} color="#FFC107" strokeWidth={2.2} />
+                   </div>
+                </div>
+              </div>
+              <div className="w-full mt-auto mb-1 flex flex-col items-center">
+                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Rental<br/>Booking</span>
+              </div>
             </button>
 
             {/* My Bookings */}
             <button
               onClick={() => navigate('/taxi/user/activity')}
-              className="bg-slate-50 hover:bg-amber-50 hover:border-amber-200 group transition-all duration-200 rounded-2xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 border border-slate-100 cursor-pointer active:scale-95 shadow-sm"
+              className="relative bg-white rounded-2xl p-2.5 pt-3 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[115px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
             >
-              <History className="text-[#FFC107] w-6 h-6 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-black text-slate-700 tracking-tight leading-tight">My Bookings</span>
+              <div className="w-full flex justify-center mt-1">
+                <div className="relative w-[40px] h-[18px]">
+                   <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
+                   <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
+                   <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
+                      <MapPin size={28} color="#FFC107" strokeWidth={2.5} />
+                   </div>
+                </div>
+              </div>
+              <div className="w-full mt-auto mb-1 flex flex-col items-center">
+                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Ride<br/>Booking</span>
+              </div>
             </button>
 
             {/* Travel Packages */}
             <button
               onClick={() => navigate('/taxi/user/cab/spiritual')}
-              className="bg-slate-50 hover:bg-amber-50 hover:border-amber-200 group transition-all duration-200 rounded-2xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 border border-slate-100 cursor-pointer active:scale-95 shadow-sm"
+              className="relative bg-white rounded-2xl p-2.5 pt-3 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[115px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
             >
-              <Compass className="text-[#FFC107] w-6 h-6 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-black text-slate-700 tracking-tight leading-tight">Travel Packages</span>
+              <div className="w-full flex justify-center mt-1">
+                <div className="relative w-[40px] h-[18px]">
+                   <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
+                   <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
+                   <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
+                      <Truck size={28} color="#FFC107" strokeWidth={2.2} />
+                   </div>
+                </div>
+              </div>
+              <div className="w-full mt-auto mb-1 flex flex-col items-center">
+                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Porter</span>
+              </div>
             </button>
 
             {/* Internship Program */}
             <button
               onClick={() => navigate('/taxi/user/onboarding')}
-              className="bg-slate-50 hover:bg-amber-50 hover:border-amber-200 group transition-all duration-200 rounded-2xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 border border-slate-100 cursor-pointer active:scale-95 shadow-sm"
+              className="relative bg-white rounded-2xl p-2.5 pt-3 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[115px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
             >
-              <GraduationCap className="text-[#FFC107] w-6 h-6 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-black text-slate-700 tracking-tight leading-tight">Internship Program</span>
+              <div className="w-full flex justify-center mt-1">
+                <div className="relative w-[40px] h-[18px]">
+                   <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
+                   <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
+                   <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
+                      <Plane size={28} color="#FFC107" strokeWidth={2.2} />
+                   </div>
+                </div>
+              </div>
+              <div className="w-full mt-auto mb-1 flex flex-col items-center">
+                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Plane<br/>Booking</span>
+              </div>
             </button>
 
             {/* Attach Car */}
             <button
               onClick={() => navigate('/taxi/driver/login')}
-              className="bg-slate-50 hover:bg-amber-50 hover:border-amber-200 group transition-all duration-200 rounded-2xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 border border-slate-100 cursor-pointer active:scale-95 shadow-sm"
+              className="relative bg-white rounded-2xl p-2.5 pt-3 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[115px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
             >
-              <Car className="text-[#FFC107] w-6 h-6 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-black text-slate-700 tracking-tight leading-tight">Attach Car</span>
+              <div className="w-full flex justify-center mt-1">
+                <div className="relative w-[40px] h-[18px]">
+                   <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
+                   <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
+                   <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
+                      <Car size={30} color="#FFC107" fill="#FFC107" strokeWidth={1} />
+                   </div>
+                </div>
+              </div>
+              <div className="w-full mt-auto mb-1 flex flex-col items-center">
+                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Attach<br/>Car</span>
+              </div>
             </button>
 
             {/* Driver Registration */}
             <button
               onClick={() => navigate('/taxi/driver/login')}
-              className="bg-slate-50 hover:bg-amber-50 hover:border-amber-200 group transition-all duration-200 rounded-2xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 border border-slate-100 cursor-pointer active:scale-95 shadow-sm"
+              className="relative bg-white rounded-2xl p-2.5 pt-3 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[115px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
             >
-              <UserCheck className="text-[#FFC107] w-6 h-6 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-black text-slate-700 tracking-tight leading-tight">Driver Registration</span>
+              <div className="w-full flex justify-center mt-1">
+                <div className="relative w-[40px] h-[18px]">
+                   <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
+                   <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
+                   <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
+                      <UserCheck size={30} color="#FFC107" fill="#FFC107" strokeWidth={1} />
+                   </div>
+                </div>
+              </div>
+              <div className="w-full mt-auto mb-1 flex flex-col items-center">
+                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Driver<br/>Registration</span>
+              </div>
             </button>
 
           </div>
