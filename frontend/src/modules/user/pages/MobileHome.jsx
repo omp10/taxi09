@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CalendarClock, ChevronRight, Clock3, MapPin, ShieldCheck, User } from 'lucide-react';
+import { CalendarClock, ChevronRight, Clock3, MapPin, ShieldCheck, User, Menu, Bell, ArrowRight, Calendar, History, Compass, GraduationCap, Car, UserCheck } from 'lucide-react';
 import carIcon from '../../../assets/icons/car.png';
 import bikeIcon from '../../../assets/icons/bike.png';
 import autoIcon from '../../../assets/icons/auto.png';
@@ -332,7 +332,7 @@ const MobileHome = () => {
             onClick={() => navigate('/taxi/user/profile')}
             className="flex items-center justify-center text-slate-950 cursor-pointer active:scale-95 transition-transform"
           >
-            <span className="material-symbols-outlined text-2xl font-bold">menu</span>
+            <Menu size={24} className="text-slate-950 stroke-[2.5]" />
           </button>
 
           <h1
@@ -348,7 +348,7 @@ const MobileHome = () => {
             onClick={() => navigate('/taxi/user/notifications')}
             className="relative flex items-center justify-center text-slate-950 cursor-pointer active:scale-95 transition-transform"
           >
-            <span className="material-symbols-outlined text-2xl">notifications</span>
+            <Bell size={24} className="text-slate-950" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white" />
           </button>
 
@@ -480,9 +480,9 @@ const MobileHome = () => {
                   <h3 className="text-[15.5px] font-black text-slate-800 leading-tight">Cars (Self Drive)</h3>
                   <p className="text-[11px] font-bold text-slate-400 leading-tight mt-0.5">Drive yourself, on your terms.</p>
                 </div>
-                <div className="w-full bg-[#FFF8E1] text-[#b27600] text-[12px] font-black px-4 py-3 rounded-xl flex items-center justify-between group-hover:bg-[#ffecb3] transition-colors">
+                <div className="w-full bg-[#f6ff00] text-slate-950 text-[12px] font-black px-4 py-3 rounded-xl flex items-center justify-between group-hover:bg-[#f6ff00] transition-colors">
                   <span>Book Now</span>
-                  <span className="material-symbols-outlined text-sm font-black">arrow_forward</span>
+                  <ArrowRight size={16} className="text-slate-950 shrink-0 stroke-[3]" />
                 </div>
               </div>
             </div>
@@ -490,7 +490,7 @@ const MobileHome = () => {
             {/* Card 2: Cars With Driver */}
             <div
               onClick={() => navigate('/taxi/user/ride/select-location')}
-              className="bg-[#FFFDF9] border border-amber-100/50 rounded-3xl p-5 flex flex-col justify-between hover:shadow-md transition-shadow cursor-pointer h-[295px] relative group"
+              className="bg-[#f6ff00] border border-amber-100/50 rounded-3xl p-5 flex flex-col justify-between hover:shadow-md transition-shadow cursor-pointer h-[295px] relative group"
             >
               {/* Top person icon badge */}
               <div className="w-9 h-9 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 shadow-sm shrink-0">
@@ -515,9 +515,9 @@ const MobileHome = () => {
                   <h3 className="text-[15.5px] font-black text-slate-800 leading-tight">Cars With Driver</h3>
                   <p className="text-[11px] font-bold text-slate-400 leading-tight mt-0.5">Sit back & relax, we drive.</p>
                 </div>
-                <div className="w-full bg-[#FFF8E1] text-[#b27600] text-[12px] font-black px-4 py-3 rounded-xl flex items-center justify-between group-hover:bg-[#ffecb3] transition-colors">
+                <div className="w-full bg-[#ffdd00] text-slate-950 text-[12px] font-black px-4 py-3 rounded-xl flex items-center justify-between group-hover:bg-[#FFA000] transition-colors">
                   <span>Book Now</span>
-                  <span className="material-symbols-outlined text-sm font-black">arrow_forward</span>
+                  <ArrowRight size={16} className="text-slate-950 shrink-0 stroke-[3]" />
                 </div>
               </div>
             </div>
@@ -538,7 +538,7 @@ const MobileHome = () => {
               <button
                 className="bg-[#FFC107] text-slate-950 text-[12px] font-black uppercase tracking-wider px-5 py-3 rounded-xl w-fit flex items-center gap-1 hover:bg-[#FFB300] transition-colors cursor-pointer active:scale-95 transition-transform animate-pulse"
               >
-                Book Now <span className="material-symbols-outlined text-sm font-black">arrow_forward</span>
+                Book Now <ArrowRight size={14} className="shrink-0 stroke-[3]" />
               </button>
             </div>
 
@@ -565,7 +565,7 @@ const MobileHome = () => {
               onClick={() => navigate('/taxi/user/profile/subscriptions')}
               className="bg-slate-50 hover:bg-amber-50 hover:border-amber-200 group transition-all duration-200 rounded-2xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 border border-slate-100 cursor-pointer active:scale-95 shadow-sm"
             >
-              <span className="material-symbols-outlined text-[#FFC107] text-2xl group-hover:scale-110 transition-transform">calendar_month</span>
+              <Calendar className="text-[#FFC107] w-6 h-6 group-hover:scale-110 transition-transform" />
               <span className="text-[10px] font-black text-slate-700 tracking-tight leading-tight">Monthly Subscription</span>
             </button>
 
@@ -574,7 +574,7 @@ const MobileHome = () => {
               onClick={() => navigate('/taxi/user/activity')}
               className="bg-slate-50 hover:bg-amber-50 hover:border-amber-200 group transition-all duration-200 rounded-2xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 border border-slate-100 cursor-pointer active:scale-95 shadow-sm"
             >
-              <span className="material-symbols-outlined text-[#FFC107] text-2xl group-hover:scale-110 transition-transform">history_edu</span>
+              <History className="text-[#FFC107] w-6 h-6 group-hover:scale-110 transition-transform" />
               <span className="text-[10px] font-black text-slate-700 tracking-tight leading-tight">My Bookings</span>
             </button>
 
@@ -583,7 +583,7 @@ const MobileHome = () => {
               onClick={() => navigate('/taxi/user/cab/spiritual')}
               className="bg-slate-50 hover:bg-amber-50 hover:border-amber-200 group transition-all duration-200 rounded-2xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 border border-slate-100 cursor-pointer active:scale-95 shadow-sm"
             >
-              <span className="material-symbols-outlined text-[#FFC107] text-2xl group-hover:scale-110 transition-transform">travel_explore</span>
+              <Compass className="text-[#FFC107] w-6 h-6 group-hover:scale-110 transition-transform" />
               <span className="text-[10px] font-black text-slate-700 tracking-tight leading-tight">Travel Packages</span>
             </button>
 
@@ -592,7 +592,7 @@ const MobileHome = () => {
               onClick={() => navigate('/taxi/user/onboarding')}
               className="bg-slate-50 hover:bg-amber-50 hover:border-amber-200 group transition-all duration-200 rounded-2xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 border border-slate-100 cursor-pointer active:scale-95 shadow-sm"
             >
-              <span className="material-symbols-outlined text-[#FFC107] text-2xl group-hover:scale-110 transition-transform">school</span>
+              <GraduationCap className="text-[#FFC107] w-6 h-6 group-hover:scale-110 transition-transform" />
               <span className="text-[10px] font-black text-slate-700 tracking-tight leading-tight">Internship Program</span>
             </button>
 
@@ -601,7 +601,7 @@ const MobileHome = () => {
               onClick={() => navigate('/taxi/driver/login')}
               className="bg-slate-50 hover:bg-amber-50 hover:border-amber-200 group transition-all duration-200 rounded-2xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 border border-slate-100 cursor-pointer active:scale-95 shadow-sm"
             >
-              <span className="material-symbols-outlined text-[#FFC107] text-2xl group-hover:scale-110 transition-transform">add_to_drive</span>
+              <Car className="text-[#FFC107] w-6 h-6 group-hover:scale-110 transition-transform" />
               <span className="text-[10px] font-black text-slate-700 tracking-tight leading-tight">Attach Car</span>
             </button>
 
@@ -610,7 +610,7 @@ const MobileHome = () => {
               onClick={() => navigate('/taxi/driver/login')}
               className="bg-slate-50 hover:bg-amber-50 hover:border-amber-200 group transition-all duration-200 rounded-2xl p-3.5 flex flex-col items-center justify-center text-center gap-1.5 border border-slate-100 cursor-pointer active:scale-95 shadow-sm"
             >
-              <span className="material-symbols-outlined text-[#FFC107] text-2xl group-hover:scale-110 transition-transform">badge</span>
+              <UserCheck className="text-[#FFC107] w-6 h-6 group-hover:scale-110 transition-transform" />
               <span className="text-[10px] font-black text-slate-700 tracking-tight leading-tight">Driver Registration</span>
             </button>
 

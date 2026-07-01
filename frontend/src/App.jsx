@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import toast from 'react-hot-toast';
 import api from './shared/api/axiosInstance';
 import { socketService } from './shared/api/socket';
-import { SettingsProvider } from './shared/context/SettingsContext';
+import { SettingsProvider, useSettings } from './shared/context/SettingsContext';
 import AppAutoUpdater from './modules/shared/components/AppAutoUpdater';
 import { addRealtimeNotification } from './modules/user/utils/realtimeNotificationStore';
 import { clearLocalUserSession, getLocalUserToken } from './modules/user/services/authService';
@@ -534,16 +534,18 @@ const getResponsePayload = (response) => response?.data?.data || response?.data 
 
 const UserUpcomingRideReminderBootstrap = () => {
   const location = useLocation();
+  const settings = useSettings();
+  const isUserRoute =
+    location.pathname.startsWith('/taxi/user') ||
+    location.pathname === '/user' ||
+    location.pathname.startsWith('/ride') ||
+    location.pathname.startsWith('/pooling') ||
+    location.pathname.startsWith('/bus');
+  const hasUserToken = !!getLocalUserToken();
+  const isBusEnabled = settings?.transportRide?.enable_bus_service === '1';
 
   useEffect(() => {
-    const isUserRoute =
-      location.pathname.startsWith('/taxi/user') ||
-      location.pathname === '/user' ||
-      location.pathname.startsWith('/ride') ||
-      location.pathname.startsWith('/pooling') ||
-      location.pathname.startsWith('/bus');
-
-    if (!isUserRoute || !getLocalUserToken()) {
+    if (!isUserRoute || !hasUserToken) {
       return undefined;
     }
 
@@ -552,7 +554,9 @@ const UserUpcomingRideReminderBootstrap = () => {
     const syncReminders = async () => {
       try {
         const [busResult, poolingResult, scheduledRideResult] = await Promise.all([
-          userBusService.getMyBookings({ page: 1, limit: 20, tripState: 'upcoming' }),
+          isBusEnabled
+            ? userBusService.getMyBookings({ page: 1, limit: 20, tripState: 'upcoming' })
+            : Promise.resolve({ results: [] }),
           userService.getMyPoolingBookings(),
           api.get('/rides', {
             params: {
@@ -635,7 +639,7 @@ const UserUpcomingRideReminderBootstrap = () => {
       window.removeEventListener('focus', syncReminders);
       document.removeEventListener('visibilitychange', handleVisibilitySync);
     };
-  }, [location.pathname]);
+  }, [isUserRoute, hasUserToken, isBusEnabled]);
 
   return null;
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CalendarClock, ChevronRight, Clock3, MapPin, ShieldCheck, User } from 'lucide-react';
+import { CalendarClock, ChevronRight, Clock3, MapPin, ShieldCheck, User, Car, Bike, Calendar, History, Compass, GraduationCap, UserCheck } from 'lucide-react';
 import HeaderGreeting from '../components/HeaderGreeting';
 import ServiceGrid from '../components/ServiceGrid';
 import LocationMapSection from '../components/LocationMapSection';
@@ -841,8 +841,7 @@ maskRepeat: 'no-repeat',
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            {/* Card 1: Cars (Self Drive) */}
+                       {/* Card 1: Cars (Self Drive) */}
             <motion.div
               whileHover={{ y: -6, scale: 1.01 }}
               className="bg-white hover:bg-slate-50/50 border border-slate-200/80 hover:border-slate-300 rounded-[32px] p-6 flex flex-col justify-between transition-all cursor-pointer h-[380px] shadow-sm hover:shadow-md group relative overflow-hidden"
@@ -855,7 +854,7 @@ maskRepeat: 'no-repeat',
                 <span className="text-xs font-bold uppercase tracking-widest text-amber-700 bg-amber-500/10 px-3 py-1 rounded-full">
                   Self Drive
                 </span>
-                <span className="material-symbols-outlined text-slate-400 group-hover:text-slate-800 transition-colors">directions_car</span>
+                <Car size={20} className="text-slate-400 group-hover:text-slate-800 transition-colors" />
               </div>
               
               <div className="my-auto flex items-center justify-center h-[140px] drop-shadow-md">
@@ -892,7 +891,7 @@ maskRepeat: 'no-repeat',
                 <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 bg-emerald-500/10 px-3 py-1 rounded-full">
                   Chauffeur Driven
                 </span>
-                <span className="material-symbols-outlined text-slate-400 group-hover:text-slate-800 transition-colors">person</span>
+                <User size={20} className="text-slate-400 group-hover:text-slate-800 transition-colors" />
               </div>
               
               <div className="my-auto flex items-center justify-center h-[140px] drop-shadow-md">
@@ -929,7 +928,7 @@ maskRepeat: 'no-repeat',
                 <span className="text-xs font-bold uppercase tracking-widest text-teal-700 bg-teal-500/10 px-3 py-1 rounded-full">
                   2 Wheelers
                 </span>
-                <span className="material-symbols-outlined text-slate-400 group-hover:text-slate-800 transition-colors">motorcycle</span>
+                <Bike size={20} className="text-slate-400 group-hover:text-slate-800 transition-colors" />
               </div>
               
               <div className="my-auto flex items-center justify-center h-[140px] drop-shadow-md">
@@ -966,8 +965,7 @@ maskRepeat: 'no-repeat',
               <div className="w-2 h-6 bg-[#FFC107] rounded-full" />
               <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Additional Services</h2>
             </div>
-            
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               
               {/* Monthly Subscription */}
               <button 
@@ -975,7 +973,7 @@ maskRepeat: 'no-repeat',
                 className="bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
               >
                 <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <span className="material-symbols-outlined text-2xl">calendar_month</span>
+                  <Calendar className="w-6 h-6 text-amber-700" />
                 </div>
                 <span className="text-xs font-extrabold text-slate-700 group-hover:text-slate-900 leading-tight">Monthly Subscription</span>
               </button>
@@ -986,7 +984,7 @@ maskRepeat: 'no-repeat',
                 className="bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
               >
                 <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <span className="material-symbols-outlined text-2xl">history_edu</span>
+                  <History className="w-6 h-6 text-amber-700" />
                 </div>
                 <span className="text-xs font-extrabold text-slate-700 group-hover:text-slate-900 leading-tight">My Bookings</span>
               </button>
@@ -997,7 +995,7 @@ maskRepeat: 'no-repeat',
                 className="bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
               >
                 <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <span className="material-symbols-outlined text-2xl">travel_explore</span>
+                  <Compass className="w-6 h-6 text-amber-700" />
                 </div>
                 <span className="text-xs font-extrabold text-slate-700 group-hover:text-slate-900 leading-tight">Travel Packages</span>
               </button>
@@ -1008,7 +1006,7 @@ maskRepeat: 'no-repeat',
                 className="bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
               >
                 <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <span className="material-symbols-outlined text-2xl">school</span>
+                  <GraduationCap className="w-6 h-6 text-amber-700" />
                 </div>
                 <span className="text-xs font-extrabold text-slate-700 group-hover:text-slate-900 leading-tight">Internship Program</span>
               </button>
@@ -1019,7 +1017,7 @@ maskRepeat: 'no-repeat',
                 className="bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
               >
                 <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <span className="material-symbols-outlined text-2xl">add_to_drive</span>
+                  <Car className="w-6 h-6 text-amber-700" />
                 </div>
                 <span className="text-xs font-extrabold text-slate-700 group-hover:text-slate-900 leading-tight">Attach Car</span>
               </button>
@@ -1030,7 +1028,7 @@ maskRepeat: 'no-repeat',
                 className="bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all cursor-pointer active:scale-95 group shadow-sm h-36"
               >
                 <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <span className="material-symbols-outlined text-2xl">badge</span>
+                  <UserCheck className="w-6 h-6 text-amber-700" />
                 </div>
                 <span className="text-xs font-extrabold text-slate-700 group-hover:text-slate-900 leading-tight">Driver Registration</span>
               </button>

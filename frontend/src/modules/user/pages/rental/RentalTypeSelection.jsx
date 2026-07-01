@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ChevronRight, Car, Bike, Check } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Car, Bike, Check, ArrowRight } from 'lucide-react';
 import rentalBikeImg from '@/assets/images/rental_bike.png';
 import rentalCarImg from '@/assets/images/rental_car.png';
 
@@ -38,7 +38,7 @@ const RentalTypeSelection = () => {
             onClick={() => navigate('/taxi/user')}
             className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shadow-sm shrink-0 border border-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer"
           >
-            <span className="material-symbols-outlined text-on-surface-variant text-xl">arrow_back</span>
+            <ArrowLeft className="text-on-surface-variant text-xl" size={20} />
           </motion.button>
           <div className="min-w-0 pt-1">
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant leading-none mb-1.5">Self-drive rentals</p>
@@ -60,7 +60,7 @@ const RentalTypeSelection = () => {
               <Car size={32} className="text-primary" strokeWidth={2.5} />
             </div>
             <div className="absolute top-0 right-0 w-6 h-6 rounded-full bg-primary border-[3px] border-background flex items-center justify-center text-white">
-              <span className="material-symbols-outlined text-sm font-black">check</span>
+              <Check className="text-white" size={12} strokeWidth={3} />
             </div>
           </div>
           <h2 className="text-[20px] font-black text-on-surface tracking-tight">Select vehicle category</h2>
@@ -154,7 +154,7 @@ const RentalTypeSelection = () => {
             Explore Entire Fleet
           </span>
           <div className="w-10 h-10 flex items-center justify-end pr-1">
-            <span className="material-symbols-outlined text-xl">arrow_forward</span>
+            <ArrowRight className="text-xl" size={20} />
           </div>
         </motion.button>
       </div>

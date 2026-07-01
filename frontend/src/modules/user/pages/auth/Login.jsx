@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Phone, ChevronRight, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Phone, ChevronRight, CheckCircle2, ArrowLeft, Car, ShieldCheck, Zap } from 'lucide-react';
 import { getLocalUserToken, userAuthService } from '../../services/authService';
 import { useSettings } from '../../../../shared/context/SettingsContext';
 import loginIllustration from '../../../../assets/images/login-illustration.png';
@@ -145,7 +145,7 @@ const Login = () => {
           <div className="space-y-6">
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center shrink-0 border border-amber-500/20 text-[#d48c00]">
-                <span className="material-symbols-outlined text-2xl">directions_car</span>
+                <Car size={24} className="text-[#d48c00]" />
               </div>
               <div>
                 <h3 className="font-extrabold text-slate-800 text-base">Self-Drive & Chauffeur Rides</h3>
@@ -155,7 +155,7 @@ const Login = () => {
 
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 border border-blue-500/20 text-blue-600">
-                <span className="material-symbols-outlined text-2xl">shield</span>
+                <ShieldCheck size={24} className="text-blue-600" />
               </div>
               <div>
                 <h3 className="font-extrabold text-slate-800 text-base">24/7 Verified Security</h3>
@@ -165,7 +165,7 @@ const Login = () => {
 
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0 border border-emerald-500/20 text-emerald-600">
-                <span className="material-symbols-outlined text-2xl">electric_car</span>
+                <Zap size={24} className="text-emerald-600" />
               </div>
               <div>
                 <h3 className="font-extrabold text-slate-800 text-base">Eco-Friendly Premium Fleet</h3>
