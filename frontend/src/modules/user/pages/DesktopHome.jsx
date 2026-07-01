@@ -217,10 +217,11 @@ const DesktopHome = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [topBanners, setTopBanners] = useState([]);
   const [bottomBanners, setBottomBanners] = useState([]);
+  const [loadingBanners, setLoadingBanners] = useState(true);
   const [activeTopIndex, setActiveTopIndex] = useState(0);
   const [activeBottomIndex, setActiveBottomIndex] = useState(0);
 
-  const displayTopBanners = topBanners.length > 0 ? topBanners : [null];
+  const displayTopBanners = topBanners;
   useEffect(() => {
     if (displayTopBanners.length <= 1) return;
     const timer = setInterval(() => {
@@ -229,7 +230,7 @@ const DesktopHome = () => {
     return () => clearInterval(timer);
   }, [displayTopBanners]);
 
-  const displayBottomBanners = bottomBanners.length > 0 ? bottomBanners : [null];
+  const displayBottomBanners = bottomBanners;
   useEffect(() => {
     if (displayBottomBanners.length <= 1) return;
     const timer = setInterval(() => {
@@ -247,6 +248,7 @@ const DesktopHome = () => {
 
   useEffect(() => {
     const fetchBanners = async () => {
+      setLoadingBanners(true);
       try {
         const topRes = await api.get('/users/banners?type=top');
         const topData = unwrapApiPayload(topRes);
@@ -265,6 +267,8 @@ const DesktopHome = () => {
         }
       } catch (err) {
         console.log('Failed to fetch bottom banners in DesktopHome:', err);
+      } finally {
+        setLoadingBanners(false);
       }
     };
     fetchBanners();
@@ -775,54 +779,58 @@ maskRepeat: 'no-repeat',
         )}
 
         {/* Dynamic Promotional Banner Carousel (Top Banner) */}
-        {topBanners.length > 0 && (
-          <div className="w-full relative overflow-hidden rounded-3xl h-[280px] border border-slate-200 shadow-xl bg-slate-100">
-            {topBanners.map((banner, idx) => (
-              <div
-                key={banner?._id || idx}
-                onClick={() => {
-                  if (banner?.redirect_url) {
-                    navigate(banner.redirect_url);
-                  }
-                }}
-                className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 flex items-center px-10 md:px-16 ${banner?.redirect_url ? 'cursor-pointer' : ''}`}
-                style={{
-                  backgroundImage: `url('${resolveBannerImage(banner?.image)}')`,
-                  opacity: idx === activeTopIndex ? 1.0 : 0,
-                  zIndex: idx === activeTopIndex ? 1 : 0
-                }}
-              >
-                {banner?.title && !banner.title.startsWith('Banner 20') && (
-                  <div 
-                    onClick={(e) => e.stopPropagation()}
-                    className="relative z-10 max-w-lg bg-white/95 p-6 rounded-2xl border border-slate-200 shadow-lg backdrop-blur-md"
-                  >
-                    <h2 className="text-2xl font-black text-slate-900">{banner.title}</h2>
-                    <p className="text-xs text-slate-500 mt-2">{banner.description}</p>
-                    {banner.redirect_url && (
-                      <button
-                        onClick={() => navigate(banner.redirect_url)}
-                        className="mt-4 px-6 py-2 bg-[#FFC107] hover:bg-amber-400 text-black font-bold rounded-xl text-xs transition-colors"
-                      >
-                        Explore Now
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
-            {topBanners.length > 1 && (
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-                {topBanners.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveTopIndex(idx)}
-                    className={`h-2 rounded-full transition-all ${idx === activeTopIndex ? 'w-6 bg-[#FFC107]' : 'w-2 bg-slate-300'}`}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+        {loadingBanners ? (
+          <div className="w-full rounded-3xl h-[280px] bg-slate-200 animate-pulse border border-slate-200 shadow-xl" />
+        ) : (
+          topBanners.length > 0 && (
+            <div className="w-full relative overflow-hidden rounded-3xl h-[280px] border border-slate-200 shadow-xl bg-slate-100">
+              {topBanners.map((banner, idx) => (
+                <div
+                  key={banner?._id || idx}
+                  onClick={() => {
+                    if (banner?.redirect_url) {
+                      navigate(banner.redirect_url);
+                    }
+                  }}
+                  className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 flex items-center px-10 md:px-16 ${banner?.redirect_url ? 'cursor-pointer' : ''}`}
+                  style={{
+                    backgroundImage: `url('${resolveBannerImage(banner?.image)}')`,
+                    opacity: idx === activeTopIndex ? 1.0 : 0,
+                    zIndex: idx === activeTopIndex ? 1 : 0
+                  }}
+                >
+                  {banner?.title && !banner.title.startsWith('Banner 20') && (
+                    <div 
+                      onClick={(e) => e.stopPropagation()}
+                      className="relative z-10 max-w-lg bg-white/95 p-6 rounded-2xl border border-slate-200 shadow-lg backdrop-blur-md"
+                    >
+                      <h2 className="text-2xl font-black text-slate-900">{banner.title}</h2>
+                      <p className="text-xs text-slate-500 mt-2">{banner.description}</p>
+                      {banner.redirect_url && (
+                        <button
+                          onClick={() => navigate(banner.redirect_url)}
+                          className="mt-4 px-6 py-2 bg-[#FFC107] hover:bg-amber-400 text-black font-bold rounded-xl text-xs transition-colors"
+                        >
+                          Explore Now
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+              {topBanners.length > 1 && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                  {topBanners.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setActiveTopIndex(idx)}
+                      className={`h-2 rounded-full transition-all ${idx === activeTopIndex ? 'w-6 bg-[#FFC107]' : 'w-2 bg-slate-300'}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )
         )}
 
         {/* Primary Booking Services Grid */}
@@ -952,8 +960,8 @@ maskRepeat: 'no-repeat',
         {/* Secondary Services and Sidebar/Activity Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* More Services Grid - Column span 8 */}
-          <div className="lg:col-span-8 space-y-6">
+          {/* More Services Grid */}
+          <div className={`${loadingBanners || displayBottomBanners.length > 0 ? 'lg:col-span-8' : 'lg:col-span-12'} space-y-6`}>
             <div className="flex items-center gap-3">
               <div className="w-2 h-6 bg-[#FFC107] rounded-full" />
               <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Additional Services</h2>
@@ -1031,73 +1039,53 @@ maskRepeat: 'no-repeat',
           </div>
 
           {/* Recommended Destination Box / Featured Activity - Column span 4 */}
-          <div className="lg:col-span-4 space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-6 bg-[#FFC107] rounded-full" />
-              <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Recommended</h2>
-            </div>
+          {(loadingBanners || displayBottomBanners.length > 0) && (
+            <div className="lg:col-span-4 space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-6 bg-[#FFC107] rounded-full" />
+                <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Recommended</h2>
+              </div>
 
-            {bottomBanners.length > 0 ? (
-              <div 
-                onClick={() => {
-                  const activeBanner = bottomBanners[activeBottomIndex];
-                  if (activeBanner?.redirect_url) {
-                    navigate(activeBanner.redirect_url);
-                  } else {
-                    navigate('/taxi/user/cab/spiritual');
-                  }
-                }}
-                className="relative w-full rounded-3xl overflow-hidden aspect-[4/3] shadow-lg border border-slate-200 bg-slate-100 cursor-pointer group"
-              >
-                {bottomBanners.map((banner, idx) => (
-                  <div 
-                    key={banner?._id || idx}
-                    className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000" 
-                    style={{ 
-                      backgroundImage: `url('${resolveBannerImage(banner?.image)}')`,
-                      opacity: idx === activeBottomIndex ? 1.0 : 0,
-                      zIndex: idx === activeBottomIndex ? 1 : 0
-                    }}
-                  />
-                ))}
-                
-                {/* Overlay details */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent z-10 flex flex-col justify-end p-6 text-white">
-                  <span className="text-[10px] text-black bg-[#FFC107] w-fit px-2.5 py-1 rounded-md mb-2 font-black uppercase tracking-wider">
-                    Exclusive Package
-                  </span>
-                  <h3 className="text-xl font-black uppercase tracking-wide group-hover:text-[#FFC107] transition-colors leading-tight">
-                    {bottomBanners[activeBottomIndex]?.title || 'Explore Holy Cities'}
-                  </h3>
-                  <p className="text-xs text-gray-300 mt-1">Book professional packages with one tap.</p>
-                </div>
-              </div>
-            ) : (
-              // Default Fallback matching mobile
-              <div 
-                onClick={() => navigate('/taxi/user/cab/spiritual')}
-                className="relative w-full rounded-3xl overflow-hidden aspect-[4/3] shadow-lg border border-slate-200 bg-slate-100 cursor-pointer group"
-              >
+              {loadingBanners ? (
+                <div className="relative w-full rounded-3xl overflow-hidden aspect-[4/3] bg-slate-200 animate-pulse border border-slate-200 shadow-lg" />
+              ) : (
                 <div 
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" 
-                  style={{ 
-                    backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuBWZteCbE_j6SFXw3oLemD9RMuU6oxI4J192AicZ4IRSu3hqfSboUsL6jl3VRpT7HVEFMndAp-Y8hCcRjlIr3_WniVu-TbpooYQ5FGEcT53HsRLxpE58KmPOhq7gKzLTa2DFx1au_cKja2e7gkrUidFjQC-MFjgxZqUWJ7EcC8CBvt0woveQXh-ltVYXIw4o9jlzyx8F49kt33arwglmgIXN01V4pCTb4v_vri47kZzo1Bjq2pzjsUv2rW5JS8dD8zyCgGu2KqWk1o')`,
+                  onClick={() => {
+                    const activeBanner = displayBottomBanners[activeBottomIndex];
+                    if (activeBanner?.redirect_url) {
+                      navigate(activeBanner.redirect_url);
+                    } else {
+                      navigate('/taxi/user/cab/spiritual');
+                    }
                   }}
-                />
-                
-                {/* Overlay details */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent z-10 flex flex-col justify-end p-6 text-white">
-                  <span className="text-[10px] text-black bg-[#FFC107] w-fit px-2.5 py-1 rounded-md mb-2 font-black uppercase tracking-wider">
-                    Recommended
-                  </span>
-                  <h3 className="text-xl font-black uppercase tracking-wide group-hover:text-[#FFC107] transition-colors leading-tight">
-                    MAHAKALESHWAR
-                  </h3>
-                  <p className="text-xs text-gray-300 mt-1">Darshan Tour Package</p>
+                  className="relative w-full rounded-3xl overflow-hidden aspect-[4/3] shadow-lg border border-slate-200 bg-slate-100 cursor-pointer group"
+                >
+                  {displayBottomBanners.map((banner, idx) => (
+                    <div 
+                      key={banner?._id || idx}
+                      className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000" 
+                      style={{ 
+                        backgroundImage: `url('${resolveBannerImage(banner?.image)}')`,
+                        opacity: idx === activeBottomIndex ? 1.0 : 0,
+                        zIndex: idx === activeBottomIndex ? 1 : 0
+                      }}
+                    />
+                  ))}
+                  
+                  {/* Overlay details */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent z-10 flex flex-col justify-end p-6 text-white">
+                    <span className="text-[10px] text-black bg-[#FFC107] w-fit px-2.5 py-1 rounded-md mb-2 font-black uppercase tracking-wider">
+                      Exclusive Package
+                    </span>
+                    <h3 className="text-xl font-black uppercase tracking-wide group-hover:text-[#FFC107] transition-colors leading-tight">
+                      {displayBottomBanners[activeBottomIndex]?.title || 'Explore Holy Cities'}
+                    </h3>
+                    <p className="text-xs text-gray-300 mt-1">Book professional packages with one tap.</p>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
           
         </div>
 

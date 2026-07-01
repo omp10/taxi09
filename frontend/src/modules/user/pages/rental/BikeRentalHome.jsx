@@ -239,7 +239,7 @@ const BikeRentalHome = () => {
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
   useEffect(() => {
-    const totalBanners = banners.length > 0 ? banners.length : 2;
+    const totalBanners = banners.length;
     if (totalBanners <= 1) return;
     const interval = setInterval(() => {
       setCurrentBannerIndex((prev) => (prev + 1) % totalBanners);
@@ -1064,93 +1064,57 @@ const BikeRentalHome = () => {
           {activeSegment === 'rentals' ? (
             <>
               {/* Rentals - Featured Section */}
-              <div className="space-y-3.5">
-                <h3 className="text-[20px] font-black text-slate-400 tracking-tight select-none">Featured</h3>
-                
-                <div className="relative w-full h-[130px] rounded-3xl overflow-hidden shadow-sm">
-                  <AnimatePresence>
-                    {banners.length > 0 ? (
-                      <motion.div
-                        key={`banner-${banners[currentBannerIndex].id || banners[currentBannerIndex]._id || currentBannerIndex}`}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.4, ease: "easeOut" }}
-                        onClick={() => {
-                          const banner = banners[currentBannerIndex];
-                          if (banner.redirect_url) {
-                            window.open(banner.redirect_url, '_blank');
-                          } else {
-                            toast('Promotion loaded', { icon: '✨' });
-                          }
-                        }}
-                        className="absolute inset-0 w-full h-full bg-slate-100 cursor-pointer"
-                      >
-                        <img
-                          src={resolveImageUrl(banners[currentBannerIndex].image)}
-                          alt={banners[currentBannerIndex].title || "Featured banner"}
-                          className="h-full w-full object-cover"
-                        />
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key={`static-banner-${currentBannerIndex}`}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.4, ease: "easeOut" }}
-                        className="absolute inset-0 w-full h-full cursor-pointer"
-                      >
-                        {currentBannerIndex === 0 ? (
-                          <div className="w-full h-full bg-gradient-to-r from-[#fff9db] to-[#ffe57f] p-4 flex items-center justify-between group">
-                            <div className="space-y-1 relative z-10 max-w-[55%]">
-                              <span className="text-[15px] font-black text-slate-900 block leading-tight">7 DAYS</span>
-                              <span className="text-[13px] font-black text-[#5d3f00] block leading-tight">Rental Package</span>
-                              <button 
-                                onClick={(e) => { e.stopPropagation(); toast('Weekly discount pricing applied', { icon: '💰' }); }}
-                                className="mt-4 flex items-center gap-1 text-[10px] font-extrabold uppercase text-slate-900/90 tracking-wider hover:opacity-80"
-                              >
-                                Lowest Price Ever <ChevronRight size={12} strokeWidth={3} />
-                              </button>
-                            </div>
-                            <div className="h-full w-[45%] flex items-end justify-center relative shrink-0">
-                              <div className="absolute bottom-2 right-2 w-14 h-22 bg-slate-900/5 rounded-lg border border-slate-900/10 flex items-center justify-center text-slate-400 text-[8px] font-bold">
-                                <Calendar size={18} className="opacity-40" />
-                              </div>
-                              <img src={rentalCarImg} alt="" className="h-14 w-full object-contain relative z-10 -ml-4 mix-blend-multiply drop-shadow-md" />
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="w-full h-full bg-[#1C2025] p-4 flex flex-col justify-between group border border-slate-800">
-                            <div className="absolute top-[-30px] right-[-30px] w-24 h-24 rounded-full bg-yellow-400/5 blur-2xl" />
-                            <div className="space-y-1">
-                              <span className="text-[14px] font-black text-white block">Rental pass</span>
-                              <p className="text-[11px] font-semibold text-slate-400 leading-tight">Get Rental Pass and</p>
-                              <p className="text-[14px] font-black text-yellow-400 leading-none">Save 25% <span className="text-[10px] font-bold text-slate-400">on bookings</span></p>
-                            </div>
-                            <button 
-                              onClick={(e) => { e.stopPropagation(); toast('Rental Pass applied successfully!', { icon: '🎫' }); }}
-                              className="text-[10px] font-extrabold text-white/60 uppercase tracking-widest text-left"
-                            >
-                              Get Pass Now
-                            </button>
-                          </div>
-                        )}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                  
-                  {/* Indicators */}
-                  <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
-                    {Array.from({ length: banners.length > 0 ? banners.length : 2 }).map((_, i) => (
-                      <div 
-                        key={i} 
-                        className={`h-1.5 rounded-full transition-all duration-300 ${i === currentBannerIndex ? 'w-4 bg-[#d48c00] shadow-sm' : 'w-1.5 bg-slate-400/50'}`}
-                      />
-                    ))}
-                  </div>
+              {bannersLoading ? (
+                <div className="space-y-3.5">
+                  <h3 className="text-[20px] font-black text-slate-400 tracking-tight select-none">Featured</h3>
+                  <div className="w-full h-[130px] rounded-3xl overflow-hidden bg-slate-200 animate-pulse" />
                 </div>
-              </div>
+              ) : (
+                banners.length > 0 && (
+                  <div className="space-y-3.5">
+                    <h3 className="text-[20px] font-black text-slate-400 tracking-tight select-none">Featured</h3>
+                    
+                    <div className="relative w-full h-[130px] rounded-3xl overflow-hidden shadow-sm">
+                      <AnimatePresence>
+                        <motion.div
+                          key={`banner-${banners[currentBannerIndex].id || banners[currentBannerIndex]._id || currentBannerIndex}`}
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -20 }}
+                          transition={{ duration: 0.4, ease: "easeOut" }}
+                          onClick={() => {
+                            const banner = banners[currentBannerIndex];
+                            if (banner.redirect_url) {
+                              window.open(banner.redirect_url, '_blank');
+                            } else {
+                              toast('Promotion loaded', { icon: '✨' });
+                            }
+                          }}
+                          className="absolute inset-0 w-full h-full bg-slate-100 cursor-pointer"
+                        >
+                          <img
+                            src={resolveImageUrl(banners[currentBannerIndex].image)}
+                            alt={banners[currentBannerIndex].title || "Featured banner"}
+                            className="h-full w-full object-cover"
+                          />
+                        </motion.div>
+                      </AnimatePresence>
+                      
+                      {/* Indicators */}
+                      {banners.length > 1 && (
+                        <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
+                          {banners.map((_, i) => (
+                            <div 
+                              key={i} 
+                              className={`h-1.5 rounded-full transition-all duration-300 ${i === currentBannerIndex ? 'w-4 bg-[#d48c00] shadow-sm' : 'w-1.5 bg-slate-400/50'}`}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              )}
 
               {/* Rentals - Top Selling Section */}
               <div className="space-y-3.5 pb-4">

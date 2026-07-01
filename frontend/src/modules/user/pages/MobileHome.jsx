@@ -119,6 +119,7 @@ const MobileHome = () => {
 
   const [topBanners, setTopBanners] = useState([]);
   const [bottomBanners, setBottomBanners] = useState([]);
+  const [loadingBanners, setLoadingBanners] = useState(true);
 
   // Resolve banner image paths correctly
   const resolveBannerImage = (img) => {
@@ -131,6 +132,7 @@ const MobileHome = () => {
   // Fetch banners on mount
   useEffect(() => {
     const fetchBanners = async () => {
+      setLoadingBanners(true);
       try {
         const topRes = await api.get('/users/banners?type=top');
         const topData = unwrapApiPayload(topRes);
@@ -149,12 +151,14 @@ const MobileHome = () => {
         }
       } catch (err) {
         console.log('Failed to fetch bottom banners:', err);
+      } finally {
+        setLoadingBanners(false);
       }
     };
     fetchBanners();
   }, []);
 
-  const displayTopBanners = topBanners.length > 0 ? topBanners : [null];
+  const displayTopBanners = topBanners;
   const [activeTopIndex, setActiveTopIndex] = useState(0);
   useEffect(() => {
     if (displayTopBanners.length <= 1) return;
@@ -164,7 +168,7 @@ const MobileHome = () => {
     return () => clearInterval(timer);
   }, [displayTopBanners]);
 
-  const displayBottomBanners = bottomBanners.length > 0 ? bottomBanners : [null];
+  const displayBottomBanners = bottomBanners;
   const [activeBottomIndex, setActiveBottomIndex] = useState(0);
   useEffect(() => {
     if (displayBottomBanners.length <= 1) return;
@@ -385,69 +389,52 @@ const MobileHome = () => {
         )}
 
         {/* Hero Banner Section */}
-        <section className="mt-4 px-4">
-          <div
-            onClick={() => {
-              const activeBanner = displayTopBanners[activeTopIndex];
-              if (activeBanner?.redirect_url) {
-                navigate(activeBanner.redirect_url);
-              } else {
-                navigate('/taxi/user/ride/select-location');
-              }
-            }}
-            className="relative overflow-hidden rounded-[28px] h-[210px] bg-[#0f0f0f] flex items-center shadow-lg group cursor-pointer"
-          >
-            {/* Banner Background Images Stack */}
-            {displayTopBanners.map((banner, idx) => (
+        {loadingBanners ? (
+          <section className="mt-4 px-4">
+            <div className="w-full h-[210px] bg-slate-200 animate-pulse rounded-[28px]" />
+          </section>
+        ) : (
+          displayTopBanners.length > 0 && (
+            <section className="mt-4 px-4">
               <div
-                key={banner?._id || idx}
-                className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
-                style={{
-                  backgroundImage: `url('${resolveBannerImage(banner?.image) || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCsZAjg2Jq6xE7vxVWDvMt4LfpalL-WE0vDrgfqjSnoarKJWW0_ZMAmAOBiSllh9ZEIRfnDI-C7Qs0lNmzoN3PZJ018vH6MgWo6ykzzB_H-kbFsN3rB-wtaBctH0xHpNlFeeiLuzJeg5B0m1vbCn7BNy9tHbjPwgCA-dx7Cn7bTspM9pWZDs19AwgeHJpyQQe6k8EdHu9obfaYCpGUut_5O6VZ3G6rxg0VN4QXG_QyHXjg9FPyqgMDBHx25b29D2_pypiWvklFhjEA'}')`,
-                  opacity: idx === activeTopIndex ? (banner ? 1.0 : 0.7) : 0,
-                  zIndex: idx === activeTopIndex ? 1 : 0
+                onClick={() => {
+                  const activeBanner = displayTopBanners[activeTopIndex];
+                  if (activeBanner?.redirect_url) {
+                    navigate(activeBanner.redirect_url);
+                  } else {
+                    navigate('/taxi/user/ride/select-location');
+                  }
                 }}
-              />
-            ))}
-
-            {/* Dark gradient overlay */}
-            {!displayTopBanners[activeTopIndex] && (
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10"></div>
-            )}
-
-            {/* Banner Content (Only shown for default fallback) */}
-            {!displayTopBanners[activeTopIndex] && (
-              <div className="relative z-20 px-6 flex flex-col gap-1 w-[60%] animate-in fade-in duration-300">
-                <div className="w-fit bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 mb-1">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-[#FFC400]">Limited Time Offer</span>
-                </div>
-                <h2 className="text-[22px] font-black text-white leading-tight tracking-tight">
-                  Get <span className="text-[#FFC400]">10%</span> Off Your First Ride
-                </h2>
-                <p className="text-[11px] font-medium text-slate-350">Ride more. Pay less.</p>
-
-                <button
-                  className="bg-[#FFB300] text-slate-950 text-[11px] font-black uppercase tracking-wider px-5 py-2.5 rounded-xl w-fit mt-3 flex items-center gap-1"
-                >
-                  Book Now <span className="material-symbols-outlined text-sm font-black">arrow_forward</span>
-                </button>
-              </div>
-
-            )}
-
-            {/* Carousel indicators */}
-            {displayTopBanners.length > 1 && (
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20">
-                {displayTopBanners.map((_, idx) => (
-                  <span
-                    key={idx}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${idx === activeTopIndex ? 'w-4 bg-[#FFB300]' : 'w-1.5 bg-white/40'}`}
+                className="relative overflow-hidden rounded-[28px] h-[210px] bg-[#0f0f0f] flex items-center shadow-lg group cursor-pointer"
+              >
+                {/* Banner Background Images Stack */}
+                {displayTopBanners.map((banner, idx) => (
+                  <div
+                    key={banner?._id || idx}
+                    className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+                    style={{
+                      backgroundImage: `url('${resolveBannerImage(banner?.image)}')`,
+                      opacity: idx === activeTopIndex ? 1.0 : 0,
+                      zIndex: idx === activeTopIndex ? 1 : 0
+                    }}
                   />
                 ))}
+
+                {/* Carousel indicators */}
+                {displayTopBanners.length > 1 && (
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20">
+                    {displayTopBanners.map((_, idx) => (
+                      <span
+                        key={idx}
+                        className={`h-1.5 rounded-full transition-all duration-300 ${idx === activeTopIndex ? 'w-4 bg-[#FFB300]' : 'w-1.5 bg-white/40'}`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </section>
+            </section>
+          )
+        )}
 
         {/* Choose Your Ride Section */}
         <section className="mt-6 px-4">
@@ -631,67 +618,52 @@ const MobileHome = () => {
         </section>
 
         {/* Featured Destination / Bottom Banners Section */}
-        <section className="mt-8 px-4">
-          <div
-            onClick={() => {
-              const activeBanner = displayBottomBanners[activeBottomIndex];
-              if (activeBanner?.redirect_url) {
-                navigate(activeBanner.redirect_url);
-              } else {
-                navigate('/taxi/user/cab/spiritual');
-              }
-            }}
-            className="relative w-full rounded-[28px] overflow-hidden aspect-[16/9] shadow-md group cursor-pointer border border-slate-100 bg-[#0f0f0f]"
-          >
-            {/* Banner Background Images Stack */}
-            {displayBottomBanners.map((banner, idx) => (
+        {loadingBanners ? (
+          <section className="mt-8 px-4">
+            <div className="w-full aspect-[16/9] bg-slate-200 animate-pulse rounded-[28px]" />
+          </section>
+        ) : (
+          displayBottomBanners.length > 0 && (
+            <section className="mt-8 px-4">
               <div
-                key={banner?._id || idx}
-                className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
-                style={{
-                  backgroundImage: `url('${resolveBannerImage(banner?.image) || 'https://lh3.googleusercontent.com/aida-public/AB6AXuBWZteCbE_j6SFXw3oLemD9RMuU6oxI4J192AicZ4IRSu3hqfSboUsL6jl3VRpT7HVEFMndAp-Y8hCcRjlIr3_WniVu-TbpooYQ5FGEcT53HsRLxpE58KmPOhq7gKzLTa2DFx1au_cKja2e7gkrUidFjQC-MFjgxZqUWJ7EcC8CBvt0woveQXh-ltVYXIw4o9jlzyx8F49kt33arwglmgIXN01V4pCTb4v_vri47kZzo1Bjq2pzjsUv2rW5JS8dD8zyCgGu2KqWk1o'}')`,
-                  opacity: idx === activeBottomIndex ? 1.0 : 0,
-                  zIndex: idx === activeBottomIndex ? 1 : 0
+                onClick={() => {
+                  const activeBanner = displayBottomBanners[activeBottomIndex];
+                  if (activeBanner?.redirect_url) {
+                    navigate(activeBanner.redirect_url);
+                  } else {
+                    navigate('/taxi/user/cab/spiritual');
+                  }
                 }}
-              />
-            ))}
-
-            {/* Dark gradient overlay */}
-            {!displayBottomBanners[activeBottomIndex] && (
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10"></div>
-            )}
-
-            {/* Banner Content (Only shown for default fallback) */}
-            {!displayBottomBanners[activeBottomIndex] && (
-              <div className="absolute bottom-0 left-0 p-5 w-full flex justify-between items-end z-20">
-                <div className="text-white">
-                  <span className="text-[9px] text-[#FFB300] bg-black/40 backdrop-blur-sm px-2.5 py-1 rounded-md mb-2 inline-block font-black uppercase tracking-wider">
-                    Recommended
-                  </span>
-                  <h3 className="text-lg md:text-xl leading-none font-black uppercase tracking-wide">
-                    MAHAKALESHWAR
-                  </h3>
-                  <p className="text-xs opacity-90 mt-1 font-semibold">Darshan Tour Package</p>
-                </div>
-                <div className="bg-[#FFB300] text-slate-950 w-9 h-9 rounded-full flex items-center justify-center group-hover:translate-x-1.5 transition-transform shadow-md shrink-0">
-                  <span className="material-symbols-outlined text-lg font-black">arrow_forward</span>
-                </div>
-              </div>
-            )}
-
-            {/* Carousel indicators */}
-            {displayBottomBanners.length > 1 && (
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20">
-                {displayBottomBanners.map((_, idx) => (
-                  <span
-                    key={idx}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${idx === activeBottomIndex ? 'w-4 bg-[#FFB300]' : 'w-1.5 bg-white/40'}`}
+                className="relative w-full rounded-[28px] overflow-hidden aspect-[16/9] shadow-md group cursor-pointer border border-slate-100 bg-[#0f0f0f]"
+              >
+                {/* Banner Background Images Stack */}
+                {displayBottomBanners.map((banner, idx) => (
+                  <div
+                    key={banner?._id || idx}
+                    className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+                    style={{
+                      backgroundImage: `url('${resolveBannerImage(banner?.image)}')`,
+                      opacity: idx === activeBottomIndex ? 1.0 : 0,
+                      zIndex: idx === activeBottomIndex ? 1 : 0
+                    }}
                   />
                 ))}
+
+                {/* Carousel indicators */}
+                {displayBottomBanners.length > 1 && (
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20">
+                    {displayBottomBanners.map((_, idx) => (
+                      <span
+                        key={idx}
+                        className={`h-1.5 rounded-full transition-all duration-300 ${idx === activeBottomIndex ? 'w-4 bg-[#FFB300]' : 'w-1.5 bg-white/40'}`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </section>
+            </section>
+          )
+        )}
 
       </main>
 
