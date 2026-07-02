@@ -57,9 +57,9 @@ body {
   --color-slate-900: #111827;
   --color-slate-800: #0A2540; /* Maps to Secondary Deep Navy */
   --color-slate-700: #0A2540;
-  --color-slate-600: #6B7280;
-  --color-slate-500: #6B7280;
-  --color-slate-400: #6B7280;
+  --color-slate-600: #374151; /* Dark charcoal for body text readability */
+  --color-slate-500: #4B5563; /* Medium dark gray for descriptive subtext */
+  --color-slate-400: #6B7280; /* Standard gray for secondary metadata */
   --color-slate-300: #E5E7EB;
   --color-slate-200: #E5E7EB;
   --color-slate-100: #F8F9FB;

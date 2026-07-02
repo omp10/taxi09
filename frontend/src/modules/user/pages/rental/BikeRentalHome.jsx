@@ -4,9 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Fuel, Shield, ChevronRight, ChevronLeft, ChevronDown, SlidersHorizontal, ArrowDownUp, Star, Info, Car, Search, X, Bike, MapPin, MessageSquare, Calendar, User, Compass, Truck, Check, Headset, Home } from 'lucide-react';
 import { userService } from '../../services/userService';
 import rentalCarImg from '@/assets/images/rental_car.png';
-import marutiSwiftImg from '@/assets/images/maruti_swift_nobg.png';
-import marutiBalenoImg from '@/assets/images/maruti_baleno_nobg.png';
-import hyundaiAuraImg from '@/assets/images/hyundai_aura_nobg.png';
 import toast from 'react-hot-toast';
 const DURATION_TABS = ['Hourly', 'Half-Day', 'Daily'];
 const RENTAL_SELECTED_VEHICLE_STORAGE_KEY = 'selectedRentalVehicleDetail';
@@ -266,90 +263,25 @@ const BikeRentalHome = () => {
 
   const taxi09Cars = useMemo(() => {
     const realCars = vehicles.filter(v => v.normalizedCategory === 'car');
-    if (realCars.length > 0) {
-      return realCars.map((car, idx) => ({
-        id: car.id,
-        name: car.name.split(' ').slice(1).join(' ') || car.name,
-        brand: car.name.split(' ')[0] || 'Car',
-        image: car.image || rentalCarImg,
-        prices: car.prices,
-        kmLimit: car.kmLimit,
-        fuel: car.fuel,
-        features: car.features || ['5 Seats', 'Automatic', 'AC'],
-        categoryType: car.capacity <= 5 ? (idx % 2 === 0 ? 'Hatchbacks' : 'Sedans') : 'SUVs',
-        year: '2024-25',
-        rawVehicle: car
-      }));
-    }
-
-    return [
-      {
-        id: 'taxi09-1',
-        name: 'XUV 700 AT',
-        brand: 'Mahindra',
-        image: rentalCarImg,
-        prices: { Hourly: 240, 'Half-Day': 1400, Daily: 5832 },
-        kmLimit: { Daily: '120 km' },
-        fuel: 'Diesel ┬╖ Automatic',
-        features: ['SUV', 'Automatic', '7 Seats'],
-        categoryType: 'SUVs',
-        year: '2024-25'
-      },
-      {
-        id: 'taxi09-2',
-        name: 'Swift 2024-25',
-        brand: 'Maruti',
-        image: rentalCarImg,
-        prices: { Hourly: 120, 'Half-Day': 700, Daily: 2592 },
-        kmLimit: { Daily: '120 km' },
-        fuel: 'Petrol ┬╖ Manual',
-        features: ['Hatchback', 'Manual', '5 Seats'],
-        categoryType: 'Hatchbacks',
-        year: '2024-25'
-      },
-      {
-        id: 'taxi09-3',
-        name: 'Alto 800 VXI',
-        brand: 'Maruti',
-        image: rentalCarImg,
-        prices: { Hourly: 90, 'Half-Day': 500, Daily: 1800 },
-        kmLimit: { Daily: '120 km' },
-        fuel: 'Petrol ┬╖ Manual',
-        features: ['Hatchback', 'Manual', '5 Seats'],
-        categoryType: 'Hatchbacks',
-        year: '2023-24'
-      },
-      {
-        id: 'taxi09-4',
-        name: 'Alto K10',
-        brand: 'Maruti',
-        image: rentalCarImg,
-        prices: { Hourly: 95, 'Half-Day': 550, Daily: 1950 },
-        kmLimit: { Daily: '120 km' },
-        fuel: 'Petrol ┬╖ Manual',
-        features: ['Hatchback', 'Manual', '5 Seats'],
-        categoryType: 'Hatchbacks',
-        year: '2024'
-      },
-      {
-        id: 'taxi09-5',
-        name: 'Verna 1.5',
-        brand: 'Hyundai',
-        image: rentalCarImg,
-        prices: { Hourly: 160, 'Half-Day': 900, Daily: 3200 },
-        kmLimit: { Daily: '120 km' },
-        fuel: 'Petrol ┬╖ Automatic',
-        features: ['Sedan', 'Automatic', '5 Seats'],
-        categoryType: 'Sedans',
-        year: '2024'
-      }
-    ];
+    return realCars.map((car, idx) => ({
+      id: car.id,
+      name: car.name.split(' ').slice(1).join(' ') || car.name,
+      brand: car.name.split(' ')[0] || 'Car',
+      image: car.image || rentalCarImg,
+      prices: car.prices,
+      kmLimit: car.kmLimit,
+      fuel: car.fuel,
+      features: car.features || ['5 Seats', 'Automatic', 'AC'],
+      categoryType: car.capacity <= 5 ? (idx % 2 === 0 ? 'Hatchbacks' : 'Sedans') : 'SUVs',
+      year: '2024-25',
+      rawVehicle: car
+    }));
   }, [vehicles]);
 
   const subscriptionVehicles = useMemo(() => {
     return vehicles
       .filter((vehicle) => vehicle.subscription?.enabled && vehicle.subscription?.plans?.length)
-      .map((vehicle) => {
+      .map((vehicle, idx) => {
         const primaryPlan = vehicle.subscription?.primaryPlan || vehicle.subscription?.plans?.[0] || null;
         const brandParts = String(vehicle.name || '').trim().split(' ').filter(Boolean);
         const brand = brandParts[0] || vehicle.vehicleCategory || 'Vehicle';
@@ -372,7 +304,7 @@ const BikeRentalHome = () => {
           },
           fuel: vehicle.fuel,
           features: vehicle.features || [],
-          categoryType: normalizeRentalCategory(vehicle.vehicleCategory) === 'bike' ? 'Bikes' : 'Cars',
+          categoryType: vehicle.capacity <= 5 ? (idx % 2 === 0 ? 'Hatchbacks' : 'Sedans') : 'SUVs',
           year: primaryPlan ? `${primaryPlan.durationDays} day plan` : 'Subscription',
           rawVehicle: vehicle,
           subscriptionPlan: primaryPlan,
@@ -384,8 +316,8 @@ const BikeRentalHome = () => {
     if (activeSegment === 'rentals') {
       return taxi09Cars.filter(c => c.prices?.Daily > 0);
     }
-    return subscriptionVehicles;
-  }, [taxi09Cars, activeSegment, subscriptionVehicles]);
+    return subscriptionVehicles.filter(c => c.categoryType === subCategory);
+  }, [taxi09Cars, activeSegment, subscriptionVehicles, subCategory]);
 
   const openVehicleDetail = (vehicle, options = {}) => {
     const payload = {
@@ -584,6 +516,13 @@ const BikeRentalHome = () => {
     });
   }, [vehicles]);
 
+  const matchedCars = useMemo(() => {
+    return searchResultCars.filter(car => {
+      if (!searchQuery) return true;
+      return `${car.brand} ${car.name}`.toLowerCase().includes(searchQuery.toLowerCase());
+    });
+  }, [searchResultCars, searchQuery]);
+
   if (selectedCategoryFilter === 'car') {
     if (isAddressEntered) {
       // 2. Render Search Results View (Indore Listing)
@@ -661,20 +600,24 @@ const BikeRentalHome = () => {
           <div className="flex-1 overflow-y-auto bg-background pb-12 no-scrollbar">
             {/* Results Header */}
             <div className="flex items-center justify-between px-6 py-3.5 select-none bg-background">
-              <h3 className="text-[17px] font-bold text-slate-700">16 cars available</h3>
+              <h3 className="text-[17px] font-bold text-slate-700">
+                {matchedCars.length} car{matchedCars.length === 1 ? '' : 's'} available
+              </h3>
               <span className="text-[12px] font-medium text-slate-500">Duration: 1 Day, 13 Hrs</span>
             </div>
 
-
-
             {/* Cars List */}
             <div className="px-6 space-y-4">
-              {searchResultCars
-                .filter(car => {
-                  if (!searchQuery) return true;
-                  return `${car.brand} ${car.name}`.toLowerCase().includes(searchQuery.toLowerCase());
-                })
-                .map((car) => (
+              {matchedCars.length === 0 ? (
+                <div className="rounded-[24px] border border-slate-100 bg-slate-200/50 p-6 text-center shadow-[0_4px_16px_rgba(15,23,42,0.02)]">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[16px] bg-slate-350/10 text-slate-400">
+                    <Car size={22} />
+                  </div>
+                  <p className="mt-4 text-[15px] font-black text-slate-900">No cars available</p>
+                  <p className="mt-1 text-[12px] font-semibold text-slate-400">Try another search query or adjust your filters.</p>
+                </div>
+              ) : (
+                matchedCars.map((car) => (
                   <div
                     key={car.id}
                     onClick={() => {
@@ -768,7 +711,8 @@ const BikeRentalHome = () => {
                       </div>
                     </div>
                   </div>
-                ))}
+                ))
+              )}
             </div>
           </div>
 
@@ -1077,76 +1021,78 @@ const BikeRentalHome = () => {
               )}
 
               {/* Rentals - Top Selling Section */}
-              <div className="space-y-3.5 pb-4">
-                <h3 className="text-[20px] font-black text-slate-400 tracking-tight select-none">Top selling cars in India</h3>
+              {displayedCars.length > 0 && (
+                <div className="space-y-3.5 pb-4">
+                  <h3 className="text-[20px] font-black text-slate-400 tracking-tight select-none">Top selling cars in India</h3>
 
-                <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
-                  {displayedCars.map((car) => (
-                    <motion.div
-                      key={car.id}
-                      whileHover={{ y: -6, scale: 1.01 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => {
-                        if (car.rawVehicle) {
-                          openVehicleDetail(
-                            car.rawVehicle,
-                            activeSegment === 'subscriptions'
-                              ? {
-                                detailMode: 'subscription',
-                                selectedSubscriptionPlanId: car.subscriptionPlan?.id || '',
-                              }
-                              : {},
-                          );
-                        } else {
-                          openVehicleDetail(
-                            normalizeRentalVehicle({
-                              id: car.id,
-                              name: `${car.brand} ${car.name}`,
-                              vehicleCategory: 'car',
-                              coverImage: car.image,
-                              pricing: [
-                                { durationHours: 24, price: car.prices.Daily, includedKm: 120, active: true }
-                              ]
-                            }),
-                            activeSegment === 'subscriptions' ? { detailMode: 'subscription' } : {},
-                          );
-                        }
-                      }}
-                      className="w-[295px] h-[160px] bg-white border border-slate-100/80 rounded-3xl p-4 shadow-[0_8px_30px_rgba(15,23,42,0.02)] flex items-center justify-between shrink-0 relative overflow-hidden cursor-pointer hover:shadow-[0_12px_36px_rgba(15,23,42,0.06)] hover:border-slate-200/50 transition-all duration-300 group"
-                    >
-                      <div className="flex flex-col justify-between h-full max-w-[60%]">
-                        <div className="space-y-0.5">
-                          <p className="text-[11.5px] font-bold text-slate-400 leading-none">
-                            {car.name} <span className="opacity-70 font-medium">{car.year || '2024-25'}</span>
-                          </p>
-                          <h4 className="text-[18px] font-black text-slate-900 tracking-tight">{car.brand}</h4>
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {car.features.map((feature, i) => (
-                              <span key={i} className="text-[8.5px] font-bold bg-slate-50 border border-slate-100 text-slate-500 px-1.5 py-0.5 rounded">
-                                {feature}
-                              </span>
-                            ))}
+                  <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+                    {displayedCars.map((car) => (
+                      <motion.div
+                        key={car.id}
+                        whileHover={{ y: -6, scale: 1.01 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                          if (car.rawVehicle) {
+                            openVehicleDetail(
+                              car.rawVehicle,
+                              activeSegment === 'subscriptions'
+                                ? {
+                                  detailMode: 'subscription',
+                                  selectedSubscriptionPlanId: car.subscriptionPlan?.id || '',
+                                }
+                                : {},
+                            );
+                          } else {
+                            openVehicleDetail(
+                              normalizeRentalVehicle({
+                                id: car.id,
+                                name: `${car.brand} ${car.name}`,
+                                vehicleCategory: 'car',
+                                coverImage: car.image,
+                                pricing: [
+                                  { durationHours: 24, price: car.prices.Daily, includedKm: 120, active: true }
+                                ]
+                              }),
+                              activeSegment === 'subscriptions' ? { detailMode: 'subscription' } : {},
+                            );
+                          }
+                        }}
+                        className="w-[295px] h-[160px] bg-white border border-slate-100/80 rounded-3xl p-4 shadow-[0_8px_30px_rgba(15,23,42,0.02)] flex items-center justify-between shrink-0 relative overflow-hidden cursor-pointer hover:shadow-[0_12px_36px_rgba(15,23,42,0.06)] hover:border-slate-200/50 transition-all duration-300 group"
+                      >
+                        <div className="flex flex-col justify-between h-full max-w-[60%]">
+                          <div className="space-y-0.5">
+                            <p className="text-[11.5px] font-bold text-slate-400 leading-none">
+                              {car.name} <span className="opacity-70 font-medium">{car.year || '2024-25'}</span>
+                            </p>
+                            <h4 className="text-[18px] font-black text-slate-900 tracking-tight">{car.brand}</h4>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {car.features.map((feature, i) => (
+                                <span key={i} className="text-[8.5px] font-bold bg-slate-50 border border-slate-100 text-slate-500 px-1.5 py-0.5 rounded">
+                                  {feature}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="mt-2 leading-none">
+                            <div className="flex items-baseline gap-0.5">
+                              <span className="text-[18px] font-black text-slate-900">₹{car.prices.Daily}</span>
+                              <span className="text-[10px] font-bold text-slate-400 ml-0.5">per day</span>
+                            </div>
                           </div>
                         </div>
-                        <div className="mt-2 leading-none">
-                          <div className="flex items-baseline gap-0.5">
-                            <span className="text-[18px] font-black text-slate-900">₹{car.prices.Daily}</span>
-                            <span className="text-[10px] font-bold text-slate-400 ml-0.5">per day</span>
-                          </div>
-                        </div>
-                      </div>
 
-                      <div className="w-[42%] h-full flex items-center justify-center relative shrink-0">
-                        <motion.img
-                          src={car.image}
-                          alt={car.name}
-                          className="w-full object-contain mix-blend-multiply relative z-10 transition-transform duration-300 group-hover:scale-108 drop-shadow-md"
-                        />
-                      </div>
-                    </motion.div>
-                  ))}
+                        <div className="w-[42%] h-full flex items-center justify-center relative shrink-0">
+                          <motion.img
+                            src={car.image}
+                            alt={car.name}
+                            className="w-full object-contain mix-blend-multiply relative z-10 transition-transform duration-300 group-hover:scale-108 drop-shadow-md"
+                          />
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Offers Section */}
               <div className="space-y-3 px-1 select-none">
@@ -1370,7 +1316,10 @@ const BikeRentalHome = () => {
                       key={car.id}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => {
-                        toast(`Selected ${car.brand} ${car.name} for subscription plan`, { icon: '≡ƒÜù' });
+                        openVehicleDetail(car.rawVehicle, {
+                          detailMode: 'subscription',
+                          selectedSubscriptionPlanId: car.subscriptionPlan?.id || car.subscriptionPlan?._id || '',
+                        });
                       }}
                       className="bg-white border border-slate-100 rounded-3xl p-3.5 shadow-[0_6px_20px_rgba(15,23,42,0.03)] flex flex-col justify-between h-[180px] cursor-pointer hover:shadow-md transition-shadow group relative overflow-hidden"
                     >

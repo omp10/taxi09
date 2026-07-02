@@ -328,12 +328,7 @@ const MobileHome = () => {
       {/* Top App Bar */}
       <header className="bg-[#FFC107] flex items-center justify-between px-6 h-16 w-full sticky top-0 z-50 select-none border-b border-amber-500/20 shadow-sm">
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate('/taxi/user/profile')}
-            className="flex items-center justify-center text-slate-950 cursor-pointer active:scale-95 transition-transform"
-          >
-            <Menu size={24} className="text-slate-950 stroke-[2.5]" />
-          </button>
+
 
           <h1
             onClick={() => navigate('/taxi/user')}
@@ -459,9 +454,9 @@ const MobileHome = () => {
 
               {/* Dots Matrix */}
               <div className="absolute top-4 right-4 grid grid-cols-4 gap-1 opacity-[0.15] pointer-events-none">
-                 {[...Array(12)].map((_, i) => (
-                   <div key={i} className="w-1 h-1 rounded-full bg-[#7c5bfa]" />
-                 ))}
+                {[...Array(12)].map((_, i) => (
+                  <div key={i} className="w-1 h-1 rounded-full bg-[#7c5bfa]" />
+                ))}
               </div>
 
               {/* Car Image */}
@@ -475,22 +470,22 @@ const MobileHome = () => {
 
               {/* Icon Badge */}
               <div className="relative z-10 w-9 h-9 rounded-[14px] bg-white/60 backdrop-blur-md shadow-sm border border-white/80 flex items-center justify-center mb-2">
-                 <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#598aff] to-[#7c5bfa] flex items-center justify-center shadow-sm">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10" />
-                      <circle cx="12" cy="12" r="3" />
-                      <path d="M3.5 12h5.5" />
-                      <path d="M15 12h5.5" />
-                      <path d="M12 15v6.5" />
-                    </svg>
-                 </div>
+                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#598aff] to-[#7c5bfa] flex items-center justify-center shadow-sm">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M3.5 12h5.5" />
+                    <path d="M15 12h5.5" />
+                    <path d="M12 15v6.5" />
+                  </svg>
+                </div>
               </div>
 
               {/* Text Content */}
               <div className="relative z-10 mb-2">
                 <h3 className="text-[15px] font-black text-slate-900 tracking-tight leading-none mb-1">Cars (Self Drive)</h3>
                 <div className="w-6 h-[3px] bg-gradient-to-r from-[#598aff] to-[#7c5bfa] rounded-full mb-1.5"></div>
-                <p className="text-[11px] font-medium text-slate-600 leading-snug">Drive yourself, on<br/>your terms.</p>
+                <p className="text-[11px] font-medium text-slate-600 leading-snug">Drive yourself, on<br />your terms.</p>
               </div>
 
               {/* Action Button */}
@@ -512,9 +507,9 @@ const MobileHome = () => {
 
               {/* Dots Matrix */}
               <div className="absolute top-4 right-4 grid grid-cols-4 gap-1 opacity-[0.25] pointer-events-none">
-                 {[...Array(12)].map((_, i) => (
-                   <div key={i} className="w-1 h-1 rounded-full bg-orange-900" />
-                 ))}
+                {[...Array(12)].map((_, i) => (
+                  <div key={i} className="w-1 h-1 rounded-full bg-orange-900" />
+                ))}
               </div>
 
               {/* Car Image */}
@@ -528,25 +523,25 @@ const MobileHome = () => {
 
               {/* Icon Badge */}
               <div className="relative z-10 w-9 h-9 rounded-[14px] bg-white/50 backdrop-blur-md shadow-sm border border-white/60 flex items-center justify-center mb-2">
-                 <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#ffcc20] to-[#ff8c00] flex items-center justify-center shadow-sm">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="11" cy="6" r="2.5" />
-                      <path d="M11 8.5v6" />
-                      <path d="M11 14.5l-3 4" />
-                      <path d="M11 14.5l3 4" />
-                      <path d="M11 10.5l4-1" />
-                      <path d="M6 20V9" />
-                      <path d="M6 16h3" />
-                      <circle cx="17" cy="9" r="2" />
-                    </svg>
-                 </div>
+                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#ffcc20] to-[#ff8c00] flex items-center justify-center shadow-sm">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="6" r="2.5" />
+                    <path d="M11 8.5v6" />
+                    <path d="M11 14.5l-3 4" />
+                    <path d="M11 14.5l3 4" />
+                    <path d="M11 10.5l4-1" />
+                    <path d="M6 20V9" />
+                    <path d="M6 16h3" />
+                    <circle cx="17" cy="9" r="2" />
+                  </svg>
+                </div>
               </div>
 
               {/* Text Content */}
               <div className="relative z-10 mb-2">
                 <h3 className="text-[15px] font-black text-slate-900 tracking-tight leading-none mb-1">Cars With Driver</h3>
                 <div className="w-6 h-[3px] bg-gradient-to-r from-[#ffcc20] to-[#ff8c00] rounded-full mb-1.5"></div>
-                <p className="text-[11px] font-medium text-slate-800/80 leading-snug">Sit back & relax,<br/>we drive.</p>
+                <p className="text-[11px] font-medium text-slate-800/80 leading-snug">Sit back & relax,<br />we drive.</p>
               </div>
 
               {/* Action Button */}
@@ -594,7 +589,7 @@ const MobileHome = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[18px] font-black text-slate-800 tracking-tight">More Services</h2>
           </div>
-          
+
           <div className="grid grid-cols-3 gap-3">
 
             {/* Monthly Subscription */}
@@ -604,15 +599,15 @@ const MobileHome = () => {
             >
               <div className="w-full flex justify-center mt-1">
                 <div className="relative w-[40px] h-[18px]">
-                   <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
-                   <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
-                   <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                      <Calendar size={28} color="#FFC107" strokeWidth={2.2} />
-                   </div>
+                  <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
+                  <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
+                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
+                    <Calendar size={28} color="#FFC107" strokeWidth={2.2} />
+                  </div>
                 </div>
               </div>
               <div className="w-full mt-auto mb-1 flex flex-col items-center">
-                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Rental<br/>Booking</span>
+                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Rental<br />Booking</span>
               </div>
             </button>
 
@@ -623,15 +618,15 @@ const MobileHome = () => {
             >
               <div className="w-full flex justify-center mt-1">
                 <div className="relative w-[40px] h-[18px]">
-                   <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
-                   <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
-                   <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                      <MapPin size={28} color="#FFC107" strokeWidth={2.5} />
-                   </div>
+                  <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
+                  <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
+                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
+                    <MapPin size={28} color="#FFC107" strokeWidth={2.5} />
+                  </div>
                 </div>
               </div>
               <div className="w-full mt-auto mb-1 flex flex-col items-center">
-                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Ride<br/>Booking</span>
+                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Ride<br />Booking</span>
               </div>
             </button>
 
@@ -642,11 +637,11 @@ const MobileHome = () => {
             >
               <div className="w-full flex justify-center mt-1">
                 <div className="relative w-[40px] h-[18px]">
-                   <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
-                   <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
-                   <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                      <Truck size={28} color="#FFC107" strokeWidth={2.2} />
-                   </div>
+                  <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
+                  <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
+                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
+                    <Truck size={28} color="#FFC107" strokeWidth={2.2} />
+                  </div>
                 </div>
               </div>
               <div className="w-full mt-auto mb-1 flex flex-col items-center">
@@ -661,15 +656,15 @@ const MobileHome = () => {
             >
               <div className="w-full flex justify-center mt-1">
                 <div className="relative w-[40px] h-[18px]">
-                   <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
-                   <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
-                   <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                      <Plane size={28} color="#FFC107" strokeWidth={2.2} />
-                   </div>
+                  <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
+                  <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
+                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
+                    <Plane size={28} color="#FFC107" strokeWidth={2.2} />
+                  </div>
                 </div>
               </div>
               <div className="w-full mt-auto mb-1 flex flex-col items-center">
-                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Plane<br/>Booking</span>
+                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Plane<br />Booking</span>
               </div>
             </button>
 
@@ -680,15 +675,15 @@ const MobileHome = () => {
             >
               <div className="w-full flex justify-center mt-1">
                 <div className="relative w-[40px] h-[18px]">
-                   <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
-                   <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
-                   <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                      <Car size={30} color="#FFC107" fill="#FFC107" strokeWidth={1} />
-                   </div>
+                  <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
+                  <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
+                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
+                    <Car size={30} color="#FFC107" fill="#FFC107" strokeWidth={1} />
+                  </div>
                 </div>
               </div>
               <div className="w-full mt-auto mb-1 flex flex-col items-center">
-                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Attach<br/>Car</span>
+                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Attach<br />Car</span>
               </div>
             </button>
 
@@ -699,15 +694,15 @@ const MobileHome = () => {
             >
               <div className="w-full flex justify-center mt-1">
                 <div className="relative w-[40px] h-[18px]">
-                   <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
-                   <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
-                   <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                      <UserCheck size={30} color="#FFC107" fill="#FFC107" strokeWidth={1} />
-                   </div>
+                  <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
+                  <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
+                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
+                    <UserCheck size={30} color="#FFC107" fill="#FFC107" strokeWidth={1} />
+                  </div>
                 </div>
               </div>
               <div className="w-full mt-auto mb-1 flex flex-col items-center">
-                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Driver<br/>Registration</span>
+                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Driver<br />Registration</span>
               </div>
             </button>
 

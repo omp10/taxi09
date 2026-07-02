@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleMap, MarkerF } from '@react-google-maps/api';
@@ -143,17 +143,23 @@ const formatSubscriptionDuration = (days) => {
   }
   return `${value} days`;
 };
-const getVehicleFuelLabel = (vehicle) =>
-  vehicle?.fuel ||
-  vehicle?.fuelType ||
-  (String(vehicle?.shortDescription || '').split('·')[0] || '').trim() ||
-  'Petrol';
+const cleanDescription = (str) => {
+  if (!str) return '';
+  return String(str)
+    .replace(/╥╕/g, '·')
+    .replace(/Â·/g, '·')
+    .replace(/â¢/g, '·');
+};
+const getVehicleFuelLabel = (vehicle) => {
+  if (vehicle?.fuel || vehicle?.fuelType) return vehicle.fuel || vehicle.fuelType;
+  const desc = cleanDescription(vehicle?.shortDescription);
+  const pieces = desc.split(/[·•\-|]/).map((item) => item.trim()).filter(Boolean);
+  return pieces[0] || 'Petrol';
+};
 const getVehicleTransmissionLabel = (vehicle) => {
   if (vehicle?.transmission) return vehicle.transmission;
-  const pieces = String(vehicle?.shortDescription || '')
-    .split('·')
-    .map((item) => item.trim())
-    .filter(Boolean);
+  const desc = cleanDescription(vehicle?.shortDescription);
+  const pieces = desc.split(/[·•\-|]/).map((item) => item.trim()).filter(Boolean);
   return pieces[1] || 'Manual';
 };
 const getVehicleVariantLabel = (vehicle) =>
@@ -203,7 +209,7 @@ const DateTimePickerModal = ({
           <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-slate-300" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
+              <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-600">
                 Pick Schedule
               </p>
               <h3 className="mt-1 text-lg font-extrabold text-slate-950">{title}</h3>
@@ -240,7 +246,7 @@ const DateTimePickerModal = ({
 
             <div className="mt-4 grid grid-cols-7 gap-2 text-center">
               {WEEK_DAYS.map((day) => (
-                <div key={day} className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <div key={day} className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
                   {day}
                 </div>
               ))}
@@ -275,8 +281,8 @@ const DateTimePickerModal = ({
 
           <div className="mt-4 rounded-[24px] border border-white/80 bg-white p-4 shadow-[0_8px_24px_rgba(15,23,42,0.06)]">
             <div className="mb-3 flex items-center gap-2">
-              <Clock size={15} className="text-slate-400" />
-              <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
+              <Clock size={15} className="text-slate-600" />
+              <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-700">
                 Select Time
               </p>
             </div>
@@ -325,7 +331,7 @@ const SeatPreview = ({ blueprint }) => {
 
   if (!rows.length) {
     return (
-      <div className="rounded-[20px] border border-slate-200 bg-slate-50 px-4 py-6 text-center text-[12px] font-semibold text-slate-400">
+      <div className="rounded-[20px] border border-slate-200 bg-slate-50 px-4 py-6 text-center text-[12px] font-semibold text-slate-600">
         No seating blueprint available
       </div>
     );
@@ -645,6 +651,37 @@ const RentalVehicleDetail = () => {
   useEffect(() => {
     setSelectedImage(gallery[0] || '');
   }, [gallery]);
+
+  const handlePrevImage = useCallback(() => {
+    if (gallery.length <= 1) return;
+    setSelectedImage((current) => {
+      const idx = gallery.indexOf(current);
+      if (idx === -1) return gallery[0];
+      const prevIdx = (idx - 1 + gallery.length) % gallery.length;
+      return gallery[prevIdx];
+    });
+  }, [gallery]);
+
+  const handleNextImage = useCallback(() => {
+    if (gallery.length <= 1) return;
+    setSelectedImage((current) => {
+      const idx = gallery.indexOf(current);
+      if (idx === -1) return gallery[0];
+      const nextIdx = (idx + 1) % gallery.length;
+      return gallery[nextIdx];
+    });
+  }, [gallery]);
+
+  useEffect(() => {
+    if (gallery.length <= 1) return;
+
+    const timer = setInterval(() => {
+      handleNextImage();
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, [gallery.length, handleNextImage]);
+
   const pricingRows = Array.isArray(vehicle.rawPricing)
     ? [...vehicle.rawPricing].sort(
         (a, b) => Number(a.durationHours || 0) - Number(b.durationHours || 0),
@@ -1255,7 +1292,7 @@ const RentalVehicleDetail = () => {
               <ArrowLeft size={20} strokeWidth={2.5} />
             </button>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-600">
                 VEHICLE DETAILS
               </p>
               <h1 className="text-[24px] font-black tracking-tight text-slate-900">{vehicle.name}</h1>
@@ -1268,7 +1305,7 @@ const RentalVehicleDetail = () => {
               </div>
               <div>
                 <p className="text-[12px] font-bold text-slate-900">Self-drive vehicles</p>
-                <p className="text-[11px] font-semibold text-slate-500">Drive at your convenience</p>
+                <p className="text-[11px] font-semibold text-slate-600">Drive at your convenience</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -1277,7 +1314,7 @@ const RentalVehicleDetail = () => {
               </div>
               <div>
                 <p className="text-[12px] font-bold text-slate-900">Verified & Inspected</p>
-                <p className="text-[11px] font-semibold text-slate-500">Quality and safety assured</p>
+                <p className="text-[11px] font-semibold text-slate-600">Quality and safety assured</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -1286,7 +1323,7 @@ const RentalVehicleDetail = () => {
               </div>
               <div>
                 <p className="text-[12px] font-bold text-slate-900">24/7 Roadside Support</p>
-                <p className="text-[11px] font-semibold text-slate-500">We're here for you</p>
+                <p className="text-[11px] font-semibold text-slate-600">We're here for you</p>
               </div>
             </div>
           </div>
@@ -1313,7 +1350,7 @@ const RentalVehicleDetail = () => {
                   <ArrowLeft size={20} strokeWidth={2.5} />
                 </motion.button>
                 <div className="min-w-0">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] leading-none mb-1.5 text-slate-500">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] leading-none mb-1.5 text-slate-600">
                     {isSubscriptionMode ? 'Subscription details' : 'Vehicle Details'}
                   </p>
                   <h1 className="text-[20px] font-black tracking-tight leading-none truncate max-w-[220px] text-slate-900">
@@ -1328,16 +1365,47 @@ const RentalVehicleDetail = () => {
 
       <main className={`mx-auto ${isSubscriptionMode ? 'max-w-lg md:max-w-none md:mx-0 w-full px-5 pt-5' : 'max-w-[1200px] px-5 lg:px-6 mt-4 lg:mt-2'}`}>
         {isSubscriptionMode ? (
-          <div className="space-y-4 pb-32">
+          <div className="space-y-4 pb-48">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
               className="overflow-hidden rounded-[26px] bg-white shadow-[0_14px_36px_rgba(15,23,42,0.08)]"
             >
-              <div className="relative flex items-center justify-center px-6 py-6 bg-gradient-to-br from-amber-50/50 to-amber-100/20">
+              <div className="relative flex items-center justify-center px-6 py-6 bg-gradient-to-br from-amber-50/50 to-amber-100/20 min-h-[224px]">
                 {selectedImage ? (
-                  <img src={selectedImage} alt={vehicle.name} className="h-44 object-contain drop-shadow-[0_18px_24px_rgba(15,23,42,0.12)]" />
+                  <div className="relative w-full h-44 flex items-center justify-center">
+                    <AnimatePresence mode="wait">
+                      <motion.img
+                        key={selectedImage}
+                        src={selectedImage}
+                        alt={vehicle.name}
+                        initial={{ opacity: 0, scale: 0.96 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.96 }}
+                        transition={{ duration: 0.2 }}
+                        className="h-full object-contain drop-shadow-[0_18px_24px_rgba(15,23,42,0.12)]"
+                      />
+                    </AnimatePresence>
+                    {gallery.length > 1 && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={handlePrevImage}
+                          className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white/85 backdrop-blur-sm text-slate-800 shadow-md hover:bg-white transition-all z-20 cursor-pointer active:scale-95"
+                        >
+                          <ChevronLeft size={18} strokeWidth={2.5} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleNextImage}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white/85 backdrop-blur-sm text-slate-800 shadow-md hover:bg-white transition-all z-20 cursor-pointer active:scale-95"
+                        >
+                          <ChevronRight size={18} strokeWidth={2.5} />
+                        </button>
+                      </>
+                    )}
+                  </div>
                 ) : (
                   <div className="flex h-44 w-full items-center justify-center text-slate-300">
                     <Car size={56} />
@@ -1362,18 +1430,24 @@ const RentalVehicleDetail = () => {
 
               <div className="border-t border-slate-100 px-5 py-4">
                 <h2 className="text-[28px] font-black tracking-tight text-slate-950">{vehicle.name}</h2>
-                <div className="mt-4 grid grid-cols-3 gap-3 text-left">
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">Variant/color</p>
-                    <p className="mt-1 text-[13px] font-bold text-slate-700">{subscriptionVariantLabel}</p>
+                <div className="mt-4 grid grid-cols-3 gap-2 border-t border-slate-100 pt-4 text-left">
+                  <div className="border-r border-slate-100 pr-2 min-w-0">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">Variant</p>
+                    <p className="mt-1 text-[13px] font-extrabold text-slate-800 truncate" title={subscriptionVariantLabel}>
+                      {subscriptionVariantLabel}
+                    </p>
                   </div>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">Transmission</p>
-                    <p className="mt-1 text-[13px] font-bold text-slate-700">{subscriptionTransmissionLabel}</p>
+                  <div className="border-r border-slate-100 px-2 min-w-0">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">Gearbox</p>
+                    <p className="mt-1 text-[13px] font-extrabold text-slate-800 truncate" title={subscriptionTransmissionLabel}>
+                      {subscriptionTransmissionLabel}
+                    </p>
                   </div>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">Fuel type</p>
-                    <p className="mt-1 text-[13px] font-bold text-slate-700">{subscriptionFuelLabel}</p>
+                  <div className="pl-2 min-w-0">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">Fuel</p>
+                    <p className="mt-1 text-[13px] font-extrabold text-slate-800 truncate" title={subscriptionFuelLabel}>
+                      {subscriptionFuelLabel}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1409,7 +1483,7 @@ const RentalVehicleDetail = () => {
                           : Number(plan.durationDays || 0)}
                       </p>
                       <p className={`mt-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
-                        isSelected ? 'text-white/80' : 'text-slate-400'
+                        isSelected ? 'text-white/80' : 'text-slate-600'
                       }`}>
                         {Number(plan.durationDays || 0) >= 30
                           ? Number(plan.durationDays || 0) / 30 > 1
@@ -1423,22 +1497,22 @@ const RentalVehicleDetail = () => {
               </div>
 
               <div className="mt-5">
-                <p className="text-[12px] font-bold text-slate-500">Starting from</p>
+                <p className="text-[12px] font-bold text-slate-600">Starting from</p>
                 <div className="mt-1 flex items-end gap-2">
                   <p className="text-[38px] font-black leading-none tracking-tight text-slate-950">
                     {formatCurrency(selectedSubscriptionPlan?.price)}
                   </p>
                   {subscriptionStrikePrice ? (
-                    <p className="pb-1 text-[16px] font-bold text-slate-400 line-through">
+                    <p className="pb-1 text-[16px] font-bold text-slate-500 line-through">
                       {formatCurrency(subscriptionStrikePrice)}
                     </p>
                   ) : null}
                 </div>
-                <p className="mt-2 text-[12px] font-semibold text-slate-500">
+                <p className="mt-2 text-[12px] font-semibold text-slate-600">
                   Inclusive of insurance and maintenance
                 </p>
                 {selectedSubscriptionPlan?.includedKm ? (
-                  <p className="mt-1 text-[12px] font-semibold text-slate-500">
+                  <p className="mt-1 text-[12px] font-semibold text-slate-600">
                     Includes {selectedSubscriptionPlan.includedKm} km for the selected tenure
                   </p>
                 ) : null}
@@ -1458,7 +1532,7 @@ const RentalVehicleDetail = () => {
                   <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#0B84A6] text-[11px] font-black text-white">i</div>
                   <p className="text-[13px] font-black">Check exact price for your dates</p>
                 </div>
-                <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400">
+                <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
                   Select Delivery Date
                 </p>
                 <button
@@ -1467,7 +1541,7 @@ const RentalVehicleDetail = () => {
                   className="mt-2 flex w-full items-center gap-3 rounded-[16px] border border-slate-200 bg-white px-4 py-3 text-left"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
                       Tap to choose
                     </p>
                     <p className="mt-1 truncate text-[15px] font-bold text-slate-700">
@@ -1476,7 +1550,7 @@ const RentalVehicleDetail = () => {
                         : 'Choose delivery date'}
                     </p>
                   </div>
-                  <Calendar size={18} className="shrink-0 text-slate-400" />
+                  <Calendar size={18} className="shrink-0 text-slate-500" />
                 </button>
               </div>
             </motion.div>
@@ -1489,7 +1563,7 @@ const RentalVehicleDetail = () => {
             >
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-slate-400">Place of delivery</p>
+                  <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-slate-600">Place of delivery</p>
                   <p className="mt-1 text-[14px] font-bold text-slate-600">
                     Choose the nearest pickup or delivery point for this subscription.
                   </p>
@@ -1503,8 +1577,8 @@ const RentalVehicleDetail = () => {
 
               <div className="mt-4 space-y-3">
                 {locationsLoading ? (
-                  <div className="flex items-center justify-center gap-2 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-6 text-[12px] font-bold text-slate-500">
-                    <Loader2 size={16} className="animate-spin" />
+                  <div className="flex items-center justify-center gap-2 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-6 text-[12px] font-bold text-slate-600">
+                    <Loader2 size={16} className="animate-spin text-slate-600" />
                     Loading delivery points...
                   </div>
                 ) : locationError ? (
@@ -1512,7 +1586,7 @@ const RentalVehicleDetail = () => {
                     {locationError}
                   </div>
                 ) : serviceLocations.length === 0 ? (
-                  <div className="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-6 text-[12px] font-bold text-slate-500">
+                  <div className="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-6 text-[12px] font-bold text-slate-600">
                     No delivery points are available for this vehicle right now.
                   </div>
                 ) : (
@@ -1573,18 +1647,49 @@ const RentalVehicleDetail = () => {
                   <span className="text-[12px] font-bold text-amber-600">Most Popular</span>
                 </div>
                 <div className="absolute top-6 right-6 text-right">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500 mb-1">RATE</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-600 mb-1">RATE</p>
                   <p className="text-[24px] font-black text-slate-900 leading-none">
                     Rs.{selectedPackage?.price || vehicle.prices?.[duration] || 0}
                   </p>
-                  <p className="text-[13px] font-bold text-slate-500 mt-1">
+                  <p className="text-[13px] font-bold text-slate-600 mt-1">
                     {selectedPackage ? packageSuffix(selectedPackage.durationHours) : '/hr'}
                   </p>
                 </div>
                 
-                <div className="mt-16 mb-8 flex justify-center">
+                <div className="mt-16 mb-8 flex justify-center relative">
                   {selectedImage ? (
-                    <img src={selectedImage} alt={vehicle.name} className="h-48 md:h-64 object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.15)]" />
+                    <div className="relative w-full h-48 md:h-64 flex items-center justify-center">
+                      <AnimatePresence mode="wait">
+                        <motion.img
+                          key={selectedImage}
+                          src={selectedImage}
+                          alt={vehicle.name}
+                          initial={{ opacity: 0, scale: 0.96 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.96 }}
+                          transition={{ duration: 0.2 }}
+                          className="h-full object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.15)]"
+                        />
+                      </AnimatePresence>
+                      {gallery.length > 1 && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={handlePrevImage}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white/85 backdrop-blur-sm text-slate-800 shadow-md hover:bg-white transition-all z-20 cursor-pointer active:scale-95"
+                          >
+                            <ChevronLeft size={18} strokeWidth={2.5} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleNextImage}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white/85 backdrop-blur-sm text-slate-800 shadow-md hover:bg-white transition-all z-20 cursor-pointer active:scale-95"
+                          >
+                            <ChevronRight size={18} strokeWidth={2.5} />
+                          </button>
+                        </>
+                      )}
+                    </div>
                   ) : (
                     <div className="flex h-48 md:h-64 w-full items-center justify-center text-slate-300">
                       <Car size={64} />
@@ -1608,14 +1713,14 @@ const RentalVehicleDetail = () => {
                 
                 <div>
                   <h2 className="text-[32px] font-black text-slate-900 tracking-tight leading-tight">{vehicle.name}</h2>
-                  <p className="text-[15px] font-semibold text-slate-500 mt-1">{vehicle.vehicleCategory || vehicle.shortDescription || 'Vehicle'}</p>
+                  <p className="text-[15px] font-semibold text-slate-600 mt-1">{vehicle.vehicleCategory || vehicle.shortDescription || 'Vehicle'}</p>
                   <div className="flex items-center gap-4 mt-4">
                     <div className="flex items-center gap-1.5 bg-yellow-50 px-2 py-1 rounded-md">
                       <Star size={16} className="text-yellow-500 fill-yellow-500" />
                       <span className="text-[15px] font-bold text-slate-900">{vehicle.rating || '4.8'}</span>
                     </div>
                     <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
-                    <span className="text-[15px] font-bold text-slate-600">
+                    <span className="text-[15px] font-bold text-slate-700">
                       {selectedPackage ? selectedPackage.includedKm : (vehicle.kmLimit?.[duration] || '10')} km included
                     </span>
                   </div>
@@ -1630,24 +1735,24 @@ const RentalVehicleDetail = () => {
                 className="grid grid-cols-2 md:grid-cols-4 gap-3"
               >
                 <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
-                  <Users size={22} className="text-slate-400 mb-2" />
+                  <Users size={22} className="text-slate-500 mb-2" />
                   <p className="text-[18px] font-black text-slate-900">{vehicle.capacity || 1}</p>
-                  <p className="text-[13px] font-semibold text-slate-500">Seat</p>
+                  <p className="text-[13px] font-semibold text-slate-600">Seat</p>
                 </div>
                 <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
-                  <Luggage size={22} className="text-slate-400 mb-2" />
+                  <Luggage size={22} className="text-slate-500 mb-2" />
                   <p className="text-[18px] font-black text-slate-900">{vehicle.luggageCapacity || 1}</p>
-                  <p className="text-[13px] font-semibold text-slate-500">Bag Space</p>
+                  <p className="text-[13px] font-semibold text-slate-600">Bag Space</p>
                 </div>
                 <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
-                  <Car size={22} className="text-slate-400 mb-2" />
+                  <Car size={22} className="text-slate-500 mb-2" />
                   <p className="text-[16px] font-black text-slate-900 truncate w-full">{vehicle.vehicleCategory || 'Bike'}</p>
-                  <p className="text-[13px] font-semibold text-slate-500">Vehicle Type</p>
+                  <p className="text-[13px] font-semibold text-slate-600">Vehicle Type</p>
                 </div>
                 <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
-                  <Fuel size={22} className="text-slate-400 mb-2" />
+                  <Fuel size={22} className="text-slate-500 mb-2" />
                   <p className="text-[16px] font-black text-slate-900">{vehicle.fuel || '80 km/hr'}</p>
-                  <p className="text-[13px] font-semibold text-slate-500">Mileage (Approx.)</p>
+                  <p className="text-[13px] font-semibold text-slate-600">Mileage (Approx.)</p>
                 </div>
               </motion.div>
 
@@ -1658,7 +1763,7 @@ const RentalVehicleDetail = () => {
                 transition={{ delay: 0.1 }}
                 className="rounded-[20px] border border-slate-100 bg-white p-6 shadow-sm space-y-5"
               >
-                <p className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-600">WHAT'S INCLUDED</p>
+                <p className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-700">WHAT'S INCLUDED</p>
                 <div className="space-y-4">
                   {(vehicle.amenities?.length ? vehicle.amenities : vehicle.features || []).map((feature) => (
                     <div key={feature} className="flex items-center gap-3">
@@ -1669,7 +1774,7 @@ const RentalVehicleDetail = () => {
                     </div>
                   ))}
                   {(!vehicle.amenities?.length && !vehicle.features?.length) && (
-                    <div className="text-slate-500 text-[14px] font-semibold">Standard features included.</div>
+                    <div className="text-slate-600 text-[14px] font-semibold">Standard features included.</div>
                   )}
                 </div>
               </motion.div>
@@ -1687,7 +1792,7 @@ const RentalVehicleDetail = () => {
                   </div>
                   <div>
                     <p className="text-[16px] font-black text-slate-900">Need a different duration?</p>
-                    <p className="text-[13px] font-semibold text-slate-500 mt-1 leading-relaxed">Contact us for custom rental packages and long-term offers.</p>
+                    <p className="text-[13px] font-semibold text-slate-600 mt-1 leading-relaxed">Contact us for custom rental packages and long-term offers.</p>
                   </div>
                 </div>
                 <button
@@ -1737,7 +1842,7 @@ const RentalVehicleDetail = () => {
                                   <p className={`text-[16px] font-black ${isSelected ? 'text-[#332000]' : 'text-slate-900'}`}>
                                     {row.label || `${row.durationHours} Hours`}
                                   </p>
-                                  <p className={`text-[12px] font-semibold mt-1.5 ${isSelected ? 'text-[#5d3f00]' : 'text-slate-500'}`}>
+                                  <p className={`text-[12px] font-semibold mt-1.5 ${isSelected ? 'text-[#5d3f00]' : 'text-slate-600'}`}>
                                     {row.durationHours} hour{row.durationHours > 1 ? 's' : ''} - {row.includedKm} km included
                                   </p>
                                 </div>
@@ -1746,13 +1851,13 @@ const RentalVehicleDetail = () => {
                                 <p className={`text-[16px] font-black ${isSelected ? 'text-[#332000]' : 'text-slate-900'}`}>
                                   Rs.{row.price}
                                 </p>
-                                <p className={`text-[12px] font-semibold mt-1.5 ${isSelected ? 'text-[#5d3f00]' : 'text-slate-500'}`}>
+                                <p className={`text-[12px] font-semibold mt-1.5 ${isSelected ? 'text-[#5d3f00]' : 'text-slate-600'}`}>
                                   {packageSuffix(row.durationHours)}
                                 </p>
                               </div>
                             </div>
                             <div className={`mt-4 pt-4 border-t text-[11.5px] font-semibold flex gap-2 sm:gap-3 flex-wrap ${
-                              isSelected ? 'border-slate-700/60 text-slate-300' : 'border-slate-100 text-slate-500'
+                              isSelected ? 'border-slate-700/60 text-slate-350' : 'border-slate-100 text-slate-600'
                             }`}>
                               <span>Extra hour: Rs.{row.extraHourPrice || 0}</span>
                               <span className="hidden sm:inline">•</span>
@@ -1775,8 +1880,8 @@ const RentalVehicleDetail = () => {
                       </div>
                       
                       {locationsLoading ? (
-                        <div className="py-10 text-center text-[13px] font-bold text-slate-500 flex flex-col items-center bg-slate-50 rounded-xl">
-                          <Loader2 className="animate-spin mb-3 text-slate-400" size={24} />
+                        <div className="py-10 text-center text-[13px] font-bold text-slate-600 flex flex-col items-center bg-slate-50 rounded-xl">
+                          <Loader2 className="animate-spin mb-3 text-slate-600" size={24} />
                           Loading service locations...
                         </div>
                       ) : locationError ? (
@@ -1784,7 +1889,7 @@ const RentalVehicleDetail = () => {
                           {locationError}
                         </div>
                       ) : serviceLocations.length === 0 ? (
-                        <div className="p-8 rounded-[16px] bg-slate-50 border border-slate-100 text-center text-slate-500 text-[13px] font-bold">
+                        <div className="p-8 rounded-[16px] bg-slate-50 border border-slate-100 text-center text-slate-600 text-[13px] font-bold">
                           No locations found for this vehicle.
                         </div>
                       ) : (
@@ -1815,7 +1920,7 @@ const RentalVehicleDetail = () => {
                                         </span>
                                       )}
                                     </div>
-                                    <p className={`text-[12px] mt-1.5 truncate ${isSelected ? 'text-[#5d3f00]' : 'text-slate-500'}`}>
+                                    <p className={`text-[12px] mt-1.5 truncate ${isSelected ? 'text-[#5d3f00]' : 'text-slate-600'}`}>
                                       {item.pickupLabel || item.address}
                                     </p>
                                   </div>
@@ -1835,32 +1940,32 @@ const RentalVehicleDetail = () => {
                 </div>
 
                 <div className="rounded-[24px] border border-slate-100 bg-white p-6 shadow-sm">
-                  <p className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-600 mb-5">BOOKING SUMMARY</p>
+                  <p className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-700 mb-5">BOOKING SUMMARY</p>
                   <div className="space-y-4 text-[14px]">
                     <div className="flex justify-between items-center">
-                      <span className="font-semibold text-slate-500">Base Fare</span>
+                      <span className="font-semibold text-slate-600">Base Fare</span>
                       <span className="font-black text-slate-900">Rs.{selectedPackage?.price || 0}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="font-semibold text-slate-500">Included Distance</span>
+                      <span className="font-semibold text-slate-600">Included Distance</span>
                       <span className="font-black text-slate-900">{selectedPackage?.includedKm || 0} km</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="font-semibold text-slate-500">Included Duration</span>
+                      <span className="font-semibold text-slate-600">Included Duration</span>
                       <span className="font-black text-slate-900">{selectedPackage?.durationHours || 0} Hours</span>
                     </div>
                   </div>
                   
                   <div className="mt-5 pt-5 border-t border-slate-100 flex justify-between items-end">
-                    <span className="text-[16px] font-black text-slate-900">Total <span className="text-[12px] font-semibold text-slate-500">(Estimated)</span></span>
+                    <span className="text-[16px] font-black text-slate-900">Total <span className="text-[12px] font-semibold text-slate-600">(Estimated)</span></span>
                     <div className="text-right">
                       <span className="text-[24px] font-black text-slate-900 leading-none">Rs.{selectedPackage?.price || 0}</span>
-                      <span className="text-[12px] font-bold text-slate-500 block mt-1">/hr</span>
+                      <span className="text-[12px] font-bold text-slate-600 block mt-1">/hr</span>
                     </div>
                   </div>
 
-                  <div className="mt-5 p-3.5 rounded-[14px] bg-slate-50 flex items-start gap-2.5 text-[11px] font-semibold text-slate-500 leading-relaxed border border-slate-100">
-                    <Shield size={14} className="shrink-0 mt-0.5 text-slate-400" />
+                  <div className="mt-5 p-3.5 rounded-[14px] bg-slate-50 flex items-start gap-2.5 text-[11px] font-semibold text-slate-600 leading-relaxed border border-slate-100">
+                    <Shield size={14} className="shrink-0 mt-0.5 text-slate-500" />
                     <p>Security deposit and taxes may apply at checkout.</p>
                   </div>
 
@@ -1906,17 +2011,17 @@ const RentalVehicleDetail = () => {
                       Custom Quote Request
                     </p>
                   </div>
-                  <button onClick={() => setShowQuoteForm(false)} className="text-slate-400 hover:text-slate-600">
+                  <button onClick={() => setShowQuoteForm(false)} className="text-slate-500 hover:text-slate-700">
                     <span className="text-xl leading-none">&times;</span>
                   </button>
                 </div>
-                <p className="text-[13px] font-semibold text-slate-500 mb-6">
+                <p className="text-[13px] font-semibold text-slate-600 mb-6">
                   Share your required hours and dates. Our admin team will review and offer a custom price.
                 </p>
                 
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-500">
+                    <label className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600">
                       Hours needed
                     </label>
                     <input
@@ -1934,7 +2039,7 @@ const RentalVehicleDetail = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-500">
+                    <label className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600">
                       Start date and time
                     </label>
                     <button
@@ -1947,7 +2052,7 @@ const RentalVehicleDetail = () => {
                           <Calendar size={18} />
                         </span>
                         <span className="min-w-0 text-left">
-                          <span className="block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                          <span className="block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-600">
                             Tap to choose
                           </span>
                           <span className="mt-0.5 block truncate text-[14px] font-bold text-slate-900">
@@ -1958,7 +2063,7 @@ const RentalVehicleDetail = () => {
                     </button>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-500">
+                    <label className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600">
                       End date and time
                     </label>
                     <button
@@ -1971,7 +2076,7 @@ const RentalVehicleDetail = () => {
                           <Clock size={18} />
                         </span>
                         <span className="min-w-0 text-left">
-                          <span className="block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                          <span className="block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-600">
                             Tap to choose
                           </span>
                           <span className="mt-0.5 block truncate text-[14px] font-bold text-slate-900">
