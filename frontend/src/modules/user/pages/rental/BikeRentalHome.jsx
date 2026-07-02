@@ -135,7 +135,7 @@ const normalizeRentalVehicle = (item = {}, index = 0) => {
     tagBg,
     image: item.image || '',
     rating: '4.8',
-    fuel: isBike ? 'Self-drive ┬╖ License required' : 'Self-drive ┬╖ Clean and sanitized',
+    fuel: item.fuel || (isBike ? 'Self-drive ┬╖ License required' : 'Self-drive ┬╖ Clean and sanitized'),
     prices,
     kmLimit,
     features: Array.from(featureSet).slice(0, 4),
@@ -229,11 +229,21 @@ const BikeRentalHome = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeSegment, setActiveSegment] = useState('rentals'); // 'rentals' or 'subscriptions'
   const [subCategory, setSubCategory] = useState('Hatchbacks'); // 'Hatchbacks', 'Sedans', 'SUVs' for subscriptions
-  const [isAddressEntered, setIsAddressEntered] = useState(false);
+  const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const isAddressEntered = queryParams.get('search') === 'true';
+  const selectedLocation = queryParams.get('location') || 'South Tukoganj, Indore';
   const [activeFaqIndex, setActiveFaqIndex] = useState(null);
-  const [locationSearchText, setLocationSearchText] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState('South Tukoganj, Indore');
+  const [locationSearchText, setLocationSearchText] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('location') || '';
+  });
   const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const loc = params.get('location') || '';
+    setLocationSearchText(loc);
+  }, [location.search]);
   const [banners, setBanners] = useState([]);
   const [bannersLoading, setBannersLoading] = useState(true);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
@@ -556,49 +566,23 @@ const BikeRentalHome = () => {
 
   // If selectedCategoryFilter is 'car', render the custom Taxi09 UI
   const searchResultCars = useMemo(() => {
-    return [
-      {
-        id: 'search-1',
-        brand: 'Maruti',
-        name: 'Swift 2024-25',
-        fuel: 'Petrol ┬╖ Manual',
-        capacity: 5,
-        price: 4896,
-        image: marutiSwiftImg,
-        distance: '7 km | Lake view..'
-      },
-      {
-        id: 'search-2',
-        brand: 'Maruti',
-        name: 'Baleno 2024-25',
-        fuel: 'Petrol ┬╖ Manual',
-        capacity: 5,
-        price: 5088,
-        image: marutiBalenoImg,
-        distance: '7 km | Lake view..'
-      },
-      {
-        id: 'search-3',
-        brand: 'Hyundai',
-        name: 'Aura 2024-25 (P)',
-        fuel: 'Petrol ┬╖ Manual',
-        capacity: 5,
-        price: 4992,
-        image: hyundaiAuraImg,
-        distance: '7 km | Lake view..'
-      },
-      {
-        id: 'search-4',
-        brand: 'Mahindra',
-        name: 'XUV 700 AT',
-        fuel: 'Diesel ┬╖ Automatic',
-        capacity: 7,
-        price: 5832,
-        image: rentalCarImg,
-        distance: '10 km | Indore Airport'
-      }
-    ];
-  }, []);
+    const cars = vehicles.filter(v => v.normalizedCategory === 'car');
+    return cars.map((car) => {
+      const nameParts = car.name.split(' ');
+      const brand = nameParts[0] || 'Car';
+      const displayName = nameParts.slice(1).join(' ') || car.name;
+      return {
+        id: car.id,
+        brand,
+        name: displayName,
+        fuel: car.rawVehicle?.fuel || 'Petrol ┬╖ Manual',
+        capacity: car.capacity || 5,
+        price: car.prices?.Daily || 4000,
+        image: car.image || rentalCarImg,
+        distance: car.shortDescription || '7 km | Lake view..'
+      };
+    });
+  }, [vehicles]);
 
   if (selectedCategoryFilter === 'car') {
     if (isAddressEntered) {
@@ -608,20 +592,20 @@ const BikeRentalHome = () => {
           {/* Sticky Header block containing Header, Filters, Search input */}
           <div className="sticky top-0 z-30 bg-white shadow-sm flex flex-col shrink-0">
             {/* Header */}
-            <div className="bg-background px-4 pt-10 pb-3 flex items-center justify-between">
+            <div className="bg-background px-6 pt-10 pb-3 flex items-center justify-between">
               <div className="flex items-center gap-3.5">
                 <button
-                  onClick={() => setIsAddressEntered(false)}
+                  onClick={() => navigate('/taxi/user/rental', { state: location.state })}
                   className="text-slate-800 hover:opacity-75 transition-opacity py-1 pr-1 shrink-0"
                 >
                   <ChevronLeft size={24} strokeWidth={2} />
                 </button>
                 <div className="min-w-0" onClick={() => {
-                  setIsAddressEntered(false);
+                  navigate('/taxi/user/rental', { state: location.state });
                   setLocationSearchText('');
                   setShowLocationSuggestions(true);
                 }}>
-                  <h1 className="text-[16px] font-bold text-slate-800 tracking-tight leading-tight flex items-center gap-1 cursor-pointer">
+                  <h1 className="text-[12px] font-bold text-slate-800 tracking-tight leading-tight flex items-center gap-1 cursor-pointer">
                     {selectedLocation}
                   </h1>
                   <p className="text-[11px] font-medium text-slate-400 mt-0.5 leading-none">
@@ -635,12 +619,12 @@ const BikeRentalHome = () => {
             </div>
 
             {/* Filters Row */}
-            <div className="px-4 py-3 flex gap-2 overflow-x-auto no-scrollbar border-b border-slate-100 bg-white">
+            <div className="px-6 py-3 flex gap-2 overflow-x-auto no-scrollbar border-b border-slate-100 bg-white">
               <button className="bg-[#d48c00] hover:bg-[#c98500] shadow-sm transition-colors text-white flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-semibold shrink-0">
                 <SlidersHorizontal size={14} strokeWidth={2} />
                 Filter
               </button>
-              
+
               <button className="bg-[#d48c00] hover:bg-[#c98500] shadow-sm transition-colors text-white p-1.5 rounded-lg shrink-0 flex items-center justify-center w-8.5 h-8.5">
                 <ArrowDownUp size={14} strokeWidth={2} />
               </button>
@@ -657,7 +641,7 @@ const BikeRentalHome = () => {
             </div>
 
             {/* Search filter input */}
-            <div className="bg-white px-4 py-2 border-b border-slate-200">
+            <div className="bg-white px-6 py-2 border-b border-slate-200">
               <div className="relative">
                 <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-slate-400">
                   <Search size={16} strokeWidth={2} />
@@ -676,31 +660,15 @@ const BikeRentalHome = () => {
           {/* Scrollable content list */}
           <div className="flex-1 overflow-y-auto bg-background pb-12 no-scrollbar">
             {/* Results Header */}
-            <div className="flex items-center justify-between px-4 py-3.5 select-none bg-background">
+            <div className="flex items-center justify-between px-6 py-3.5 select-none bg-background">
               <h3 className="text-[17px] font-bold text-slate-700">16 cars available</h3>
               <span className="text-[12px] font-medium text-slate-500">Duration: 1 Day, 13 Hrs</span>
             </div>
 
-            {/* Notice Banner */}
-            <div className="mx-4 mb-4 bg-gradient-to-r from-[#ffd54f]/20 to-[#faf9f5]/50 rounded-2xl p-4 flex gap-4 border border-[#ffc400]/20 select-none">
-              <div className="w-[55%]">
-                <h4 className="text-[14px] font-bold text-slate-800 leading-tight">
-                  Rentals will be chargeable on per day basis <br />
-                  <span className="font-semibold text-slate-600 text-[11px] block mt-1">(Only in {selectedLocation.split(',').pop().trim()})</span>
-                </h4>
-              </div>
-              <div className="w-[45%] flex flex-col justify-between text-[11px] text-slate-700 leading-snug">
-                <p>
-                  Morning 9am to 9am will be considered as one day
-                </p>
-                <span className="text-[#d48c00] hover:text-[#b27600] transition-colors font-bold mt-1.5 inline-flex items-center hover:underline cursor-pointer">
-                  Know more &gt;
-                </span>
-              </div>
-            </div>
+
 
             {/* Cars List */}
-            <div className="px-4 space-y-4">
+            <div className="px-6 space-y-4">
               {searchResultCars
                 .filter(car => {
                   if (!searchQuery) return true;
@@ -722,28 +690,25 @@ const BikeRentalHome = () => {
                         ]
                       }));
                     }}
-                    className="bg-white border border-slate-100 rounded-2xl p-4 shadow-[0_4px_16px_rgba(15,23,42,0.02)] flex flex-col gap-3 relative overflow-hidden cursor-pointer hover:shadow-md transition-shadow group animate-fadeIn"
+                    className="bg-white border border-slate-100 rounded-3xl p-4 shadow-[0_4px_16px_rgba(15,23,42,0.02)] flex flex-col gap-3 relative overflow-hidden cursor-pointer hover:shadow-md transition-shadow group animate-fadeIn"
                   >
                     {/* Top row */}
                     <div className="flex justify-between items-start">
                       {/* Left: Image & Badge */}
-                      <div className="w-[40%] flex flex-col items-center">
+                      <div className="w-[48%] flex flex-col items-center justify-center">
                         <img
                           src={car.image}
                           alt={car.name}
-                          className="h-16 object-contain mix-blend-multiply drop-shadow-sm group-hover:scale-105 transition-transform duration-300"
+                          className="h-28 w-full object-contain mix-blend-multiply drop-shadow-sm group-hover:scale-105 transition-transform duration-300"
                         />
-                        <span className="bg-gradient-to-r from-amber-500 to-rose-500 text-white text-[7.5px] font-bold px-2 py-0.5 rounded-full mt-2 text-center whitespace-nowrap block shadow-sm leading-none">
-                          Selling Fast for the selected dates
-                        </span>
                       </div>
 
                       {/* Right: metadata */}
-                      <div className="flex-1 pl-4 flex flex-col justify-between min-h-[90px]">
+                      <div className="flex-1 pl-4 flex flex-col justify-between min-h-[112px]">
                         <div>
                           <span className="text-[10px] font-bold text-slate-400 block uppercase leading-none">{car.brand}</span>
                           <h4 className="text-[15.5px] font-bold text-slate-800 tracking-tight leading-tight mt-1">{car.name}</h4>
-                          
+
                           {/* Details list with icons */}
                           <div className="flex items-center gap-2 text-[10px] font-medium text-slate-400 mt-2">
                             <div className="flex items-center gap-0.5">
@@ -787,7 +752,7 @@ const BikeRentalHome = () => {
                         </div>
                         <span className="font-semibold text-slate-700">Home delivery</span>
                       </div>
-                      
+
                       <span className="text-[9.5px] font-bold text-slate-300">or</span>
 
                       <div className="flex items-center gap-1.5 text-slate-600">
@@ -808,7 +773,7 @@ const BikeRentalHome = () => {
           </div>
 
           {/* Floating headset button */}
-          <div 
+          <div
             onClick={() => {
               navigate('/taxi/user/support');
               toast('Connecting to Support Chat...', { icon: '≡ƒÆ¼' });
@@ -822,7 +787,7 @@ const BikeRentalHome = () => {
           <div className="fixed bottom-0 inset-x-0 bg-white border-t border-slate-100 py-2.5 px-4 shadow-[0_-8px_30px_rgba(15,23,42,0.06)] z-40 max-w-lg md:max-w-none md:mx-0 w-full mx-auto flex items-center justify-between">
             <button
               onClick={() => {
-                setIsAddressEntered(false);
+                navigate('/taxi/user/rental', { state: location.state });
                 setActiveSegment('rentals');
               }}
               className="flex flex-col items-center gap-1 flex-1 py-1 text-[#d48c00]"
@@ -832,10 +797,10 @@ const BikeRentalHome = () => {
               </div>
               <span className="text-[9.5px] font-bold tracking-wide uppercase">Rentals</span>
             </button>
-            
+
             <button
               onClick={() => {
-                setIsAddressEntered(false);
+                navigate('/taxi/user/rental', { state: location.state });
                 setActiveSegment('subscriptions');
               }}
               className="flex flex-col items-center gap-1 flex-1 py-1 relative text-slate-400 hover:text-slate-600"
@@ -883,7 +848,7 @@ const BikeRentalHome = () => {
         {/* Teal Header Block */}
         <div className="bg-gradient-to-b from-[#fffbeb] to-[#fef3c7] shadow-[0_10px_30px_rgba(251,191,36,0.08)] border-b border-amber-200/40 text-slate-900 px-5 pt-12 pb-6 rounded-b-[40px] relative shrink-0 z-20">
           <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-[#ffc400]/5 blur-[40px] pointer-events-none" />
-          
+
           {/* Row 1: Back Arrow & Logo */}
           <div className="relative flex items-center justify-between mb-6">
             <motion.button
@@ -905,9 +870,8 @@ const BikeRentalHome = () => {
           <div className="bg-amber-100/70 border border-amber-200/40 shadow-inner mb-6 relative p-1.5 rounded-2xl flex">
             <button
               onClick={() => setActiveSegment('rentals')}
-              className={`relative flex-1 py-2.5 rounded-[14px] text-[12px] font-extrabold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center outline-none ${
-                activeSegment === 'rentals' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-600 hover:bg-white/40'
-              }`}
+              className={`relative flex-1 py-2.5 rounded-[14px] text-[12px] font-extrabold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center outline-none ${activeSegment === 'rentals' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-600 hover:bg-white/40'
+                }`}
             >
               <span className="text-[13px] font-black">Rentals</span>
               <span className={`text-[8px] font-bold mt-0.5 ${activeSegment === 'rentals' ? 'text-slate-500' : 'text-slate-400'}`}>For hours & days</span>
@@ -917,9 +881,8 @@ const BikeRentalHome = () => {
             </button>
             <button
               onClick={() => setActiveSegment('subscriptions')}
-              className={`relative flex-1 py-2.5 rounded-[14px] text-[12px] font-extrabold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center outline-none ${
-                activeSegment === 'subscriptions' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-600 hover:bg-white/40'
-              }`}
+              className={`relative flex-1 py-2.5 rounded-[14px] text-[12px] font-extrabold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center outline-none ${activeSegment === 'subscriptions' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-600 hover:bg-white/40'
+                }`}
             >
               <span className="text-[13px] font-black">Subscriptions</span>
               <span className={`text-[8px] font-bold mt-0.5 ${activeSegment === 'subscriptions' ? 'text-slate-500' : 'text-slate-400'}`}>For months & years</span>
@@ -970,16 +933,16 @@ const BikeRentalHome = () => {
           <div className="relative z-20">
             {/* Backdrop overlay to close suggestions when clicking outside */}
             {showLocationSuggestions && (
-              <div 
-                className="fixed inset-0 z-10 bg-transparent" 
+              <div
+                className="fixed inset-0 z-10 bg-transparent"
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowLocationSuggestions(false);
                 }}
               />
             )}
-            
-            <div 
+
+            <div
               className="bg-white rounded-3xl p-2 shadow-[0_12px_40px_rgba(212,140,0,0.15)] flex items-center gap-3 border border-slate-100/80 relative z-20 hover:shadow-[0_16px_48px_rgba(212,140,0,0.22)] focus-within:shadow-[0_16px_48px_rgba(212,140,0,0.22)] transition-all duration-300"
             >
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#ffc400] to-[#ffd54f] text-[#332000] flex items-center justify-center text-white shrink-0 shadow-md">
@@ -996,19 +959,18 @@ const BikeRentalHome = () => {
                 onFocus={() => setShowLocationSuggestions(true)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && locationSearchText.trim()) {
-                    setSelectedLocation(locationSearchText);
                     setShowLocationSuggestions(false);
-                    setIsAddressEntered(true);
+                    navigate(`/taxi/user/rental?search=true&location=${encodeURIComponent(locationSearchText)}`, { state: location.state });
                   }
                 }}
                 className="flex-1 text-[13.5px] font-bold text-slate-800 placeholder:text-slate-400 focus:outline-none bg-transparent"
               />
               {locationSearchText && (
-                <button 
+                <button
                   onClick={() => {
                     setLocationSearchText('');
                     setShowLocationSuggestions(false);
-                  }} 
+                  }}
                   className="text-slate-400 hover:text-slate-600 px-1 shrink-0"
                 >
                   <X size={16} strokeWidth={2.5} />
@@ -1028,10 +990,9 @@ const BikeRentalHome = () => {
                     <div
                       key={idx}
                       onClick={() => {
-                        setSelectedLocation(loc);
                         setLocationSearchText(loc);
                         setShowLocationSuggestions(false);
-                        setIsAddressEntered(true);
+                        navigate(`/taxi/user/rental?search=true&location=${encodeURIComponent(loc)}`, { state: location.state });
                       }}
                       className="px-4 py-3 hover:bg-slate-50 flex items-center gap-3 cursor-pointer transition-colors border-b border-slate-50 last:border-b-0"
                     >
@@ -1040,12 +1001,11 @@ const BikeRentalHome = () => {
                     </div>
                   ))}
                 {LOCATION_SUGGESTIONS.filter(loc => !locationSearchText || loc.toLowerCase().includes(locationSearchText.toLowerCase())).length === 0 && (
-                  <div 
+                  <div
                     onClick={() => {
                       if (locationSearchText.trim()) {
-                        setSelectedLocation(locationSearchText);
                         setShowLocationSuggestions(false);
-                        setIsAddressEntered(true);
+                        navigate(`/taxi/user/rental?search=true&location=${encodeURIComponent(locationSearchText)}`, { state: location.state });
                       }
                     }}
                     className="px-4 py-3 hover:bg-slate-50 flex items-center gap-3 cursor-pointer text-slate-500 font-semibold text-[13px] border-t border-slate-50"
@@ -1073,7 +1033,7 @@ const BikeRentalHome = () => {
                 banners.length > 0 && (
                   <div className="space-y-3.5">
                     <h3 className="text-[20px] font-black text-slate-400 tracking-tight select-none">Featured</h3>
-                    
+
                     <div className="relative w-full h-[130px] rounded-3xl overflow-hidden shadow-sm">
                       <AnimatePresence>
                         <motion.div
@@ -1099,13 +1059,13 @@ const BikeRentalHome = () => {
                           />
                         </motion.div>
                       </AnimatePresence>
-                      
+
                       {/* Indicators */}
                       {banners.length > 1 && (
                         <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
                           {banners.map((_, i) => (
-                            <div 
-                              key={i} 
+                            <div
+                              key={i}
                               className={`h-1.5 rounded-full transition-all duration-300 ${i === currentBannerIndex ? 'w-4 bg-[#d48c00] shadow-sm' : 'w-1.5 bg-slate-400/50'}`}
                             />
                           ))}
@@ -1119,7 +1079,7 @@ const BikeRentalHome = () => {
               {/* Rentals - Top Selling Section */}
               <div className="space-y-3.5 pb-4">
                 <h3 className="text-[20px] font-black text-slate-400 tracking-tight select-none">Top selling cars in India</h3>
-                
+
                 <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
                   {displayedCars.map((car) => (
                     <motion.div
@@ -1132,9 +1092,9 @@ const BikeRentalHome = () => {
                             car.rawVehicle,
                             activeSegment === 'subscriptions'
                               ? {
-                                  detailMode: 'subscription',
-                                  selectedSubscriptionPlanId: car.subscriptionPlan?.id || '',
-                                }
+                                detailMode: 'subscription',
+                                selectedSubscriptionPlanId: car.subscriptionPlan?.id || '',
+                              }
                               : {},
                           );
                         } else {
@@ -1152,7 +1112,7 @@ const BikeRentalHome = () => {
                           );
                         }
                       }}
-                      className="w-[290px] h-[155px] bg-white border border-slate-100/80 rounded-3xl p-4 shadow-[0_8px_30px_rgba(15,23,42,0.02)] flex items-center justify-between shrink-0 relative overflow-hidden cursor-pointer hover:shadow-[0_12px_36px_rgba(15,23,42,0.06)] hover:border-slate-200/50 transition-all duration-300 group"
+                      className="w-[295px] h-[160px] bg-white border border-slate-100/80 rounded-3xl p-4 shadow-[0_8px_30px_rgba(15,23,42,0.02)] flex items-center justify-between shrink-0 relative overflow-hidden cursor-pointer hover:shadow-[0_12px_36px_rgba(15,23,42,0.06)] hover:border-slate-200/50 transition-all duration-300 group"
                     >
                       <div className="flex flex-col justify-between h-full max-w-[60%]">
                         <div className="space-y-0.5">
@@ -1193,9 +1153,9 @@ const BikeRentalHome = () => {
                 <h3 className="text-[19px] font-bold text-slate-700 tracking-tight">Offers</h3>
                 <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
                   {/* Offer 1 */}
-                  <motion.div 
-                    whileHover={{ y: -6 }} 
-                    whileTap={{ scale: 0.98 }} 
+                  <motion.div
+                    whileHover={{ y: -6 }}
+                    whileTap={{ scale: 0.98 }}
                     className="w-[280px] rounded-3xl bg-white border border-slate-100/80 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex flex-col justify-between overflow-hidden shrink-0 cursor-pointer"
                   >
                     <div className="p-4 flex-1">
@@ -1217,9 +1177,9 @@ const BikeRentalHome = () => {
                   </motion.div>
 
                   {/* Offer 2 */}
-                  <motion.div 
-                    whileHover={{ y: -6 }} 
-                    whileTap={{ scale: 0.98 }} 
+                  <motion.div
+                    whileHover={{ y: -6 }}
+                    whileTap={{ scale: 0.98 }}
                     className="w-[280px] rounded-3xl bg-white border border-slate-100/80 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex flex-col justify-between overflow-hidden shrink-0 cursor-pointer"
                   >
                     <div className="p-4 flex-1">
@@ -1247,9 +1207,9 @@ const BikeRentalHome = () => {
                 <h3 className="text-[19px] font-bold text-slate-700 tracking-tight">Why Taxi09?</h3>
                 <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
                   {/* Card 1 */}
-                  <motion.div 
-                    whileHover={{ y: -6 }} 
-                    whileTap={{ scale: 0.98 }} 
+                  <motion.div
+                    whileHover={{ y: -6 }}
+                    whileTap={{ scale: 0.98 }}
                     className="w-[280px] rounded-3xl bg-white border border-slate-100/80 p-4 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex gap-3.5 shrink-0 cursor-default"
                   >
                     <div className="w-12 h-12 rounded-full bg-[#ffd54f]/10 text-[#d48c00] flex items-center justify-center shrink-0">
@@ -1264,9 +1224,9 @@ const BikeRentalHome = () => {
                   </motion.div>
 
                   {/* Card 2 */}
-                  <motion.div 
-                    whileHover={{ y: -6 }} 
-                    whileTap={{ scale: 0.98 }} 
+                  <motion.div
+                    whileHover={{ y: -6 }}
+                    whileTap={{ scale: 0.98 }}
                     className="w-[280px] rounded-3xl bg-white border border-slate-100/80 p-4 shadow-[0_8px_30px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_36px_rgba(15,23,42,0.05)] transition-all duration-300 flex gap-3.5 shrink-0 cursor-default"
                   >
                     <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
@@ -1291,7 +1251,7 @@ const BikeRentalHome = () => {
                 <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-[0_4px_16px_rgba(15,23,42,0.02)] divide-y divide-slate-100">
                   {/* FAQ 1 */}
                   <div className="pb-3 pt-0.5">
-                    <button 
+                    <button
                       onClick={() => setActiveFaqIndex(activeFaqIndex === 0 ? null : 0)}
                       className="w-full flex justify-between items-center text-left text-[13.5px] font-bold text-slate-800 outline-none"
                     >
@@ -1307,7 +1267,7 @@ const BikeRentalHome = () => {
 
                   {/* FAQ 2 */}
                   <div className="py-3">
-                    <button 
+                    <button
                       onClick={() => setActiveFaqIndex(activeFaqIndex === 1 ? null : 1)}
                       className="w-full flex justify-between items-center text-left text-[13.5px] font-bold text-slate-800 outline-none"
                     >
@@ -1323,7 +1283,7 @@ const BikeRentalHome = () => {
 
                   {/* FAQ 3 */}
                   <div className="pt-3 pb-0.5">
-                    <button 
+                    <button
                       onClick={() => setActiveFaqIndex(activeFaqIndex === 2 ? null : 2)}
                       className="w-full flex justify-between items-center text-left text-[13.5px] font-bold text-slate-800 outline-none"
                     >
@@ -1344,7 +1304,7 @@ const BikeRentalHome = () => {
               {/* Subscriptions - Banners */}
               <div className="space-y-3.5">
                 <h3 className="text-[20px] font-black text-slate-400 tracking-tight select-none">Why subscriptions</h3>
-                
+
                 <div className="flex gap-4 overflow-x-auto no-scrollbar pb-1">
                   <div className="w-[240px] h-[130px] rounded-3xl bg-[#d48c00] shadow-sm shrink-0 border border-slate-800 relative overflow-hidden group cursor-pointer flex items-center justify-center">
                     <div className="absolute inset-0 bg-gradient-to-r from-amber-600/30 to-slate-900/60 z-0" />
@@ -1381,9 +1341,8 @@ const BikeRentalHome = () => {
                       <button
                         key={cat}
                         onClick={() => setSubCategory(cat)}
-                        className={`relative pb-2 text-[15px] font-black transition-colors ${
-                          isActive ? 'text-[#d48c00]' : 'text-slate-400 hover:text-slate-600'
-                        }`}
+                        className={`relative pb-2 text-[15px] font-black transition-colors ${isActive ? 'text-[#d48c00]' : 'text-slate-400 hover:text-slate-600'
+                          }`}
                       >
                         {cat}
                         {isActive && (
@@ -1452,7 +1411,7 @@ const BikeRentalHome = () => {
             </div>
             <span className="text-[9.5px] font-bold tracking-wide uppercase">Rentals</span>
           </button>
-          
+
           <button
             onClick={() => setActiveSegment('subscriptions')}
             className={`flex flex-col items-center gap-1 flex-1 py-1 relative ${activeSegment === 'subscriptions' ? 'text-[#d48c00]' : 'text-slate-400 hover:text-slate-600'}`}
@@ -1505,7 +1464,7 @@ const BikeRentalHome = () => {
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className="sticky top-0 z-30 w-full"
       >
-        <div className="bg-white/85 backdrop-blur-2xl px-5 pt-12 pb-5 border-b border-white/40 shadow-[0_8px_32px_rgba(15,23,42,0.06)] relative overflow-hidden">
+        <div className="bg-white/85 backdrop-blur-2xl px-6 pt-12 pb-5 border-b border-white/40 shadow-[0_8px_32px_rgba(15,23,42,0.06)] relative overflow-hidden">
           {/* Subtle accent gradients */}
           <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-amber-400/5 blur-[40px] pointer-events-none" />
           <div className="absolute top-0 left-0 h-24 w-24 rounded-full bg-amber-400/3 blur-[40px] pointer-events-none" />
@@ -1582,7 +1541,7 @@ const BikeRentalHome = () => {
           </div>
 
           {visibleSuggestions.length > 0 && !searchQuery && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               className="flex gap-2 overflow-x-auto no-scrollbar pt-4 pb-1"
@@ -1602,7 +1561,7 @@ const BikeRentalHome = () => {
         </div>
       </motion.header>
 
-      <div className="px-5 pt-6 space-y-5">
+      <div className="px-6 pt-6 space-y-5">
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedDuration}
@@ -1625,8 +1584,8 @@ const BikeRentalHome = () => {
           <div className="flex items-center justify-between mb-1">
             <p className="text-[10px] font-[800] uppercase tracking-[0.2em] text-slate-400">Available Near You</p>
             {searchQuery && (
-              <motion.span 
-                initial={{ opacity: 0 }} 
+              <motion.span
+                initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="text-[10px] font-[800] uppercase tracking-wider text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md"
               >
@@ -1648,11 +1607,10 @@ const BikeRentalHome = () => {
                   key={id}
                   type="button"
                   onClick={() => setSelectedCategoryFilter(id)}
-                  className={`shrink-0 rounded-[18px] border px-3.5 py-2.5 transition-all ${
-                    isActive
-                      ? 'border-[#d48c00] bg-[#d48c00] text-white shadow-[0_10px_24px_rgba(212,140,0,0.16)]'
-                      : 'border-surface-variant bg-surface-container text-on-surface-variant shadow-[0_8px_20px_rgba(0,0,0,0.02)]'
-                  }`}
+                  className={`shrink-0 rounded-[18px] border px-3.5 py-2.5 transition-all ${isActive
+                    ? 'border-[#d48c00] bg-[#d48c00] text-white shadow-[0_10px_24px_rgba(212,140,0,0.16)]'
+                    : 'border-surface-variant bg-surface-container text-on-surface-variant shadow-[0_8px_20px_rgba(0,0,0,0.02)]'
+                    }`}
                 >
                   <div className="flex items-center gap-2">
                     <div className={`flex h-8 w-8 items-center justify-center rounded-[12px] ${isActive ? 'bg-white/12' : 'bg-slate-100 text-slate-500'}`}>
@@ -1689,7 +1647,7 @@ const BikeRentalHome = () => {
         </div>
       </div>
 
-      <div className="px-5 pt-4 pb-12 space-y-4">
+      <div className="px-6 pt-4 pb-12 space-y-4">
         <AnimatePresence mode="wait">
           {loading ? (
             <motion.div
@@ -1740,75 +1698,75 @@ const BikeRentalHome = () => {
               <p className="mt-1 text-[12px] font-bold text-slate-400">Try another vehicle name, category, amenity, or switch the car and bike filter.</p>
             </motion.div>
           ) : (
-          paginatedVehicles.map((v, idx) => (
-            <motion.div
-              key={v.id}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.38, delay: idx * 0.07, ease: 'easeOut' }}
-              className="rounded-[24px] border border-white/80 bg-white/90 shadow-[0_8px_24px_rgba(15,23,42,0.06)] overflow-hidden"
-            >
-              <div
-                className="px-4 pt-3.5 pb-3 flex items-center justify-between"
-                style={{ background: `linear-gradient(135deg, ${v.gradientFrom} 0%, ${v.gradientTo} 100%)` }}
+            paginatedVehicles.map((v, idx) => (
+              <motion.div
+                key={v.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.38, delay: idx * 0.07, ease: 'easeOut' }}
+                className="rounded-[26px] border border-white/80 bg-white/90 shadow-[0_10px_28px_rgba(15,23,42,0.06)] overflow-hidden"
               >
-                <div className="flex-1 min-w-0 pr-2 space-y-1">
-                  <span className={`inline-block text-[9px] font-bold px-2 py-0.5 rounded-full border ${v.tagBg} ${v.tagColor}`}>
-                    {v.tag}
-                  </span>
-                  <h3 className="text-[16px] font-extrabold text-on-surface leading-tight tracking-tight">{v.name}</h3>
-                  {v.shortDescription ? (
-                    <p className="text-[11px] font-medium text-slate-500/80">{v.shortDescription}</p>
-                  ) : null}
-                  <div className="flex items-center gap-1">
-                    <Star size={10} className="text-yellow-500 fill-yellow-400" />
-                    <span className="text-[11px] font-bold text-slate-700">{v.rating}</span>
-                    <span className="text-[10px] font-medium text-slate-400">┬╖ {v.kmLimit[selectedDuration]} limit</span>
-                  </div>
-                </div>
-                {v.image ? (
-                  <img src={v.image} alt={v.name} className="h-20 w-24 object-contain drop-shadow-lg shrink-0 -mt-2 -mb-2" />
-                ) : (
-                  <div className="flex h-20 w-24 items-center justify-center rounded-[20px] bg-white/60 text-slate-300 shadow-sm shrink-0">
-                    <Car size={28} />
-                  </div>
-                )}
-              </div>
-
-              <div className="px-4 pb-4 pt-3 space-y-2.5 border-t border-slate-50">
-                <div className="flex flex-wrap gap-1">
-                  {v.features.map((feature) => (
-                    <span key={feature} className="text-[9px] font-bold bg-slate-50 text-slate-500 px-2 py-0.5 rounded-full border border-slate-100">
-                      {feature}
+                <div
+                  className="px-4.5 pt-4.5 pb-3.5 flex items-center justify-between"
+                  style={{ background: `linear-gradient(135deg, ${v.gradientFrom} 0%, ${v.gradientTo} 100%)` }}
+                >
+                  <div className="flex-1 min-w-0 pr-2 space-y-1">
+                    <span className={`inline-block text-[9px] font-bold px-2 py-0.5 rounded-full border ${v.tagBg} ${v.tagColor}`}>
+                      {v.tag}
                     </span>
-                  ))}
-                </div>
-
-                <div className="flex items-center gap-1.5">
-                  <Fuel size={11} className="text-slate-300 shrink-0" />
-                  <span className="text-[11px] font-bold text-slate-400">{v.fuel}</span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.15em] block">Price</span>
-                    <div className="flex items-baseline gap-0.5">
-                      <span className="text-[24px] font-extrabold text-on-surface tracking-tighter leading-none">₹{v.prices[selectedDuration]}</span>
-                      <span className="text-[11px] font-bold text-slate-400/80 ml-0.5">{durationSuffix[selectedDuration]}</span>
+                    <h3 className="text-[16.5px] font-extrabold text-on-surface leading-tight tracking-tight">{v.name}</h3>
+                    {v.shortDescription ? (
+                      <p className="text-[11.5px] font-medium text-slate-500/80">{v.shortDescription}</p>
+                    ) : null}
+                    <div className="flex items-center gap-1">
+                      <Star size={10.5} className="text-yellow-500 fill-yellow-400" />
+                      <span className="text-[11.5px] font-bold text-slate-700">{v.rating}</span>
+                      <span className="text-[10px] font-medium text-slate-400">┬╖ {v.kmLimit[selectedDuration]} limit</span>
                     </div>
                   </div>
-                  <motion.button
-                    whileTap={{ scale: 0.96 }}
-                    onClick={() => openVehicleDetail(v)}
-                    className="bg-primary text-white hover:opacity-90 transition-all px-4 py-2.5 rounded-[12px] text-[11px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-[0_6px_16px_rgba(212,140,0,0.15)] active:scale-95"
-                  >
-                    Book Now <ChevronRight size={13} strokeWidth={3} className="opacity-60" />
-                  </motion.button>
+                  {v.image ? (
+                    <img src={v.image} alt={v.name} className="h-28 w-34 object-contain drop-shadow-lg shrink-0 -mt-4 -mb-4 -mr-2" />
+                  ) : (
+                    <div className="flex h-28 w-34 items-center justify-center rounded-[20px] bg-white/60 text-slate-300 shadow-sm shrink-0">
+                      <Car size={44} />
+                    </div>
+                  )}
                 </div>
-              </div>
-            </motion.div>
-          ))
-        )}
+
+                <div className="px-4.5 pb-4.5 pt-3.5 space-y-3 border-t border-slate-50">
+                  <div className="flex flex-wrap gap-1">
+                    {v.features.map((feature) => (
+                      <span key={feature} className="text-[9px] font-bold bg-slate-50 text-slate-500 px-2 py-0.5 rounded-full border border-slate-100">
+                        {feature}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-1.5">
+                    <Fuel size={11} className="text-slate-300 shrink-0" />
+                    <span className="text-[11px] font-bold text-slate-400">{v.fuel}</span>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.15em] block">Price</span>
+                      <div className="flex items-baseline gap-0.5">
+                        <span className="text-[22px] font-extrabold text-on-surface tracking-tighter leading-none">₹{v.prices[selectedDuration]}</span>
+                        <span className="text-[11px] font-bold text-slate-400/80 ml-0.5">{durationSuffix[selectedDuration]}</span>
+                      </div>
+                    </div>
+                    <motion.button
+                      whileTap={{ scale: 0.96 }}
+                      onClick={() => openVehicleDetail(v)}
+                      className="bg-primary text-white hover:opacity-90 transition-all px-4 py-2.5 rounded-[12px] text-[11px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-[0_6px_16px_rgba(212,140,0,0.15)] active:scale-95"
+                    >
+                      Book Now <ChevronRight size={13} strokeWidth={3} className="opacity-60" />
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            ))
+          )}
         </AnimatePresence>
 
         {!loading && !errorMessage && filteredVehicles.length > RENTAL_PAGE_SIZE ? (

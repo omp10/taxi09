@@ -177,6 +177,11 @@ const rentalVehicleTypeSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    fuel: {
+      type: String,
+      default: '',
+      trim: true,
+    },
     short_description: {
       type: String,
       default: '',
@@ -299,3 +304,5 @@ rentalVehicleTypeSchema.index({ status: 1, active: 1 });
 export const RentalVehicleType =
   mongoose.models.TaxiRentalVehicleType ||
   mongoose.model('TaxiRentalVehicleType', rentalVehicleTypeSchema);
+
+

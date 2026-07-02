@@ -1714,11 +1714,11 @@ const RentalVehicleDetail = () => {
 
                   {selectionStep === 'package' ? (
                     <div className="space-y-4">
-                      {pricingRows.map((row) => {
+                      {pricingRows.map((row, index) => {
                         const isSelected = String(selectedPackageId) === String(row.id);
                         return (
                           <button
-                            key={row.id}
+                            key={row.id || index}
                             onClick={() => setSelectedPackageId(String(row.id))}
                             className={`w-full text-left rounded-[16px] border-2 p-5 transition-all relative ${
                               isSelected

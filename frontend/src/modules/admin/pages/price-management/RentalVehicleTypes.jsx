@@ -343,29 +343,38 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
       setLoading(true);
       setErrorMessage('');
       try {
-        const [response, serviceStoreResponse, subcategoryResponse] = await Promise.all([
-          adminService.getRentalVehicleTypes(),
-          adminService.getServiceStores(),
-          adminService.getRentalVehicleSubcategories(),
-        ]);
+        const promises = [adminService.getRentalVehicleTypes()];
+        const shouldLoadDetails = isEditor || isView;
+        if (shouldLoadDetails) {
+          promises.push(adminService.getServiceStores());
+          promises.push(adminService.getRentalVehicleSubcategories());
+        }
+
+        const responses = await Promise.all(promises);
+        const response = responses[0];
+        const serviceStoreResponse = shouldLoadDetails ? responses[1] : null;
+        const subcategoryResponse = shouldLoadDetails ? responses[2] : null;
+
         const results =
           response?.data?.data?.results ||
           response?.data?.results ||
           response?.results ||
           [];
-        const serviceStoreResults =
+        const serviceStoreResults = shouldLoadDetails ? (
           serviceStoreResponse?.data?.data?.results ||
           serviceStoreResponse?.data?.results ||
           serviceStoreResponse?.results ||
-          [];
-        const subcategoryResults =
+          []
+        ) : [];
+        const subcategoryResults = shouldLoadDetails ? (
           subcategoryResponse?.data?.data?.results?.results ||
           subcategoryResponse?.data?.data?.results ||
           subcategoryResponse?.data?.results?.results ||
           subcategoryResponse?.data?.results ||
           subcategoryResponse?.results?.results ||
           subcategoryResponse?.results ||
-          [];
+          []
+        ) : [];
         if (!mounted) return;
         setItems(results);
         setServiceStores(serviceStoreResults);
