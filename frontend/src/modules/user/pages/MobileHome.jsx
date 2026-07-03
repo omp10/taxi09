@@ -385,12 +385,12 @@ const MobileHome = () => {
 
         {/* Hero Banner Section */}
         {loadingBanners ? (
-          <section className="mt-4 px-4">
-            <div className="w-full h-[210px] bg-slate-200 animate-pulse rounded-[28px]" />
+          <section className="w-full mt-0">
+            <div className="w-full h-[210px] bg-slate-200 animate-pulse" />
           </section>
         ) : (
           displayTopBanners.length > 0 && (
-            <section className="mt-4 px-4">
+            <section className="w-full mt-0">
               <div
                 onClick={() => {
                   const activeBanner = displayTopBanners[activeTopIndex];
@@ -400,7 +400,7 @@ const MobileHome = () => {
                     navigate('/taxi/user/ride/select-location');
                   }
                 }}
-                className="relative overflow-hidden rounded-[28px] h-[210px] bg-[#0f0f0f] flex items-center shadow-lg group cursor-pointer"
+                className="w-full relative overflow-hidden h-[210px] bg-[#0f0f0f] flex items-center group cursor-pointer"
               >
                 {/* Banner Background Images Stack */}
                 {displayTopBanners.map((banner, idx) => (

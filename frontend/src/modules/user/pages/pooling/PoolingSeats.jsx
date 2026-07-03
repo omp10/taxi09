@@ -80,7 +80,7 @@ const PoolingSeats = () => {
       const seatAvailability = routeData?.seatAvailability || {};
       const availabilityKey =
         nextVehicle?._id && selectedSchedule?.id
-          ? `${String(nextVehicle._id)}:${String(selectedSchedule.id)}`
+          ? `${String(nextVehicle._id)}va:${String(selectedSchedule.id)}`
           : '';
       const nextBookedSeatIds =
         availabilityKey && Array.isArray(seatAvailability[availabilityKey])
