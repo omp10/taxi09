@@ -166,7 +166,7 @@ const MobileHome = () => {
       setActiveTopIndex((prev) => (prev + 1) % displayTopBanners.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [displayTopBanners]);
+  }, [displayTopBanners, activeTopIndex]);
 
   const displayBottomBanners = bottomBanners;
   const [activeBottomIndex, setActiveBottomIndex] = useState(0);
@@ -176,7 +176,7 @@ const MobileHome = () => {
       setActiveBottomIndex((prev) => (prev + 1) % displayBottomBanners.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [displayBottomBanners]);
+  }, [displayBottomBanners, activeBottomIndex]);
 
   // Sync profile/initials
   useEffect(() => {
@@ -391,7 +391,18 @@ const MobileHome = () => {
         ) : (
           displayTopBanners.length > 0 && (
             <section className="w-full mt-0">
-              <div
+              <motion.div
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(event, info) => {
+                  const swipeThreshold = 50;
+                  if (info.offset.x < -swipeThreshold) {
+                    setActiveTopIndex((prev) => (prev + 1) % displayTopBanners.length);
+                  } else if (info.offset.x > swipeThreshold) {
+                    setActiveTopIndex((prev) => (prev - 1 + displayTopBanners.length) % displayTopBanners.length);
+                  }
+                }}
                 onClick={() => {
                   const activeBanner = displayTopBanners[activeTopIndex];
                   if (activeBanner?.redirect_url) {
@@ -400,7 +411,7 @@ const MobileHome = () => {
                     navigate('/taxi/user/ride/select-location');
                   }
                 }}
-                className="w-full relative overflow-hidden h-[210px] bg-[#0f0f0f] flex items-center group cursor-pointer"
+                className="w-full relative overflow-hidden h-[210px] bg-[#0f0f0f] flex items-center group cursor-pointer touch-pan-y"
               >
                 {/* Banner Background Images Stack */}
                 {displayTopBanners.map((banner, idx) => (
@@ -426,7 +437,7 @@ const MobileHome = () => {
                     ))}
                   </div>
                 )}
-              </div>
+              </motion.div>
             </section>
           )
         )}
@@ -717,7 +728,18 @@ const MobileHome = () => {
         ) : (
           displayBottomBanners.length > 0 && (
             <section className="mt-8 px-4">
-              <div
+              <motion.div
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(event, info) => {
+                  const swipeThreshold = 50;
+                  if (info.offset.x < -swipeThreshold) {
+                    setActiveBottomIndex((prev) => (prev + 1) % displayBottomBanners.length);
+                  } else if (info.offset.x > swipeThreshold) {
+                    setActiveBottomIndex((prev) => (prev - 1 + displayBottomBanners.length) % displayBottomBanners.length);
+                  }
+                }}
                 onClick={() => {
                   const activeBanner = displayBottomBanners[activeBottomIndex];
                   if (activeBanner?.redirect_url) {
@@ -726,7 +748,7 @@ const MobileHome = () => {
                     navigate('/taxi/user/cab/spiritual');
                   }
                 }}
-                className="relative w-full rounded-[28px] overflow-hidden aspect-[16/9] shadow-md group cursor-pointer border border-slate-100 bg-[#0f0f0f]"
+                className="relative w-full rounded-[28px] overflow-hidden aspect-[16/9] shadow-md group cursor-pointer border border-slate-100 bg-[#0f0f0f] touch-pan-y"
               >
                 {/* Banner Background Images Stack */}
                 {displayBottomBanners.map((banner, idx) => (
@@ -752,7 +774,7 @@ const MobileHome = () => {
                     ))}
                   </div>
                 )}
-              </div>
+              </motion.div>
             </section>
           )
         )}
