@@ -70,19 +70,23 @@ const getRoleFromPathname = () => {
 
   const pathname = String(window.location.pathname || '').toLowerCase();
 
-  if (pathname.includes('/taxi/owner')) {
+  // Admin routes do not need user/driver FCM push registrations
+  if (pathname.startsWith('/admin') || pathname.includes('/admin')) {
+    return '';
+  }
+
+  // Driver/Owner routes
+  if (
+    pathname.includes('/taxi/driver') ||
+    pathname.includes('/driver') ||
+    pathname.includes('/taxi/owner') ||
+    pathname.includes('/owner')
+  ) {
     return 'driver';
   }
 
-  if (pathname.includes('/taxi/driver') || pathname.includes('/driver')) {
-    return 'driver';
-  }
-
-  if (pathname.includes('/taxi/user') || pathname.includes('/user')) {
-    return 'user';
-  }
-
-  return '';
+  // Fallback to customer/user role for all other routes
+  return 'user';
 };
 
 const getStoredRegistration = () => {

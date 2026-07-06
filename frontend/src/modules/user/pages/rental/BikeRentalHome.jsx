@@ -166,31 +166,31 @@ const normalizeRentalVehicle = (item = {}, index = 0) => {
 const RentalSkeleton = () => (
   <div className="space-y-4">
     {[1, 2, 3].map((i) => (
-      <div key={i} className="rounded-[24px] border border-white/80 bg-white/90 shadow-[0_8px_24px_rgba(15,23,42,0.06)] overflow-hidden">
+      <div key={i} className="rounded-[24px] border border-white/80 bg-white/90 shadow-[0_8px_24px_rgba(15,23,42,0.06)] overflow-hidden animate-pulse">
         <div className="px-4 pt-3.5 pb-3 flex items-center justify-between bg-slate-50/50">
           <div className="flex-1 space-y-2">
-            <div className="h-3 w-16 skeleton rounded-full" />
-            <div className="h-5 w-32 skeleton rounded-md" />
-            <div className="h-3 w-24 skeleton rounded-md" />
+            <div className="h-3 w-16 bg-slate-200 rounded-full" />
+            <div className="h-5 w-32 bg-slate-200 rounded-md" />
+            <div className="h-3 w-24 bg-slate-200 rounded-md" />
             <div className="flex gap-2">
-              <div className="h-3 w-8 skeleton rounded-full" />
-              <div className="h-3 w-12 skeleton rounded-full" />
+              <div className="h-3 w-8 bg-slate-200 rounded-full" />
+              <div className="h-3 w-12 bg-slate-200 rounded-full" />
             </div>
           </div>
-          <div className="h-16 w-20 skeleton rounded-2xl shrink-0" />
+          <div className="h-16 w-20 bg-slate-200 rounded-2xl shrink-0" />
         </div>
         <div className="px-4 pb-4 pt-3 space-y-3">
           <div className="flex gap-1">
-            <div className="h-4 w-12 skeleton rounded-full" />
-            <div className="h-4 w-12 skeleton rounded-full" />
-            <div className="h-4 w-12 skeleton rounded-full" />
+            <div className="h-4 w-12 bg-slate-200 rounded-full" />
+            <div className="h-4 w-12 bg-slate-200 rounded-full" />
+            <div className="h-4 w-12 bg-slate-200 rounded-full" />
           </div>
           <div className="flex items-center justify-between">
             <div className="space-y-1">
-              <div className="h-2 w-8 skeleton rounded-full" />
-              <div className="h-6 w-20 skeleton rounded-md" />
+              <div className="h-2 w-8 bg-slate-200 rounded-full" />
+              <div className="h-6 w-20 bg-slate-200 rounded-md" />
             </div>
-            <div className="h-9 w-24 skeleton rounded-xl" />
+            <div className="h-9 w-24 bg-slate-200 rounded-xl" />
           </div>
         </div>
       </div>

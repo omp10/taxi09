@@ -75,15 +75,9 @@ const BottomNavbar = () => {
                 className="flex-1 flex flex-col items-center justify-center py-1.5 relative z-10 outline-none tap-highlight-transparent group"
               >
                 <div className="relative flex flex-col items-center justify-center w-full gap-0">
-                  <AnimatePresence>
                     {isActive && (
-                      <motion.div
-                        layoutId="active-pill"
-                        transition={{ type: 'spring', stiffness: 400, damping: 32, mass: 1 }}
-                        className="absolute -inset-y-1 inset-x-2 sm:inset-x-4 bg-[#FFC107] rounded-[18px]"
-                      />
+                      <div className="absolute -inset-y-1 inset-x-2 sm:inset-x-4 bg-[#FFC107] rounded-[18px]" />
                     )}
-                  </AnimatePresence>
                   <motion.div
                     animate={{ scale: isActive ? 1.05 : 1, y: isActive ? -1 : 0 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}

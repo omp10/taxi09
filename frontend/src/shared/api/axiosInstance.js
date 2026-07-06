@@ -207,12 +207,12 @@ const getRoleFromPathname = () => {
 
   const pathname = String(window.location.pathname || '').toLowerCase();
 
-  if (pathname.includes('/admin')) {
+  if (pathname.startsWith('/admin') || pathname.includes('/admin')) {
     return 'admin';
   }
 
   // Owners currently authenticate with driver tokens (fleet-owner flow).
-  if (pathname.includes('/taxi/owner')) {
+  if (pathname.includes('/taxi/owner') || pathname.includes('/owner')) {
     return 'driver';
   }
 
@@ -220,11 +220,8 @@ const getRoleFromPathname = () => {
     return 'driver';
   }
 
-  if (pathname.includes('/taxi/user') || pathname.includes('/user')) {
-    return 'user';
-  }
-
-  return '';
+  // Fallback to customer/user role for all other routes
+  return 'user';
 };
 
 const resolveAuthTokenForRequest = (config = {}) => {

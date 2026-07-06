@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
 
 @import "tailwindcss";
 
 :root {
-  font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -83,8 +83,8 @@ body {
   --color-orange-400: #FFD54F;
   --color-orange-100: #FFECB3;
   --color-orange-50: #FFF8E1;
-  --font-sans: 'Montserrat', system-ui, sans-serif;
-  --font-display: 'Montserrat', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
   --font-inter: 'Inter', system-ui, sans-serif;
   --font-outfit: 'Outfit', system-ui, sans-serif;
   
@@ -163,7 +163,7 @@ button, .button-text {
     
     background-color: var(--driver-bg-soft);
     color: #0F172A;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 /* Localize Tailwind's color mapping for the driver module */

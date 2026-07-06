@@ -146,9 +146,13 @@ const formatSubscriptionDuration = (days) => {
 const cleanDescription = (str) => {
   if (!str) return '';
   return String(str)
+    .replace(/┬┬/g, '·')
+    .replace(/┬║/g, '·')
+    .replace(/┬/g, '·')
     .replace(/╥╕/g, '·')
     .replace(/Â·/g, '·')
-    .replace(/â¢/g, '·');
+    .replace(/â€¢/g, '·')
+    .trim();
 };
 const getVehicleFuelLabel = (vehicle) => {
   if (vehicle?.fuel || vehicle?.fuelType) return vehicle.fuel || vehicle.fuelType;
@@ -1339,24 +1343,22 @@ const RentalVehicleDetail = () => {
           className={`sticky top-0 z-30 w-full ${isSubscriptionMode ? 'lg:flex' : 'lg:hidden'}`}
         >
           <div className="px-5 pt-6 pb-5 relative overflow-hidden bg-white/90 backdrop-blur-xl border-b border-slate-200">
-            <div className="relative flex items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <motion.button
-                  whileHover={{ x: -2 }}
-                  whileTap={{ scale: 0.92 }}
-                  onClick={() => navigate(-1)}
-                  className="w-10 h-10 flex items-center justify-center shrink-0 rounded-full bg-[#ffc400] text-white shadow-md transition-all"
-                >
-                  <ArrowLeft size={20} strokeWidth={2.5} />
-                </motion.button>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] leading-none mb-1.5 text-slate-600">
-                    {isSubscriptionMode ? 'Subscription details' : 'Vehicle Details'}
-                  </p>
-                  <h1 className="text-[20px] font-black tracking-tight leading-none truncate max-w-[220px] text-slate-900">
-                    {isSubscriptionMode ? 'Subscription details' : vehicle.name}
-                  </h1>
-                </div>
+            <div className="relative flex items-center justify-center w-full">
+              <motion.button
+                whileHover={{ x: -2 }}
+                whileTap={{ scale: 0.92 }}
+                onClick={() => navigate(-1)}
+                className="absolute left-0 w-10 h-10 flex items-center justify-center shrink-0 rounded-full bg-[#ffc400] text-white shadow-md transition-all z-10"
+              >
+                <ArrowLeft size={20} strokeWidth={2.5} />
+              </motion.button>
+              <div className="text-center min-w-0 px-12">
+                <p className="text-[11px] font-bold uppercase tracking-[0.18em] leading-none mb-1.5 text-slate-600">
+                  {isSubscriptionMode ? 'Subscription details' : 'Vehicle Details'}
+                </p>
+                <h1 className="text-[20px] font-black tracking-tight leading-none truncate max-w-[220px] text-slate-900 mx-auto">
+                  {isSubscriptionMode ? 'Subscription details' : vehicle.name}
+                </h1>
               </div>
             </div>
           </div>
@@ -1711,11 +1713,11 @@ const RentalVehicleDetail = () => {
                   </div>
                 )}
                 
-                <div>
-                  <h2 className="text-[32px] font-black text-slate-900 tracking-tight leading-tight">{vehicle.name}</h2>
-                  <p className="text-[15px] font-semibold text-slate-600 mt-1">{vehicle.vehicleCategory || vehicle.shortDescription || 'Vehicle'}</p>
-                  <div className="flex items-center gap-4 mt-4">
-                    <div className="flex items-center gap-1.5 bg-yellow-50 px-2 py-1 rounded-md">
+                <div className="text-center">
+                  <h2 className="text-[32px] font-black text-slate-900 tracking-tight leading-tight text-center">{vehicle.name}</h2>
+                  <p className="text-[17px] font-bold text-slate-700 mt-2 text-center">{vehicle.vehicleCategory || vehicle.shortDescription || 'Vehicle'}</p>
+                  <div className="flex items-center justify-center gap-4 mt-4">
+                    <div className="flex items-center gap-1.5 bg-yellow-50 px-2.5 py-1.5 rounded-md">
                       <Star size={16} className="text-yellow-500 fill-yellow-500" />
                       <span className="text-[15px] font-bold text-slate-900">{vehicle.rating || '4.8'}</span>
                     </div>
@@ -1737,22 +1739,22 @@ const RentalVehicleDetail = () => {
                 <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
                   <Users size={22} className="text-slate-500 mb-2" />
                   <p className="text-[18px] font-black text-slate-900">{vehicle.capacity || 1}</p>
-                  <p className="text-[13px] font-semibold text-slate-600">Seat</p>
+                  <p className="text-[14px] font-bold text-slate-700">Seat</p>
                 </div>
                 <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
                   <Luggage size={22} className="text-slate-500 mb-2" />
                   <p className="text-[18px] font-black text-slate-900">{vehicle.luggageCapacity || 1}</p>
-                  <p className="text-[13px] font-semibold text-slate-600">Bag Space</p>
+                  <p className="text-[14px] font-bold text-slate-700">Bag Space</p>
                 </div>
                 <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
                   <Car size={22} className="text-slate-500 mb-2" />
                   <p className="text-[16px] font-black text-slate-900 truncate w-full">{vehicle.vehicleCategory || 'Bike'}</p>
-                  <p className="text-[13px] font-semibold text-slate-600">Vehicle Type</p>
+                  <p className="text-[14px] font-bold text-slate-700">Vehicle Type</p>
                 </div>
                 <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
                   <Fuel size={22} className="text-slate-500 mb-2" />
-                  <p className="text-[16px] font-black text-slate-900">{vehicle.fuel || '80 km/hr'}</p>
-                  <p className="text-[13px] font-semibold text-slate-600">Mileage (Approx.)</p>
+                  <p className="text-[16px] font-black text-slate-900">{cleanDescription(vehicle.fuel) || '80 km/hr'}</p>
+                  <p className="text-[14px] font-bold text-slate-700">Mileage (Approx.)</p>
                 </div>
               </motion.div>
 
@@ -1763,18 +1765,18 @@ const RentalVehicleDetail = () => {
                 transition={{ delay: 0.1 }}
                 className="rounded-[20px] border border-slate-100 bg-white p-6 shadow-sm space-y-5"
               >
-                <p className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-700">WHAT'S INCLUDED</p>
-                <div className="space-y-4">
+                <p className="text-[15px] font-black uppercase tracking-[0.15em] text-slate-800 text-center">WHAT'S INCLUDED</p>
+                <div className="flex flex-col items-center justify-center space-y-4">
                   {(vehicle.amenities?.length ? vehicle.amenities : vehicle.features || []).map((feature) => (
-                    <div key={feature} className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-full border-[1.5px] border-emerald-500 flex items-center justify-center text-emerald-500">
+                    <div key={feature} className="flex items-center gap-3 justify-center">
+                      <div className="w-5 h-5 rounded-full border-[1.5px] border-emerald-500 flex items-center justify-center text-emerald-500 shrink-0">
                         <CheckCircle2 size={12} strokeWidth={3} />
                       </div>
-                      <span className="text-[15px] font-bold text-slate-800">{feature}</span>
+                      <span className="text-[16px] font-extrabold text-slate-800">{feature}</span>
                     </div>
                   ))}
                   {(!vehicle.amenities?.length && !vehicle.features?.length) && (
-                    <div className="text-slate-600 text-[14px] font-semibold">Standard features included.</div>
+                    <div className="text-slate-600 text-[14px] font-semibold text-center">Standard features included.</div>
                   )}
                 </div>
               </motion.div>
@@ -1784,16 +1786,14 @@ const RentalVehicleDetail = () => {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.12 }}
-                className="rounded-[20px] border border-slate-100 bg-white p-6 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm"
+                className="rounded-[20px] border border-slate-100 bg-white p-6 flex flex-col items-center justify-center text-center gap-5 shadow-sm"
               >
-                <div className="flex items-center gap-5 w-full sm:w-auto">
-                  <div className="w-14 h-14 rounded-full bg-[#FFB800] flex items-center justify-center shrink-0 shadow-[0_4px_14px_rgba(255,184,0,0.3)]">
-                    <Calendar size={24} className="text-slate-900" />
-                  </div>
-                  <div>
-                    <p className="text-[16px] font-black text-slate-900">Need a different duration?</p>
-                    <p className="text-[13px] font-semibold text-slate-600 mt-1 leading-relaxed">Contact us for custom rental packages and long-term offers.</p>
-                  </div>
+                <div className="w-14 h-14 rounded-full bg-[#FFB800] flex items-center justify-center shrink-0 shadow-[0_4px_14px_rgba(255,184,0,0.3)]">
+                  <Calendar size={24} className="text-slate-900" />
+                </div>
+                <div>
+                  <p className="text-[18px] font-black text-slate-900">Need a different duration?</p>
+                  <p className="text-[15px] font-bold text-slate-600 mt-2 leading-relaxed">Contact us for custom rental packages and long-term offers.</p>
                 </div>
                 <button
                   onClick={() => setShowQuoteForm(true)}
@@ -1809,10 +1809,10 @@ const RentalVehicleDetail = () => {
               <div className="sticky top-24 space-y-6">
                 <div className="rounded-[24px] border border-slate-100 bg-white p-6 shadow-sm">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-600">
+                    <h3 className="text-[14px] font-black uppercase tracking-[0.15em] text-slate-800">
                       CHOOSE HOURLY RENTAL
                     </h3>
-                    <span className="text-[13px] font-bold text-amber-600">
+                    <span className="text-[14px] font-bold text-amber-600">
                       Step {selectionStep === 'package' ? '1' : '2'} of 2
                     </span>
                   </div>
@@ -1828,36 +1828,36 @@ const RentalVehicleDetail = () => {
                             className={`w-full text-left rounded-[16px] border-2 p-5 transition-all relative ${
                               isSelected
                                 ? 'border-[#ffc400] bg-[#ffc400] shadow-[0_8px_20px_rgba(17,24,39,0.2)]'
-                                : 'border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50'
+                                : 'border-slate-150 bg-white hover:border-slate-250 hover:bg-slate-50'
                             }`}
                           >
                             <div className="flex items-start justify-between">
                               <div className="flex items-center gap-4">
                                 <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-1 ${
-                                  isSelected ? 'border-[#FFB800]' : 'border-slate-300'
+                                  isSelected ? 'border-slate-900 bg-white' : 'border-slate-400'
                                 }`}>
-                                  {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-[#FFB800]" />}
+                                  {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-slate-900" />}
                                 </div>
                                 <div>
-                                  <p className={`text-[16px] font-black ${isSelected ? 'text-[#332000]' : 'text-slate-900'}`}>
+                                  <p className={`text-[17px] font-black ${isSelected ? 'text-slate-950' : 'text-slate-950'}`}>
                                     {row.label || `${row.durationHours} Hours`}
                                   </p>
-                                  <p className={`text-[12px] font-semibold mt-1.5 ${isSelected ? 'text-[#5d3f00]' : 'text-slate-600'}`}>
+                                  <p className={`text-[13.5px] font-bold mt-1.5 ${isSelected ? 'text-slate-900/90' : 'text-slate-800'}`}>
                                     {row.durationHours} hour{row.durationHours > 1 ? 's' : ''} - {row.includedKm} km included
                                   </p>
                                 </div>
                               </div>
                               <div className="text-right">
-                                <p className={`text-[16px] font-black ${isSelected ? 'text-[#332000]' : 'text-slate-900'}`}>
+                                <p className={`text-[17px] font-black ${isSelected ? 'text-slate-950' : 'text-slate-950'}`}>
                                   Rs.{row.price}
                                 </p>
-                                <p className={`text-[12px] font-semibold mt-1.5 ${isSelected ? 'text-[#5d3f00]' : 'text-slate-600'}`}>
+                                <p className={`text-[13px] font-bold mt-1.5 ${isSelected ? 'text-slate-900/90' : 'text-slate-800'}`}>
                                   {packageSuffix(row.durationHours)}
                                 </p>
                               </div>
                             </div>
-                            <div className={`mt-4 pt-4 border-t text-[11.5px] font-semibold flex gap-2 sm:gap-3 flex-wrap ${
-                              isSelected ? 'border-slate-700/60 text-slate-350' : 'border-slate-100 text-slate-600'
+                            <div className={`mt-4 pt-4 border-t text-[13px] font-black flex gap-2 sm:gap-3 flex-wrap ${
+                              isSelected ? 'border-slate-900/20 text-slate-950' : 'border-slate-200 text-slate-800'
                             }`}>
                               <span>Extra hour: Rs.{row.extraHourPrice || 0}</span>
                               <span className="hidden sm:inline">•</span>
@@ -1870,10 +1870,10 @@ const RentalVehicleDetail = () => {
                   ) : (
                     <div className="space-y-4">
                       <div className="flex items-center justify-between pb-2">
-                        <p className="text-[15px] font-black text-slate-900">Select Location</p>
+                        <p className="text-[17px] font-black text-slate-950">Select Location</p>
                         <button
                           onClick={() => setSelectionStep('package')}
-                          className="text-[13px] font-bold text-[#FFB800] hover:text-yellow-600 transition-colors flex items-center gap-1"
+                          className="text-[14px] font-black text-[#FFB800] hover:text-yellow-600 transition-colors flex items-center gap-1"
                         >
                           <ChevronLeft size={16} /> Back
                         </button>
@@ -1903,29 +1903,29 @@ const RentalVehicleDetail = () => {
                                 className={`w-full text-left p-4 rounded-[16px] border-2 transition-all ${
                                   isSelected
                                     ? 'border-[#ffc400] bg-[#ffc400] text-[#332000] shadow-md'
-                                    : 'border-slate-100 bg-white hover:border-slate-200'
+                                    : 'border-slate-150 bg-white hover:border-slate-250'
                                 }`}
                               >
                                 <div className="flex items-start justify-between gap-3">
                                   <div className="min-w-0 pr-2">
                                     <div className="flex items-center gap-2 flex-wrap">
-                                      <p className={`text-[14px] font-black truncate ${isSelected ? 'text-[#332000]' : 'text-slate-900'}`}>
+                                      <p className={`text-[15px] font-black truncate ${isSelected ? 'text-[#332000]' : 'text-slate-950'}`}>
                                         {item.name}
                                       </p>
                                       {index === 0 && userCoordinates && (
                                         <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                                          isSelected ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-700'
+                                          isSelected ? 'bg-white/20 text-white' : 'bg-emerald-150 text-emerald-800'
                                         }`}>
                                           Closest
                                         </span>
                                       )}
                                     </div>
-                                    <p className={`text-[12px] mt-1.5 truncate ${isSelected ? 'text-[#5d3f00]' : 'text-slate-600'}`}>
+                                    <p className={`text-[13.5px] font-bold mt-1.5 truncate ${isSelected ? 'text-[#473000]' : 'text-slate-800'}`}>
                                       {item.pickupLabel || item.address}
                                     </p>
                                   </div>
                                   <div className={`w-5 h-5 shrink-0 rounded-full border-2 flex items-center justify-center mt-0.5 ${
-                                    isSelected ? 'border-[#FFB800]' : 'border-slate-300'
+                                    isSelected ? 'border-[#FFB800]' : 'border-slate-400'
                                   }`}>
                                     {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-[#FFB800]" />}
                                   </div>
@@ -1940,32 +1940,32 @@ const RentalVehicleDetail = () => {
                 </div>
 
                 <div className="rounded-[24px] border border-slate-100 bg-white p-6 shadow-sm">
-                  <p className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-700 mb-5">BOOKING SUMMARY</p>
-                  <div className="space-y-4 text-[14px]">
+                  <p className="text-[14px] font-black uppercase tracking-[0.15em] text-slate-800 mb-5">BOOKING SUMMARY</p>
+                  <div className="space-y-4 text-[15px]">
                     <div className="flex justify-between items-center">
-                      <span className="font-semibold text-slate-600">Base Fare</span>
-                      <span className="font-black text-slate-900">Rs.{selectedPackage?.price || 0}</span>
+                      <span className="font-bold text-slate-800">Base Fare</span>
+                      <span className="font-black text-slate-950">Rs.{selectedPackage?.price || 0}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="font-semibold text-slate-600">Included Distance</span>
-                      <span className="font-black text-slate-900">{selectedPackage?.includedKm || 0} km</span>
+                      <span className="font-bold text-slate-800">Included Distance</span>
+                      <span className="font-black text-slate-950">{selectedPackage?.includedKm || 0} km</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="font-semibold text-slate-600">Included Duration</span>
-                      <span className="font-black text-slate-900">{selectedPackage?.durationHours || 0} Hours</span>
+                      <span className="font-bold text-slate-800">Included Duration</span>
+                      <span className="font-black text-slate-950">{selectedPackage?.durationHours || 0} Hours</span>
                     </div>
                   </div>
                   
-                  <div className="mt-5 pt-5 border-t border-slate-100 flex justify-between items-end">
-                    <span className="text-[16px] font-black text-slate-900">Total <span className="text-[12px] font-semibold text-slate-600">(Estimated)</span></span>
+                  <div className="mt-5 pt-5 border-t border-slate-150 flex justify-between items-end">
+                    <span className="text-[17px] font-black text-slate-950">Total <span className="text-[13px] font-bold text-slate-800">(Estimated)</span></span>
                     <div className="text-right">
-                      <span className="text-[24px] font-black text-slate-900 leading-none">Rs.{selectedPackage?.price || 0}</span>
-                      <span className="text-[12px] font-bold text-slate-600 block mt-1">/hr</span>
+                      <span className="text-[25px] font-black text-slate-950 leading-none">Rs.{selectedPackage?.price || 0}</span>
+                      <span className="text-[13px] font-extrabold text-slate-800 block mt-1">/hr</span>
                     </div>
                   </div>
 
-                  <div className="mt-5 p-3.5 rounded-[14px] bg-slate-50 flex items-start gap-2.5 text-[11px] font-semibold text-slate-600 leading-relaxed border border-slate-100">
-                    <Shield size={14} className="shrink-0 mt-0.5 text-slate-500" />
+                  <div className="mt-5 p-3.5 rounded-[14px] bg-slate-50 flex items-start gap-2.5 text-[13px] font-bold text-slate-800 leading-relaxed border border-slate-200">
+                    <Shield size={14} className="shrink-0 mt-0.5 text-slate-700" />
                     <p>Security deposit and taxes may apply at checkout.</p>
                   </div>
 

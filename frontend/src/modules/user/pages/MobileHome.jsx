@@ -178,6 +178,70 @@ const MobileHome = () => {
     return () => clearInterval(timer);
   }, [displayBottomBanners, activeBottomIndex]);
 
+  // Banner Touch Swipe Handlers (FAANG engineering style)
+  const touchStartPos = useRef(null);
+  const isSwipeGesture = useRef(false);
+
+  const handleTouchStart = (e) => {
+    if (!e.touches || e.touches.length === 0) return;
+    touchStartPos.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+      time: Date.now()
+    };
+    isSwipeGesture.current = false;
+  };
+
+  const handleTouchEnd = (e, isTopBanner) => {
+    if (!touchStartPos.current || !e.changedTouches || e.changedTouches.length === 0) return;
+
+    const endX = e.changedTouches[0].clientX;
+    const endY = e.changedTouches[0].clientY;
+    const diffX = touchStartPos.current.x - endX;
+    const diffY = touchStartPos.current.y - endY;
+    const duration = Date.now() - touchStartPos.current.time;
+
+    // Detect horizontal swipe: diffX must be larger than diffY, and have crossed threshold
+    if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY) && duration < 300) {
+      isSwipeGesture.current = true;
+      if (isTopBanner) {
+        if (displayTopBanners.length > 1) {
+          if (diffX > 0) {
+            // Swipe left -> Next
+            setActiveTopIndex((prev) => (prev + 1) % displayTopBanners.length);
+          } else {
+            // Swipe right -> Prev
+            setActiveTopIndex((prev) => (prev - 1 + displayTopBanners.length) % displayTopBanners.length);
+          }
+        }
+      } else {
+        if (displayBottomBanners.length > 1) {
+          if (diffX > 0) {
+            // Swipe left -> Next
+            setActiveBottomIndex((prev) => (prev + 1) % displayBottomBanners.length);
+          } else {
+            // Swipe right -> Prev
+            setActiveBottomIndex((prev) => (prev - 1 + displayBottomBanners.length) % displayBottomBanners.length);
+          }
+        }
+      }
+    }
+  };
+
+  const handleBannerClick = (e, banner, defaultRedirect) => {
+    if (isSwipeGesture.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      isSwipeGesture.current = false;
+      return;
+    }
+    if (banner?.redirect_url) {
+      navigate(banner.redirect_url);
+    } else {
+      navigate(defaultRedirect);
+    }
+  };
+
   // Sync profile/initials
   useEffect(() => {
     let active = true;
@@ -391,40 +455,27 @@ const MobileHome = () => {
         ) : (
           displayTopBanners.length > 0 && (
             <section className="w-full mt-0">
-              <motion.div
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.2}
-                onDragEnd={(event, info) => {
-                  const swipeThreshold = 50;
-                  if (info.offset.x < -swipeThreshold) {
-                    setActiveTopIndex((prev) => (prev + 1) % displayTopBanners.length);
-                  } else if (info.offset.x > swipeThreshold) {
-                    setActiveTopIndex((prev) => (prev - 1 + displayTopBanners.length) % displayTopBanners.length);
-                  }
-                }}
-                onClick={() => {
-                  const activeBanner = displayTopBanners[activeTopIndex];
-                  if (activeBanner?.redirect_url) {
-                    navigate(activeBanner.redirect_url);
-                  } else {
-                    navigate('/taxi/user/ride/select-location');
-                  }
-                }}
-                className="w-full relative overflow-hidden h-[210px] bg-[#0f0f0f] flex items-center group cursor-pointer touch-pan-y"
+              <div
+                onTouchStart={handleTouchStart}
+                onTouchEnd={(e) => handleTouchEnd(e, true)}
+                onClick={(e) => handleBannerClick(e, displayTopBanners[activeTopIndex], '/taxi/user/ride/select-location')}
+                className="w-full relative overflow-hidden h-[210px] bg-[#0f0f0f] flex items-center group cursor-pointer touch-pan-y select-none"
               >
-                {/* Banner Background Images Stack */}
-                {displayTopBanners.map((banner, idx) => (
-                  <div
-                    key={banner?._id || idx}
-                    className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
-                    style={{
-                      backgroundImage: `url('${resolveBannerImage(banner?.image)}')`,
-                      opacity: idx === activeTopIndex ? 1.0 : 0,
-                      zIndex: idx === activeTopIndex ? 1 : 0
-                    }}
-                  />
-                ))}
+                {/* Banner Background Images Sliding Track */}
+                <div
+                  className="flex w-full h-full transition-transform duration-500 ease-out"
+                  style={{ transform: `translateX(-${activeTopIndex * 100}%)` }}
+                >
+                  {displayTopBanners.map((banner, idx) => (
+                    <div
+                      key={banner?._id || idx}
+                      className="w-full h-full bg-cover bg-center shrink-0"
+                      style={{
+                        backgroundImage: `url('${resolveBannerImage(banner?.image)}')`
+                      }}
+                    />
+                  ))}
+                </div>
 
                 {/* Carousel indicators */}
                 {displayTopBanners.length > 1 && (
@@ -437,7 +488,7 @@ const MobileHome = () => {
                     ))}
                   </div>
                 )}
-              </motion.div>
+              </div>
             </section>
           )
         )}
@@ -596,17 +647,17 @@ const MobileHome = () => {
         </section>
 
         {/* More Services Section */}
-        <section className="mt-8 px-4">
+        <section className="mt-10 px-5 mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[18px] font-black text-slate-800 tracking-tight">More Services</h2>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2">
 
             {/* Monthly Subscription */}
             <button
               onClick={() => navigate('/taxi/user/profile/subscriptions')}
-              className="relative bg-white rounded-2xl p-2.5 pt-3 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[115px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
+              className="relative bg-white rounded-2xl p-2 pt-2.5 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[96px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
             >
               <div className="w-full flex justify-center mt-1">
                 <div className="relative w-[40px] h-[18px]">
@@ -625,7 +676,7 @@ const MobileHome = () => {
             {/* My Bookings */}
             <button
               onClick={() => navigate('/taxi/user/activity')}
-              className="relative bg-white rounded-2xl p-2.5 pt-3 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[115px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
+              className="relative bg-white rounded-2xl p-2 pt-2.5 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[96px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
             >
               <div className="w-full flex justify-center mt-1">
                 <div className="relative w-[40px] h-[18px]">
@@ -644,7 +695,7 @@ const MobileHome = () => {
             {/* Travel Packages */}
             <button
               onClick={() => navigate('/taxi/user/cab/spiritual')}
-              className="relative bg-white rounded-2xl p-2.5 pt-3 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[115px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
+              className="relative bg-white rounded-2xl p-2 pt-2.5 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[96px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
             >
               <div className="w-full flex justify-center mt-1">
                 <div className="relative w-[40px] h-[18px]">
@@ -663,7 +714,7 @@ const MobileHome = () => {
             {/* Internship Program */}
             <button
               onClick={() => navigate('/taxi/user/onboarding')}
-              className="relative bg-white rounded-2xl p-2.5 pt-3 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[115px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
+              className="relative bg-white rounded-2xl p-2 pt-2.5 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[96px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
             >
               <div className="w-full flex justify-center mt-1">
                 <div className="relative w-[40px] h-[18px]">
@@ -682,7 +733,7 @@ const MobileHome = () => {
             {/* Attach Car */}
             <button
               onClick={() => navigate('/taxi/driver/login')}
-              className="relative bg-white rounded-2xl p-2.5 pt-3 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[115px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
+              className="relative bg-white rounded-2xl p-2 pt-2.5 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[96px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
             >
               <div className="w-full flex justify-center mt-1">
                 <div className="relative w-[40px] h-[18px]">
@@ -701,7 +752,7 @@ const MobileHome = () => {
             {/* Driver Registration */}
             <button
               onClick={() => navigate('/taxi/driver/login')}
-              className="relative bg-white rounded-2xl p-2.5 pt-3 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[115px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
+              className="relative bg-white rounded-2xl p-2 pt-2.5 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[96px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
             >
               <div className="w-full flex justify-center mt-1">
                 <div className="relative w-[40px] h-[18px]">
@@ -728,40 +779,27 @@ const MobileHome = () => {
         ) : (
           displayBottomBanners.length > 0 && (
             <section className="mt-8 px-4">
-              <motion.div
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.2}
-                onDragEnd={(event, info) => {
-                  const swipeThreshold = 50;
-                  if (info.offset.x < -swipeThreshold) {
-                    setActiveBottomIndex((prev) => (prev + 1) % displayBottomBanners.length);
-                  } else if (info.offset.x > swipeThreshold) {
-                    setActiveBottomIndex((prev) => (prev - 1 + displayBottomBanners.length) % displayBottomBanners.length);
-                  }
-                }}
-                onClick={() => {
-                  const activeBanner = displayBottomBanners[activeBottomIndex];
-                  if (activeBanner?.redirect_url) {
-                    navigate(activeBanner.redirect_url);
-                  } else {
-                    navigate('/taxi/user/cab/spiritual');
-                  }
-                }}
-                className="relative w-full rounded-[28px] overflow-hidden aspect-[16/9] shadow-md group cursor-pointer border border-slate-100 bg-[#0f0f0f] touch-pan-y"
+              <div
+                onTouchStart={handleTouchStart}
+                onTouchEnd={(e) => handleTouchEnd(e, false)}
+                onClick={(e) => handleBannerClick(e, displayBottomBanners[activeBottomIndex], '/taxi/user/cab/spiritual')}
+                className="relative w-full rounded-[28px] overflow-hidden aspect-[16/9] shadow-md group cursor-pointer border border-slate-100 bg-[#0f0f0f] touch-pan-y select-none"
               >
-                {/* Banner Background Images Stack */}
-                {displayBottomBanners.map((banner, idx) => (
-                  <div
-                    key={banner?._id || idx}
-                    className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
-                    style={{
-                      backgroundImage: `url('${resolveBannerImage(banner?.image)}')`,
-                      opacity: idx === activeBottomIndex ? 1.0 : 0,
-                      zIndex: idx === activeBottomIndex ? 1 : 0
-                    }}
-                  />
-                ))}
+                {/* Banner Background Images Sliding Track */}
+                <div
+                  className="flex w-full h-full transition-transform duration-500 ease-out"
+                  style={{ transform: `translateX(-${activeBottomIndex * 100}%)` }}
+                >
+                  {displayBottomBanners.map((banner, idx) => (
+                    <div
+                      key={banner?._id || idx}
+                      className="w-full h-full bg-cover bg-center shrink-0"
+                      style={{
+                        backgroundImage: `url('${resolveBannerImage(banner?.image)}')`
+                      }}
+                    />
+                  ))}
+                </div>
 
                 {/* Carousel indicators */}
                 {displayBottomBanners.length > 1 && (
@@ -774,7 +812,7 @@ const MobileHome = () => {
                     ))}
                   </div>
                 )}
-              </motion.div>
+              </div>
             </section>
           )
         )}
