@@ -1460,7 +1460,7 @@ const AdminLayout = () => {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F8F9FA] font-sans text-gray-900">
+    <div className="flex h-screen overflow-hidden bg-[#F8F9FA] font-sans text-gray-900 admin-theme">
       <aside
         className={`relative z-50 flex h-screen flex-col overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
           isCollapsed ? 'w-20' : 'w-72'

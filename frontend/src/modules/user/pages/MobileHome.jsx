@@ -531,17 +531,7 @@ const MobileHome = () => {
               </div>
 
               {/* Icon Badge */}
-              <div className="relative z-10 w-9 h-9 rounded-[14px] bg-white/60 backdrop-blur-md shadow-sm border border-white/80 flex items-center justify-center mb-2">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#598aff] to-[#7c5bfa] flex items-center justify-center shadow-sm">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <circle cx="12" cy="12" r="3" />
-                    <path d="M3.5 12h5.5" />
-                    <path d="M15 12h5.5" />
-                    <path d="M12 15v6.5" />
-                  </svg>
-                </div>
-              </div>
+
 
               {/* Text Content */}
               <div className="relative z-10 mb-2">
@@ -584,20 +574,7 @@ const MobileHome = () => {
               </div>
 
               {/* Icon Badge */}
-              <div className="relative z-10 w-9 h-9 rounded-[14px] bg-white/50 backdrop-blur-md shadow-sm border border-white/60 flex items-center justify-center mb-2">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#ffcc20] to-[#ff8c00] flex items-center justify-center shadow-sm">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="11" cy="6" r="2.5" />
-                    <path d="M11 8.5v6" />
-                    <path d="M11 14.5l-3 4" />
-                    <path d="M11 14.5l3 4" />
-                    <path d="M11 10.5l4-1" />
-                    <path d="M6 20V9" />
-                    <path d="M6 16h3" />
-                    <circle cx="17" cy="9" r="2" />
-                  </svg>
-                </div>
-              </div>
+
 
               {/* Text Content */}
               <div className="relative z-10 mb-2">

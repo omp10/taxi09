@@ -358,3 +358,9 @@ button, .button-text {
   scrollbar-width: none;
 }
 
+/* Centralized Admin Panel Theme Configuration */
+.admin-theme,
+.admin-theme * {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+}
+
