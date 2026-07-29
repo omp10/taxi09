@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Fuel, Shield, ChevronRight, ChevronLeft, ChevronDown, SlidersHorizontal, ArrowDownUp, Star, Info, Car, Search, X, Bike, MapPin, MessageSquare, Calendar, User, Compass, Truck, Check, Headset, Home } from 'lucide-react';
+import { ArrowLeft, Fuel, Shield, ChevronRight, ChevronLeft, ChevronDown, SlidersHorizontal, ArrowDownUp, Star, Info, Car, Search, X, Bike, MapPin, MessageSquare, Calendar, User, Compass, Truck, Check, Headset, Home, Bell, Clock, Users, Percent, IndianRupee } from 'lucide-react';
 import { userService } from '../../services/userService';
+import BottomNavbar from '../../components/BottomNavbar';
 import rentalCarImg from '@/assets/images/rental_car.png';
 import toast from 'react-hot-toast';
 const DURATION_TABS = ['Hourly', 'Half-Day', 'Daily'];
@@ -221,11 +222,27 @@ const BikeRentalHome = () => {
     if (location.state?.preSelectedCategory) {
       return location.state.preSelectedCategory;
     }
-    return 'all';
+    return 'car';
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [activeSegment, setActiveSegment] = useState('rentals'); // 'rentals' or 'subscriptions'
   const [subCategory, setSubCategory] = useState('Hatchbacks'); // 'Hatchbacks', 'Sedans', 'SUVs' for subscriptions
+  const [landingCategory, setLandingCategory] = useState('Hatchback');
+  const [dropOffLocation, setDropOffLocation] = useState('');
+  const [pickupDate, setPickupDate] = useState('2026-06-26');
+  const [dropoffDate, setDropoffDate] = useState('2026-06-27');
+  const [pickupTime, setPickupTime] = useState('18:00');
+  const [dropoffTime, setDropoffTime] = useState('16:00');
+  const [passengerCount, setPassengerCount] = useState(1);
+  const [transmission, setTransmission] = useState('Manual');
+  const [offerApplied, setOfferApplied] = useState(false);
+  const [landingDropdown, setLandingDropdown] = useState(null);
+  const [resultDropdown, setResultDropdown] = useState(null);
+  const [resultPriceFilter, setResultPriceFilter] = useState('Any');
+  const [resultTransmissionFilter, setResultTransmissionFilter] = useState('Any');
+  const [resultFuelFilter, setResultFuelFilter] = useState('Any');
+  const [resultSeatsFilter, setResultSeatsFilter] = useState('Any');
+  const [resultSort, setResultSort] = useState('Recommended');
   const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const isAddressEntered = queryParams.get('search') === 'true';
   const selectedLocation = queryParams.get('location') || 'South Tukoganj, Indore';
@@ -333,7 +350,7 @@ const BikeRentalHome = () => {
       // Ignore storage failures and continue with navigation state.
     }
 
-    navigate('/rental/vehicle', { state: payload });
+    navigate('/taxi/user/rental/vehicle', { state: payload });
   };
 
   useEffect(() => {
@@ -526,6 +543,308 @@ const BikeRentalHome = () => {
   if (selectedCategoryFilter === 'car') {
     if (isAddressEntered) {
       // 2. Render Search Results View (Indore Listing)
+      const fallbackCars = [
+        { id: 'swift-demo', brand: 'Maruti', name: 'Swift', image: rentalCarImg, fuel: 'Petrol', capacity: 5, price: 2199, badge: 'Popular', rating: '4.6', reviews: 128, body: 'Hatchback' },
+        { id: 'city-demo', brand: 'Honda', name: 'City', image: rentalCarImg, fuel: 'Petrol', capacity: 5, price: 2599, badge: 'Best Value', rating: '4.7', reviews: 210, body: 'Sedan' },
+        { id: 'creta-demo', brand: 'Hyundai', name: 'Creta', image: rentalCarImg, fuel: 'Diesel', capacity: 5, price: 3199, badge: 'Premium', rating: '4.8', reviews: 156, body: 'SUV' },
+        { id: 'scorpio-demo', brand: 'Mahindra', name: 'Scorpio-N', image: rentalCarImg, fuel: 'Diesel', capacity: 7, price: 3899, badge: '', rating: '4.8', reviews: 98, body: 'SUV' },
+      ];
+      const listingCars = (matchedCars.length ? matchedCars : fallbackCars).slice(0, 4).map((car, index) => ({
+        ...fallbackCars[index],
+        ...car,
+        body: car.body || car.categoryType?.replace(/s$/, '') || fallbackCars[index]?.body || 'Hatchback',
+        badge: car.badge || fallbackCars[index]?.badge || '',
+        rating: car.rating || fallbackCars[index]?.rating || '4.7',
+        reviews: car.reviews || fallbackCars[index]?.reviews || 128,
+        fuel: String(car.fuel || fallbackCars[index]?.fuel || 'Petrol').split(' ')[0],
+        transmission: car.transmission || fallbackCars[index]?.transmission || (index === 1 ? 'Auto' : 'Manual'),
+      }));
+      const filteredListingCars = listingCars
+        .filter((car) => {
+          if (resultPriceFilter === 'Under ₹3000' && Number(car.price || 0) >= 3000) return false;
+          if (resultPriceFilter === '₹3000+' && Number(car.price || 0) < 3000) return false;
+          if (resultTransmissionFilter !== 'Any' && car.transmission !== resultTransmissionFilter) return false;
+          if (resultFuelFilter !== 'Any' && car.fuel !== resultFuelFilter) return false;
+          if (resultSeatsFilter === '5 Seater' && Number(car.capacity || 0) !== 5) return false;
+          if (resultSeatsFilter === '6+ Seater' && Number(car.capacity || 0) < 6) return false;
+          return true;
+        })
+        .sort((a, b) => {
+          if (resultSort === 'Price Low') return Number(a.price || 0) - Number(b.price || 0);
+          if (resultSort === 'Price High') return Number(b.price || 0) - Number(a.price || 0);
+          if (resultSort === 'Rating') return Number(b.rating || 0) - Number(a.rating || 0);
+          return Number(b.reviews || 0) - Number(a.reviews || 0);
+        });
+      const activeFilterCount = [
+        resultPriceFilter !== 'Any',
+        resultTransmissionFilter !== 'Any',
+        resultFuelFilter !== 'Any',
+        resultSeatsFilter !== 'Any',
+      ].filter(Boolean).length;
+      const resetResultFilters = () => {
+        setResultPriceFilter('Any');
+        setResultTransmissionFilter('Any');
+        setResultFuelFilter('Any');
+        setResultSeatsFilter('Any');
+        setResultSort('Recommended');
+        setResultDropdown(null);
+      };
+
+      return (
+        <div className="min-h-screen max-w-lg mx-auto bg-white text-black font-sans relative overflow-x-hidden pb-28 shadow-2xl border-x border-slate-100">
+          <header className="px-5 pt-5 pb-3">
+            <div className="relative flex items-center justify-center">
+              <button
+                type="button"
+                onClick={() => navigate('/taxi/user/rental', { state: location.state })}
+                className="absolute left-0 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-[0_8px_20px_rgba(15,23,42,0.11)]"
+              >
+                <ArrowLeft size={21} strokeWidth={2.4} />
+              </button>
+              <div className="text-center">
+                <div className="text-[27px] font-black italic leading-none tracking-tight">
+                  TAXI<span className="text-[#f5b700]">09</span>
+                </div>
+                <div className="mt-0.5 text-[12px] font-bold uppercase tracking-[0.14em] text-slate-500">Self Drive</div>
+              </div>
+              <button
+                type="button"
+                onClick={() => navigate('/taxi/user/notifications')}
+                className="absolute right-0 flex h-10 w-10 items-center justify-center text-black"
+              >
+                <Bell size={25} strokeWidth={2.1} />
+                <span className="absolute right-2 top-1.5 h-2 w-2 rounded-full bg-[#f5b700]" />
+              </button>
+            </div>
+          </header>
+
+          <main className="px-3">
+            <section className="grid grid-cols-[1fr_auto_1fr] items-center rounded-[14px] border border-slate-100 bg-white p-3 shadow-[0_6px_18px_rgba(15,23,42,0.07)]">
+              <div className="flex items-start gap-2">
+                <span className="mt-5 h-3 w-3 rounded-full bg-[#22c55e]" />
+                <div>
+                  <p className="text-[11px] font-medium text-slate-500">Pick-up</p>
+                  <p className="line-clamp-2 text-[12px] font-black leading-tight">{selectedLocation}</p>
+                </div>
+              </div>
+              <button className="mx-2 flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-[0_6px_16px_rgba(15,23,42,0.12)]">
+                <ArrowDownUp size={20} strokeWidth={2.5} />
+              </button>
+              <div className="flex items-start gap-2 border-l border-dashed border-slate-200 pl-3">
+                <span className="mt-5 h-3 w-3 rounded-full bg-[#ff3347]" />
+                <div className="min-w-0">
+                  <p className="text-[11px] font-medium text-slate-500">Drop-off</p>
+                  <p className="line-clamp-2 text-[12px] font-black leading-tight">{selectedLocation}</p>
+                </div>
+              </div>
+            </section>
+
+            <section className="mt-4">
+              <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+              {[
+                ['Filters', SlidersHorizontal, activeFilterCount ? `${activeFilterCount} On` : 'Filters'],
+                ['Price', IndianRupee, resultPriceFilter],
+                ['Transmission', SlidersHorizontal, resultTransmissionFilter],
+                ['Fuel Type', Fuel, resultFuelFilter],
+                ['Seats', ArrowDownUp, resultSeatsFilter],
+              ].map(([label, Icon, value]) => {
+                const options =
+                  label === 'Price'
+                    ? ['Any', 'Under ₹3000', '₹3000+']
+                    : label === 'Transmission'
+                      ? ['Any', 'Manual', 'Auto']
+                      : label === 'Fuel Type'
+                        ? ['Any', 'Petrol', 'Diesel']
+                        : ['Any', '5 Seater', '6+ Seater'];
+                const selectedValue =
+                  label === 'Price'
+                    ? resultPriceFilter
+                    : label === 'Transmission'
+                      ? resultTransmissionFilter
+                      : label === 'Fuel Type'
+                        ? resultFuelFilter
+                        : resultSeatsFilter;
+
+                return (
+                  <div key={label} className="relative shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (label === 'Filters') {
+                          resetResultFilters();
+                          return;
+                        }
+                        setResultDropdown((current) => (current === label ? null : label));
+                      }}
+                      className={`flex h-9 items-center gap-2 rounded-[9px] border px-3 text-[13px] font-semibold shadow-sm ${
+                        value !== 'Any' && value !== 'Filters'
+                          ? 'border-[#f5b700] bg-[#fff7d6] text-black'
+                          : 'border-slate-200 bg-white text-black'
+                      }`}
+                    >
+                      <Icon size={17} strokeWidth={2.3} />
+                      {value === 'Any' ? label : value}
+                      {label !== 'Filters' && <ChevronDown size={15} />}
+                    </button>
+
+                    {resultDropdown === label && label !== 'Filters' && (
+                      <div className="absolute left-0 top-11 z-40 w-44 overflow-hidden rounded-[12px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.16)]">
+                        {options.map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() => {
+                              if (label === 'Price') setResultPriceFilter(option);
+                              if (label === 'Transmission') setResultTransmissionFilter(option);
+                              if (label === 'Fuel Type') setResultFuelFilter(option);
+                              if (label === 'Seats') setResultSeatsFilter(option);
+                              setResultDropdown(null);
+                            }}
+                            className="flex w-full items-center justify-between border-b border-slate-50 px-4 py-2.5 text-left text-[13px] font-semibold text-black last:border-b-0"
+                          >
+                            {option}
+                            {selectedValue === option && <Check size={15} className="text-[#f5b700]" />}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+              </div>
+            </section>
+
+            <section className="mt-3 flex min-h-[78px] items-center overflow-hidden rounded-[13px] border border-amber-200 bg-gradient-to-r from-[#fff7dc] to-[#fff1b7] px-4 shadow-sm">
+              <Shield size={46} className="shrink-0 text-[#f5b700]" strokeWidth={2.4} />
+              <div className="ml-3 min-w-0 flex-1">
+                <h2 className="text-[15px] font-black">Drive with Confidence</h2>
+                <p className="mt-0.5 text-[11px] font-medium text-slate-700">Sanitized, insured & road-ready</p>
+                <button className="mt-1 text-[11px] font-bold text-[#f5a800]">Learn More</button>
+              </div>
+              <img src={filteredListingCars[0]?.image || listingCars[0]?.image || rentalCarImg} alt="" className="h-16 w-24 object-contain mix-blend-multiply" />
+            </section>
+
+            <div className="mt-4 flex items-center justify-between">
+              <p className="text-[13px] font-semibold text-slate-700">{filteredListingCars.length} Cars available</p>
+              <button
+                type="button"
+                onClick={() => setResultDropdown((current) => (current === 'Sort' ? null : 'Sort'))}
+                className="flex items-center gap-1 text-[12px] font-semibold text-slate-700"
+              >
+                Sort by: <span className="font-black text-[#f5b700]">{resultSort}</span>
+                <ChevronDown size={16} />
+              </button>
+            </div>
+
+            {resultDropdown === 'Sort' && (
+              <div className="ml-auto mt-2 w-44 overflow-hidden rounded-[12px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.16)]">
+                {['Recommended', 'Price Low', 'Price High', 'Rating'].map((option) => (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => {
+                      setResultSort(option);
+                      setResultDropdown(null);
+                    }}
+                    className="flex w-full items-center justify-between border-b border-slate-50 px-4 py-2.5 text-left text-[13px] font-semibold text-black last:border-b-0"
+                  >
+                    {option}
+                    {resultSort === option && <Check size={15} className="text-[#f5b700]" />}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <section className="mt-3 space-y-3">
+              {filteredListingCars.length === 0 ? (
+                <div className="rounded-[14px] border border-slate-100 bg-white p-5 text-center shadow-[0_5px_18px_rgba(15,23,42,0.06)]">
+                  <p className="text-[14px] font-black text-slate-900">No cars match these filters</p>
+                  <button
+                    type="button"
+                    onClick={resetResultFilters}
+                    className="mt-3 rounded-[9px] bg-[#f5b700] px-4 py-2 text-[12px] font-black text-black"
+                  >
+                    Clear Filters
+                  </button>
+                </div>
+              ) : filteredListingCars.map((car) => (
+                <article
+                  key={car.id}
+                  className="rounded-[14px] border border-slate-100 bg-white p-3 shadow-[0_5px_18px_rgba(15,23,42,0.06)]"
+                >
+                  <div className="grid grid-cols-[30%_1fr_auto] gap-2.5">
+                    <div className="relative pt-4">
+                      {car.badge && (
+                        <span className="absolute left-0 top-0 rounded-full bg-violet-100 px-2 py-1 text-[10px] font-black text-violet-700">
+                          {car.badge}
+                        </span>
+                      )}
+                      <img src={car.image} alt={`${car.brand} ${car.name}`} className="mt-4 h-20 w-full object-contain mix-blend-multiply" />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="truncate text-[15px] font-black">{car.brand} {car.name}</h3>
+                      <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10.5px] font-semibold text-slate-800">
+                        <span className="flex items-center gap-1"><Car size={13} />{car.body}</span>
+                        <span>•</span>
+                        <span>{car.capacity} Seater</span>
+                        <span>•</span>
+                        <span>{car.fuel}</span>
+                        <span className="flex items-center gap-1"><SlidersHorizontal size={13} />{car.transmission}</span>
+                        <span>A/C</span>
+                        <span>Bluetooth</span>
+                      </div>
+                      <span className="mt-2 inline-flex rounded-full bg-green-100 px-2.5 py-1 text-[10px] font-bold text-green-700">
+                        Free Cancellation
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-end justify-between">
+                      <span className="flex items-center gap-1 text-[12px] font-semibold text-slate-700">
+                        <Star size={14} fill="#f5b700" className="text-[#f5b700]" />
+                        {car.rating} <span className="text-slate-500">({car.reviews})</span>
+                      </span>
+                      <div className="text-right">
+                        <p className="text-[17px] font-black">₹{Number(car.price || 2199).toLocaleString('en-IN')}</p>
+                        <p className="text-[10px] font-semibold">/ per day</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          openVehicleDetail(normalizeRentalVehicle({
+                            id: car.id,
+                            name: `${car.brand} ${car.name}`,
+                            vehicleCategory: 'car',
+                            coverImage: car.image,
+                            fuel: car.fuel,
+                            capacity: car.capacity,
+                            pricing: [{ durationHours: 24, price: car.price, includedKm: 120, active: true }],
+                          }));
+                        }}
+                        className="rounded-[8px] bg-[#f5b700] px-3 py-2 text-[11px] font-black text-black"
+                      >
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </section>
+
+            <section className="mt-4 flex items-center justify-between rounded-[12px] bg-gradient-to-r from-[#fff4cf] to-[#fff8e6] px-4 py-3">
+              <div className="flex items-center gap-3">
+                <Percent size={25} className="text-[#f5b700]" />
+                <div>
+                  <p className="text-[13px] font-black">Save more with long term rentals</p>
+                  <p className="text-[11px] font-medium text-slate-600">Weekly & monthly plans available</p>
+                </div>
+              </div>
+              <button className="flex items-center gap-1 text-[13px] font-black text-[#f5a800]">View Plans <ChevronRight size={16} /></button>
+            </section>
+          </main>
+
+          <BottomNavbar />
+        </div>
+      );
+
       return (
         <div className="min-h-screen bg-background max-w-lg md:max-w-none md:mx-0 w-full mx-auto font-sans relative pb-24 flex flex-col justify-between overflow-x-hidden no-scrollbar">
           {/* Sticky Header block containing Header, Filters, Search input */}
@@ -785,6 +1104,290 @@ const BikeRentalHome = () => {
         </div>
       );
     }
+
+    const rentalCategories = ['Hatchback', 'Sedan', 'SUV', 'Premium', 'Luxury'];
+    const bookingLocation = locationSearchText || selectedLocation || 'Bhubaneswar';
+    const formatDisplayTime = (value) => {
+      const [hourValue, minute = '00'] = String(value || '00:00').split(':');
+      const hour = Number(hourValue);
+      const period = hour >= 12 ? 'PM' : 'AM';
+      const normalizedHour = hour % 12 || 12;
+      return `${String(normalizedHour).padStart(2, '0')}:${minute} ${period}`;
+    };
+    const submitSelfDriveSearch = () => {
+      navigate(`/taxi/user/rental?search=true&location=${encodeURIComponent(bookingLocation)}`, {
+        state: {
+          ...location.state,
+          preSelectedCategory: 'car',
+          rentalSearch: {
+            category: landingCategory,
+            pickupLocation: bookingLocation,
+            dropOffLocation: dropOffLocation.trim(),
+            pickupDate,
+            dropoffDate,
+            pickupTime,
+            dropoffTime,
+            passengerCount,
+            transmission,
+            offerApplied,
+          },
+        },
+      });
+    };
+
+    return (
+      <div className="min-h-screen max-w-lg mx-auto bg-white text-black font-sans relative overflow-x-hidden pb-28 shadow-2xl border-x border-slate-100">
+        <section className="relative h-[285px] overflow-hidden bg-slate-950">
+          <img
+            src="/taxi09_rental_hero_banner.png"
+            alt="Taxi09 self drive banner"
+            className="absolute inset-0 h-full w-full object-cover"
+            draggable={false}
+          />
+          <div className="absolute left-0 right-0 top-14 flex items-center justify-end px-7 text-white">
+            <button
+              type="button"
+              onClick={() => navigate('/taxi/user/notifications')}
+              className="relative flex h-12 w-12 items-center justify-center text-[#ffc400]"
+              aria-label="Notifications"
+            >
+              <Bell size={36} strokeWidth={2.1} />
+              <span className="absolute right-2 top-1 h-2.5 w-2.5 rounded-full bg-[#ffc400]" />
+            </button>
+          </div>
+        </section>
+
+        <section className="relative z-10 -mt-[78px] px-4">
+          <div className="rounded-t-[28px] bg-white px-4 pb-5 pt-6 shadow-[0_-10px_34px_rgba(15,23,42,0.16)]">
+            <h1 className="text-center text-[23px] font-black leading-[1.18] text-black">
+              Book Your Self Drive Car
+            </h1>
+
+            <div className="mt-5 grid grid-cols-5 gap-2">
+              {rentalCategories.map((category, index) => (
+                <button
+                  type="button"
+                  key={category}
+                  onClick={() => {
+                    setLandingCategory(category);
+                    setSubCategory(category === 'SUV' ? 'SUVs' : category === 'Sedan' ? 'Sedans' : 'Hatchbacks');
+                  }}
+                  className={`flex h-[58px] flex-col items-center justify-center rounded-[10px] border text-[11px] font-semibold shadow-[0_5px_14px_rgba(15,23,42,0.07)] ${
+                    landingCategory === category
+                      ? 'border-[#ffc400] bg-[#ffc400] text-black'
+                      : 'border-slate-100 bg-white text-black'
+                  }`}
+                >
+                  <Car size={22} strokeWidth={2.4} fill="currentColor" className="mb-1" />
+                  {category}
+                </button>
+              ))}
+            </div>
+
+            <div className="relative mt-4 space-y-3">
+              <button
+                type="button"
+                onClick={() => setShowLocationSuggestions(true)}
+                className="flex min-h-[68px] w-full items-center gap-3 rounded-[14px] border border-slate-200 bg-white px-4 text-left shadow-[0_4px_14px_rgba(15,23,42,0.04)]"
+              >
+                <span className="h-6 w-6 rounded-full bg-[#22c55e]" />
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[12px] font-medium text-slate-500">Pick-up Location</span>
+                  <span className="block truncate text-[16px] font-semibold text-black">{bookingLocation}</span>
+                </span>
+                <ChevronDown size={21} className="text-slate-500" />
+              </button>
+
+              {showLocationSuggestions && (
+                <div className="absolute left-0 right-0 top-[72px] z-30 overflow-hidden rounded-[14px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.16)]">
+                  {LOCATION_SUGGESTIONS.slice(0, 5).map((loc) => (
+                    <button
+                      key={loc}
+                      type="button"
+                      onClick={() => {
+                        setLocationSearchText(loc);
+                        setShowLocationSuggestions(false);
+                      }}
+                      className="flex w-full items-center gap-2 border-b border-slate-50 px-4 py-2.5 text-left text-[13px] font-semibold text-slate-700 last:border-b-0"
+                    >
+                      <MapPin size={15} className="text-[#f5b700]" />
+                      <span className="truncate">{loc}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <label
+                className="flex min-h-[68px] w-full items-center gap-3 rounded-[14px] border border-slate-200 bg-white px-4 text-left shadow-[0_4px_14px_rgba(15,23,42,0.04)]"
+              >
+                <MapPin size={28} className="text-[#ff3b4f]" strokeWidth={2.4} />
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[12px] font-medium text-slate-500">Drop-off Location</span>
+                  <input
+                    value={dropOffLocation}
+                    onChange={(event) => setDropOffLocation(event.target.value)}
+                    placeholder="Where to?"
+                    className="block w-full bg-transparent text-[16px] font-semibold text-black outline-none placeholder:text-black"
+                  />
+                </span>
+                <ChevronDown size={21} className="text-slate-500" />
+              </label>
+
+              <button
+                type="button"
+                className="absolute right-[-8px] top-[58px] flex h-[52px] w-[52px] items-center justify-center rounded-full bg-white text-black shadow-[0_8px_24px_rgba(15,23,42,0.15)]"
+                aria-label="Swap locations"
+              >
+                <ArrowDownUp size={25} strokeWidth={2.6} />
+              </button>
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              {[
+                { icon: Calendar, label: 'Pick-up Date', value: pickupDate, type: 'date', onChange: setPickupDate },
+                { icon: Calendar, label: 'Drop-off Date', value: dropoffDate, type: 'date', onChange: setDropoffDate },
+                { icon: Clock, label: 'Pick-up Time', value: formatDisplayTime(pickupTime), inputValue: pickupTime, type: 'time', onChange: setPickupTime },
+                { icon: Clock, label: 'Drop-off Time', value: formatDisplayTime(dropoffTime), inputValue: dropoffTime, type: 'time', onChange: setDropoffTime },
+              ].map(({ icon: Icon, label, value, inputValue, type, onChange }) => (
+                <label
+                  key={label}
+                  className="relative flex min-h-[64px] items-center gap-2.5 rounded-[12px] border border-slate-200 bg-white px-3 text-left shadow-[0_4px_14px_rgba(15,23,42,0.04)]"
+                >
+                  <Icon size={23} className="text-black" strokeWidth={2.5} />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[11px] font-medium text-slate-500">{label}</span>
+                    <span className="block truncate text-[14px] font-semibold text-black">{value}</span>
+                  </span>
+                  <ChevronDown size={18} className="text-slate-500" />
+                  <input
+                    type={type}
+                    value={inputValue || value}
+                    onChange={(event) => onChange(event.target.value)}
+                    className="absolute inset-0 cursor-pointer opacity-0"
+                  />
+                </label>
+              ))}
+            </div>
+
+            <div className="relative mt-4 grid grid-cols-3 gap-3">
+              {[
+                {
+                  icon: Users,
+                  value: `${passengerCount} Passenger${passengerCount > 1 ? 's' : ''}`,
+                  keyName: 'passengers',
+                },
+                {
+                  icon: SlidersHorizontal,
+                  value: transmission,
+                  keyName: 'transmission',
+                },
+                {
+                  icon: Percent,
+                  value: offerApplied ? 'Offer On' : 'Offers',
+                  keyName: 'offers',
+                },
+              ].map(({ icon: Icon, value, keyName }) => (
+                <button
+                  type="button"
+                  key={value}
+                  onClick={() => setLandingDropdown((current) => (current === keyName ? null : keyName))}
+                  className="flex min-h-[52px] items-center gap-2 rounded-[12px] border border-slate-200 bg-white px-2.5 text-left shadow-[0_4px_14px_rgba(15,23,42,0.04)]"
+                >
+                  <Icon size={20} className="shrink-0 text-black" strokeWidth={2.7} />
+                  <span className="min-w-0 flex-1 truncate text-[11px] font-semibold text-black">{value}</span>
+                  <ChevronDown size={17} className="shrink-0 text-slate-500" />
+                </button>
+              ))}
+
+              {landingDropdown && (
+                <div
+                  className={`absolute top-[58px] z-40 overflow-hidden rounded-[12px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.16)] ${
+                    landingDropdown === 'passengers'
+                      ? 'left-0 w-[32%]'
+                      : landingDropdown === 'transmission'
+                        ? 'left-1/2 w-[32%] -translate-x-1/2'
+                        : 'right-0 w-[32%]'
+                  }`}
+                >
+                  {landingDropdown === 'passengers' &&
+                    [1, 2, 3, 4, 5, 6].map((count) => (
+                      <button
+                        key={count}
+                        type="button"
+                        onClick={() => {
+                          setPassengerCount(count);
+                          setLandingDropdown(null);
+                        }}
+                        className="w-full border-b border-slate-50 px-3 py-2 text-left text-[12px] font-semibold text-black last:border-b-0"
+                      >
+                        {count} Passenger{count > 1 ? 's' : ''}
+                      </button>
+                    ))}
+
+                  {landingDropdown === 'transmission' &&
+                    ['Manual', 'Auto'].map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() => {
+                          setTransmission(option);
+                          setLandingDropdown(null);
+                        }}
+                        className="w-full border-b border-slate-50 px-3 py-2 text-left text-[12px] font-semibold text-black last:border-b-0"
+                      >
+                        {option}
+                      </button>
+                    ))}
+
+                  {landingDropdown === 'offers' &&
+                    [
+                      { label: 'No Offer', value: false },
+                      { label: 'Apply Offer', value: true },
+                    ].map((option) => (
+                      <button
+                        key={option.label}
+                        type="button"
+                        onClick={() => {
+                          setOfferApplied(option.value);
+                          setLandingDropdown(null);
+                          toast(option.value ? 'Offer applied' : 'Offer removed');
+                        }}
+                        className="w-full border-b border-slate-50 px-3 py-2 text-left text-[12px] font-semibold text-black last:border-b-0"
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                </div>
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={submitSelfDriveSearch}
+              className="mt-5 h-[58px] w-full rounded-[13px] bg-[#ffc400] text-[21px] font-black text-black shadow-[0_8px_20px_rgba(255,196,0,0.3)] active:scale-[0.99]"
+            >
+              Find Self Drive Cars
+            </button>
+
+            <div className="mt-6 grid grid-cols-4 divide-x divide-slate-200 rounded-[14px] bg-slate-50 px-1 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
+              {[
+                { icon: Shield, label: 'Safe & Secure\nBookings' },
+                { icon: User, label: 'Verified\nCars' },
+                { icon: Headset, label: '24x7\nSupport' },
+                { icon: IndianRupee, label: 'Affordable\nPrices' },
+              ].map(({ icon: Icon, label }) => (
+                <div key={label} className="flex flex-col items-center justify-center gap-2 px-2 text-center">
+                  <Icon size={25} className="text-black" strokeWidth={2.1} />
+                  <span className="whitespace-pre-line text-[11px] font-medium leading-tight text-black">{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <BottomNavbar />
+      </div>
+    );
 
     // 1. Render Taxi09 Dashboard View (Teal header, featured list)
     return (

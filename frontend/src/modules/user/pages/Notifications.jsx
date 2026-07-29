@@ -26,15 +26,15 @@ const formatNotificationTime = (value) => {
 };
 
 const TYPE_ICONS = {
-  ride:     { icon: Star,        bg: 'bg-orange-50',  color: 'text-orange-500' },
-  promo:    { icon: Tag,         bg: 'bg-yellow-50',  color: 'text-yellow-500' },
+  ride:     { icon: Star,        bg: 'bg-amber-50',   color: 'text-[#d48c00]'  },
+  promo:    { icon: Tag,         bg: 'bg-rose-50',    color: 'text-rose-500'   },
   safety:   { icon: ShieldCheck, bg: 'bg-blue-50',    color: 'text-blue-500'   },
-  referral: { icon: Star,        bg: 'bg-emerald-50', color: 'text-emerald-500'},
+  referral: { icon: Star,        bg: 'bg-emerald-50', color: 'text-emerald-500' },
   parcel:   { icon: Bell,        bg: 'bg-violet-50',  color: 'text-violet-500' },
 };
 
 const SkeletonCard = () => (
-  <div className="animate-pulse rounded-[20px] bg-white/70 border border-white/80 p-4 flex items-start gap-3">
+  <div className="animate-pulse rounded-[20px] bg-white/70 border border-slate-200/50 p-4 flex items-start gap-3">
     <div className="w-10 h-10 rounded-[12px] bg-slate-200 shrink-0" />
     <div className="flex-1 space-y-2">
       <div className="h-3 bg-slate-200 rounded-full w-2/3" />
@@ -133,47 +133,47 @@ const Notifications = () => {
   const totalCount = useMemo(() => notifications.length, [notifications.length]);
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#F8FAFC_0%,#F3F4F6_38%,#EEF2F7_100%)] max-w-lg mx-auto font-sans pb-28 relative overflow-hidden">
-      <div className="absolute -top-16 right-[-40px] h-44 w-44 rounded-full bg-purple-100/60 blur-3xl pointer-events-none" />
-      <div className="absolute top-52 left-[-60px] h-52 w-52 rounded-full bg-blue-100/40 blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-[linear-gradient(180deg,#FAF9F5_0%,#F6F4EB_50%,#EAE7D7_100%)] max-w-lg mx-auto font-sans pb-28 relative overflow-hidden">
+      <div className="absolute -top-16 right-[-40px] h-44 w-44 rounded-full bg-[#ffc400]/20 blur-3xl pointer-events-none" />
+      <div className="absolute top-52 left-[-60px] h-52 w-52 rounded-full bg-[#ffd54f]/15 blur-3xl pointer-events-none" />
 
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-md px-5 pt-6 pb-4 sticky top-0 z-20 border-b border-white/80 shadow-[0_4px_20px_rgba(15,23,42,0.05)]">
+      <header className="bg-gradient-to-r from-[#ffc400] to-[#ffd54f] px-5 pt-12 pb-4 sticky top-0 z-20 border-b border-amber-500/25 shadow-sm">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate('/taxi/user/profile')} className="w-9 h-9 rounded-[12px] border border-white/80 bg-white/90 flex items-center justify-center shadow-sm active:scale-95 transition-all">
-            <ArrowLeft size={18} className="text-slate-900" strokeWidth={2.5} />
+          <button onClick={() => navigate('/taxi/user/profile')} className="w-9 h-9 rounded-[12px] border border-white/40 bg-white/85 flex items-center justify-center shadow-sm active:scale-95 transition-all text-[#332000] hover:bg-white">
+            <ArrowLeft size={18} className="text-[#332000]" strokeWidth={2.5} />
           </button>
           <div className="flex-1 min-w-0">
-            <p className="text-[9px] font-black uppercase tracking-[0.26em] text-slate-400">Inbox</p>
-            <h1 className="text-[19px] font-black tracking-tight text-slate-900 leading-tight">Notifications</h1>
+            <p className="text-[9px] font-black uppercase tracking-[0.26em] text-[#5c4600]">Inbox</p>
+            <h1 className="text-[19px] font-black tracking-tight text-[#332000] leading-tight">Notifications</h1>
           </div>
-          <div className="bg-slate-900 text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-sm">
+          <div className="bg-[#332000] text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-sm">
             {totalCount}
           </div>
         </div>
       </header>
 
       <div className="px-5 pt-4 space-y-2.5">
-        <div className="flex items-center justify-between px-1">
-          <p className="text-[10px] font-black uppercase tracking-[0.26em] text-slate-400">Admin & System Alerts</p>
-          <div className="flex items-center gap-4">
+        <div className="flex items-center justify-between px-1 mb-1">
+          <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 shrink-0">System Alerts</p>
+          <div className="flex items-center gap-2 shrink-0">
             {notifications.length > 0 && (
               <button
                 type="button"
                 onClick={handleClearAll}
                 disabled={clearing || loading}
-                className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-rose-500 active:scale-95 transition-all disabled:opacity-50"
+                className="flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100/80 px-2.5 py-1.5 rounded-lg active:scale-95 transition-all disabled:opacity-50 shrink-0 border border-rose-100"
               >
-                <Trash2 size={12} strokeWidth={2.5} />
-                Clear All
+                <Trash2 size={11} strokeWidth={2.5} />
+                Clear
               </button>
             )}
             <button
               type="button"
               onClick={fetchNotifications}
-              className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-slate-500 active:scale-95 transition-all"
+              className="flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200/80 px-2.5 py-1.5 rounded-lg active:scale-95 transition-all shrink-0 border border-slate-200/50"
             >
-              <RefreshCw size={12} strokeWidth={2.5} className={loading ? 'animate-spin' : ''} />
+              <RefreshCw size={11} strokeWidth={2.5} className={loading ? 'animate-spin' : ''} />
               Refresh
             </button>
           </div>
@@ -183,12 +183,12 @@ const Notifications = () => {
 
         {error && !loading && (
           <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
-            <div className="w-16 h-16 bg-white/80 border border-white/80 rounded-3xl flex items-center justify-center">
-              <AlertCircle size={28} className="text-red-400" strokeWidth={2} />
+            <div className="w-16 h-16 bg-[#ffc400]/10 border border-[#ffc400]/20 rounded-3xl flex items-center justify-center">
+              <AlertCircle size={28} className="text-[#d48c00]" strokeWidth={2} />
             </div>
             <p className="text-[14px] font-black text-slate-700">{error}</p>
             <button onClick={fetchNotifications}
-              className="flex items-center gap-2 bg-slate-900 text-white px-6 py-3 rounded-full text-[12px] font-black uppercase tracking-widest active:scale-95 transition-all">
+              className="flex items-center gap-2 bg-[#ffc400] text-[#332000] px-6 py-3 rounded-full text-[12px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-md">
               <RefreshCw size={13} strokeWidth={2.5} /> Retry
             </button>
           </div>
@@ -196,8 +196,8 @@ const Notifications = () => {
 
         {!loading && !error && notifications.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
-            <div className="w-20 h-20 bg-white/80 border border-white/80 rounded-3xl flex items-center justify-center">
-              <Bell size={36} className="text-slate-300" strokeWidth={1.5} />
+            <div className="w-20 h-20 bg-gradient-to-br from-[#fffbeb] to-[#fef3c7] border border-[#ffc400]/20 rounded-3xl flex items-center justify-center shadow-sm">
+              <Bell size={36} className="text-[#d48c00]" strokeWidth={1.5} />
             </div>
             <div>
               <p className="text-[16px] font-black text-slate-700">You're all caught up</p>
@@ -208,13 +208,16 @@ const Notifications = () => {
 
         <AnimatePresence>
           {!loading && !error && notifications.map((n) => {
+            const typeConfig = TYPE_ICONS[n.type] || { icon: Megaphone, bg: 'bg-[#ffc400]/10', color: 'text-[#d48c00]' };
+            const IconComponent = typeConfig.icon;
+
             return (
               <motion.div key={n.id}
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
-                className="relative rounded-[20px] border border-white/80 bg-white p-4 flex items-start gap-3 transition-all shadow-[0_4px_14px_rgba(15,23,42,0.07)]">
-                <div className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 bg-blue-50">
-                  <Megaphone size={16} className="text-blue-500" strokeWidth={2} />
+                className="relative rounded-[20px] border border-slate-200/50 bg-white hover:bg-gradient-to-b hover:from-white hover:to-[#fffbeb] hover:border-[#ffc400] p-4 flex items-start gap-3 transition-all duration-300 shadow-[0_4px_14px_rgba(15,23,42,0.04)] hover:shadow-[0_8px_20px_rgba(255,196,0,0.1)]">
+                <div className={`w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 ${typeConfig.bg} border border-slate-100 shadow-sm`}>
+                  <IconComponent size={16} className={typeConfig.color} strokeWidth={2.5} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
@@ -225,7 +228,7 @@ const Notifications = () => {
                       </span>
                       <button
                         onClick={() => handleRemoveSingle(n.id)}
-                        className="p-1.5 text-slate-300 hover:text-rose-500 transition-colors"
+                        className="p-1.5 text-slate-350 hover:text-[#d48c00] transition-colors"
                       >
                         <Trash2 size={13} strokeWidth={2.5} />
                       </button>

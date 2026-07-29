@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, CarFront, Headset, User, Key, Package, Wallet } from 'lucide-react';
+import { Home, CarFront, User, CalendarDays, Tag } from 'lucide-react';
 import { useSettings, normalizeAssetUrl } from '../../../shared/context/SettingsContext';
 import busIcon from '../../../assets/3d images/AutoCab/bus.png';
 import { getLocalUserToken, clearLocalUserSession } from '../services/authService';
@@ -36,8 +36,9 @@ const BottomNavbar = () => {
 
   const navItems = [
     { icon: Home, label: 'Home', path: '/taxi/user' },
-    { icon: CarFront, label: 'Rides', path: '/taxi/user/activity' },
-    { icon: Wallet, label: 'Wallet', path: '/taxi/user/wallet' },
+    { icon: CalendarDays, label: 'Bookings', path: '/taxi/user/activity' },
+    { icon: CarFront, label: 'Cars', path: '/taxi/user/rental/type', center: true },
+    { icon: Tag, label: 'Offers', path: '/taxi/user/promo' },
     { icon: User, label: 'Profile', path: '/taxi/user/profile' },
   ];
 
@@ -59,44 +60,51 @@ const BottomNavbar = () => {
   return (
     <>
       {/* Mobile Bottom Navbar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-[100] mx-auto w-full max-w-lg px-4 pb-[max(env(safe-area-inset-bottom),16px)] pt-2 pointer-events-none md:hidden flex">
-        <div className="flex w-full items-center justify-around overflow-visible rounded-[32px] border border-white/60 bg-white/95 px-2 py-2.5 shadow-[0_10px_40px_rgba(0,0,0,0.08)] backdrop-blur-2xl pointer-events-auto relative">
-          {navItems.map(({ icon: Icon, imageIcon, label, path }) => {
+      <nav className="fixed bottom-0 left-0 right-0 z-[100] mx-auto w-full max-w-lg md:hidden">
+        <div className="flex w-full items-end justify-around border-t border-slate-200 bg-white px-2 pt-2 pb-[max(env(safe-area-inset-bottom),10px)] shadow-[0_-2px_16px_rgba(0,0,0,0.06)]">
+          {navItems.map(({ icon: Icon, label, path, center }) => {
             const isActive =
-              path === '/taxi/user'
-                ? pathname === path
-                : pathname === path || pathname.startsWith(`${path}/`);
+              label === 'Cars'
+                ? pathname.startsWith('/taxi/user/rental')
+                : path === '/taxi/user'
+                  ? pathname === path
+                  : pathname === path || pathname.startsWith(`${path}/`);
+
+            if (center) {
+              return (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => navigate(path)}
+                  className="flex-1 flex flex-col items-center outline-none tap-highlight-transparent"
+                >
+                  <motion.span
+                    whileTap={{ scale: 0.92 }}
+                    className="-mt-7 mb-1 flex h-[58px] w-[58px] items-center justify-center rounded-full bg-[#F5B700] shadow-[0_6px_16px_rgba(245,183,0,0.45)] ring-4 ring-white"
+                  >
+                    <Icon size={28} strokeWidth={2.2} className="text-slate-900" />
+                  </motion.span>
+                  <span className="text-[11px] font-bold text-slate-700">{label}</span>
+                </button>
+              );
+            }
 
             return (
               <button
                 key={label}
                 type="button"
                 onClick={() => navigate(path)}
-                className="flex-1 flex flex-col items-center justify-center py-1.5 relative z-10 outline-none tap-highlight-transparent group"
+                className="flex-1 flex flex-col items-center gap-1 pb-1 outline-none tap-highlight-transparent group"
               >
-                <div className="relative flex flex-col items-center justify-center w-full gap-0">
-                    {isActive && (
-                      <div className="absolute -inset-y-1 inset-x-2 sm:inset-x-4 bg-[#FFC107] rounded-[18px]" />
-                    )}
-                  <motion.div
-                    animate={{ scale: isActive ? 1.05 : 1, y: isActive ? -1 : 0 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    className="relative z-20"
-                  >
-                    {imageIcon ? (
-                      <img src={imageIcon} alt="" className={`h-[22px] w-[22px] object-contain transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-60 group-hover:opacity-80'}`} draggable={false} />
-                    ) : (
-                      <Icon size={22} strokeWidth={isActive ? 2.5 : 2} className={`transition-colors duration-300 ${isActive ? 'text-slate-950' : 'text-slate-500 group-hover:text-slate-700'}`} />
-                    )}
-                  </motion.div>
-                  <motion.span
-                    animate={{ opacity: 1, y: isActive ? 2 : 1, scale: isActive ? 1 : 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className={`relative z-20 mt-1 text-[11px] font-bold transition-colors duration-300 ${isActive ? 'text-slate-950 font-black' : 'text-slate-500 group-hover:text-slate-900'}`}
-                  >
-                    {label}
-                  </motion.span>
-                </div>
+                <Icon
+                  size={23}
+                  strokeWidth={isActive ? 2.5 : 2}
+                  className={isActive ? 'text-[#F5B700]' : 'text-slate-600'}
+                />
+                <span className={`text-[11px] ${isActive ? 'font-black text-[#F5B700]' : 'font-semibold text-slate-600'}`}>
+                  {label}
+                </span>
+                <span className={`h-[3px] w-6 rounded-full ${isActive ? 'bg-[#F5B700]' : 'bg-transparent'}`} />
               </button>
             );
           })}
@@ -112,7 +120,12 @@ const BottomNavbar = () => {
         </div>
         <div className="flex items-center gap-8">
           {navItems.map((item) => {
-            const isActive = item.path === '/taxi/user' ? pathname === item.path : pathname.startsWith(item.path);
+            const isActive =
+              item.label === 'Cars'
+                ? pathname.startsWith('/taxi/user/rental')
+                : item.path === '/taxi/user'
+                  ? pathname === item.path
+                  : pathname.startsWith(item.path);
             return (
               <button
                 key={item.label}

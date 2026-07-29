@@ -1,12 +1,77 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, User, Phone, Mail, ChevronRight, Check, Loader2 } from 'lucide-react';
+import {
+  BedDouble,
+  ChevronRight,
+  Loader2,
+  ShieldCheck,
+  Star,
+  UserRound,
+  Utensils,
+} from 'lucide-react';
 import userBusService from '../../services/busService';
 import { userAuthService } from '../../services/authService';
+import AppHeader from '../../components/AppHeader';
 import { buildBusRouteState, toPlainData } from './busNavigationState';
 
 const getRoutePrefix = (pathname = '') => (pathname.startsWith('/taxi/user') ? '/taxi/user' : '');
+
+// Ids and prices must match BUS_ADD_ON_CATALOG on the server, which is the
+// authority on pricing - these values are display only.
+const ADD_ONS = [
+  { id: 'insurance', label: 'Travel Insurance', hint: 'Secure your journey', price: 49, icon: ShieldCheck },
+  { id: 'meal_veg', label: 'Meal (Veg)', hint: 'Dinner on board', price: 99, icon: Utensils },
+];
+
+const GENDERS = ['Male', 'Female', 'Other'];
+
+const NAME_PATTERN = /^[A-Za-z][A-Za-z .'-]*$/;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const INDIAN_MOBILE_PATTERN = /^[6-9]\d{9}$/;
+
+/**
+ * Per-field rules. Phone/email are only mandatory for the lead passenger, who
+ * is the booking contact - but if anyone else fills them they must still be valid.
+ */
+const getFieldError = (field, rawValue, { isLead }) => {
+  const value = String(rawValue ?? '').trim();
+
+  if (field === 'name') {
+    if (!value) return 'Full name is required';
+    if (value.length < 2) return 'Enter at least 2 characters';
+    if (value.length > 60) return 'Name is too long';
+    if (!NAME_PATTERN.test(value)) return 'Letters, spaces and . - only';
+    return '';
+  }
+
+  if (field === 'age') {
+    if (!value) return 'Age is required';
+    if (!/^\d{1,3}$/.test(value)) return 'Digits only';
+    const age = Number(value);
+    if (age < 1 || age > 120) return 'Enter 1-120';
+    return '';
+  }
+
+  if (field === 'phone') {
+    const digits = value.replace(/\D/g, '');
+    if (!digits) return isLead ? 'Mobile number is required' : '';
+    if (digits.length !== 10) return 'Enter 10 digits';
+    if (!INDIAN_MOBILE_PATTERN.test(digits)) return 'Must start with 6-9';
+    return '';
+  }
+
+  if (field === 'email') {
+    if (!value) return isLead ? 'Email is required' : '';
+    if (!EMAIL_PATTERN.test(value)) return 'Enter a valid email';
+    return '';
+  }
+
+  return '';
+};
+
+const FieldError = ({ message }) =>
+  message ? <p className="mt-1 text-[9.5px] font-semibold text-[var(--danger)]">{message}</p> : null;
 
 const loadRazorpayScript = () =>
   new Promise((resolve) => {
@@ -23,19 +88,19 @@ const loadRazorpayScript = () =>
     document.body.appendChild(script);
   });
 
-const formatTravelDate = (dateStr) => {
-  if (!dateStr) return '';
-  try {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      day: 'numeric',
-      month: 'short',
-    });
-  } catch (err) {
-    return dateStr;
-  }
-};
+const Field = ({ label, required, children }) => (
+  <label className="block">
+    <span className="text-[10px] font-bold text-[var(--text-light)]">
+      {label} {required ? <span className="text-[var(--danger)]">*</span> : null}
+    </span>
+    <div className="mt-1">{children}</div>
+  </label>
+);
+
+const inputClass = (hasError) =>
+  `w-full rounded-[10px] border bg-white px-3 py-2.5 text-[12.5px] font-semibold text-[var(--text)] outline-none placeholder:font-medium placeholder:text-slate-300 ${
+    hasError ? 'border-[var(--danger)] focus:border-[var(--danger)]' : 'border-[var(--border)] focus:border-[var(--primary)]'
+  }`;
 
 const BusDetails = () => {
   const navigate = useNavigate();
@@ -43,14 +108,22 @@ const BusDetails = () => {
   const routePrefix = useMemo(() => getRoutePrefix(location.pathname), [location.pathname]);
   const state = location.state || {};
   const { bus, fromCity, toCity, date, selectedSeats, totalFare } = state;
-  const [name, setName] = useState('');
-  const [age, setAge] = useState('');
-  const [gender, setGender] = useState('Male');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
+
+  const [passengers, setPassengers] = useState(() =>
+    (selectedSeats || []).map((seat) => ({
+      seatId: seat.id,
+      seatLabel: seat.label || seat.id,
+      name: '',
+      age: '',
+      gender: 'Male',
+      phone: '',
+      email: '',
+    })),
+  );
+  const [touched, setTouched] = useState(() => (selectedSeats || []).map(() => ({})));
+  const [selectedAddOns, setSelectedAddOns] = useState([]);
   const [error, setError] = useState('');
   const [isPaying, setIsPaying] = useState(false);
-  const [travellerMode, setTravellerMode] = useState('self');
   const [profileLoading, setProfileLoading] = useState(true);
   const [profileData, setProfileData] = useState(null);
 
@@ -67,95 +140,119 @@ const BusDetails = () => {
       }
     })();
 
-    const applyProfile = (profile = {}, mode = travellerMode) => {
-      if (!active) {
-        return;
-      }
-
-      const nextProfile = {
+    const applyProfile = (profile = {}) => {
+      if (!active) return;
+      setProfileData({
         name: String(profile?.name || '').trim(),
         email: String(profile?.email || '').trim(),
         phone: String(profile?.phone || '').trim(),
-      };
-
-      setProfileData(nextProfile);
-
-      if (mode === 'self') {
-        setName(nextProfile.name || '');
-        setEmail(nextProfile.email || '');
-        setPhone(nextProfile.phone || '');
-      }
+      });
     };
 
-    applyProfile(storedProfile, travellerMode);
+    applyProfile(storedProfile);
 
     const loadProfile = async () => {
       try {
         const response = await userAuthService.getCurrentUser();
         const user = response?.data?.user || {};
-        const normalizedUser = {
+        localStorage.setItem('userInfo', JSON.stringify({ ...storedProfile, ...user }));
+        applyProfile({
           name: user.name || storedProfile?.name || '',
           email: user.email || storedProfile?.email || '',
           phone: user.phone || storedProfile?.phone || '',
-        };
-
-        localStorage.setItem('userInfo', JSON.stringify({
-          ...storedProfile,
-          ...user,
-        }));
-        applyProfile(normalizedUser, travellerMode);
+        });
       } catch {
-        applyProfile(storedProfile, travellerMode);
+        applyProfile(storedProfile);
       } finally {
-        if (active) {
-          setProfileLoading(false);
-        }
+        if (active) setProfileLoading(false);
       }
     };
 
     loadProfile();
-
     return () => {
       active = false;
     };
   }, []);
 
+  // Prefill the lead passenger from the signed-in profile, but never clobber
+  // anything already typed.
   useEffect(() => {
-    if (travellerMode === 'self' && profileData) {
-      setName(profileData.name || '');
-      setEmail(profileData.email || '');
-      setPhone(profileData.phone || '');
-    }
-  }, [travellerMode, profileData]);
-
-  const applySelfProfile = () => {
-    setTravellerMode('self');
-    setName(profileData?.name || '');
-    setEmail(profileData?.email || '');
-    setPhone(profileData?.phone || '');
-    setError('');
-  };
-
-  const switchToSomeoneElse = () => {
-    setTravellerMode('other');
-    setName('');
-    setAge('');
-    setGender('Male');
-    setPhone('');
-    setEmail('');
-    setError('');
-  };
+    if (!profileData) return;
+    setPassengers((current) => {
+      if (!current.length) return current;
+      const lead = current[0];
+      if (lead.name || lead.phone || lead.email) return current;
+      return [
+        {
+          ...lead,
+          name: profileData.name || '',
+          phone: String(profileData.phone || '').replace(/\D/g, '').slice(-10),
+          email: profileData.email || '',
+        },
+        ...current.slice(1),
+      ];
+    });
+  }, [profileData]);
 
   if (!bus || !selectedSeats?.length) {
     navigate(`${routePrefix}/bus`, { replace: true });
     return null;
   }
 
+  const passengerErrors = passengers.map((item, index) => {
+    const context = { isLead: index === 0 };
+    return {
+      name: getFieldError('name', item.name, context),
+      age: getFieldError('age', item.age, context),
+      phone: getFieldError('phone', item.phone, context),
+      email: getFieldError('email', item.email, context),
+    };
+  });
+
+  const showError = (index, field) => (touched[index]?.[field] ? passengerErrors[index]?.[field] || '' : '');
+
+  const markTouched = (index, field) =>
+    setTouched((current) => current.map((item, idx) => (idx === index ? { ...item, [field]: true } : item)));
+
+  const updatePassenger = (index, patch) => {
+    setPassengers((current) => current.map((item, idx) => (idx === index ? { ...item, ...patch } : item)));
+    setError('');
+  };
+
+  const applyProfileTo = (index) => {
+    if (!profileData) return;
+    updatePassenger(index, {
+      name: profileData.name || '',
+      phone: String(profileData.phone || '').replace(/\D/g, '').slice(-10),
+      email: profileData.email || '',
+    });
+    setTouched((current) =>
+      current.map((item, idx) => (idx === index ? { ...item, name: true, phone: true, email: true } : item)),
+    );
+  };
+
+  const toggleAddOn = (id) =>
+    setSelectedAddOns((current) =>
+      current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
+    );
+
+  const addOnsTotal = ADD_ONS.filter((item) => selectedAddOns.includes(item.id)).reduce(
+    (sum, item) => sum + item.price,
+    0,
+  );
+  const payableAmount = Number(totalFare || 0) + addOnsTotal;
+  const isSleeperBus = String(bus?.type || '').toLowerCase().includes('sleeper');
+  const hasRating = Number(bus?.ratingCount || 0) > 0 && Number(bus?.rating || 0) > 0;
+
   const handleContinue = async () => {
     if (isPaying) return;
 
-    if (!name || !age || !phone || !email) {
-      setError('Please fill in all passenger details.');
+    // Reveal every message at once so nothing stays hidden behind a blur event.
+    setTouched(passengers.map(() => ({ name: true, age: true, phone: true, email: true })));
+
+    const firstBadIndex = passengerErrors.findIndex((item) => Object.values(item).some(Boolean));
+    if (firstBadIndex >= 0) {
+      setError(`Check the highlighted fields for Passenger ${firstBadIndex + 1}.`);
       return;
     }
 
@@ -168,13 +265,15 @@ const BusDetails = () => {
         throw new Error('Razorpay SDK failed to load');
       }
 
-      const passenger = { name, age, gender, phone, email };
+      const lead = passengers[0];
       const orderResponse = await userBusService.createBookingOrder({
         busServiceId: bus.busServiceId,
         scheduleId: bus.scheduleId,
         travelDate: date,
         seatIds: selectedSeats.map((seat) => seat.id),
-        passenger,
+        passenger: lead,
+        passengers,
+        addOns: selectedAddOns,
       });
       const order = unwrapPayload(orderResponse);
 
@@ -189,31 +288,18 @@ const BusDetails = () => {
         name: bus.operator || 'Bus Booking',
         description: `${fromCity} to ${toCity}`,
         order_id: order.orderId,
-        prefill: {
-          name,
-          email,
-          contact: phone,
-        },
+        prefill: { name: lead.name, email: lead.email, contact: lead.phone },
         modal: {
-          ondismiss: () => {
-            setIsPaying(false);
-          },
+          ondismiss: () => setIsPaying(false),
         },
-        theme: {
-          color: '#C2410C',
-        },
+        theme: { color: '#FFC107' },
         handler: async (response) => {
           try {
             const verifyResponse = await userBusService.verifyBookingPayment(response);
             const booking = toPlainData(unwrapPayload(verifyResponse));
             navigate(`${routePrefix}/bus/confirm`, {
               replace: true,
-              state: buildBusRouteState({
-                booking,
-                fromCity,
-                toCity,
-                date,
-              }),
+              state: buildBusRouteState({ booking, fromCity, toCity, date }),
             });
           } catch (verifyError) {
             setError(verifyError?.message || 'Payment verification failed');
@@ -223,8 +309,7 @@ const BusDetails = () => {
       });
 
       rzp.on('payment.failed', (event) => {
-        const message = event?.error?.description || event?.error?.reason || 'Payment failed';
-        setError(message);
+        setError(event?.error?.description || event?.error?.reason || 'Payment failed');
         setIsPaying(false);
       });
 
@@ -236,206 +321,303 @@ const BusDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 max-w-lg mx-auto font-sans pb-32">
-      <div className="bg-white px-5 pt-6 pb-4 sticky top-0 z-20 border-b border-slate-100 shadow-sm">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate(-1)}
-            className="w-9 h-9 rounded-xl border border-slate-200 bg-white flex items-center justify-center shadow-sm active:scale-95 transition-all"
+    <div className="min-h-screen max-w-lg mx-auto bg-[var(--background)] pb-44 text-[var(--text)]">
+      <AppHeader showBack subtitle="PASSENGER DETAILS" />
+
+      <div className="space-y-3 px-3 pt-3">
+        {/* Bus summary */}
+        <div className="overflow-hidden rounded-[18px] border-t-4 border-[var(--primary)] bg-white p-3 shadow-[var(--shadow-sm)]">
+          <div className="flex gap-3">
+            <div className="h-[86px] w-[94px] shrink-0 overflow-hidden rounded-[12px] bg-slate-900">
+              {bus.coverImage || bus.image ? (
+                <img src={bus.coverImage || bus.image} alt={bus.operator} className="h-full w-full object-cover" />
+              ) : null}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[15px] font-extrabold leading-tight">{bus.operator}</p>
+              <p className="mt-0.5 truncate text-[10px] font-medium text-[var(--text-light)]">
+                {bus.type}
+                {bus.busName ? ` • ${bus.busName}` : ''}
+              </p>
+
+              {Array.isArray(bus.amenities) && bus.amenities.length ? (
+                <div className="mt-1.5 flex flex-wrap gap-x-2.5 gap-y-1">
+                  {bus.amenities.slice(0, 6).map((amenity) => (
+                    <span
+                      key={amenity}
+                      className="flex items-center gap-1 text-[8.5px] font-semibold text-[var(--text-light)]"
+                    >
+                      <ShieldCheck size={9} className="shrink-0 text-[var(--primary-dark)]" />
+                      {amenity}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
+
+              {hasRating ? (
+                <p className="mt-1.5 flex items-center gap-1 text-[10px] font-bold">
+                  <Star size={11} className="fill-[var(--primary)] text-[var(--primary)]" />
+                  {Number(bus.rating).toFixed(1)}
+                  <span className="font-medium text-[var(--text-light)]">({bus.ratingCount} Ratings)</span>
+                </p>
+              ) : null}
+            </div>
+          </div>
+        </div>
+
+        {/* Selected berths */}
+        <div className="flex items-center gap-3 rounded-[18px] border border-[var(--border)] bg-white p-3 shadow-[var(--shadow-sm)]">
+          <p className="shrink-0 text-[12.5px] font-extrabold leading-tight">
+            Selected {isSleeperBus ? 'Sleeper Berths' : 'Seats'}
+          </p>
+          <div className="flex flex-1 gap-2 overflow-x-auto no-scrollbar">
+            {selectedSeats.map((seat) => (
+              <span
+                key={seat.id}
+                className="flex shrink-0 items-center gap-1.5 rounded-[10px] border border-[var(--primary)] bg-[var(--secondary)] px-2.5 py-1.5"
+              >
+                <BedDouble size={13} className="shrink-0 text-[var(--primary-dark)]" />
+                <span className="leading-tight">
+                  <span className="block text-[11.5px] font-extrabold">{seat.label || seat.id}</span>
+                  <span className="block text-[8px] font-medium text-[var(--text-light)]">
+                    {String(seat.id).startsWith('U') ? 'Upper Deck' : 'Lower Deck'}
+                  </span>
+                </span>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Passenger forms - one per berth */}
+        {passengers.map((passenger, index) => (
+          <div
+            key={passenger.seatId}
+            className="rounded-[18px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]"
           >
-            <ArrowLeft size={18} className="text-slate-900" />
-          </button>
-          <div className="flex-1">
-            <h1 className="text-lg font-bold text-slate-900 truncate">Passenger Details</h1>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">
-              {selectedSeats.length} Seat(s) • {fromCity} to {toCity}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="px-5 pt-6 space-y-6">
-        <div className="bg-slate-900 rounded-3xl p-6 text-white shadow-xl shadow-slate-200">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">{formatTravelDate(date)} • {bus.departure}</p>
-              <h3 className="text-xl font-bold leading-tight">{bus.operator}</h3>
-              <p className="text-sm font-medium text-slate-400 mt-1">{bus.type}</p>
-            </div>
-            <div className="text-right">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Seats</p>
-              <p className="text-base font-bold">{selectedSeats.map((seat) => seat.label || seat.id).join(', ')}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-6">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <h3 className="text-lg font-bold text-slate-900">Primary Passenger</h3>
-              <p className="mt-1 text-xs font-semibold text-slate-500">Choose who is travelling, then confirm the details below.</p>
-            </div>
-            {profileLoading ? (
-              <div className="flex items-center gap-2 rounded-full bg-slate-50 px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">
-                <Loader2 size={12} className="animate-spin" /> Loading
-              </div>
-            ) : null}
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={applySelfProfile}
-              className={`rounded-2xl border px-4 py-3 text-left transition-all ${
-                travellerMode === 'self'
-                  ? 'border-slate-900 bg-slate-900 text-white shadow-lg'
-                  : 'border-slate-200 bg-slate-50 text-slate-700'
-              }`}
-            >
-              <p className="text-[10px] font-black uppercase tracking-[0.18em]">Self</p>
-              <p className={`mt-1 text-sm font-black ${travellerMode === 'self' ? 'text-white' : 'text-slate-900'}`}>
-                Use my profile
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-[14px] font-extrabold">
+                Passenger {index + 1}
+                <span className="ml-1 text-[11px] font-medium text-[var(--text-light)]">
+                  ({isSleeperBus ? 'Berth' : 'Seat'} {passenger.seatLabel})
+                </span>
               </p>
-              <p className={`mt-1 text-[11px] font-semibold ${travellerMode === 'self' ? 'text-white/70' : 'text-slate-500'}`}>
-                Name, phone, and email auto-fill from your account.
-              </p>
-            </button>
-            <button
-              type="button"
-              onClick={switchToSomeoneElse}
-              className={`rounded-2xl border px-4 py-3 text-left transition-all ${
-                travellerMode === 'other'
-                  ? 'border-slate-900 bg-slate-900 text-white shadow-lg'
-                  : 'border-slate-200 bg-slate-50 text-slate-700'
-              }`}
-            >
-              <p className="text-[10px] font-black uppercase tracking-[0.18em]">Other</p>
-              <p className={`mt-1 text-sm font-black ${travellerMode === 'other' ? 'text-white' : 'text-slate-900'}`}>
-                Book for someone else
-              </p>
-              <p className={`mt-1 text-[11px] font-semibold ${travellerMode === 'other' ? 'text-white/70' : 'text-slate-500'}`}>
-                Enter passenger details manually.
-              </p>
-            </button>
-          </div>
-
-          {travellerMode === 'self' && profileData ? (
-            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-[12px] font-bold text-emerald-700">
-              {profileData.email
-                ? `Using ${profileData.email} for the ticket confirmation.`
-                : 'Profile phone and name are filled. Add an email if you want the e-ticket mailed too.'}
+              <button
+                type="button"
+                onClick={() => applyProfileTo(index)}
+                disabled={profileLoading || !profileData?.name}
+                className="flex shrink-0 items-center gap-1.5 rounded-[10px] border border-[var(--border)] px-2.5 py-1.5 text-[10px] font-bold disabled:opacity-40"
+              >
+                {profileLoading ? <Loader2 size={11} className="animate-spin" /> : <UserRound size={11} />}
+                Use Profile
+              </button>
             </div>
-          ) : null}
 
-          <div className="space-y-4">
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Full Name</label>
-              <div className="flex min-w-0 items-center gap-3 bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3">
-                <User size={16} className="shrink-0 text-slate-400" />
+            <div className="mt-3 grid grid-cols-[1fr_84px] gap-2.5">
+              <Field label="Full Name" required>
                 <input
                   type="text"
+                  value={passenger.name}
+                  onChange={(event) => updatePassenger(index, { name: event.target.value })}
+                  onBlur={() => markTouched(index, 'name')}
                   placeholder="Enter full name"
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                  className="min-w-0 flex-1 bg-transparent text-sm font-bold text-slate-900 focus:outline-none placeholder:text-slate-300"
+                  aria-invalid={Boolean(showError(index, 'name'))}
+                  className={inputClass(showError(index, 'name'))}
                 />
-              </div>
+                <FieldError message={showError(index, 'name')} />
+              </Field>
+              <Field label="Age" required>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={3}
+                  value={passenger.age}
+                  onChange={(event) =>
+                    updatePassenger(index, { age: event.target.value.replace(/\D/g, '').slice(0, 3) })
+                  }
+                  onBlur={() => markTouched(index, 'age')}
+                  placeholder="00"
+                  aria-invalid={Boolean(showError(index, 'age'))}
+                  className={inputClass(showError(index, 'age'))}
+                />
+                <FieldError message={showError(index, 'age')} />
+              </Field>
             </div>
 
-            <div className="flex gap-4">
-              <div className="flex-1 space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Age</label>
-                <input
-                  type="number"
-                  placeholder="Age"
-                  value={age}
-                  onChange={(event) => setAge(event.target.value)}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3 text-sm font-bold text-slate-900 focus:outline-none placeholder:text-slate-300"
-                />
-              </div>
-              <div className="flex-[2] space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Gender</label>
-                <div className="flex bg-slate-50 border border-slate-100 rounded-2xl p-1">
-                  {['Male', 'Female', 'Other'].map((item) => (
+            <div className="mt-2.5">
+              <Field label="Gender" required>
+                <div className="grid grid-cols-3 gap-2">
+                  {GENDERS.map((gender) => (
                     <button
-                      key={item}
+                      key={gender}
                       type="button"
-                      onClick={() => setGender(item)}
-                      className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all ${gender === item ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'}`}
+                      onClick={() => updatePassenger(index, { gender })}
+                      className={`rounded-[10px] border py-2.5 text-[11.5px] font-bold transition-colors ${
+                        passenger.gender === gender
+                          ? 'border-[var(--primary)] bg-[var(--secondary)] text-[var(--text)]'
+                          : 'border-[var(--border)] bg-white text-[var(--text-light)]'
+                      }`}
                     >
-                      {item}
+                      {gender}
                     </button>
                   ))}
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-6">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-bold text-slate-900">Contact Info</h3>
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider bg-slate-50 px-2 py-1 rounded-full">For e-ticket</span>
-          </div>
-
-          <div className="space-y-4">
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Mobile Number</label>
-              <div className="flex min-w-0 items-center gap-3 bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3">
-                <Phone size={16} className="shrink-0 text-slate-400" />
-                <input
-                  type="tel"
-                  placeholder="Mobile number"
-                  value={phone}
-                  onChange={(event) => setPhone(event.target.value)}
-                  className="min-w-0 flex-1 bg-transparent text-sm font-bold text-slate-900 focus:outline-none placeholder:text-slate-300"
-                />
-              </div>
+              </Field>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Email ID</label>
-              <div className="flex min-w-0 items-center gap-3 bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3">
-                <Mail size={16} className="shrink-0 text-slate-400" />
+            <div className="mt-2.5 grid grid-cols-2 gap-2.5">
+              <Field label="Mobile Number" required={index === 0}>
+                <div
+                  className={`flex items-center rounded-[10px] border bg-white ${
+                    showError(index, 'phone')
+                      ? 'border-[var(--danger)]'
+                      : 'border-[var(--border)] focus-within:border-[var(--primary)]'
+                  }`}
+                >
+                  <span className="shrink-0 border-r border-[var(--border)] px-2 py-2.5 text-[11.5px] font-bold text-[var(--text-light)]">
+                    +91
+                  </span>
+                  <input
+                    type="tel"
+                    inputMode="numeric"
+                    maxLength={10}
+                    value={passenger.phone}
+                    onChange={(event) =>
+                      updatePassenger(index, { phone: event.target.value.replace(/\D/g, '').slice(0, 10) })
+                    }
+                    onBlur={() => markTouched(index, 'phone')}
+                    placeholder="98765 43210"
+                    aria-invalid={Boolean(showError(index, 'phone'))}
+                    className="w-full min-w-0 bg-transparent px-2 py-2.5 text-[12.5px] font-semibold outline-none placeholder:font-medium placeholder:text-slate-300"
+                  />
+                </div>
+                <FieldError message={showError(index, 'phone')} />
+              </Field>
+              <Field label={index === 0 ? 'Email' : 'Email (Optional)'} required={index === 0}>
                 <input
                   type="email"
-                  placeholder="Email address"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  className="min-w-0 flex-1 bg-transparent text-sm font-bold text-slate-900 focus:outline-none placeholder:text-slate-300"
+                  value={passenger.email}
+                  onChange={(event) => updatePassenger(index, { email: event.target.value })}
+                  onBlur={() => markTouched(index, 'email')}
+                  placeholder="name@email.com"
+                  aria-invalid={Boolean(showError(index, 'email'))}
+                  className={inputClass(showError(index, 'email'))}
                 />
-              </div>
+                <FieldError message={showError(index, 'email')} />
+              </Field>
             </div>
           </div>
+        ))}
 
-          {error && (
-            <div className="rounded-2xl border border-rose-100 bg-rose-50 px-4 py-3 text-xs font-bold text-rose-600">
-              {error}
-            </div>
-          )}
+        {/* Add ons */}
+        <div className="rounded-[18px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
+          <p className="text-[14px] font-extrabold">
+            Add Ons <span className="text-[11px] font-medium text-[var(--text-light)]">(Optional)</span>
+          </p>
+          <div className="mt-2.5 space-y-2">
+            {ADD_ONS.map(({ id, label, hint, price, icon: Icon }) => {
+              const checked = selectedAddOns.includes(id);
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => toggleAddOn(id)}
+                  className={`flex w-full items-center gap-2.5 rounded-[12px] border px-3 py-2.5 text-left transition-colors ${
+                    checked ? 'border-[var(--primary)] bg-[var(--secondary)]' : 'border-[var(--border)] bg-white'
+                  }`}
+                >
+                  <Icon size={17} className="shrink-0 text-[var(--primary-dark)]" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[12px] font-extrabold leading-tight">{label}</span>
+                    <span className="block text-[9.5px] font-medium text-[var(--text-light)]">{hint}</span>
+                  </span>
+                  <span className="shrink-0 text-[12px] font-extrabold">Rs{price}</span>
+                  <span
+                    className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border-2 ${
+                      checked ? 'border-[var(--primary-dark)] bg-[var(--primary)]' : 'border-[var(--border)] bg-white'
+                    }`}
+                  >
+                    {checked ? (
+                      <svg viewBox="0 0 12 12" className="h-2.5 w-2.5 text-[var(--text)]" aria-hidden="true">
+                        <path d="M2 6.5 4.5 9 10 3" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    ) : null}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
+
+        {/* Fare breakdown */}
+        <div className="rounded-[18px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
+          <p className="text-[14px] font-extrabold">Fare Summary</p>
+          <div className="mt-2.5 space-y-1.5 text-[11.5px] font-semibold">
+            <div className="flex items-center justify-between">
+              <span className="text-[var(--text-light)]">
+                {selectedSeats.length} {isSleeperBus ? 'berth' : 'seat'}
+                {selectedSeats.length > 1 ? 's' : ''}
+              </span>
+              <span>Rs{Number(totalFare || 0)}</span>
+            </div>
+            {ADD_ONS.filter((item) => selectedAddOns.includes(item.id)).map((item) => (
+              <div key={item.id} className="flex items-center justify-between">
+                <span className="text-[var(--text-light)]">{item.label}</span>
+                <span>Rs{item.price}</span>
+              </div>
+            ))}
+            <div className="flex items-center justify-between border-t border-[var(--border)] pt-2 text-[13px] font-extrabold">
+              <span>Total</span>
+              <span>Rs{payableAmount}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Secure payments */}
+        <div className="flex items-center justify-between gap-3 rounded-[18px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
+          <div className="flex min-w-0 items-center gap-2">
+            <ShieldCheck size={20} className="shrink-0 text-[var(--primary-dark)]" />
+            <span className="min-w-0">
+              <span className="block text-[11.5px] font-extrabold leading-tight">100% Secure Payments</span>
+              <span className="block text-[9.5px] font-medium text-[var(--text-light)]">Your data is safe with us</span>
+            </span>
+          </div>
+          <div className="shrink-0 text-right">
+            <span className="block text-[8.5px] font-medium text-[var(--text-light)]">We Accept</span>
+            <span className="mt-0.5 flex items-center gap-1.5 text-[8.5px] font-extrabold text-[var(--text-light)]">
+              <span>UPI</span>
+              <span>VISA</span>
+              <span>MC</span>
+              <span>RuPay</span>
+            </span>
+          </div>
+        </div>
+
+        {error ? (
+          <div className="rounded-[14px] border border-rose-100 bg-rose-50 px-3.5 py-3 text-[11.5px] font-bold text-[var(--danger)]">
+            {error}
+          </div>
+        ) : null}
       </div>
 
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg px-5 pb-8 pt-4 bg-white border-t border-slate-100 z-30">
-        <div className="flex items-center justify-between mb-4 px-1">
+      <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-lg -translate-x-1/2 border-t border-[var(--border)] bg-white px-4 pb-6 pt-3">
+        <div className="mb-2.5 flex items-center justify-between">
           <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Payable Amount</p>
-            <p className="text-2xl font-bold text-slate-900">₹{Number(totalFare || 0)}</p>
+            <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">Payable Amount</p>
+            <p className="text-[20px] font-extrabold leading-tight">Rs{payableAmount}</p>
           </div>
-          <div className="flex items-center gap-1.5 bg-emerald-50 px-3 py-1 rounded-full">
-            <Check size={12} className="text-emerald-600" strokeWidth={3} />
-            <p className="text-[10px] font-bold text-emerald-700">Taxes included</p>
-          </div>
+          <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-[var(--success)]">
+            Taxes included
+          </span>
         </div>
 
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={handleContinue}
           disabled={isPaying}
-          className="w-full bg-slate-900 text-white py-4 rounded-2xl text-base font-bold flex items-center justify-center gap-2 shadow-lg disabled:opacity-70 transition-all"
+          className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[15px] font-extrabold text-[var(--text)] shadow-[0_8px_20px_rgba(255,193,7,.4)] disabled:opacity-60"
         >
-          {isPaying ? <Loader2 size={20} className="animate-spin" /> : 'Pay Now'}
-          {!isPaying && <ChevronRight size={18} />}
+          {isPaying ? <Loader2 size={18} className="animate-spin" /> : 'Pay Now'}
+          {!isPaying ? <ChevronRight size={18} strokeWidth={2.8} /> : null}
         </motion.button>
       </div>
     </div>

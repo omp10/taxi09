@@ -236,6 +236,7 @@ export const adminService = {
   getRentalTrackingDashboard: () => api.get('/admin/rental-tracking'),
   updateRentalBookingRequest: (id, data) => api.patch(`/admin/rental-booking-requests/${id}`, data),
   getRentalQuoteRequests: () => api.get('/admin/rental-quote-requests'),
+  getRentalQuoteRequest: (id) => api.get(`/admin/rental-quote-requests/${id}`),
   updateRentalQuoteRequest: (id, data) => api.patch(`/admin/rental-quote-requests/${id}`, data),
   getPoolingRoutes: () => api.get('/admin/pooling-routes'),
   createPoolingRoute: (data) => api.post('/admin/pooling-routes', data),

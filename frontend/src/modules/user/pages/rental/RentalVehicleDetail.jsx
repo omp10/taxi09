@@ -6,6 +6,7 @@ import {
   ArrowLeft,
   Calendar,
   Car,
+  Check,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
@@ -17,9 +18,20 @@ import {
   MapPin,
   Navigation,
   Shield,
+  Share2,
   Star,
   Tag,
   Users,
+  Heart,
+  Bluetooth,
+  Armchair,
+  PackageCheck,
+  CircleEllipsis,
+  Pencil,
+  Info,
+  Building2,
+  ReceiptText,
+  TicketPercent,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useSettings } from '../../../../shared/context/SettingsContext';
@@ -555,6 +567,9 @@ const RentalVehicleDetail = () => {
   const [subscriptionStartDate, setSubscriptionStartDate] = useState(() =>
     formatDateTimeValue(new Date(), '10:00'),
   );
+  const [selectedKmPlan, setSelectedKmPlan] = useState('250');
+  const [selectedAddOns, setSelectedAddOns] = useState([]);
+  const [showAddOnsPanel, setShowAddOnsPanel] = useState(false);
 
   useEffect(() => {
     setVehicle(initialVehicle);
@@ -636,7 +651,7 @@ const RentalVehicleDetail = () => {
   }, [detailMode, duration, selectedSubscriptionPlanId, vehicle]);
 
   if (!vehicle) {
-    navigate('/rental');
+    navigate('/taxi/user/rental');
     return null;
   }
 
@@ -1235,7 +1250,7 @@ const RentalVehicleDetail = () => {
         // Ignore storage failures and rely on route state when possible.
       }
 
-      navigate('/rental/schedule', withHistorySafeStateOptions({ state: nextState }));
+      navigate('/taxi/user/rental/schedule', withHistorySafeStateOptions({ state: nextState }));
       return;
     }
 
@@ -1268,7 +1283,7 @@ const RentalVehicleDetail = () => {
       // Ignore storage failures and rely on route state when possible.
     }
 
-    navigate('/rental/schedule', withHistorySafeStateOptions({ state: nextState }));
+    navigate('/taxi/user/rental/schedule', withHistorySafeStateOptions({ state: nextState }));
   };
 
   const isSubscriptionMode = detailMode === 'subscription';
@@ -1280,6 +1295,420 @@ const RentalVehicleDetail = () => {
   const rentalProceedDisabled =
     !selectedPackage ||
     (selectionStep === 'location' && (locationsLoading || !selectedServiceLocation));
+
+  if (!isSubscriptionMode) {
+    const vehicleNameParts = String(vehicle.name || 'Maruti Swift').trim().split(' ').filter(Boolean);
+    const displayBrand = vehicleNameParts[0] || 'Maruti';
+    const displayModel = vehicleNameParts.slice(1).join(' ') || 'Swift';
+    const displayName = `${displayBrand} ${displayModel}`.trim();
+    const basePrice = Number(selectedPackage?.price || vehicle.prices?.Daily || vehicle.prices?.Hourly || 2199);
+    const kmPlans = [
+      { id: '250', title: '250 KM', subtitle: 'Included', extra: '+ ₹9 / km', price: basePrice, tag: 'Recommended' },
+      { id: '400', title: '400 KM', subtitle: 'Included', extra: '+ ₹7 / km', price: basePrice + 300 },
+      { id: 'unlimited', title: 'Unlimited KM', subtitle: 'Unlimited', extra: '+ ₹0 / km', price: basePrice + 900 },
+    ];
+    const selectedPlan = kmPlans.find((plan) => plan.id === selectedKmPlan) || kmPlans[0];
+    const addOns = [
+      { id: 'child', label: 'Child Seat', price: 150, icon: Armchair },
+      { id: 'driver', label: 'Driver Needed', price: 1200, icon: Users },
+      { id: 'roof', label: 'Roof Carrier', price: 250, icon: Car },
+      { id: 'luggage', label: 'Extra Luggage', price: 100, icon: Luggage },
+      { id: 'more', label: 'More Options', price: 0, icon: CircleEllipsis },
+    ];
+    const allAddOns = [
+      { id: 'child', label: 'Child Seat', description: 'Safe & comfortable seating for kids', price: 150, icon: Armchair },
+      { id: 'driver', label: 'Driver Needed', description: 'Professional driver for your trip', price: 1200, icon: Users },
+      { id: 'roof', label: 'Roof Carrier', description: 'Extra luggage space for your journey', price: 250, icon: Car },
+      { id: 'luggage', label: 'Extra Luggage', description: 'Extra luggage space per bag', price: 100, icon: Luggage },
+      { id: 'wifi', label: 'Wi-Fi Device', description: 'Stay connected on the go', price: 100, icon: Navigation },
+      { id: 'gps', label: 'GPS Navigation', description: 'Navigate easily anywhere', price: 100, icon: MapPin },
+      { id: 'holder', label: 'Mobile Holder', description: 'Secure your phone while driving', price: 50, icon: Car },
+      { id: 'fastag', label: 'FASTag', description: 'Seamless toll payments', price: 100, icon: Tag },
+      { id: 'snow', label: 'Snow Chains', description: 'Better grip on snowy roads', price: 300, icon: Shield },
+      { id: 'umbrella', label: 'Umbrella', description: 'Be prepared for unexpected rain', price: 50, icon: Shield },
+    ];
+    const addOnTotal = allAddOns
+      .filter((item) => selectedAddOns.includes(item.id))
+      .reduce((sum, item) => sum + item.price, 0);
+    const totalPayable = selectedPlan.price + addOnTotal;
+    const toggleAddOn = (id) => {
+      setSelectedAddOns((current) =>
+        current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
+      );
+    };
+    const continueFromDetail = () => {
+      if (!selectedPackage) {
+        toast.error('Select a KM plan first.');
+        return;
+      }
+
+      if (!selectedServiceLocation) {
+        toast.error('Pickup location is still loading. Try again in a moment.');
+        return;
+      }
+
+      const nextState = {
+        vehicle,
+        duration,
+        selectedPackage: {
+          ...selectedPackage,
+          price: totalPayable,
+          includedKm: Number(selectedPlan.id === 'unlimited' ? 9999 : selectedPlan.id),
+          label: `${selectedPlan.title} / day`,
+          addOns: selectedAddOns,
+        },
+        serviceLocation: selectedServiceLocation,
+        userCoordinates,
+      };
+
+      try {
+        window.sessionStorage.setItem(RENTAL_SCHEDULE_STATE_KEY, JSON.stringify(nextState));
+      } catch {
+        // Keep navigation working even if storage is unavailable.
+      }
+
+      navigate('/taxi/user/rental/schedule', withHistorySafeStateOptions({ state: nextState }));
+    };
+
+    if (showAddOnsPanel) {
+      return (
+        <div className="min-h-screen max-w-lg mx-auto bg-white pb-32 text-black font-sans shadow-2xl border-x border-slate-100">
+          <header className="sticky top-0 z-40 bg-white/95 px-4 pt-3 pb-2 backdrop-blur-xl">
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => setShowAddOnsPanel(false)}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-[0_5px_14px_rgba(15,23,42,0.10)]"
+              >
+                <ArrowLeft size={18} />
+              </button>
+              <div>
+                <h1 className="text-[16px] font-black">Add-ons</h1>
+                <p className="text-[10px] font-semibold text-slate-500">Customize your trip</p>
+              </div>
+            </div>
+          </header>
+
+          <main className="px-4 pt-2">
+            <section className="space-y-1.5">
+              {allAddOns.map(({ id, label, description, price, icon: Icon }) => {
+                const isSelected = selectedAddOns.includes(id);
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => toggleAddOn(id)}
+                    className="flex w-full items-center gap-3 rounded-[13px] bg-white px-1 py-2 text-left"
+                  >
+                    <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border ${
+                      isSelected ? 'border-[#f5b700] bg-[#f5b700]' : 'border-slate-300 bg-white'
+                    }`}>
+                      {isSelected && <CheckCircle2 size={12} className="text-black" fill="currentColor" />}
+                    </span>
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[11px] bg-slate-50">
+                      <Icon size={22} className="text-slate-900" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[12px] font-black leading-tight">{label}</span>
+                      <span className="mt-0.5 block text-[9.5px] font-semibold leading-tight text-slate-500">{description}</span>
+                    </span>
+                    <span className="text-right">
+                      <span className="block text-[11px] font-black">₹{price}</span>
+                      <span className="block text-[8.5px] font-semibold text-slate-500">/ day</span>
+                    </span>
+                  </button>
+                );
+              })}
+            </section>
+
+            <section className="mt-4 flex items-center justify-between rounded-[13px] bg-[#fff5d6] p-3">
+              <div className="flex items-center gap-3">
+                <span className="text-[23px]">🎁</span>
+                <div>
+                  <p className="text-[12px] font-black">Get 10% OFF on add-ons</p>
+                  <p className="text-[9.5px] font-semibold text-slate-600">Use coupon code EXTRA10 to save more</p>
+                </div>
+              </div>
+              <TicketPercent size={24} className="text-[#f5b700]" />
+            </section>
+
+            <section className="mt-4 rounded-[13px] border border-slate-100 bg-white p-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[12px] font-black">Your Selection</p>
+                  <p className="text-[9.5px] font-semibold text-slate-500">
+                    {selectedAddOns.length} add-on{selectedAddOns.length === 1 ? '' : 's'} selected
+                  </p>
+                </div>
+                <p className="text-[13px] font-black">₹{addOnTotal}</p>
+              </div>
+            </section>
+          </main>
+
+          <footer className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-lg bg-white px-4 pb-[max(env(safe-area-inset-bottom),10px)] pt-3 shadow-[0_-8px_24px_rgba(15,23,42,0.10)]">
+            <button
+              type="button"
+              onClick={() => setShowAddOnsPanel(false)}
+              className="h-11 w-full rounded-[8px] bg-[#f5b700] text-[13px] font-black text-black"
+            >
+              Add Selected & Continue
+            </button>
+            <p className="mt-2 text-center text-[9px] font-semibold text-slate-500">
+              You won't be charged yet
+            </p>
+          </footer>
+        </div>
+      );
+    }
+
+    return (
+      <div className="min-h-screen max-w-lg mx-auto bg-white pb-28 text-black font-sans shadow-2xl border-x border-slate-100">
+        <header className="sticky top-0 z-40 bg-white/95 px-3 pt-3 pb-2 backdrop-blur-xl">
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-white shadow-[0_6px_16px_rgba(15,23,42,0.10)]"
+            >
+              <ArrowLeft size={19} strokeWidth={2.5} />
+            </button>
+            <div className="text-center">
+              <h1 className="text-[18px] font-black leading-tight">Car Details</h1>
+              <p className="text-[10px] font-semibold text-slate-600">Review & Book</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <button type="button" className="flex flex-col items-center text-[9px] font-bold">
+                <Share2 size={17} />
+                Share
+              </button>
+              <button type="button" className="flex flex-col items-center text-[9px] font-bold">
+                <Heart size={18} />
+                Save
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <main className="space-y-2.5 px-2.5">
+          <section className="grid grid-cols-[39%_1fr] overflow-hidden rounded-[13px] border border-slate-100 bg-white shadow-[0_5px_16px_rgba(15,23,42,0.06)]">
+            <div className="relative min-h-[132px] bg-gradient-to-br from-amber-50 via-slate-100 to-slate-200">
+              <span className="absolute left-2 top-2 z-10 rounded-[7px] bg-[#fff0b8] px-1.5 py-0.5 text-[8px] font-black">Most Popular</span>
+              {selectedImage ? (
+                <img src={selectedImage} alt={displayName} className="absolute inset-0 h-full w-full object-contain p-2.5" />
+              ) : (
+                <Car className="absolute inset-0 m-auto text-slate-400" size={64} />
+              )}
+              <span className="absolute bottom-2 right-2 rounded-md bg-black/75 px-1.5 py-0.5 text-[9px] font-bold text-white">1/12</span>
+            </div>
+            <div className="p-3">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <h2 className="line-clamp-2 text-[16px] font-black leading-[1.08]">{displayName}</h2>
+                  <p className="mt-1 text-[10px] font-semibold text-slate-600">{vehicle.subCategory || vehicle.vehicleCategory || 'Hatchback'}</p>
+                </div>
+                <span className="flex shrink-0 items-center gap-1 rounded-full border border-slate-100 px-1.5 py-0.5 text-[10px] font-bold">
+                  <Star size={11} fill="#f5b700" className="text-[#f5b700]" /> 4.6
+                </span>
+              </div>
+              <div className="mt-2.5 grid grid-cols-2 gap-x-2 gap-y-2 text-[10px] font-bold">
+                <span className="flex items-center gap-1.5"><Fuel size={13} />{getVehicleFuelLabel(vehicle)}</span>
+                <span className="flex items-center gap-1.5"><Car size={13} />{getVehicleTransmissionLabel(vehicle)}</span>
+                <span className="flex items-center gap-1.5"><Users size={13} />{vehicle.capacity || 5} Seats</span>
+                <span className="flex items-center gap-1.5"><Bluetooth size={13} />Bluetooth</span>
+                <span className="flex items-center gap-1.5"><Shield size={13} />Airbags</span>
+                <span className="flex items-center gap-1.5"><CheckCircle2 size={13} />A/C</span>
+              </div>
+              <span className="mt-2.5 inline-flex items-center gap-1.5 rounded-[7px] bg-green-100 px-2 py-1.5 text-[10px] font-bold text-green-700">
+                <Shield size={12} fill="currentColor" /> Sanitized Car
+              </span>
+            </div>
+          </section>
+
+          <section className="grid grid-cols-[1fr_auto_1fr] items-center rounded-[13px] border border-slate-100 bg-white p-3 shadow-[0_4px_14px_rgba(15,23,42,0.05)]">
+            <div className="flex gap-2">
+              <span className="mt-5 h-3 w-3 rounded-full bg-green-500" />
+              <div>
+                <p className="text-[10px] font-semibold text-slate-500">Pickup</p>
+                <p className="text-[12px] font-black">Bhubaneswar</p>
+                <p className="text-[10px] font-semibold text-slate-600">26 Jun, 06:00 PM</p>
+              </div>
+            </div>
+            <button className="mx-2 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-[0_5px_14px_rgba(15,23,42,0.12)]">
+              <Navigation size={15} />
+            </button>
+            <div className="flex gap-2">
+              <span className="mt-5 h-3 w-3 rounded-full bg-red-500" />
+              <div>
+                <p className="text-[10px] font-semibold text-slate-500">Drop-off</p>
+                <p className="text-[12px] font-black">Bhubaneswar</p>
+                <p className="text-[10px] font-semibold text-slate-600">27 Jun, 04:00 PM</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div className="mb-1.5 flex items-center justify-between">
+              <h3 className="flex items-center gap-1 text-[12px] font-black tracking-tight">Choose KM Plan <Info size={11} /></h3>
+              <button className="flex items-center gap-1 text-[10px] font-bold text-slate-700"><PackageCheck size={12} />Compare</button>
+            </div>
+            <div className="grid grid-cols-3 gap-1.5">
+              {kmPlans.map((plan) => {
+                const isSelected = selectedKmPlan === plan.id;
+                const displayTitle = plan.id === 'unlimited' ? 'Unlimited' : plan.title.replace(' KM', '');
+                const caption = plan.id === 'unlimited' ? 'No limit' : 'KM/day';
+                const extraRate = plan.id === 'unlimited' ? 'No extra' : plan.extra.replace('+ ', '');
+                return (
+                  <button
+                    key={plan.id}
+                    type="button"
+                    onClick={() => setSelectedKmPlan(plan.id)}
+                    className={`relative min-h-[86px] overflow-hidden rounded-[13px] border px-1.5 py-2 text-left transition-all ${
+                      isSelected
+                        ? 'border-[#f5b700] bg-gradient-to-br from-[#fff6cf] via-white to-white shadow-[0_7px_18px_rgba(245,183,0,0.18)]'
+                        : 'border-slate-100 bg-white shadow-[0_4px_12px_rgba(15,23,42,0.05)]'
+                    }`}
+                  >
+                    {plan.tag && (
+                      <span className="absolute left-0 top-0 rounded-br-[8px] bg-[#f5b700] px-1.5 py-0.5 text-[6px] font-black uppercase leading-none">
+                        Best
+                      </span>
+                    )}
+                    <span className={`absolute right-1.5 top-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full border ${
+                      isSelected ? 'border-[#f5b700] bg-[#f5b700]' : 'border-slate-200 bg-white'
+                    }`}>
+                      {isSelected && <Check size={9} strokeWidth={3} />}
+                    </span>
+                    <p className={`mt-2.5 text-[15px] font-black leading-none ${plan.id === 'unlimited' ? 'text-[11.5px]' : ''}`}>
+                      {displayTitle}
+                    </p>
+                    <p className="mt-1 text-[8.5px] font-bold uppercase tracking-[0.08em] text-slate-500">
+                      {caption}
+                    </p>
+                    <p className="mt-2 text-[9px] font-bold text-slate-500">{extraRate}</p>
+                    <div className="mt-1.5 flex items-end justify-between">
+                      <p className="text-[13px] font-black text-slate-950">&#8377;{plan.price}</p>
+                      <p className="text-[8px] font-bold text-slate-400">/day</p>
+                    </div>
+                    <p className="hidden" />
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
+            <div className="mb-2 flex items-center justify-between">
+              <div>
+                <h3 className="text-[13px] font-black">Add-ons (Optional)</h3>
+                <p className="text-[10px] font-semibold text-slate-600">Customize your trip</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAddOnsPanel(true)}
+                className="rounded-[8px] border border-slate-200 px-3 py-1.5 text-[11px] font-bold"
+              >
+                View All
+              </button>
+            </div>
+            <div className="grid grid-cols-5 gap-1.5">
+              {addOns.map(({ id, label, price, icon: Icon }) => {
+                const isSelected = selectedAddOns.includes(id);
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => {
+                      if (id === 'more') {
+                        setShowAddOnsPanel(true);
+                        return;
+                      }
+                      toggleAddOn(id);
+                    }}
+                    className="relative rounded-[9px] border border-slate-200 p-1.5 text-center"
+                  >
+                    <span className={`absolute left-1.5 top-1.5 h-3.5 w-3.5 rounded border ${isSelected ? 'border-[#f5b700] bg-[#f5b700]' : 'border-slate-300'}`} />
+                    <Icon className="mx-auto mt-3 text-slate-900" size={19} />
+                    <p className="mt-1.5 min-h-[24px] text-[8.5px] font-bold leading-tight">{label}</p>
+                    {price > 0 && <p className="mt-0.5 text-[8.5px] font-black">₹{price}</p>}
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
+            <h3 className="text-[13px] font-black">Package Includes</h3>
+            <div className="mt-3 grid grid-cols-5 gap-2 text-center">
+              {[
+                ['Insurance', Shield],
+                ['Roadside 24x7', Users],
+                ['FASTag', Tag],
+                ['Toll Tax', Building2],
+                ['State Tax', ReceiptText],
+              ].map(([label, Icon]) => (
+                <div key={label} className="text-[8.5px] font-bold leading-tight">
+                  <Icon className="mx-auto mb-1" size={17} />
+                  {label}
+                  <p className="text-green-600">Included</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
+            <h3 className="text-[13px] font-black">Rental Information</h3>
+            <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1.5 text-[10.5px] font-semibold">
+              <span className="text-slate-600">Fuel Policy</span><span className="text-right">Full to Full</span>
+              <span className="text-slate-600">Security Deposit</span><span className="text-right">₹2000 Refundable</span>
+              <span className="text-slate-600">Minimum Driver Age</span><span className="text-right">21 Years</span>
+              <span className="text-slate-600">Cancellation Policy</span><span className="text-right text-green-600">Free till 24 hrs</span>
+            </div>
+          </section>
+
+          <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
+            <h3 className="text-[13px] font-black">Price Summary <span className="font-semibold text-slate-600">({selectedPlan.title})</span></h3>
+            <div className="mt-2 space-y-1.5 text-[11px] font-semibold">
+              <div className="flex justify-between"><span>Base Fare (1 Day)</span><span>₹{selectedPlan.price}</span></div>
+              <div className="flex justify-between"><span>Add-ons</span><span>₹{addOnTotal}</span></div>
+              <div className="flex justify-between border-t border-dashed border-slate-200 pt-2 text-[13px] font-black"><span>Total Payable</span><span>₹{totalPayable}</span></div>
+            </div>
+          </section>
+
+          <section className="flex items-center justify-between rounded-[13px] border border-green-200 bg-green-50 p-3">
+            <div className="flex items-center gap-2">
+              <TicketPercent className="text-green-700" size={24} />
+              <div>
+                <p className="text-[10px] font-black text-green-700">LIMITED TIME OFFER</p>
+                <p className="mt-0.5 text-[10px] font-semibold">Get 10% OFF up to ₹300</p>
+                <p className="mt-0.5 text-[10px] font-bold">Code: <span className="rounded border border-green-300 bg-white px-1.5 py-0.5 text-green-700">DRIVE10</span></p>
+              </div>
+            </div>
+            <button className="rounded-[9px] border border-green-300 px-3 py-2 text-[11px] font-black text-green-700">Apply</button>
+          </section>
+        </main>
+
+        <footer className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-lg bg-white px-3 pb-[max(env(safe-area-inset-bottom),8px)] pt-2 shadow-[0_-8px_24px_rgba(15,23,42,0.10)]">
+          <div className="flex items-center gap-3">
+            <div className="w-[38%]">
+              <p className="text-[18px] font-black leading-tight">₹{totalPayable}</p>
+              <p className="text-[10px] font-semibold text-slate-700">View Price Breakup</p>
+            </div>
+            <button
+              type="button"
+              onClick={continueFromDetail}
+              disabled={!selectedPackage || locationsLoading || !selectedServiceLocation}
+              className="flex h-12 flex-1 items-center justify-center gap-2 rounded-[9px] bg-[#f5b700] text-[14px] font-black text-black disabled:opacity-60"
+            >
+              Continue to Book <ChevronRight size={20} />
+            </button>
+          </div>
+          <p className="mt-2 text-center text-[10px] font-semibold text-slate-600">
+            Secure Booking • No Hidden Charges
+          </p>
+        </footer>
+      </div>
+    );
+  }
 
   return (
     <div className={`min-h-screen font-sans relative ${

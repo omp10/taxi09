@@ -4,12 +4,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
   Calendar,
+  Car,
   ChevronLeft,
   ChevronRight,
   Clock,
+  CreditCard,
+  FileText,
+  Fuel,
+  Mail,
   MapPin,
+  Phone,
+  Settings2,
   ShieldCheck,
   Tag,
+  User,
+  Users,
+  Wallet,
 } from 'lucide-react';
 import { userService } from '../../services/userService';
 
@@ -292,6 +302,9 @@ const RentalSchedule = () => {
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [promoError, setPromoError] = useState('');
+  const [paymentPercent, setPaymentPercent] = useState(50);
+  const [paymentSuccess, setPaymentSuccess] = useState(null);
+  const [bookingConfirmed, setBookingConfirmed] = useState(false);
 
   const pickup = useMemo(
     () => formatDateTimeValue(pickupDate, pickupTime),
@@ -484,6 +497,557 @@ const RentalSchedule = () => {
 
     navigate('/rental/kyc');
   };
+
+  if (!isSubscriptionMode) {
+    const vehicleImage = vehicle.image || vehicle.coverImage || vehicle.images?.[0] || '';
+    const vehicleName = vehicle.name || 'Maruti Swift';
+    const packageLabel = selectedPackage?.label || `${selectedPackage?.includedKm || 250} KM / day`;
+    const planPrice = Number(selectedPackage?.price || totalCost || vehicle.prices?.Daily || 2199);
+    const addOnIds = Array.isArray(selectedPackage?.addOns) ? selectedPackage.addOns : [];
+    const addOnCatalog = {
+      child: { label: 'Child Seat', price: 150 },
+      driver: { label: 'Driver Needed', price: 1200 },
+      roof: { label: 'Roof Carrier', price: 250 },
+      luggage: { label: 'Extra Luggage', price: 100 },
+      wifi: { label: 'Wi-Fi Device', price: 100 },
+      gps: { label: 'GPS Navigation', price: 100 },
+      holder: { label: 'Mobile Holder', price: 50 },
+      fastag: { label: 'FASTag', price: 100 },
+      snow: { label: 'Snow Chains', price: 300 },
+      umbrella: { label: 'Umbrella', price: 50 },
+    };
+    const selectedAddOns = addOnIds
+      .map((id) => ({ id, ...(addOnCatalog[id] || { label: id, price: 0 }) }))
+      .filter((item) => item.id && item.id !== 'more');
+    const addOnsTotal = selectedAddOns.reduce((sum, item) => sum + Number(item.price || 0), 0);
+    const taxAmount = 0;
+    const totalPayable = Math.max(planPrice, totalCost || 0);
+    const payableNow = Math.round(totalPayable * (paymentPercent / 100));
+    const payLater = Math.max(0, totalPayable - payableNow);
+    const pickupLabel = serviceLocation?.name || state.pickupLocation || 'Bhubaneswar';
+    const dropLabel = state.dropoffLocation || pickupLabel;
+    const pickupDateLabel = new Date(pickup).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    const returnDateLabel = new Date(returnDateTimeValue).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    const pickupTimeLabel = formatTimeLabel(pickupTime);
+    const returnTimeLabel = formatTimeLabel(returnTime);
+
+    const proceedRentalPayment = () => {
+      const nextState = {
+        ...state,
+        vehicle,
+        duration,
+        selectedPackage,
+        serviceLocation,
+        userCoordinates,
+        pickup,
+        returnTime: returnDateTimeValue,
+        totalCost: totalPayable,
+        payableNowOverride: payableNow,
+        paymentVariant: paymentPercent === 100 ? 'full' : 'advance',
+        advancePaymentLabelOverride:
+          paymentPercent === 100
+            ? 'Full rental payment'
+            : `${paymentPercent}% advance booking payment`,
+        rentalPaymentSummary: {
+          baseFare: planPrice,
+          addOnsTotal,
+          taxes: taxAmount,
+          totalPayable,
+          payableNow,
+          payLater,
+          paymentPercent,
+          selectedAddOns,
+        },
+      };
+
+      try {
+        window.sessionStorage.setItem(RENTAL_KYC_STATE_KEY, JSON.stringify(nextState));
+      } catch {
+        // Ignore storage failures and continue navigation.
+      }
+
+      setPaymentSuccess({
+        paidAmount: payableNow,
+        remainingAmount: payLater,
+        method: 'UPI / Google Pay',
+        transactionId: `UPI${Date.now().toString().slice(-12)}`,
+        paymentDate: new Date(),
+        pickupDueLabel: returnDateLabel,
+        pickupDueTime: returnTimeLabel,
+      });
+    };
+
+    if (bookingConfirmed && paymentSuccess) {
+      const bookingId = `TAXI09-${paymentSuccess.transactionId.slice(-10)}`;
+
+      return (
+        <div className="min-h-screen max-w-lg mx-auto bg-white pb-28 text-black font-sans shadow-2xl border-x border-slate-100">
+          <header className="sticky top-0 z-40 bg-white/95 px-4 pt-4 pb-2 backdrop-blur-xl">
+            <div className="grid grid-cols-[40px_1fr_40px] items-center">
+              <button
+                type="button"
+                onClick={() => setBookingConfirmed(false)}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-[0_5px_14px_rgba(15,23,42,0.10)]"
+              >
+                <ArrowLeft size={18} />
+              </button>
+              <div className="text-center">
+                <h1 className="text-[18px] font-black leading-tight">Booking Confirmed</h1>
+                <p className="mt-1 text-[11px] font-black text-slate-700">You're all set!</p>
+              </div>
+              <span />
+            </div>
+          </header>
+
+          <main className="px-4 pt-4">
+            <section className="text-center">
+              <div className="relative mx-auto flex h-28 w-40 items-center justify-center">
+                <span className="absolute left-2 top-4 h-1.5 w-1.5 rounded-full bg-sky-400" />
+                <span className="absolute left-8 bottom-6 h-1.5 w-1.5 rounded-full bg-red-400" />
+                <span className="absolute right-5 top-3 h-1.5 w-1.5 rounded-full bg-green-400" />
+                <span className="absolute right-2 bottom-7 h-1.5 w-1.5 rounded-full bg-[#f5b700]" />
+                <span className="absolute inset-x-10 inset-y-2 rounded-full bg-green-100 blur-sm" />
+                <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-[#19b94f] shadow-[0_12px_28px_rgba(25,185,79,0.28)] ring-8 ring-green-50">
+                  <Car size={36} className="text-white" fill="currentColor" />
+                </div>
+              </div>
+              <div className="mt-3 flex items-center justify-center gap-2 rounded-[8px] bg-green-50 px-3 py-2 text-[12px] font-black text-green-800">
+                <span>Booking ID:</span>
+                <span>{bookingId}</span>
+                <FileText size={14} />
+              </div>
+              <p className="mx-auto mt-3 max-w-[270px] text-[12px] font-black leading-5 text-slate-800">
+                A confirmation has been sent to ompartek@gmail.com | +91 72230 77890
+              </p>
+            </section>
+
+            <section className="mt-5 rounded-[14px] border border-slate-100 bg-white p-4 shadow-[0_5px_16px_rgba(15,23,42,0.05)]">
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="text-[14px] font-black">Trip Summary</h2>
+                <button className="text-[10px] font-black text-slate-900 underline underline-offset-2">View Details</button>
+              </div>
+              <div className="grid grid-cols-[1fr_82px] gap-3">
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    <span className="mt-1 h-2.5 w-2.5 rounded-full bg-green-500" />
+                    <div>
+                      <p className="text-[10px] font-black text-slate-700">Pickup</p>
+                      <p className="text-[12px] font-black">{pickupLabel}</p>
+                      <p className="text-[10px] font-bold text-slate-700">{pickupDateLabel}, {pickupTimeLabel}</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <span className="mt-1 h-2.5 w-2.5 rounded-full bg-red-500" />
+                    <div>
+                      <p className="text-[10px] font-black text-slate-700">Drop-off</p>
+                      <p className="text-[12px] font-black">{dropLabel}</p>
+                      <p className="text-[10px] font-bold text-slate-700">{returnDateLabel}, {returnTimeLabel}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="rounded-[11px] border border-slate-100 bg-slate-50 p-2 text-center">
+                  <p className="text-[9px] font-black text-slate-700">Duration</p>
+                  <p className="mt-2 text-[13px] font-black">{Math.max(1, Math.ceil(Number(hours || 24) / 24))} Day</p>
+                  <p className="text-[10px] font-black">10 Hrs</p>
+                </div>
+              </div>
+            </section>
+
+            <section className="mt-3 rounded-[14px] border border-slate-100 bg-white p-4 shadow-[0_5px_16px_rgba(15,23,42,0.05)]">
+              <h2 className="text-[14px] font-black">Vehicle</h2>
+              <div className="mt-3 flex items-center gap-3">
+                <div className="flex h-16 w-20 shrink-0 items-center justify-center overflow-hidden rounded-[10px] bg-slate-100">
+                  {vehicleImage ? <img src={vehicleImage} alt={vehicleName} className="h-full w-full object-contain p-1" /> : <Car size={32} />}
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate text-[15px] font-black">{vehicleName}</p>
+                  <p className="mt-1 text-[10px] font-black text-slate-800">
+                    Hatchback • Petrol • Manual
+                  </p>
+                  <p className="mt-0.5 text-[10px] font-black text-slate-800">{vehicle.capacity || 5} Seats</p>
+                  <span className="mt-2 inline-flex rounded-[6px] bg-[#fff0b8] px-2 py-1 text-[9px] font-black text-slate-950">{packageLabel}</span>
+                </div>
+              </div>
+            </section>
+
+            <section className="mt-3 rounded-[14px] border border-slate-100 bg-white p-4 shadow-[0_5px_16px_rgba(15,23,42,0.05)]">
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="text-[14px] font-black">Payment Summary</h2>
+                <button className="text-[10px] font-black text-slate-900 underline underline-offset-2">View Details</button>
+              </div>
+              <div className="space-y-3 text-[12px] font-black">
+                <div className="flex justify-between"><span className="text-slate-700">Total Payable</span><span>{formatCurrency(totalPayable)}</span></div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-700">Paid Now ({paymentPercent}%)</span>
+                  <div className="flex items-center gap-2">
+                    <span>{formatCurrency(paymentSuccess.paidAmount)}</span>
+                    <span className="rounded-[7px] bg-green-50 px-2 py-1 text-[9px] font-black text-green-700">Paid</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-700">Amount Due Before Pickup</span>
+                  <div className="flex items-center gap-2">
+                    <span>{formatCurrency(paymentSuccess.remainingAmount)}</span>
+                    <span className="rounded-[7px] bg-[#fff0b8] px-2 py-1 text-[9px] font-black text-[#9a6b00]">Pending</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </main>
+
+          <footer className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-lg bg-white px-4 pb-[max(env(safe-area-inset-bottom),14px)] pt-3">
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => navigate('/taxi/user/rental')}
+                className="h-12 rounded-[8px] border border-slate-200 bg-white text-[13px] font-black text-black"
+              >
+                View Booking
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/taxi/user/profile/bookings')}
+                className="h-12 rounded-[8px] bg-[#f5b700] text-[13px] font-black text-black shadow-[0_8px_20px_rgba(245,183,0,0.25)]"
+              >
+                Go to My Bookings
+              </button>
+            </div>
+            <p className="mt-3 text-center text-[11px] font-black text-slate-700">
+              Need help? Contact Support
+            </p>
+          </footer>
+        </div>
+      );
+    }
+
+    if (paymentSuccess) {
+      const paymentDateLabel = paymentSuccess.paymentDate.toLocaleDateString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      });
+      const paymentTimeLabel = paymentSuccess.paymentDate.toLocaleTimeString('en-IN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      });
+
+      return (
+        <div className="min-h-screen max-w-lg mx-auto bg-white pb-28 text-black font-sans shadow-2xl border-x border-slate-100">
+          <header className="sticky top-0 z-40 bg-white/95 px-4 pt-4 pb-2 backdrop-blur-xl">
+            <div className="grid grid-cols-[40px_1fr_40px] items-center">
+              <button
+                type="button"
+                onClick={() => setPaymentSuccess(null)}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-[0_5px_14px_rgba(15,23,42,0.10)]"
+              >
+                <ArrowLeft size={18} />
+              </button>
+              <div className="text-center">
+                <h1 className="text-[18px] font-black leading-tight">Payment Successful</h1>
+                <p className="mt-1 text-[11px] font-black text-slate-700">Thank you!</p>
+              </div>
+              <span />
+            </div>
+          </header>
+
+          <main className="px-4 pt-4">
+            <section className="text-center">
+              <div className="relative mx-auto flex h-32 w-32 items-center justify-center">
+                <span className="absolute left-4 top-4 h-2 w-2 rounded-full bg-[#18c56e]" />
+                <span className="absolute right-5 top-7 h-2 w-2 rounded-full bg-[#f5b700]" />
+                <span className="absolute bottom-7 left-2 h-1.5 w-1.5 rounded-full bg-sky-400" />
+                <span className="absolute bottom-4 right-5 h-1.5 w-1.5 rounded-full bg-pink-400" />
+                <span className="absolute inset-6 rounded-full bg-green-100 blur-sm" />
+                <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-[#19b94f] shadow-[0_12px_28px_rgba(25,185,79,0.28)] ring-8 ring-green-50">
+                  <span className="text-[48px] font-black leading-none text-white">✓</span>
+                </div>
+              </div>
+              <h2 className="mt-2 text-[20px] font-black tracking-tight">
+                Payment of {formatCurrency(paymentSuccess.paidAmount)}
+              </h2>
+              <p className="mt-1 text-[13px] font-black text-slate-700">was successful!</p>
+              <div className="mx-auto mt-4 inline-flex items-center gap-2 rounded-[9px] bg-green-50 px-4 py-3 text-[12px] font-black text-green-800">
+                <ShieldCheck size={16} fill="currentColor" />
+                Your booking is confirmed.
+              </div>
+            </section>
+
+            <section className="mt-6 rounded-[14px] border border-slate-100 bg-white p-4 shadow-[0_5px_16px_rgba(15,23,42,0.05)]">
+              <h3 className="text-[14px] font-black">Payment Details</h3>
+              <div className="mt-4 space-y-4 text-[12px] font-black">
+                <div className="flex justify-between gap-4">
+                  <span className="text-slate-700">Amount Paid</span>
+                  <span>{formatCurrency(paymentSuccess.paidAmount)}</span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <span className="text-slate-700">Payment Method</span>
+                  <span>{paymentSuccess.method}</span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <span className="text-slate-700">Transaction ID</span>
+                  <span>{paymentSuccess.transactionId}</span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <span className="text-slate-700">Payment Date</span>
+                  <span>{paymentDateLabel}, {paymentTimeLabel}</span>
+                </div>
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-slate-700">Status</span>
+                  <span className="rounded-[7px] bg-green-50 px-2.5 py-1 text-[10px] font-black text-green-700">Success</span>
+                </div>
+              </div>
+            </section>
+
+            <section className="mt-4 flex items-center gap-3 rounded-[13px] border border-[#f5d47a] bg-[#fff8e3] p-4">
+              <Wallet size={24} className="shrink-0 text-[#d59b00]" />
+              <div>
+                <p className="text-[13px] font-black">
+                  Remaining amount <span className="text-[18px]">{formatCurrency(paymentSuccess.remainingAmount)}</span>
+                </p>
+                <p className="mt-1 text-[11px] font-black text-slate-800">
+                  Pay before pickup on {paymentSuccess.pickupDueLabel}, {paymentSuccess.pickupDueTime}
+                </p>
+              </div>
+            </section>
+          </main>
+
+          <footer className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-lg bg-white px-4 pb-[max(env(safe-area-inset-bottom),14px)] pt-3">
+            <button
+              type="button"
+              onClick={() => setBookingConfirmed(true)}
+              className="h-12 w-full rounded-[8px] bg-[#f5b700] text-[15px] font-black text-black shadow-[0_8px_20px_rgba(245,183,0,0.25)]"
+            >
+              Continue
+            </button>
+            <p className="mt-2 text-center text-[10px] font-black text-slate-600">
+              You will receive a confirmation on your email & SMS
+            </p>
+          </footer>
+        </div>
+      );
+    }
+
+    return (
+      <div className="min-h-screen max-w-lg mx-auto bg-white pb-28 text-black font-sans shadow-2xl border-x border-slate-100">
+        <header className="sticky top-0 z-40 bg-white/95 px-4 pt-3 pb-2 backdrop-blur-xl">
+          <div className="grid grid-cols-[40px_1fr_40px] items-center">
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-[0_5px_14px_rgba(15,23,42,0.10)]"
+            >
+              <ArrowLeft size={18} />
+            </button>
+            <div className="text-center">
+              <h1 className="text-[24px] font-black leading-none tracking-tight">Booking Details</h1>
+              <p className="mt-1 text-[11px] font-black text-slate-700">Confirm & Pay</p>
+            </div>
+            <span />
+          </div>
+
+          <div className="mt-4 grid grid-cols-3 items-center text-center">
+            {['Details', 'Review', 'Payment'].map((step, index) => {
+              const active = index === 0;
+              return (
+                <div key={step} className="relative">
+                  {index > 0 && <span className="absolute right-1/2 top-3 h-px w-full bg-slate-200" />}
+                  <span className={`relative z-10 mx-auto flex h-6 w-6 items-center justify-center rounded-full text-[9px] font-black ${
+                    active ? 'bg-[#f5b700] text-white' : 'bg-slate-100 text-slate-500'
+                  }`}>
+                    {index + 1}
+                  </span>
+                  <p className={`mt-1 text-[10px] font-black ${active ? 'text-[#d59b00]' : 'text-slate-700'}`}>{step}</p>
+                </div>
+              );
+            })}
+          </div>
+        </header>
+
+        <main className="space-y-2.5 px-3 pt-2">
+          <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-[0_4px_14px_rgba(15,23,42,0.05)]">
+            <div className="mb-2 flex items-center justify-between">
+              <h2 className="text-[20px] font-black tracking-tight">Trip Summary</h2>
+              <button className="text-[11px] font-black text-slate-900">Edit</button>
+            </div>
+            <div className="grid grid-cols-[1fr_82px] gap-3">
+              <div className="space-y-2.5">
+                <div className="flex gap-2">
+                  <span className="mt-1 h-2.5 w-2.5 rounded-full bg-green-500" />
+                  <div>
+                    <p className="text-[11px] font-black text-slate-700">Pickup</p>
+                    <p className="text-[12px] font-black">{pickupLabel}</p>
+                    <p className="text-[10px] font-bold text-slate-700">{pickupDateLabel}, {pickupTimeLabel}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <span className="mt-1 h-2.5 w-2.5 rounded-full bg-red-500" />
+                  <div>
+                    <p className="text-[11px] font-black text-slate-700">Drop-off</p>
+                    <p className="text-[12px] font-black">{dropLabel}</p>
+                    <p className="text-[10px] font-bold text-slate-700">{returnDateLabel}, {returnTimeLabel}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="rounded-[11px] border border-slate-100 bg-slate-50 p-2 text-center">
+                <p className="text-[9px] font-black text-slate-700">Duration</p>
+                <p className="mt-2 text-[13px] font-black">{Math.max(1, Math.ceil(Number(hours || 24) / 24))} Day</p>
+                <p className="text-[10px] font-bold">{Math.round(Number(hours || 24) % 24 || 10)} Hrs</p>
+              </div>
+            </div>
+          </section>
+
+          <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
+            <h2 className="mb-2 text-[20px] font-black tracking-tight">Vehicle & Plan</h2>
+            <div className="flex items-center gap-3">
+              <div className="flex h-16 w-20 shrink-0 items-center justify-center overflow-hidden rounded-[10px] bg-slate-100">
+                {vehicleImage ? <img src={vehicleImage} alt={vehicleName} className="h-full w-full object-contain p-1" /> : <Car size={32} />}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[13px] font-black">{vehicleName}</p>
+                <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-[9px] font-black text-slate-800">
+                  <span className="flex items-center gap-1"><Fuel size={10} />{vehicle.fuel || 'Petrol'}</span>
+                  <span className="flex items-center gap-1"><Settings2 size={10} />{vehicle.transmission || 'Manual'}</span>
+                  <span className="flex items-center gap-1"><Users size={10} />{vehicle.capacity || 5} Seats</span>
+                </div>
+                <span className="mt-2 inline-flex rounded-[6px] bg-[#fff0b8] px-2 py-1 text-[9px] font-black text-slate-950">{packageLabel}</span>
+              </div>
+              <div className="text-right">
+                <p className="text-[12px] font-black">{formatCurrency(planPrice)}</p>
+                <p className="text-[9px] font-black text-slate-700">/day</p>
+              </div>
+            </div>
+          </section>
+
+          <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
+            <div className="mb-2 flex items-center justify-between">
+              <h2 className="text-[20px] font-black tracking-tight">Add-ons ({selectedAddOns.length})</h2>
+              <button type="button" onClick={() => navigate(-1)} className="text-[11px] font-black text-slate-900">Edit</button>
+            </div>
+            <div className="space-y-2">
+              {(selectedAddOns.length ? selectedAddOns : [{ id: 'none', label: 'No add-ons selected', price: 0 }]).slice(0, 3).map((item) => (
+                <div key={item.id} className="flex items-center justify-between rounded-[10px] bg-slate-50 px-2.5 py-2">
+                  <div className="flex items-center gap-2">
+                    <Tag size={13} className="text-[#f5b700]" />
+                    <div>
+                      <p className="text-[12px] font-black text-slate-900">{item.label}</p>
+                      {item.price > 0 && <p className="text-[10px] font-bold text-slate-700">{formatCurrency(item.price)} / day x 1</p>}
+                    </div>
+                  </div>
+                  <p className="text-[11px] font-black">{item.price > 0 ? formatCurrency(item.price) : '₹0'}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-[13px] border border-[#f5b700] bg-[#fffdf5] p-3 shadow-sm">
+            <div className="mb-2 flex items-center justify-between">
+              <h2 className="text-[18px] font-black tracking-tight">Payment Preference</h2>
+              <span className="rounded-full bg-[#fff0b8] px-2 py-0.5 text-[9px] font-black text-[#9a6b00]">Recommended</span>
+            </div>
+            <div className="rounded-[11px] border border-slate-100 bg-white p-2.5">
+              <div className="flex items-center gap-2">
+                <CreditCard size={15} className="text-[#f5b700]" />
+                <div>
+                  <p className="text-[13px] font-black">Pay Partial Now, Rest Later</p>
+                  <p className="text-[10px] font-black text-slate-700">Choose how much you want to pay now</p>
+                </div>
+              </div>
+              <div className="mt-2 grid grid-cols-3 gap-1.5">
+                {[25, 50, 100].map((percent) => (
+                  <button
+                    key={percent}
+                    type="button"
+                    onClick={() => setPaymentPercent(percent)}
+                    className={`h-8 rounded-[8px] border text-[11px] font-black ${
+                      paymentPercent === percent
+                        ? 'border-[#f5b700] bg-[#fff0b8]'
+                        : 'border-slate-200 bg-white'
+                    }`}
+                  >
+                    {percent}%
+                  </button>
+                ))}
+              </div>
+              <div className="mt-3 space-y-1.5 text-[11px] font-black text-slate-900">
+                <div className="flex justify-between"><span>Pay now ({paymentPercent}%)</span><span>{formatCurrency(payableNow)}</span></div>
+                <div className="flex justify-between"><span>Pay before pickup</span><span>{formatCurrency(payLater)}</span></div>
+              </div>
+              <p className="mt-2 rounded-[8px] bg-blue-50 px-2 py-1.5 text-[9.5px] font-black text-blue-800">
+                Remaining amount is paid before pickup.
+              </p>
+            </div>
+          </section>
+
+          <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
+            <h2 className="text-[18px] font-black tracking-tight">Price Breakdown</h2>
+            <div className="mt-2 space-y-1.5 text-[11px] font-black text-slate-900">
+              <div className="flex justify-between"><span>Base Fare (1 Day)</span><span>{formatCurrency(planPrice)}</span></div>
+              <div className="flex justify-between"><span>Add-ons Total ({selectedAddOns.length} items)</span><span>{formatCurrency(addOnsTotal)}</span></div>
+              <div className="flex justify-between"><span>Taxes & Fees</span><span>{formatCurrency(taxAmount)}</span></div>
+              <div className="flex justify-between border-t border-dashed border-slate-200 pt-2 text-[12px] font-black"><span>Total Payable</span><span>{formatCurrency(totalPayable)}</span></div>
+            </div>
+            <div className="mt-2 flex items-center justify-between rounded-[9px] bg-green-50 px-2.5 py-2 text-[10px] font-black text-green-800">
+              <span>You save ₹280 with DRIVE10</span>
+              <span className="rounded border border-green-200 bg-white px-1.5 py-0.5">DRIVE10</span>
+            </div>
+          </section>
+
+          <section className="grid grid-cols-2 gap-2">
+            <div className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
+              <div className="mb-2 flex items-center justify-between">
+                <h2 className="text-[13px] font-black">Customer Details</h2>
+                <button className="text-[9px] font-black text-slate-900">Edit</button>
+              </div>
+              <div className="space-y-1.5 text-[9.5px] font-black text-slate-800">
+                <p className="flex items-center gap-1.5"><User size={10} /> Om Partek</p>
+                <p className="flex items-center gap-1.5"><Phone size={10} /> +91 72230 77880</p>
+                <p className="flex items-center gap-1.5"><Mail size={10} /> ompartek@gmail.com</p>
+                <p className="flex items-center gap-1.5"><FileText size={10} /> DL verified</p>
+              </div>
+            </div>
+            <div className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
+              <h2 className="text-[13px] font-black">Secure Your Booking</h2>
+              <div className="mt-2 flex gap-2">
+                <ShieldCheck size={18} className="shrink-0 text-slate-900" />
+                <div>
+                  <p className="text-[10px] font-black">Security Deposit</p>
+                  <p className="text-[9px] font-black text-slate-700">Refundable after ride completion.</p>
+                  <p className="mt-1 text-[11px] font-black">₹2000</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <footer className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-lg bg-white px-3 pb-[max(env(safe-area-inset-bottom),8px)] pt-2 shadow-[0_-8px_24px_rgba(15,23,42,0.10)]">
+          <div className="grid grid-cols-[1fr_1fr_1.45fr] items-center gap-2">
+            <div>
+              <p className="text-[9px] font-black text-slate-700">Total Payable</p>
+              <p className="text-[14px] font-black">{formatCurrency(totalPayable)}</p>
+              <p className="text-[9px] font-black text-slate-700">View Price Breakup</p>
+            </div>
+            <div>
+              <p className="text-[9px] font-black text-slate-700">Pay Now ({paymentPercent}%)</p>
+              <p className="text-[14px] font-black">{formatCurrency(payableNow)}</p>
+            </div>
+            <button
+              type="button"
+              onClick={proceedRentalPayment}
+              className="flex h-11 items-center justify-center gap-1 rounded-[8px] bg-[#f5b700] text-[12px] font-black text-black"
+            >
+              Proceed to Payment <ChevronRight size={15} />
+            </button>
+          </div>
+          <div className="mt-2 grid grid-cols-3 text-center text-[8.5px] font-black text-slate-700">
+            <span className="flex items-center justify-center gap-1"><ShieldCheck size={10} />100% Secure</span>
+            <span>No Hidden Charges</span>
+            <span>24x7 Support</span>
+          </div>
+        </footer>
+      </div>
+    );
+  }
 
   return (
     <div className={`min-h-screen max-w-lg md:max-w-none md:mx-0 w-full mx-auto font-sans pb-28 relative overflow-hidden ${

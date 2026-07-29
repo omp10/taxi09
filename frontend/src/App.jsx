@@ -20,6 +20,10 @@ import './App.css';
 
 // Lazy loading pages for performance
 const UserHome = lazy(() => import('./modules/user/pages/Home'));
+const WithDriverHome = lazy(() => import('./modules/user/pages/WithDriverHome'));
+const WithDriverBooking = lazy(() => import('./modules/user/pages/WithDriverBooking'));
+const PermanentDriverSearch = lazy(() => import('./modules/user/pages/PermanentDriverSearch'));
+const PermanentDriverConfirm = lazy(() => import('./modules/user/pages/PermanentDriverConfirm'));
 const Login = lazy(() => import('./modules/user/pages/auth/Login'));
 const VerifyOTP = lazy(() => import('./modules/user/pages/auth/VerifyOTP'));
 const Signup = lazy(() => import('./modules/user/pages/auth/Signup'));
@@ -95,6 +99,7 @@ const BusSeats = lazy(() => import('./modules/user/pages/bus/BusSeats'));
 const BusPreview = lazy(() => import('./modules/user/pages/bus/BusPreview'));
 const BusDetails = lazy(() => import('./modules/user/pages/bus/BusDetails'));
 const BusConfirm = lazy(() => import('./modules/user/pages/bus/BusConfirm'));
+const HotelHome = lazy(() => import('./modules/user/pages/hotel/HotelHome'));
 
 // Phase 5 — Onboarding
 const Onboarding = lazy(() => import('./modules/user/pages/auth/Onboarding'));
@@ -246,6 +251,7 @@ const AdminRentalTracking = lazy(() => import('./modules/admin/pages/price-manag
 const AdminRentalTrackingDetail = lazy(() => import('./modules/admin/pages/price-management/RentalTrackingDetail'));
 const AdminRentalBookingRequests = lazy(() => import('./modules/admin/pages/price-management/RentalBookingRequests'));
 const AdminRentalQuoteRequests = lazy(() => import('./modules/admin/pages/price-management/RentalQuoteRequests'));
+const AdminRentalQuoteDetail = lazy(() => import('./modules/admin/pages/price-management/RentalQuoteDetail'));
 const AdminRentalPackageTypes = lazy(() => import('./modules/admin/pages/price-management/RentalPackageTypes'));
 const AdminGoodsTypes = lazy(() => import('./modules/admin/pages/price-management/GoodsTypes'));
 const AdminPoolingManager = lazy(() => import('./modules/admin/pages/pooling/PoolingManager'));
@@ -781,6 +787,7 @@ function App() {
               <Route path="/bus/seats" element={<BusSeats />} />
               <Route path="/bus/details" element={<BusDetails />} />
               <Route path="/bus/confirm" element={<BusConfirm />} />
+              <Route path="/hotel" element={<HotelHome />} />
               <Route path="/tours" element={<ComingSoon />} />
 
               <Route path="/activity" element={<Activity />} />
@@ -818,8 +825,13 @@ function App() {
               <Route path="/taxi/user/verify-otp" element={<VerifyOTP />} />
               <Route path="/taxi/user/signup" element={<Signup />} />
               <Route path="/taxi/user" element={<UserHomeRoute taxiPrefixed />} />
+              <Route path="/user" element={<UserHomeRoute />} />
 
               <Route element={<UserProtectedRoute />}>
+              <Route path="/taxi/user/with-driver" element={<WithDriverHome />} />
+              <Route path="/taxi/user/with-driver/details" element={<WithDriverBooking />} />
+              <Route path="/taxi/user/with-driver/permanent" element={<PermanentDriverSearch />} />
+              <Route path="/taxi/user/with-driver/permanent/confirm" element={<PermanentDriverConfirm />} />
               <Route
                 path="/taxi/user/ride/select-category"
                 element={<SelectCategory />}
@@ -946,6 +958,7 @@ function App() {
               <Route path="/taxi/user/bus/details" element={<BusPreview />} />
               <Route path="/taxi/user/bus/checkout" element={<BusDetails />} />
               <Route path="/taxi/user/bus/confirm" element={<BusConfirm />} />
+              <Route path="/taxi/user/hotel" element={<HotelHome />} />
               <Route path="/taxi/user/tours" element={<ComingSoon />} />
 
               <Route path="/taxi/user/activity" element={<Activity />} />
@@ -1454,6 +1467,14 @@ function App() {
                     path="service-stores/edit/:id"
                     element={<AdminServiceStores mode="edit" />}
                   />
+                  <Route
+                    path="service-stores/pending"
+                    element={<AdminPendingDrivers roleFilter="service_center" />}
+                  />
+                  <Route
+                    path="service-stores/pending-staff"
+                    element={<AdminPendingDrivers roleFilter="service_center_staff" />}
+                  />
                   <Route path="app-modules" element={<AdminAppModules />} />
                   <Route
                     path="app-modules/create"
@@ -1533,6 +1554,10 @@ function App() {
                   <Route
                     path="rental-quotes"
                     element={<AdminRentalQuoteRequests />}
+                  />
+                  <Route
+                    path="rental-quotes/:id"
+                    element={<AdminRentalQuoteDetail />}
                   />
                   <Route
                     path="rental-packages"

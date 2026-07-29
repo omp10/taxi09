@@ -1,32 +1,32 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import { CalendarClock, ChevronRight, Clock3, MapPin, ShieldCheck, User, Menu, Bell, ArrowRight, Calendar, History, Compass, GraduationCap, Car, UserCheck, Briefcase, Plane, Truck } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight, Bike, Bell, Car, ChevronRight, FileCheck, Headset, Menu, ShieldCheck, UserCheck } from 'lucide-react';
+import toast from 'react-hot-toast';
 import carIcon from '../../../assets/icons/car.png';
 import bikeIcon from '../../../assets/icons/bike.png';
 import autoIcon from '../../../assets/icons/auto.png';
 import deliveryIcon from '../../../assets/icons/Delivery.png';
-import rentalCarImg from '../../../assets/images/rental_car_transparent.png';
-import yellowCarImg from '../../../assets/images/maruti_swift_transparent.png';
-import rentalBikeImg from '../../../assets/images/rental_bike_transparent.png';
+import rentalCarImg from '../../../assets/images/rental_car_yellow.png';
+import rentalBikeImg from '../../../assets/images/yellow_sports_bike_transparent.png';
+import driverWithCabImg from '../../../assets/images/driver_beside_cab_white.png';
 import api from '../../../shared/api/axiosInstance';
 import BottomNavbar from '../components/BottomNavbar';
-import { useSettings } from '../../../shared/context/SettingsContext';
-import { userService } from '../services/userService';
+import AppHeader from '../components/AppHeader';
 import { userAuthService } from '../services/authService';
 import {
   CURRENT_RIDE_UPDATED_EVENT,
   getCurrentRide,
-  getCurrentRideSignature,
-  isActiveCurrentRide,
   saveCurrentRide,
   clearCurrentRide,
 } from '../services/currentRideService';
-
-const Motion = motion;
 const ACTIVE_RIDE_SYNC_INTERVAL_MS = 15000;
 const IDLE_RIDE_SYNC_INTERVALS_MS = [60000, 120000, 180000];
 const FORCED_SYNC_COOLDOWN_MS = 10000;
+const STATIC_TOP_BANNER = '/taxi09_home_top_banner.png';
+const STATIC_BOTTOM_BANNER = '/taxi09_home_bottom_banner.png';
+const RENTAL_SELF_DRIVE_IMAGE = '/taxi09_rental_self_drive.png';
+const RENTAL_WITH_DRIVER_IMAGE = '/taxi09_rental_with_driver.png';
+const RENTAL_BIKE_IMAGE = '/taxi09_rental_bike.png';
 
 const getCurrentRideIcon = (ride) => {
   const customIcon = String(
@@ -110,137 +110,37 @@ const getScheduledCountdownLabel = (value, now = Date.now()) => {
 
 const MobileHome = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const settings = useSettings();
 
   const [currentRide, setCurrentRide] = useState(() => getCurrentRide());
   const [clockNow, setClockNow] = useState(() => Date.now());
-  const [userInfo, setUserInfo] = useState(null);
+  const [topBanners, setTopBanners] = useState([{ image: STATIC_TOP_BANNER }]);
+  const [bottomBanners, setBottomBanners] = useState([{ image: STATIC_BOTTOM_BANNER }]);
 
-  const [topBanners, setTopBanners] = useState([]);
-  const [bottomBanners, setBottomBanners] = useState([]);
-  const [loadingBanners, setLoadingBanners] = useState(true);
-
-  // Resolve banner image paths correctly
   const resolveBannerImage = (img) => {
     if (!img) return '';
     if (img.startsWith('data:') || img.startsWith('http')) return img;
+    if (img.startsWith('/')) return img;
     const origin = globalThis.__LEGACY_BACKEND_ORIGIN__ || window.location.origin;
     return `${origin}/${img.startsWith('/') ? img.slice(1) : img}`;
   };
 
-  // Fetch banners on mount
   useEffect(() => {
     const fetchBanners = async () => {
-      setLoadingBanners(true);
       try {
-        const topRes = await api.get('/users/banners?type=top');
-        const topData = unwrapApiPayload(topRes);
-        if (topData && Array.isArray(topData.results)) {
-          setTopBanners(topData.results);
-        }
-      } catch (err) {
-        console.log('Failed to fetch top banners:', err);
-      }
-
-      try {
-        const bottomRes = await api.get('/users/banners?type=bottom');
-        const bottomData = unwrapApiPayload(bottomRes);
-        if (bottomData && Array.isArray(bottomData.results)) {
-          setBottomBanners(bottomData.results);
-        }
-      } catch (err) {
-        console.log('Failed to fetch bottom banners:', err);
-      } finally {
-        setLoadingBanners(false);
+        const [topRes, bottomRes] = await Promise.all([
+          api.get('/users/banners?type=top'),
+          api.get('/users/banners?type=bottom'),
+        ]);
+        const topResults = unwrapApiPayload(topRes)?.results || [];
+        const bottomResults = unwrapApiPayload(bottomRes)?.results || [];
+        if (topResults.length) setTopBanners(topResults);
+        if (bottomResults.length) setBottomBanners(bottomResults);
+      } catch (error) {
+        console.log('Failed to hydrate homepage banners:', error);
       }
     };
     fetchBanners();
   }, []);
-
-  const displayTopBanners = topBanners;
-  const [activeTopIndex, setActiveTopIndex] = useState(0);
-  useEffect(() => {
-    if (displayTopBanners.length <= 1) return;
-    const timer = setInterval(() => {
-      setActiveTopIndex((prev) => (prev + 1) % displayTopBanners.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [displayTopBanners, activeTopIndex]);
-
-  const displayBottomBanners = bottomBanners;
-  const [activeBottomIndex, setActiveBottomIndex] = useState(0);
-  useEffect(() => {
-    if (displayBottomBanners.length <= 1) return;
-    const timer = setInterval(() => {
-      setActiveBottomIndex((prev) => (prev + 1) % displayBottomBanners.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [displayBottomBanners, activeBottomIndex]);
-
-  // Banner Touch Swipe Handlers (FAANG engineering style)
-  const touchStartPos = useRef(null);
-  const isSwipeGesture = useRef(false);
-
-  const handleTouchStart = (e) => {
-    if (!e.touches || e.touches.length === 0) return;
-    touchStartPos.current = {
-      x: e.touches[0].clientX,
-      y: e.touches[0].clientY,
-      time: Date.now()
-    };
-    isSwipeGesture.current = false;
-  };
-
-  const handleTouchEnd = (e, isTopBanner) => {
-    if (!touchStartPos.current || !e.changedTouches || e.changedTouches.length === 0) return;
-
-    const endX = e.changedTouches[0].clientX;
-    const endY = e.changedTouches[0].clientY;
-    const diffX = touchStartPos.current.x - endX;
-    const diffY = touchStartPos.current.y - endY;
-    const duration = Date.now() - touchStartPos.current.time;
-
-    // Detect horizontal swipe: diffX must be larger than diffY, and have crossed threshold
-    if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY) && duration < 300) {
-      isSwipeGesture.current = true;
-      if (isTopBanner) {
-        if (displayTopBanners.length > 1) {
-          if (diffX > 0) {
-            // Swipe left -> Next
-            setActiveTopIndex((prev) => (prev + 1) % displayTopBanners.length);
-          } else {
-            // Swipe right -> Prev
-            setActiveTopIndex((prev) => (prev - 1 + displayTopBanners.length) % displayTopBanners.length);
-          }
-        }
-      } else {
-        if (displayBottomBanners.length > 1) {
-          if (diffX > 0) {
-            // Swipe left -> Next
-            setActiveBottomIndex((prev) => (prev + 1) % displayBottomBanners.length);
-          } else {
-            // Swipe right -> Prev
-            setActiveBottomIndex((prev) => (prev - 1 + displayBottomBanners.length) % displayBottomBanners.length);
-          }
-        }
-      }
-    }
-  };
-
-  const handleBannerClick = (e, banner, defaultRedirect) => {
-    if (isSwipeGesture.current) {
-      e.preventDefault();
-      e.stopPropagation();
-      isSwipeGesture.current = false;
-      return;
-    }
-    if (banner?.redirect_url) {
-      navigate(banner.redirect_url);
-    } else {
-      navigate(defaultRedirect);
-    }
-  };
 
   // Sync profile/initials
   useEffect(() => {
@@ -249,7 +149,7 @@ const MobileHome = () => {
       try {
         const user = await userAuthService.getCurrentUser();
         if (active && user) {
-          setUserInfo(user);
+          return user;
         }
       } catch (err) {
         console.log('Failed to fetch user in MobileHome:', err);
@@ -376,52 +276,103 @@ const MobileHome = () => {
   const scheduledDateLabel = formatScheduledDateTime(currentRide?.scheduledAt);
   const scheduledCountdown = getScheduledCountdownLabel(currentRide?.scheduledAt, clockNow);
 
-  const getInitials = (name) => {
-    if (!name) return 'JD';
-    const parts = name.trim().split(/\s+/);
-    if (parts.length >= 2) {
-      return (parts[0][0] + parts[1][0]).toUpperCase();
-    }
-    return name.slice(0, 2).toUpperCase();
+  const rentalOptions = [
+    {
+      icon: Car,
+      title: 'Self Drive',
+      subtitle: 'Drive on your terms',
+      image: RENTAL_SELF_DRIVE_IMAGE,
+      path: '/taxi/user/rental/type',
+    },
+    {
+      icon: UserCheck,
+      title: 'With Driver',
+      subtitle: "Relax, we'll drive",
+      image: RENTAL_WITH_DRIVER_IMAGE,
+      path: '/taxi/user/with-driver',
+    },
+    {
+      icon: Bike,
+      title: 'Bike Rental',
+      subtitle: 'Quick & affordable',
+      image: RENTAL_BIKE_IMAGE,
+      path: '/taxi/user/rental/bike-categories',
+    },
+  ];
+
+  const moreServices = [
+    { iconImage: '/taxi09_service_hotel.png', label: 'Hotel\nBooking', path: null },
+    { iconImage: '/taxi09_service_subscription.png', label: 'Monthly\nSubscription', path: '/taxi/user/profile/subscriptions' },
+    { iconImage: '/taxi09_service_travel.png', label: 'Travel\nPackages', path: '/taxi/user/cab/spiritual' },
+    { iconImage: '/taxi09_service_bookings.png', label: 'My\nBookings', path: '/taxi/user/activity' },
+    { iconImage: '/taxi09_service_attach_car.png', label: 'Attach\nCar', path: '/taxi/driver/login' },
+    { iconImage: '/taxi09_service_driver.png', label: 'Driver\nRegistration', path: '/taxi/driver/login' },
+  ];
+
+  const [topIndex, setTopIndex] = useState(0);
+  const [bottomIndex, setBottomIndex] = useState(0);
+  const touchStart = useRef(null);
+  const swipedRef = useRef(false);
+
+  useEffect(() => {
+    if (topBanners.length <= 1) return undefined;
+    const t = setInterval(() => setTopIndex((i) => (i + 1) % topBanners.length), 5000);
+    return () => clearInterval(t);
+  }, [topBanners.length]);
+
+  useEffect(() => {
+    if (bottomBanners.length <= 1) return undefined;
+    const t = setInterval(() => setBottomIndex((i) => (i + 1) % bottomBanners.length), 5000);
+    return () => clearInterval(t);
+  }, [bottomBanners.length]);
+
+  const handleTouchStart = (e) => {
+    const touch = e.touches?.[0];
+    touchStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
+    swipedRef.current = false;
   };
-  const userInitials = userInfo ? getInitials(userInfo.name) : 'User';
+
+  const handleTouchEnd = (e, count, setIndex) => {
+    const touch = e.changedTouches?.[0];
+    if (!touchStart.current || !touch || count <= 1) return;
+    const dx = touchStart.current.x - touch.clientX;
+    const dy = touchStart.current.y - touch.clientY;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+      swipedRef.current = true;
+      setIndex((i) => (i + (dx > 0 ? 1 : -1) + count) % count);
+    }
+  };
+
+  const trustPoints = [
+    { icon: ShieldCheck, label: 'Best Price\nGuarantee' },
+    { icon: UserCheck, label: 'Verified\nDrivers' },
+    { icon: Headset, label: '24x7\nSupport' },
+    { icon: FileCheck, label: 'Easy\nBooking' },
+  ];
+
+  const openBanner = (banner, fallbackPath) => {
+    if (swipedRef.current) {
+      swipedRef.current = false;
+      return;
+    }
+    navigate(banner?.redirect_url || banner?.deep_link || fallbackPath);
+  };
+
+  const openService = (path) => {
+    if (path) {
+      navigate(path);
+    } else {
+      toast('Coming soon');
+    }
+  };
 
   return (
-    <div className="premium-theme min-h-screen bg-white text-slate-900 font-sans pb-0 max-w-lg mx-auto relative overflow-x-hidden no-scrollbar border-x border-slate-200 shadow-2xl flex flex-col justify-between">
+    <div className="premium-theme min-h-screen bg-[#fffdf8] text-slate-900 font-sans pb-0 max-w-lg mx-auto relative overflow-x-hidden no-scrollbar border-x border-slate-100 shadow-2xl flex flex-col justify-between">
 
-      {/* Top App Bar */}
-      <header className="bg-[#FFC107] flex items-center justify-between px-6 h-16 w-full sticky top-0 z-50 select-none border-b border-amber-500/20 shadow-sm">
-        <div className="flex items-center gap-4">
-
-
-          <h1
-            onClick={() => navigate('/taxi/user')}
-            className="text-[24px] font-black cursor-pointer text-slate-950 select-none flex items-center"
-          >
-            Taxi<span className="text-white">09</span>
-          </h1>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate('/taxi/user/notifications')}
-            className="relative flex items-center justify-center text-slate-950 cursor-pointer active:scale-95 transition-transform"
-          >
-            <Bell size={24} className="text-slate-950" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white" />
-          </button>
-
-          <div
-            onClick={() => navigate('/taxi/user/profile')}
-            className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-slate-950 text-sm font-bold cursor-pointer active:scale-95 transition-transform border border-white/25"
-          >
-            {userInitials}
-          </div>
-        </div>
-      </header>
+      <AppHeader />
 
       {/* Main Body Content */}
-      <main className="flex-1 pb-24">
+      <main className="flex-1 px-4 pb-28">
 
         {/* Active scheduled ride or rental alerts (if any exist) */}
         {isScheduledAcceptedRide && (
@@ -447,352 +398,156 @@ const MobileHome = () => {
           </div>
         )}
 
-        {/* Hero Banner Section */}
-        {loadingBanners ? (
-          <section className="w-full mt-0">
-            <div className="w-full h-[210px] bg-slate-200 animate-pulse" />
-          </section>
-        ) : (
-          displayTopBanners.length > 0 && (
-            <section className="w-full mt-0">
-              <div
-                onTouchStart={handleTouchStart}
-                onTouchEnd={(e) => handleTouchEnd(e, true)}
-                onClick={(e) => handleBannerClick(e, displayTopBanners[activeTopIndex], '/taxi/user/ride/select-location')}
-                className="w-full relative overflow-hidden h-[210px] bg-[#0f0f0f] flex items-center group cursor-pointer touch-pan-y select-none"
-              >
-                {/* Banner Background Images Sliding Track */}
-                <div
-                  className="flex w-full h-full transition-transform duration-500 ease-out"
-                  style={{ transform: `translateX(-${activeTopIndex * 100}%)` }}
-                >
-                  {displayTopBanners.map((banner, idx) => (
-                    <div
-                      key={banner?._id || idx}
-                      className="w-full h-full bg-cover bg-center shrink-0"
-                      style={{
-                        backgroundImage: `url('${resolveBannerImage(banner?.image)}')`
-                      }}
-                    />
-                  ))}
-                </div>
-
-                {/* Carousel indicators */}
-                {displayTopBanners.length > 1 && (
-                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20">
-                    {displayTopBanners.map((_, idx) => (
-                      <span
-                        key={idx}
-                        className={`h-1.5 rounded-full transition-all duration-300 ${idx === activeTopIndex ? 'w-4 bg-[#FFB300]' : 'w-1.5 bg-white/40'}`}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            </section>
-          )
-        )}
-
-        {/* Choose Your Ride Section */}
-        <section className="mt-6 px-4">
-          <div className="flex items-center justify-between mb-2 pt-3">
-            <div>
-              <h2 className="text-[20px] font-black text-slate-800 tracking-tight">Choose Your Ride</h2>
-              <p className="text-[12px] font-semibold text-slate-400 mt-0.5">Safe. Reliable. Always There.</p>
-            </div>
-            <div className="w-6 h-1 bg-[#FFC400] rounded-full"></div>
-          </div>
-
-          {/* Cards Grid */}
-          <div className="grid grid-cols-2 gap-4 mt-4">
-
-            {/* Card 1: Cars (Self Drive) */}
-            <div
-              onClick={() => navigate('/taxi/user/rental/type')}
-              className="relative overflow-hidden rounded-[24px] p-3.5 flex flex-col justify-between hover:shadow-lg transition-all cursor-pointer h-[260px] group bg-gradient-to-br from-[#e6f0fa] via-[#e8ebff] to-[#eeddf7] shadow-sm border border-white/60"
-            >
-              {/* Decorative Curve Background */}
-              <div className="absolute top-[-25%] left-[-25%] w-[150%] h-[75%] bg-gradient-to-b from-white/70 to-white/0 rounded-[100%] pointer-events-none" />
-
-              {/* Dots Matrix */}
-              <div className="absolute top-4 right-4 grid grid-cols-4 gap-1 opacity-[0.15] pointer-events-none">
-                {[...Array(12)].map((_, i) => (
-                  <div key={i} className="w-1 h-1 rounded-full bg-[#7c5bfa]" />
-                ))}
-              </div>
-
-              {/* Car Image */}
-              <div className="relative z-10 flex items-center justify-center h-[80px] mt-1 mb-2">
-                <img
-                  src={rentalCarImg}
-                  alt="Cars (Self Drive)"
-                  className="h-[75px] w-auto object-contain scale-[1.35] transform-gpu transition-transform duration-300 group-hover:scale-[1.45] drop-shadow-lg"
-                />
-              </div>
-
-              {/* Icon Badge */}
-
-
-              {/* Text Content */}
-              <div className="relative z-10 mb-2">
-                <h3 className="text-[15px] font-black text-slate-900 tracking-tight leading-none mb-1">Cars (Self Drive)</h3>
-                <div className="w-6 h-[3px] bg-gradient-to-r from-[#598aff] to-[#7c5bfa] rounded-full mb-1.5"></div>
-                <p className="text-[11px] font-medium text-slate-600 leading-snug">Drive yourself, on<br />your terms.</p>
-              </div>
-
-              {/* Action Button */}
-              <div className="relative z-10 w-full bg-gradient-to-r from-[#7c5bfa] to-[#598aff] text-white text-[12px] font-bold px-1.5 py-1 rounded-full flex items-center justify-between group-hover:shadow-md transition-all mt-auto pl-3.5">
-                <span>Book Now</span>
-                <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-sm">
-                  <ArrowRight size={14} className="text-[#598aff] shrink-0 stroke-[3]" />
-                </div>
-              </div>
-            </div>
-
-            {/* Card 2: Cars With Driver */}
-            <div
-              onClick={() => navigate('/taxi/user/ride/select-location')}
-              className="relative overflow-hidden rounded-[24px] p-3.5 flex flex-col justify-between hover:shadow-lg transition-all cursor-pointer h-[260px] group bg-gradient-to-br from-[#ffe866] via-[#ffcc20] to-[#ff9900] shadow-sm border border-white/40"
-            >
-              {/* Decorative Curve Background */}
-              <div className="absolute top-[-25%] left-[-25%] w-[150%] h-[75%] bg-gradient-to-b from-white/60 to-white/0 rounded-[100%] pointer-events-none" />
-
-              {/* Dots Matrix */}
-              <div className="absolute top-4 right-4 grid grid-cols-4 gap-1 opacity-[0.25] pointer-events-none">
-                {[...Array(12)].map((_, i) => (
-                  <div key={i} className="w-1 h-1 rounded-full bg-orange-900" />
-                ))}
-              </div>
-
-              {/* Car Image */}
-              <div className="relative z-10 flex items-center justify-center h-[80px] mt-1 mb-2">
-                <img
-                  src={yellowCarImg}
-                  alt="Cars With Driver"
-                  className="h-[75px] w-auto object-contain scale-[1.35] transform-gpu transition-transform duration-300 group-hover:scale-[1.45] drop-shadow-lg"
-                />
-              </div>
-
-              {/* Icon Badge */}
-
-
-              {/* Text Content */}
-              <div className="relative z-10 mb-2">
-                <h3 className="text-[15px] font-black text-slate-900 tracking-tight leading-none mb-1">Cars With Driver</h3>
-                <div className="w-6 h-[3px] bg-gradient-to-r from-[#ffcc20] to-[#ff8c00] rounded-full mb-1.5"></div>
-                <p className="text-[11px] font-medium text-slate-800/80 leading-snug">Sit back & relax,<br />we drive.</p>
-              </div>
-
-              {/* Action Button */}
-              <div className="relative z-10 w-full bg-gradient-to-r from-[#ff8c00] to-[#ff6600] text-white text-[12px] font-bold px-1.5 py-1 rounded-full flex items-center justify-between group-hover:shadow-md transition-all mt-auto pl-3.5">
-                <span>Book Now</span>
-                <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-sm">
-                  <ArrowRight size={14} className="text-[#ff8c00] shrink-0 stroke-[3]" />
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Full Width Bikes Card */}
+        <section className="mt-1">
           <div
-            onClick={() => navigate('/taxi/user/rental/bike-categories')}
-            className="bg-[#FFFDF9] border border-amber-100/50 rounded-3xl p-5 flex items-center justify-between hover:shadow-md transition-shadow cursor-pointer mt-8 group overflow-hidden relative h-[160px]"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={(e) => handleTouchEnd(e, topBanners.length, setTopIndex)}
+            onClick={() => openBanner(topBanners[topIndex], '/taxi/user/ride/select-location')}
+            className="relative w-full cursor-pointer touch-pan-y select-none overflow-hidden rounded-[28px] border border-[#f0eadf] bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)]"
           >
-            <div className="flex flex-col justify-between h-full z-10 w-[70%]">
-              <div>
-                <h3 className="text-[21px] font-black text-slate-800 leading-tight">Bikes</h3>
-                <p className="text-[12px] font-bold text-slate-500 leading-tight mt-1">Quick rides. Beat the traffic.</p>
-              </div>
+            <div
+              className="flex w-full transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(-${topIndex * 100}%)` }}
+            >
+              {topBanners.map((banner, idx) => (
+                <img
+                  key={banner?._id || idx}
+                  src={resolveBannerImage(banner?.image)}
+                  alt="Taxi09 offer banner"
+                  className="block h-auto w-full shrink-0"
+                  draggable={false}
+                />
+              ))}
+            </div>
 
+            {topBanners.length > 1 && (
+              <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1.5">
+                {topBanners.map((_, idx) => (
+                  <span
+                    key={idx}
+                    className={`h-2 w-2 rounded-full transition-all duration-300 ${idx === topIndex ? 'bg-[#F5B700]' : 'bg-white/70'}`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Rental Options */}
+        <section className="mt-6">
+          <div className="mb-4 flex items-end justify-between px-1">
+            <h2 className="text-[24px] font-black tracking-[-0.05em] text-slate-950">Rental Options</h2>
+            <button
+              onClick={() => navigate('/taxi/user/rental/type')}
+              className="flex items-center gap-1.5 text-[14px] font-bold text-[#F5B700] active:scale-95 transition-transform"
+            >
+              View All <ArrowRight size={16} strokeWidth={2.6} />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3">
+            {rentalOptions.map(({ icon: Icon, title, subtitle, image, path }) => (
               <button
-                className="bg-[#FFC107] text-slate-950 text-[12px] font-black uppercase tracking-wider px-5 py-3 rounded-xl w-fit flex items-center gap-1"
+                key={title}
+                onClick={() => navigate(path)}
+                className="relative flex min-h-[148px] flex-col overflow-hidden rounded-[22px] border border-[#f1ede6] bg-white px-2.5 pt-3 pb-2 text-left shadow-[0_10px_24px_rgba(15,23,42,0.07)] active:scale-[0.98] transition-transform"
               >
-                Book Now <ArrowRight size={14} className="shrink-0 stroke-[3]" />
+                <div className="flex items-start gap-2">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#fff2c9]">
+                    <Icon size={17} className="text-slate-900" strokeWidth={2.1} />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-[12px] font-black leading-[1.15] text-slate-950">{title}</span>
+                    <span className="mt-0.5 block text-[9px] font-medium leading-tight text-slate-600">{subtitle}</span>
+                  </span>
+                </div>
+
+                <div className="mt-auto flex min-h-0 items-end justify-center">
+                  <img
+                    src={image}
+                    alt={title}
+                    className={`w-full object-contain ${title === 'With Driver' ? 'max-h-[74px]' : 'max-h-[66px] scale-[1.14]'}`}
+                    draggable={false}
+                  />
+                </div>
+
+                <span className="absolute bottom-1.5 right-1 flex h-[22px] w-[22px] items-center justify-center rounded-full bg-[#f5b700] shadow-[0_6px_14px_rgba(245,183,0,0.3)]">
+                  <ChevronRight size={12} className="text-black" strokeWidth={3.2} />
+                </span>
               </button>
-            </div>
-
-            {/* Bike Image on the right */}
-            <div className="w-[30%] h-full flex items-center justify-center relative">
-              <img
-                src={rentalBikeImg}
-                alt="Bikes"
-                className="h-[135px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-md z-10"
-              />
-            </div>
+            ))}
           </div>
         </section>
 
-        {/* More Services Section */}
-        <section className="mt-10 px-5 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-[18px] font-black text-slate-800 tracking-tight">More Services</h2>
-          </div>
+        {/* More Services */}
+        <section className="mt-7">
+          <h2 className="mb-4 px-1 text-[24px] font-black tracking-[-0.05em] text-slate-950">More Services</h2>
 
-          <div className="grid grid-cols-3 gap-2">
-
-            {/* Monthly Subscription */}
-            <button
-              onClick={() => navigate('/taxi/user/profile/subscriptions')}
-              className="relative bg-white rounded-2xl p-2 pt-2.5 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[96px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
-            >
-              <div className="w-full flex justify-center mt-1">
-                <div className="relative w-[40px] h-[18px]">
-                  <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
-                  <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
-                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                    <Calendar size={28} color="#FFC107" strokeWidth={2.2} />
-                  </div>
-                </div>
-              </div>
-              <div className="w-full mt-auto mb-1 flex flex-col items-center">
-                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Rental<br />Booking</span>
-              </div>
-            </button>
-
-            {/* My Bookings */}
-            <button
-              onClick={() => navigate('/taxi/user/activity')}
-              className="relative bg-white rounded-2xl p-2 pt-2.5 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[96px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
-            >
-              <div className="w-full flex justify-center mt-1">
-                <div className="relative w-[40px] h-[18px]">
-                  <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
-                  <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
-                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                    <MapPin size={28} color="#FFC107" strokeWidth={2.5} />
-                  </div>
-                </div>
-              </div>
-              <div className="w-full mt-auto mb-1 flex flex-col items-center">
-                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Ride<br />Booking</span>
-              </div>
-            </button>
-
-            {/* Travel Packages */}
-            <button
-              onClick={() => navigate('/taxi/user/cab/spiritual')}
-              className="relative bg-white rounded-2xl p-2 pt-2.5 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[96px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
-            >
-              <div className="w-full flex justify-center mt-1">
-                <div className="relative w-[40px] h-[18px]">
-                  <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
-                  <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
-                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                    <Truck size={28} color="#FFC107" strokeWidth={2.2} />
-                  </div>
-                </div>
-              </div>
-              <div className="w-full mt-auto mb-1 flex flex-col items-center">
-                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Porter</span>
-              </div>
-            </button>
-
-            {/* Internship Program */}
-            <button
-              onClick={() => navigate('/taxi/user/onboarding')}
-              className="relative bg-white rounded-2xl p-2 pt-2.5 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[96px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
-            >
-              <div className="w-full flex justify-center mt-1">
-                <div className="relative w-[40px] h-[18px]">
-                  <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
-                  <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
-                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                    <Plane size={28} color="#FFC107" strokeWidth={2.2} />
-                  </div>
-                </div>
-              </div>
-              <div className="w-full mt-auto mb-1 flex flex-col items-center">
-                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Plane<br />Booking</span>
-              </div>
-            </button>
-
-            {/* Attach Car */}
-            <button
-              onClick={() => navigate('/taxi/driver/login')}
-              className="relative bg-white rounded-2xl p-2 pt-2.5 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[96px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
-            >
-              <div className="w-full flex justify-center mt-1">
-                <div className="relative w-[40px] h-[18px]">
-                  <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
-                  <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
-                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                    <Car size={30} color="#FFC107" fill="#FFC107" strokeWidth={1} />
-                  </div>
-                </div>
-              </div>
-              <div className="w-full mt-auto mb-1 flex flex-col items-center">
-                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Attach<br />Car</span>
-              </div>
-            </button>
-
-            {/* Driver Registration */}
-            <button
-              onClick={() => navigate('/taxi/driver/login')}
-              className="relative bg-white rounded-2xl p-2 pt-2.5 flex flex-col items-center hover:shadow-lg transition-all cursor-pointer h-[96px] border-b-[3px] border-[#FFC107] shadow-[0_4px_12px_rgba(255,193,7,0.12)] group"
-            >
-              <div className="w-full flex justify-center mt-1">
-                <div className="relative w-[40px] h-[18px]">
-                  <div className="absolute inset-0 bg-[#FFB300] rounded-[8px] translate-y-1.5 transform -skew-x-[25deg] rotate-[-15deg]"></div>
-                  <div className="absolute inset-0 bg-white rounded-[8px] transform -skew-x-[25deg] rotate-[-15deg] border border-slate-100 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.05)]"></div>
-                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 drop-shadow-[0_4px_6px_rgba(255,193,7,0.4)] z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                    <UserCheck size={30} color="#FFC107" fill="#FFC107" strokeWidth={1} />
-                  </div>
-                </div>
-              </div>
-              <div className="w-full mt-auto mb-1 flex flex-col items-center">
-                <span className="text-[10px] font-black text-slate-800 text-center leading-[1.15]">Driver<br />Registration</span>
-              </div>
-            </button>
-
-          </div>
-        </section>
-
-        {/* Featured Destination / Bottom Banners Section */}
-        {loadingBanners ? (
-          <section className="mt-8 px-4">
-            <div className="w-full aspect-[16/9] bg-slate-200 animate-pulse rounded-[28px]" />
-          </section>
-        ) : (
-          displayBottomBanners.length > 0 && (
-            <section className="mt-8 px-4">
-              <div
-                onTouchStart={handleTouchStart}
-                onTouchEnd={(e) => handleTouchEnd(e, false)}
-                onClick={(e) => handleBannerClick(e, displayBottomBanners[activeBottomIndex], '/taxi/user/cab/spiritual')}
-                className="relative w-full rounded-[28px] overflow-hidden aspect-[16/9] shadow-md group cursor-pointer border border-slate-100 bg-[#0f0f0f] touch-pan-y select-none"
+          <div className="grid grid-cols-3 gap-3">
+            {moreServices.map(({ iconImage, label, path }) => (
+              <button
+                key={label}
+                onClick={() => openService(path)}
+                className="relative flex min-h-[84px] items-center gap-1.5 overflow-hidden rounded-[20px] border border-[#f1ede6] bg-white pl-2 pr-1 py-3 text-left shadow-[0_10px_24px_rgba(15,23,42,0.06)] active:scale-[0.97] transition-transform"
               >
-                {/* Banner Background Images Sliding Track */}
-                <div
-                  className="flex w-full h-full transition-transform duration-500 ease-out"
-                  style={{ transform: `translateX(-${activeBottomIndex * 100}%)` }}
-                >
-                  {displayBottomBanners.map((banner, idx) => (
-                    <div
-                      key={banner?._id || idx}
-                      className="w-full h-full bg-cover bg-center shrink-0"
-                      style={{
-                        backgroundImage: `url('${resolveBannerImage(banner?.image)}')`
-                      }}
-                    />
-                  ))}
-                </div>
+                <img src={iconImage} alt="" className="h-8 w-8 shrink-0 object-contain" draggable={false} />
+                <span className="min-w-0 break-words text-[10px] font-extrabold leading-[1.2] whitespace-pre-line text-slate-950">
+                  {label}
+                </span>
+                <span className="absolute bottom-1.5 right-1 flex h-[22px] w-[22px] items-center justify-center rounded-full border border-[#f5b700]/35 bg-white shadow-[0_2px_6px_rgba(0,0,0,0.05)]">
+                  <ChevronRight size={12} className="text-[#F5B700]" strokeWidth={3.5} />
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
 
-                {/* Carousel indicators */}
-                {displayBottomBanners.length > 1 && (
-                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20">
-                    {displayBottomBanners.map((_, idx) => (
-                      <span
-                        key={idx}
-                        className={`h-1.5 rounded-full transition-all duration-300 ${idx === activeBottomIndex ? 'w-4 bg-[#FFB300]' : 'w-1.5 bg-white/40'}`}
-                      />
-                    ))}
-                  </div>
-                )}
+        <section className="mt-7">
+          <div
+            onTouchStart={handleTouchStart}
+            onTouchEnd={(e) => handleTouchEnd(e, bottomBanners.length, setBottomIndex)}
+            onClick={() => openBanner(bottomBanners[bottomIndex], '/taxi/user/cab/spiritual')}
+            className="relative w-full cursor-pointer touch-pan-y select-none overflow-hidden rounded-[28px] border border-[#f1ede6] bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)]"
+          >
+            <div
+              className="flex w-full transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(-${bottomIndex * 100}%)` }}
+            >
+              {bottomBanners.map((banner, idx) => (
+                <img
+                  key={banner?._id || idx}
+                  src={resolveBannerImage(banner?.image)}
+                  alt="Taxi09 travel packages banner"
+                  className="block h-auto w-full shrink-0"
+                  draggable={false}
+                />
+              ))}
+            </div>
+
+            {bottomBanners.length > 1 && (
+              <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1.5">
+                {bottomBanners.map((_, idx) => (
+                  <span
+                    key={idx}
+                    className={`h-2 w-2 rounded-full transition-all duration-300 ${idx === bottomIndex ? 'bg-[#F5B700]' : 'bg-white/70'}`}
+                  />
+                ))}
               </div>
-            </section>
-          )
-        )}
+            )}
+          </div>
+        </section>
+
+        {/* Trust strip */}
+        <section className="mt-6">
+          <div className="grid grid-cols-4 divide-x divide-[#efe8dc] rounded-[22px] border border-[#f1ede6] bg-white py-4 shadow-[0_10px_28px_rgba(15,23,42,0.06)]">
+            {trustPoints.map(({ icon: Icon, label }) => (
+              <div key={label} className="flex min-w-0 flex-col items-center justify-center gap-2 px-2 text-center">
+                <Icon size={22} className="shrink-0 text-[#F5B700]" strokeWidth={2.2} />
+                <span className="whitespace-pre-line text-[9px] font-black leading-[1.25] tracking-tight text-slate-800">{label}</span>
+              </div>
+            ))}
+          </div>
+        </section>
 
       </main>
 

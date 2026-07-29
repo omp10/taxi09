@@ -1318,6 +1318,9 @@ export const deletePoolingRoute = asyncHandler(async (req, res) => {
 export const getRentalQuoteRequests = asyncHandler(async (_req, res) =>
   ok(res, { results: await adminService.listRentalQuoteRequests() }),
 );
+export const getRentalQuoteRequest = asyncHandler(async (req, res) =>
+  ok(res, await adminService.getRentalQuoteRequest(req.params.id)),
+);
 export const updateRentalQuoteRequest = asyncHandler(async (req, res) =>
   ok(res, await adminService.updateRentalQuoteRequest(req.params.id, req.body, req.auth?.sub)),
 );

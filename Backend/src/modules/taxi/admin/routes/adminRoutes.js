@@ -119,6 +119,7 @@ import {
   getRentalBookingRequests,
   getRentalTrackingDashboard,
   getRentalQuoteRequests,
+  getRentalQuoteRequest,
   getPreferences,
   getRentalVehicleTypes,
   getRideModules,
@@ -372,6 +373,7 @@ adminRouter.get('/admin/rental-booking-requests', getRentalBookingRequests);
 adminRouter.get('/admin/rental-tracking', getRentalTrackingDashboard);
 adminRouter.patch('/admin/rental-booking-requests/:id', updateRentalBookingRequest);
 adminRouter.get('/admin/rental-quote-requests', getRentalQuoteRequests);
+adminRouter.get('/admin/rental-quote-requests/:id', getRentalQuoteRequest);
 adminRouter.patch('/admin/rental-quote-requests/:id', updateRentalQuoteRequest);
 adminRouter.get('/admin/goods-types', getGoodsTypes);
 adminRouter.post('/admin/goods-types', createGoodsType);

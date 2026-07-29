@@ -2,19 +2,18 @@ import React, { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  ArrowLeft,
   Armchair,
   BusFront,
   CalendarDays,
   ChevronRight,
   Clock3,
-  Images,
-  MapPin,
   Phone,
+  Star,
   ShieldCheck,
   Ticket,
 } from 'lucide-react';
 import { buildBusRouteState } from './busNavigationState';
+import AppHeader from '../../components/AppHeader';
 
 const getRoutePrefix = (pathname = '') => (pathname.startsWith('/taxi/user') ? '/taxi/user' : '');
 
@@ -45,6 +44,27 @@ const formatDurationBrief = (value = '') => {
     .trim();
 };
 
+const splitCity = (value = '') => String(value).split(',')[0].trim();
+
+const getStopName = (bus, stopType) => {
+  const stops = Array.isArray(bus?.route?.stops) ? bus.route.stops : [];
+  const wanted = stopType === 'drop' ? ['drop', 'both'] : ['pickup', 'both'];
+  const stop = stops.find((item) => wanted.includes(String(item?.stopType || 'pickup').toLowerCase()));
+  return String(stop?.pointName || '').trim();
+};
+
+const SectionTitle = ({ children }) => (
+  <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--text-light)]">{children}</p>
+);
+
+const Stat = ({ icon: Icon, label, value, tone = '' }) => (
+  <div className="min-w-0 rounded-[12px] bg-slate-50 px-2 py-2 text-center">
+    <Icon size={13} className="mx-auto text-[var(--text-light)]" />
+    <p className="mt-1 text-[8px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">{label}</p>
+    <p className={`mt-0.5 truncate text-[11px] font-extrabold ${tone}`}>{value}</p>
+  </div>
+);
+
 const stopBadgeTone = {
   pickup: 'border-emerald-200 bg-emerald-50 text-emerald-700',
   drop: 'border-rose-200 bg-rose-50 text-rose-700',
@@ -58,6 +78,7 @@ const BusPreview = () => {
   const state = location.state || {};
   const { bus, fromCity, toCity, date } = state;
   const [activeImage, setActiveImage] = useState(bus?.coverImage || bus?.image || bus?.galleryImages?.[0] || '');
+  const [openPolicy, setOpenPolicy] = useState('');
 
   if (!bus?.busServiceId || !bus?.scheduleId) {
     navigate(`${routePrefix}/bus`, { replace: true });
@@ -69,221 +90,257 @@ const BusPreview = () => {
     ...(Array.isArray(bus?.galleryImages) ? bus.galleryImages : []),
   ].filter(Boolean).filter((image, index, list) => list.indexOf(image) === index);
   const routeStops = Array.isArray(bus?.route?.stops) ? bus.route.stops : [];
+  const boardingPoint = getStopName(bus, 'pickup');
+  const droppingPoint = getStopName(bus, 'drop');
+  const hasRating = Number(bus?.ratingCount || 0) > 0 && Number(bus?.rating || 0) > 0;
+  const policies = [
+    { key: 'boarding', label: 'Boarding Policy', text: bus?.boardingPolicy },
+    { key: 'cancellation', label: 'Cancellation Policy', text: bus?.cancellationPolicy },
+    { key: 'luggage', label: 'Luggage Policy', text: bus?.luggagePolicy },
+  ].filter((item) => Boolean(item.text));
 
   return (
-    <div className="min-h-screen max-w-lg mx-auto bg-[linear-gradient(180deg,#fff7ed_0%,#ffffff_18%,#f8fafc_100%)] font-sans pb-28">
-      <header className="sticky top-0 z-20 border-b border-white/80 bg-white/90 px-5 pb-4 pt-6 shadow-[0_4px_20px_rgba(15,23,42,0.05)] backdrop-blur-md">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm"
-          >
-            <ArrowLeft size={18} className="text-slate-900" />
-          </button>
-          <div className="min-w-0 flex-1">
-            <h1 className="truncate text-lg font-black text-slate-900">{bus.operator || 'Bus Details'}</h1>
-            <p className="mt-0.5 text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">
-              {fromCity} to {toCity} • {formatTravelDate(date)}
-            </p>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen max-w-lg mx-auto bg-[var(--background)] pb-28 text-[var(--text)]">
+      <AppHeader showBack subtitle="BUS DETAILS" />
 
-      <div className="space-y-5 px-5 pt-5">
+      <div className="space-y-3 px-3 pt-3">
+        {/* Hero */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="overflow-hidden rounded-[30px] border border-white/80 bg-white/95 shadow-[0_8px_24px_rgba(15,23,42,0.06)]"
+          className="overflow-hidden rounded-[20px] border border-[var(--border)] bg-white shadow-[var(--shadow-sm)]"
         >
-          <div className="relative h-56 bg-slate-900">
+          <div className="relative h-[168px] bg-slate-900">
             {activeImage ? (
-              <img src={activeImage} alt={bus.busName || bus.operator || 'Bus'} className="h-full w-full object-cover" />
+              <img
+                src={activeImage}
+                alt={bus.busName || bus.operator || 'Bus'}
+                className="h-full w-full object-cover"
+              />
             ) : (
-              <div
-                className="flex h-full w-full items-center justify-center"
-                style={{ backgroundColor: bus.busColor || '#0f172a' }}
-              >
-                <BusFront size={70} className="text-white/90" />
+              <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(180deg,#FFD54F,#FFC107)]">
+                <BusFront size={56} className="text-white/90" />
               </div>
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-900/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-              <div className="flex items-end justify-between gap-4">
-                <div className="min-w-0">
-                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/70">{bus.busName || 'Coach Service'}</p>
-                  <h2 className="mt-1 truncate text-[22px] font-black">{bus.operator}</h2>
-                  <p className="mt-1 text-sm font-semibold text-white/75">{bus.type} • {bus.routeName || 'Direct route'}</p>
-                </div>
-                <div className="rounded-2xl bg-white/12 px-4 py-3 text-right backdrop-blur-sm">
-                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-white/70">Starts at</p>
-                  <p className="mt-1 text-2xl font-black">Rs {Number(bus.price || 0)}</p>
-                </div>
+            {/* Solid scrim so the overlay text stays readable on any photo */}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/35 to-transparent" />
+
+            {hasRating ? (
+              <span className="absolute left-3 top-3 flex items-center gap-1 rounded-[10px] bg-[var(--success)] px-2 py-1 text-[10px] font-bold text-white">
+                <Star size={10} className="fill-current" />
+                {Number(bus.rating).toFixed(1)}
+                {bus.ratingCount ? <span className="font-medium opacity-80">({bus.ratingCount})</span> : null}
+              </span>
+            ) : null}
+            <span className="absolute right-3 top-3 rounded-[10px] bg-black/60 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
+              {bus.type || 'Coach'}
+            </span>
+
+            <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-3.5 text-white">
+              <div className="min-w-0">
+                <p className="truncate text-[9px] font-bold uppercase tracking-[0.16em] text-white/70">
+                  {bus.busName || 'Coach Service'}
+                </p>
+                <h2 className="mt-0.5 truncate text-[19px] font-extrabold leading-tight">{bus.operator}</h2>
+                <p className="mt-0.5 truncate text-[10px] font-medium text-white/75">
+                  {bus.routeName || `${fromCity} to ${toCity}`}
+                </p>
+              </div>
+              <div className="shrink-0 rounded-[12px] bg-white/15 px-2.5 py-1.5 text-right backdrop-blur-md">
+                <p className="text-[8px] font-bold uppercase tracking-[0.14em] text-white/70">Starts at</p>
+                <p className="text-[19px] font-extrabold leading-tight">Rs{Number(bus.price || 0)}</p>
               </div>
             </div>
           </div>
 
           {gallery.length > 1 ? (
-            <div className="border-t border-slate-100 p-4">
-              <div className="mb-3 flex items-center gap-2">
-                <Images size={14} className="text-slate-400" />
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Gallery</p>
-              </div>
-              <div className="flex gap-3 overflow-x-auto pb-1">
-                {gallery.map((image, index) => (
-                  <button
-                    key={`${image}-${index}`}
-                    type="button"
-                    onClick={() => setActiveImage(image)}
-                    className={`overflow-hidden rounded-2xl border-2 ${activeImage === image ? 'border-orange-400' : 'border-transparent'}`}
-                  >
-                    <img src={image} alt={`${bus.operator} ${index + 1}`} className="h-20 w-28 object-cover" />
-                  </button>
-                ))}
-              </div>
+            <div className="flex gap-2 overflow-x-auto p-2.5 no-scrollbar">
+              {gallery.map((image, index) => (
+                <button
+                  key={`${image}-${index}`}
+                  type="button"
+                  onClick={() => setActiveImage(image)}
+                  className={`shrink-0 overflow-hidden rounded-[12px] border-2 transition-colors ${
+                    activeImage === image ? 'border-[var(--primary)]' : 'border-transparent'
+                  }`}
+                >
+                  <img src={image} alt={`${bus.operator} ${index + 1}`} className="h-14 w-20 object-cover" />
+                </button>
+              ))}
             </div>
           ) : null}
         </motion.div>
 
-        <div className="grid grid-cols-3 gap-3">
-          <div className="rounded-[22px] border border-slate-100 bg-white p-4 shadow-sm">
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">Departure</p>
-            <p className="mt-2 text-lg font-black text-slate-900">{bus.departure || 'NA'}</p>
+        {/* Timeline */}
+        <div className="rounded-[20px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+            <div className="min-w-0">
+              <p className="text-[20px] font-extrabold leading-none">{bus.departure || '--:--'}</p>
+              <p className="mt-1 truncate text-[10px] font-bold text-[var(--text-light)]">{splitCity(fromCity)}</p>
+              {boardingPoint ? (
+                <p className="truncate text-[9px] font-medium text-[var(--text-light)]">{boardingPoint}</p>
+              ) : null}
+            </div>
+            <div className="flex flex-col items-center px-2">
+              <span className="text-[9px] font-bold text-[var(--text-light)]">{formatDurationBrief(bus.duration)}</span>
+              <div className="my-1 flex w-16 items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-[var(--primary)]" />
+                <span className="h-px flex-1 bg-[var(--border)]" />
+                <BusFront size={12} className="text-[var(--text-light)]" />
+                <span className="h-px flex-1 bg-[var(--border)]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[var(--primary)]" />
+              </div>
+              <span className="text-[9px] font-medium text-[var(--text-light)]">Direct</span>
+            </div>
+            <div className="min-w-0 text-right">
+              <p className="text-[20px] font-extrabold leading-none">{bus.arrival || '--:--'}</p>
+              <p className="mt-1 truncate text-[10px] font-bold text-[var(--text-light)]">{splitCity(toCity)}</p>
+              {droppingPoint ? (
+                <p className="truncate text-[9px] font-medium text-[var(--text-light)]">{droppingPoint}</p>
+              ) : null}
+            </div>
           </div>
-          <div className="rounded-[22px] border border-slate-100 bg-white p-4 shadow-sm">
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">Arrival</p>
-            <p className="mt-2 text-lg font-black text-slate-900">{bus.arrival || 'NA'}</p>
-          </div>
-          <div className="rounded-[22px] border border-slate-100 bg-white p-4 shadow-sm">
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">Seats Left</p>
-            <p className="mt-2 text-lg font-black text-emerald-600">{bus.availableSeats || 0}</p>
+
+          <div className="mt-3 grid grid-cols-3 gap-2 border-t border-[var(--border)] pt-3">
+            <Stat icon={CalendarDays} label="Travel date" value={formatTravelDate(date)} />
+            <Stat icon={Armchair} label="Seats left" value={`${bus.availableSeats || 0}`} tone="text-[var(--success)]" />
+            <Stat icon={Ticket} label="Per seat" value={`Rs${Number(bus.price || 0)}`} />
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-slate-100 bg-white p-5 shadow-sm">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Journey Summary</p>
-              <h3 className="mt-1 text-lg font-black text-slate-900">{fromCity} to {toCity}</h3>
-            </div>
-            <div className="rounded-full bg-orange-50 px-3 py-2 text-[11px] font-black text-orange-600">
-              {formatDurationBrief(bus.duration)}
-            </div>
-          </div>
-
-          <div className="mt-5 grid gap-3">
-            <div className="flex items-center justify-between rounded-[20px] border border-slate-100 bg-slate-50 px-4 py-3">
-              <div className="flex items-center gap-2">
-                <CalendarDays size={14} className="text-slate-400" />
-                <span className="text-sm font-bold text-slate-700">{formatTravelDate(date)}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm font-bold text-slate-700">
-                <Clock3 size={14} className="text-slate-400" />
-                {bus.departure} to {bus.arrival}
-              </div>
-            </div>
-            <div className="flex items-center justify-between rounded-[20px] border border-slate-100 bg-slate-50 px-4 py-3">
-              <div className="flex items-center gap-2">
-                <Armchair size={14} className="text-slate-400" />
-                <span className="text-sm font-bold text-slate-700">{bus.type}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm font-bold text-slate-700">
-                <Ticket size={14} className="text-slate-400" />
-                Rs {Number(bus.price || 0)} per seat
-              </div>
-            </div>
-            {(bus.driverName || bus.driverPhone) ? (
-              <div className="flex items-center justify-between rounded-[20px] border border-slate-100 bg-slate-50 px-4 py-3">
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">Bus Staff</p>
-                  <p className="mt-1 text-sm font-black text-slate-900">{bus.driverName || 'Assigned crew'}</p>
+        {/* Amenities */}
+        {Array.isArray(bus.amenities) && bus.amenities.length > 0 ? (
+          <div className="rounded-[20px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
+            <SectionTitle>Onboard Amenities</SectionTitle>
+            <div className="mt-2.5 grid grid-cols-2 gap-2">
+              {bus.amenities.map((amenity) => (
+                <div
+                  key={amenity}
+                  className="flex items-center gap-2 rounded-[12px] bg-[var(--secondary)] px-2.5 py-2 text-[10.5px] font-semibold"
+                >
+                  <ShieldCheck size={12} className="shrink-0 text-[var(--primary-dark)]" />
+                  <span className="truncate">{amenity}</span>
                 </div>
-                {bus.driverPhone ? (
-                  <div className="flex items-center gap-2 text-sm font-bold text-slate-700">
-                    <Phone size={14} className="text-slate-400" />
-                    {bus.driverPhone}
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
+              ))}
+            </div>
           </div>
-        </div>
+        ) : null}
 
-        <div className="rounded-[28px] border border-slate-100 bg-white p-5 shadow-sm">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Stops & Boarding Points</p>
-          <div className="mt-4 space-y-3">
-            {routeStops.length > 0 ? routeStops.map((stop, index) => (
-              <div key={stop.id || `${bus.id}-stop-${index}`} className="rounded-[22px] border border-slate-100 bg-slate-50/80 px-4 py-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <MapPin size={14} className="text-orange-500" />
-                      <p className="truncate text-sm font-black text-slate-900">{stop.city || stop.pointName || `Stop ${index + 1}`}</p>
+        {/* Stops */}
+        <div className="rounded-[20px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
+          <SectionTitle>Stops &amp; Boarding Points</SectionTitle>
+          <div className="mt-2.5">
+            {routeStops.length > 0 ? (
+              <div className="relative space-y-3 pl-4">
+                <span className="absolute bottom-2 left-[3px] top-2 w-px bg-[var(--border)]" />
+                {routeStops.map((stop, index) => (
+                  <div key={stop.id || `${bus.id}-stop-${index}`} className="relative">
+                    <span
+                      className={`absolute -left-4 top-1.5 h-[7px] w-[7px] rounded-full ring-2 ring-white ${
+                        stop.stopType === 'drop' ? 'bg-rose-500' : 'bg-[var(--primary)]'
+                      }`}
+                    />
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="truncate text-[12px] font-extrabold">
+                          {stop.city || stop.pointName || `Stop ${index + 1}`}
+                        </p>
+                        <p className="mt-0.5 truncate text-[10px] font-medium text-[var(--text-light)]">
+                          {stop.pointName || 'Point not set'}
+                        </p>
+                      </div>
+                      <div className="shrink-0 text-right">
+                        <span
+                          className={`inline-flex rounded-full border px-1.5 py-0.5 text-[8px] font-bold uppercase ${
+                            stopBadgeTone[stop.stopType] || stopBadgeTone.both
+                          }`}
+                        >
+                          {stop.stopType === 'both' ? 'BP + DP' : stop.stopType === 'drop' ? 'DP' : 'BP'}
+                        </span>
+                        <p className="mt-0.5 text-[10px] font-bold text-[var(--text-light)]">
+                          {stop.arrivalTime || stop.departureTime || '--:--'}
+                        </p>
+                      </div>
                     </div>
-                    <p className="mt-1 truncate text-[12px] font-semibold text-slate-500">{stop.pointName || 'Point not set'}</p>
                   </div>
-                  <div className="shrink-0 text-right">
-                    <span className={`inline-flex rounded-full border px-2 py-1 text-[9px] font-black uppercase tracking-wider ${stopBadgeTone[stop.stopType] || stopBadgeTone.both}`}>
-                      {stop.stopType === 'both' ? 'BP + DP' : stop.stopType === 'drop' ? 'DP' : 'BP'}
-                    </span>
-                    <p className="mt-1 text-[11px] font-bold text-slate-500">{stop.arrivalTime || stop.departureTime || '--:--'}</p>
-                  </div>
-                </div>
+                ))}
               </div>
-            )) : (
-              <div className="rounded-[22px] border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-sm font-semibold text-slate-500">
+            ) : (
+              <p className="rounded-[14px] border border-dashed border-[var(--border)] bg-slate-50 px-3 py-5 text-center text-[11px] font-semibold text-[var(--text-light)]">
                 No stop details added for this bus yet.
-              </div>
+              </p>
             )}
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-slate-100 bg-white p-5 shadow-sm">
-          <div className="flex items-center gap-2">
-            <ShieldCheck size={16} className="text-emerald-500" />
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Policies & Comfort</p>
-          </div>
-
-          {Array.isArray(bus.amenities) && bus.amenities.length > 0 ? (
-            <div className="mt-4 flex flex-wrap gap-2">
-              {bus.amenities.map((amenity) => (
-                <span key={amenity} className="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-black text-slate-700">
-                  {amenity}
-                </span>
+        {/* Policies */}
+        {policies.length > 0 ? (
+          <div className="rounded-[20px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
+            <SectionTitle>Policies</SectionTitle>
+            <div className="mt-2.5 space-y-2">
+              {policies.map(({ key, label, text }) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setOpenPolicy((current) => (current === key ? '' : key))}
+                  className="w-full rounded-[14px] bg-slate-50 px-3 py-2.5 text-left"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[11px] font-extrabold">{label}</span>
+                    <ChevronRight
+                      size={14}
+                      className={`shrink-0 text-[var(--text-light)] transition-transform ${
+                        openPolicy === key ? 'rotate-90' : ''
+                      }`}
+                    />
+                  </div>
+                  {openPolicy === key ? (
+                    <p className="mt-1.5 text-[10.5px] font-medium leading-[1.6] text-[var(--text-light)]">{text}</p>
+                  ) : null}
+                </button>
               ))}
             </div>
-          ) : null}
+          </div>
+        ) : null}
 
-          <div className="mt-4 space-y-3">
-            {bus.boardingPolicy ? (
-              <div className="rounded-[20px] border border-slate-100 bg-slate-50 px-4 py-4">
-                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">Boarding Policy</p>
-                <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">{bus.boardingPolicy}</p>
-              </div>
-            ) : null}
-            {bus.cancellationPolicy ? (
-              <div className="rounded-[20px] border border-slate-100 bg-slate-50 px-4 py-4">
-                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">Cancellation Policy</p>
-                <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">{bus.cancellationPolicy}</p>
-              </div>
-            ) : null}
-            {bus.luggagePolicy ? (
-              <div className="rounded-[20px] border border-slate-100 bg-slate-50 px-4 py-4">
-                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">Luggage Policy</p>
-                <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">{bus.luggagePolicy}</p>
-              </div>
+        {(bus.driverName || bus.driverPhone) ? (
+          <div className="flex items-center justify-between rounded-[20px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
+            <div className="min-w-0">
+              <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[var(--text-light)]">Bus Staff</p>
+              <p className="mt-0.5 truncate text-[12px] font-extrabold">{bus.driverName || 'Assigned crew'}</p>
+            </div>
+            {bus.driverPhone ? (
+              <a
+                href={`tel:${bus.driverPhone}`}
+                className="flex shrink-0 items-center gap-1.5 rounded-[12px] border border-[var(--border)] px-3 py-2 text-[11px] font-bold"
+              >
+                <Phone size={12} className="text-[var(--primary-dark)]" />
+                Call
+              </a>
             ) : null}
           </div>
-        </div>
+        ) : null}
       </div>
 
-      <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-lg -translate-x-1/2 border-t border-slate-100 bg-white/95 px-5 pb-8 pt-4 backdrop-blur-md">
+      <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-lg -translate-x-1/2 border-t border-[var(--border)] bg-white/95 px-4 pb-6 pt-3 backdrop-blur-md">
+        <div className="mb-2 flex items-center justify-between">
+          <div>
+            <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[var(--text-light)]">Starting from</p>
+            <p className="text-[18px] font-extrabold leading-tight">
+              Rs{Number(bus.price || 0)}
+              <span className="ml-1 text-[10px] font-medium text-[var(--text-light)]">per seat</span>
+            </p>
+          </div>
+          <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-[var(--success)]">
+            {bus.availableSeats || 0} seats left
+          </span>
+        </div>
         <button
           type="button"
           onClick={() => navigate(`${routePrefix}/bus/seats`, { state: buildBusRouteState(state) })}
-          className="flex w-full items-center justify-center gap-2 rounded-[20px] bg-slate-900 py-4 text-base font-black text-white shadow-lg"
+          className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[15px] font-extrabold text-[var(--text)] shadow-[0_8px_20px_rgba(255,193,7,.4)] active:scale-[0.99] transition-transform"
         >
-          Select Seats <ChevronRight size={18} />
+          Select Seats <ChevronRight size={18} strokeWidth={2.8} />
         </button>
       </div>
     </div>

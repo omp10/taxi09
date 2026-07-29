@@ -8818,6 +8818,16 @@ export const updateBusService = async (id, payload = {}, options = {}) => {
     return items.map((item) => serializeRentalQuoteRequest(item));
   };
 
+  export const getRentalQuoteRequest = async (id) => {
+    const item = await RentalQuoteRequest.findById(id)
+      .populate('userId', 'name phone email')
+      .populate('vehicleTypeId', 'name vehicleCategory image')
+      .lean();
+
+    if (!item) throw new ApiError(404, 'Rental quote request not found');
+    return serializeRentalQuoteRequest(item);
+  };
+
   export const updateRentalQuoteRequest = async (id, payload = {}, adminId = null) => {
     const item = await RentalQuoteRequest.findById(id);
     if (!item) {

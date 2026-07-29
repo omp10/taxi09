@@ -1,6 +1,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 @import "tailwindcss";
+
+/* Taxi09 bus theme tokens */
+:root {
+  --primary: #FFC107;
+  --primary-dark: #F4B400;
+  --secondary: #FFF8E5;
+
+  --text: #111827;
+  --text-light: #6B7280;
+
+  --border: #ECECEC;
+  --background: #F7F8FA;
+
+  --success: #16A34A;
+  --danger: #EF4444;
+
+  --shadow-sm: 0 6px 20px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 12px 35px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 25px 60px rgba(0, 0, 0, 0.12);
+
+  --radius: 24px;
+  --radius-sm: 18px;
+}
+
+.font-poppins {
+  font-family: 'Poppins', sans-serif;
+}
 
 :root {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;

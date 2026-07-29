@@ -29,7 +29,7 @@ import { RentalVehicleType } from '../../admin/models/RentalVehicleType.js';
 import { ServiceStore } from '../../admin/models/ServiceStore.js';
 import { SetPrice } from '../../admin/models/SetPrice.js';
 import { applyDriverWalletAdjustment } from '../../driver/services/walletService.js';
-import { emitToDriver } from '../../services/dispatchService.js';
+import { emitToDriver, emitToAdmins } from '../../services/dispatchService.js';
 import { sendPushNotificationToEntities } from '../../services/pushNotificationService.js';
 import { buildRentalTrackingSnapshot, updateUserRentalTracking } from '../../services/rentalTrackingService.js';
 import { listDriverServiceLocations } from '../../driver/services/serviceLocationService.js';
@@ -3312,6 +3312,27 @@ export const getBusSeatLayout = async (req, res) => {
   });
 };
 
+// Prices live here, not on the client, so a tampered payload cannot discount the order.
+const BUS_ADD_ON_CATALOG = {
+  insurance: { id: 'insurance', label: 'Travel Insurance', price: 49 },
+  meal_veg: { id: 'meal_veg', label: 'Meal (Veg)', price: 99 },
+};
+
+const resolveBusAddOns = (rawAddOns) => {
+  const ids = Array.isArray(rawAddOns) ? rawAddOns : [];
+  const seen = new Set();
+  const resolved = [];
+
+  ids.forEach((entry) => {
+    const id = toCleanString(typeof entry === 'string' ? entry : entry?.id);
+    if (!id || seen.has(id) || !BUS_ADD_ON_CATALOG[id]) return;
+    seen.add(id);
+    resolved.push({ ...BUS_ADD_ON_CATALOG[id] });
+  });
+
+  return resolved;
+};
+
 export const createBusBookingOrder = async (req, res) => {
   await ensureBusServiceEnabled();
   await cleanupExpiredBusSeatHolds();
@@ -3320,13 +3341,21 @@ export const createBusBookingOrder = async (req, res) => {
   const busServiceId = String(req.body?.busServiceId || '');
   const scheduleId = toCleanString(req.body?.scheduleId);
   const travelDate = normalizeBusTravelDate(req.body?.travelDate || req.body?.date);
-  const passenger = {
-    name: toCleanString(req.body?.passenger?.name),
-    age: Number(req.body?.passenger?.age || 0),
-    gender: toCleanString(req.body?.passenger?.gender),
-    phone: normalizePhone(req.body?.passenger?.phone),
-    email: normalizeEmail(req.body?.passenger?.email),
-  };
+  const normalizePassenger = (raw) => ({
+    seatId: toCleanString(raw?.seatId),
+    seatLabel: toCleanString(raw?.seatLabel),
+    name: toCleanString(raw?.name),
+    age: Number(raw?.age || 0),
+    gender: toCleanString(raw?.gender),
+    phone: normalizePhone(raw?.phone),
+    email: normalizeEmail(raw?.email),
+  });
+
+  const rawPassengers = Array.isArray(req.body?.passengers) && req.body.passengers.length
+    ? req.body.passengers
+    : [req.body?.passenger];
+  const passengers = rawPassengers.filter(Boolean).map(normalizePassenger);
+  const passenger = passengers[0] || normalizePassenger({});
   const seatIds = Array.isArray(req.body?.seatIds)
     ? [...new Set(req.body.seatIds.map((item) => toCleanString(item)).filter(Boolean))]
     : [];
@@ -3335,13 +3364,23 @@ export const createBusBookingOrder = async (req, res) => {
     throw new ApiError(400, 'busServiceId, scheduleId and seatIds are required');
   }
 
-  validateName(passenger.name);
+  if (passengers.length !== seatIds.length) {
+    throw new ApiError(400, `Provide passenger details for all ${seatIds.length} seat(s)`);
+  }
+
+  passengers.forEach((item, index) => {
+    validateName(item.name);
+    if (!Number.isFinite(item.age) || item.age < 1 || item.age > 120) {
+      throw new ApiError(400, `Passenger ${index + 1} age must be valid`);
+    }
+  });
+
+  // Contact details are taken from the lead passenger and are the only ones required.
   validatePhone(passenger.phone);
   validateEmail(passenger.email);
 
-  if (!Number.isFinite(passenger.age) || passenger.age < 1 || passenger.age > 120) {
-    throw new ApiError(400, 'Passenger age must be valid');
-  }
+  const addOns = resolveBusAddOns(req.body?.addOns);
+  const addOnsAmount = addOns.reduce((sum, item) => sum + Number(item.price || 0), 0);
 
   const busService = await BusService.findById(busServiceId).lean();
   if (!busService || String(busService.status || '') !== 'active') {
@@ -3362,9 +3401,11 @@ export const createBusBookingOrder = async (req, res) => {
     throw new ApiError(400, `Seat ${invalidSeat} is not available for booking`);
   }
 
-  const amount = Math.round(
-    seatIds.reduce((sum, seatId) => sum + resolveBusSeatPrice(busService, seatCellMap.get(seatId)), 0) * 100,
-  ) / 100;
+  const seatAmount = seatIds.reduce(
+    (sum, seatId) => sum + resolveBusSeatPrice(busService, seatCellMap.get(seatId)),
+    0,
+  );
+  const amount = Math.round((seatAmount + addOnsAmount) * 100) / 100;
   if (amount <= 0) {
     throw new ApiError(400, 'Bus fare is not configured');
   }
@@ -3403,6 +3444,8 @@ export const createBusBookingOrder = async (req, res) => {
     seatIds,
     seatLabels: seatIds.map((seatId) => seatCellMap.get(seatId)?.label || seatId),
     passenger,
+    passengers,
+    addOns,
     amount,
     currency: busService.fareCurrency || 'INR',
     status: 'pending',
@@ -3877,9 +3920,16 @@ export const createRentalQuoteRequest = async (req, res) => {
     status: 'pending',
   });
 
+  const serialized = serializeRentalQuoteRequest(request.toObject());
+  try {
+    emitToAdmins('new_rental_quote_request', serialized);
+  } catch (err) {
+    console.error('Failed to emit new rental quote request socket event', err);
+  }
+
   return res.status(201).json({
     success: true,
-    data: serializeRentalQuoteRequest(request.toObject()),
+    data: serialized,
     message: 'Rental quote request submitted successfully',
   });
 };

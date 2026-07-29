@@ -2,6 +2,16 @@ import mongoose from 'mongoose';
 
 const passengerSchema = new mongoose.Schema(
   {
+    seatId: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    seatLabel: {
+      type: String,
+      default: '',
+      trim: true,
+    },
     name: {
       type: String,
       default: '',
@@ -120,6 +130,23 @@ const busBookingSchema = new mongoose.Schema(
     passenger: {
       type: passengerSchema,
       default: () => ({}),
+    },
+    passengers: {
+      type: [passengerSchema],
+      default: [],
+    },
+    addOns: {
+      type: [
+        new mongoose.Schema(
+          {
+            id: { type: String, default: '', trim: true },
+            label: { type: String, default: '', trim: true },
+            price: { type: Number, default: 0 },
+          },
+          { _id: false },
+        ),
+      ],
+      default: [],
     },
     amount: {
       type: Number,

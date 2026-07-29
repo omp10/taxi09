@@ -16,7 +16,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { adminService } from '../../services/adminService';
 
@@ -24,8 +24,9 @@ const ACTION_MENU_WIDTH = 238;
 const ACTION_MENU_GAP = 8;
 const ACTION_MENU_MAX_HEIGHT = 300;
 
-const PendingDrivers = () => {
+const PendingDrivers = ({ roleFilter }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(true);
@@ -36,6 +37,45 @@ const PendingDrivers = () => {
   const [passwordModal, setPasswordModal] = useState({ isOpen: false, driverId: null, password: '', isSubmitting: false });
   const [page, setPage] = useState(1);
   const [paginator, setPaginator] = useState(null);
+
+  const currentPath = location.pathname;
+
+  const config = {
+    service_center: {
+      module: 'Rental',
+      page: 'Pending Service Stores',
+      title: 'Pending Service Stores',
+      addPath: '/admin/pricing/service-stores/add',
+      addLabel: 'Add Store',
+      showAdd: false,
+      codeLabel: 'Store Code',
+      typeLabel: 'Role',
+      loadingText: 'Loading pending stores...',
+      emptyText: 'No pending stores found.',
+    },
+    service_center_staff: {
+      module: 'Rental',
+      page: 'Pending Service Staff',
+      title: 'Pending Service Staff',
+      showAdd: false,
+      codeLabel: 'Staff Code',
+      typeLabel: 'Role',
+      loadingText: 'Loading pending staff...',
+      emptyText: 'No pending staff found.',
+    },
+    drivers: {
+      module: 'Drivers',
+      page: 'Pending Drivers',
+      title: 'Pending Drivers',
+      addPath: '/admin/drivers/create',
+      addLabel: 'Add Drivers',
+      showAdd: true,
+      codeLabel: 'Driver Code',
+      typeLabel: 'Transport Type',
+      loadingText: 'Loading pending drivers...',
+      emptyText: 'No pending drivers found.',
+    }
+  }[roleFilter || 'drivers'];
 
   const openActionMenu = (driverId, anchorEl) => {
     const rect = anchorEl.getBoundingClientRect();
@@ -74,15 +114,15 @@ const PendingDrivers = () => {
   };
 
   const handleAction = async (action, driverId) => {
-    const confirmMsg = action === 'delete' ? 'Are you sure you want to delete this pending request?' : 'Are you sure you want to APPROVE this driver?';
+    const confirmMsg = action === 'delete' ? 'Are you sure you want to delete this pending request?' : 'Are you sure you want to APPROVE this user?';
     if (action !== 'view' && action !== 'edit' && action !== 'password' && !window.confirm(confirmMsg)) return;
 
     if (action === 'view') {
-      navigate(`/admin/drivers/${driverId}`, { state: { from: '/admin/drivers/pending' } });
+      navigate(`/admin/drivers/${driverId}`, { state: { from: currentPath } });
       return;
     }
     if (action === 'edit') {
-      navigate(`/admin/drivers/edit/${driverId}`, { state: { from: '/admin/drivers/pending' } });
+      navigate(`/admin/drivers/edit/${driverId}`, { state: { from: currentPath } });
       return;
     }
 
@@ -141,8 +181,18 @@ const PendingDrivers = () => {
       });
       const driversList = responseData.data?.results || [];
       
+      const targetRole = roleFilter || 'drivers';
       const pending = driversList
-        .filter((d) => String(d?.onboarding_role || '').toLowerCase() !== 'owner')
+        .filter((d) => {
+          const role = String(d?.onboarding_role || '').toLowerCase();
+          if (targetRole === 'service_center') {
+            return role === 'service_center';
+          }
+          if (targetRole === 'service_center_staff') {
+            return role === 'service_center_staff';
+          }
+          return role !== 'owner' && role !== 'service_center' && role !== 'service_center_staff';
+        })
         .map((d) => ({
           id: d._id,
           name: d.name || 'Unknown',
@@ -160,7 +210,7 @@ const PendingDrivers = () => {
       setPendingDrivers(pending);
       setPaginator(responseData.data?.paginator || null);
     } catch (err) {
-      setError(err?.message || 'Failed to fetch pending drivers');
+      setError(err?.message || 'Failed to fetch registry');
     } finally {
       setIsLoading(false);
     }
@@ -235,18 +285,20 @@ const PendingDrivers = () => {
       
       <div className="mb-6">
         <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-2">
-          <span>Drivers</span>
+          <span>{config.module}</span>
           <ChevronRight size={12} />
-          <span className="text-gray-700">Pending Drivers</span>
+          <span className="text-gray-700">{config.page}</span>
         </div>
         <div className="flex items-center justify-between gap-4">
-          <h1 className="text-xl font-semibold text-gray-900">Pending Drivers</h1>
-          <button
-            onClick={() => navigate('/admin/drivers/create')}
-            className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            <Plus size={16} /> Add Drivers
-          </button>
+          <h1 className="text-xl font-semibold text-gray-900">{config.title}</h1>
+          {config.showAdd && (
+            <button
+              onClick={() => navigate(config.addPath)}
+              className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              <Plus size={16} /> {config.addLabel}
+            </button>
+          )}
         </div>
       </div>
 
@@ -288,10 +340,10 @@ const PendingDrivers = () => {
             <thead>
               <tr className="bg-gray-50 border-b border-gray-100 text-xs font-semibold text-gray-500">
                 <th className="px-6 py-4">Name</th>
-                <th className="px-4 py-4">Driver Code</th>
+                <th className="px-4 py-4">{config.codeLabel}</th>
                 <th className="px-4 py-4">Service Location</th>
                 <th className="px-4 py-4">Mobile Number</th>
-                <th className="px-4 py-4">Transport Type</th>
+                <th className="px-4 py-4">{config.typeLabel}</th>
                 <th className="px-4 py-4 text-center">Document View</th>
                 <th className="px-4 py-4 text-center">Approved Status</th>
                 <th className="px-4 py-4 text-center">Declined Reason</th>
@@ -303,11 +355,11 @@ const PendingDrivers = () => {
             <tbody className="divide-y divide-gray-100 text-sm text-gray-700">
               {isLoading ? (
                 <tr>
-                  <td colSpan="11" className="px-6 py-12 text-center text-gray-400">Loading pending drivers...</td>
+                  <td colSpan="11" className="px-6 py-12 text-center text-gray-400">{config.loadingText}</td>
                 </tr>
               ) : pendingDrivers.length === 0 ? (
                 <tr>
-                  <td colSpan="11" className="px-6 py-12 text-center text-gray-400">No pending drivers found.</td>
+                  <td colSpan="11" className="px-6 py-12 text-center text-gray-400">{config.emptyText}</td>
                 </tr>
               ) : (
                 pendingDrivers.map((driver) => (
@@ -323,7 +375,7 @@ const PendingDrivers = () => {
                     <td className="px-4 py-4">{driver.transport}</td>
                     <td className="px-4 py-4 text-center">
                       <button
-                        onClick={() => navigate(`/admin/drivers/${driver.id}?tab=Documents`, { state: { from: '/admin/drivers/pending' } })}
+                        onClick={() => navigate(`/admin/drivers/${driver.id}?tab=Documents`, { state: { from: currentPath } })}
                         className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 text-indigo-600 hover:bg-indigo-50 transition-colors"
                       >
                         <FileText size={16} />

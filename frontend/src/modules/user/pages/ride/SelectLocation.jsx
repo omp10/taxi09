@@ -165,7 +165,9 @@ const SelectLocation = () => {
   const routeActiveInput = routeState.activeInput === 'pickup' || routeState.activeInput === 'drop'
     ? routeState.activeInput
     : 'drop';
-  const isParcelFlow = routeState.flow === 'parcel' || String(routeState.returnTo || '').includes('/parcel/details');
+  const returnToPath = String(routeState.returnTo || '');
+  const isParcelFlow = routeState.flow === 'parcel' || returnToPath.includes('/parcel/details');
+  const isSelectionReturnFlow = isParcelFlow || routeState.flow === 'hire-driver' || returnToPath.includes('/with-driver/details');
   const savedLocation = getSavedLocation();
   const savedPickupLabel = String(savedLocation?.address || '').trim();
   const savedPickupCoords = getSavedLocationCoords();
@@ -198,6 +200,7 @@ const SelectLocation = () => {
   const navigate = useNavigate();
   const routePrefix = window.location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
   const parcelReturnPath = routeState.returnTo || `${routePrefix}/parcel/details`;
+  const selectionReturnPath = routeState.returnTo || parcelReturnPath;
 
   // All known locations â€” filtered live as user types
   const allResults = [
@@ -679,8 +682,8 @@ const SelectLocation = () => {
     const resolvedPickupCoords = pickupCoords || await resolveCoords(finalPickup);
     const resolvedDropCoords = optionalDropCoords || dropCoords || await resolveCoords(finalDrop);
 
-    if (isParcelFlow) {
-      navigate(parcelReturnPath, {
+    if (isSelectionReturnFlow) {
+      navigate(selectionReturnPath, {
         state: {
           ...routeState,
           pickup: finalPickup,
@@ -719,8 +722,8 @@ const SelectLocation = () => {
     });
   };
 
-  const returnParcelSelection = (targetInput, address, coords) => {
-    navigate(parcelReturnPath, {
+  const returnSelection = (targetInput, address, coords) => {
+    navigate(selectionReturnPath, {
       state: {
         ...routeState,
         pickup: targetInput === 'pickup' ? address : pickup,
@@ -735,7 +738,7 @@ const SelectLocation = () => {
   };
 
   const handleParcelBack = (keepMapPicker = false) => {
-    navigate(parcelReturnPath, {
+    navigate(selectionReturnPath, {
       state: {
         ...routeState,
         pickup,
@@ -750,7 +753,7 @@ const SelectLocation = () => {
   };
 
   const handleScreenBack = () => {
-    if (isParcelFlow) {
+    if (isSelectionReturnFlow) {
       handleParcelBack(false);
       return;
     }
@@ -758,7 +761,7 @@ const SelectLocation = () => {
   };
 
   const handleMapBack = () => {
-    if (isParcelFlow) {
+    if (isSelectionReturnFlow) {
       handleParcelBack(false);
       return;
     }
@@ -770,8 +773,8 @@ const SelectLocation = () => {
     const selectedCoords = [lastCenterRef.current.lng, lastCenterRef.current.lat];
 
     if (activeInput === 'pickup') {
-      if (isParcelFlow) {
-        returnParcelSelection('pickup', finalAddress, selectedCoords);
+      if (isSelectionReturnFlow) {
+        returnSelection('pickup', finalAddress, selectedCoords);
         return;
       }
       setPickup(finalAddress);
@@ -783,8 +786,8 @@ const SelectLocation = () => {
       });
       setActiveInput('drop');
     } else if (activeInput === 'drop') {
-      if (isParcelFlow) {
-        returnParcelSelection('drop', finalAddress, selectedCoords);
+      if (isSelectionReturnFlow) {
+        returnSelection('drop', finalAddress, selectedCoords);
         return;
       }
       setDrop(finalAddress);
@@ -809,8 +812,8 @@ const SelectLocation = () => {
           if (status === 'OK' && results[0]) {
             const addr = results[0].formatted_address;
             const coords = [longitude, latitude];
-            if (isParcelFlow) {
-              returnParcelSelection(activeInput, addr, coords);
+            if (isSelectionReturnFlow) {
+              returnSelection(activeInput, addr, coords);
               return;
             }
             if (activeInput === 'drop') {
@@ -823,8 +826,8 @@ const SelectLocation = () => {
           } else {
             const raw = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
             const coords = [longitude, latitude];
-            if (isParcelFlow) {
-              returnParcelSelection(activeInput, raw, coords);
+            if (isSelectionReturnFlow) {
+              returnSelection(activeInput, raw, coords);
               return;
             }
             if (activeInput === 'drop') {
@@ -872,8 +875,8 @@ const SelectLocation = () => {
     resetAutocompleteSessionToken();
 
     if (activeInput === 'pickup') {
-      if (isParcelFlow) {
-        returnParcelSelection('pickup', finalTitle, resolvedCoords);
+      if (isSelectionReturnFlow) {
+        returnSelection('pickup', finalTitle, resolvedCoords);
         return;
       }
       setPickup(finalTitle);
@@ -885,8 +888,8 @@ const SelectLocation = () => {
       });
       setActiveInput('drop');
     } else if (activeInput === 'drop') {
-      if (isParcelFlow) {
-        returnParcelSelection('drop', finalTitle, resolvedCoords);
+      if (isSelectionReturnFlow) {
+        returnSelection('drop', finalTitle, resolvedCoords);
         return;
       }
       setDrop(finalTitle);
