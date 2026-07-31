@@ -59,6 +59,10 @@ const FaqPage = lazy(() => import('./modules/shared/pages/FaqPage'));
 const ServicesPage = lazy(() => import('./modules/shared/pages/ServicesPage'));
 const BlogPage = lazy(() => import('./modules/shared/pages/BlogPage'));
 const LinksPage = lazy(() => import('./modules/shared/pages/LinksPage'));
+const ToursHome = lazy(() => import('./modules/user/pages/tours/ToursHome'));
+const TourDetails = lazy(() => import('./modules/user/pages/tours/TourDetails'));
+const InternationalHome = lazy(() => import('./modules/user/pages/international/InternationalHome'));
+const InternationalDetails = lazy(() => import('./modules/user/pages/international/InternationalDetails'));
 const PhonePeStatusPage = lazy(() => import('./modules/shared/pages/PhonePeStatusPage'));
 const RazorpayStatusPage = lazy(() => import('./modules/shared/pages/RazorpayStatusPage'));
 const RazorpayLaunchPage = lazy(() => import('./modules/shared/pages/RazorpayLaunchPage'));
@@ -100,6 +104,8 @@ const BusPreview = lazy(() => import('./modules/user/pages/bus/BusPreview'));
 const BusDetails = lazy(() => import('./modules/user/pages/bus/BusDetails'));
 const BusConfirm = lazy(() => import('./modules/user/pages/bus/BusConfirm'));
 const HotelHome = lazy(() => import('./modules/user/pages/hotel/HotelHome'));
+const HotelRooms = lazy(() => import('./modules/user/pages/hotel/HotelRooms'));
+const HotelCheckout = lazy(() => import('./modules/user/pages/hotel/HotelCheckout'));
 
 // Phase 5 — Onboarding
 const Onboarding = lazy(() => import('./modules/user/pages/auth/Onboarding'));
@@ -154,6 +160,8 @@ const DriverWallet = lazy(() => import('./modules/driver/pages/DriverWallet'));
 const DriverProfile = lazy(() => import('./modules/driver/pages/DriverProfile'));
 const DriverBankDetailsPage = lazy(() => import('./modules/driver/pages/DriverBankDetailsPage'));
 const ServiceCenterDashboard = lazy(() => import('./modules/driver/pages/ServiceCenterDashboard'));
+const StaffHandoverQueue = lazy(() => import('./modules/driver/pages/handover/StaffHandoverQueue'));
+const StaffHandoverFlow = lazy(() => import('./modules/driver/pages/handover/StaffHandoverFlow'));
 const ServiceCenterVehicleDetails = lazy(() => import('./modules/driver/pages/ServiceCenterVehicleDetails'));
 const RideRequests = lazy(() => import('./modules/driver/pages/RideRequests'));
 const DriverIncentives = lazy(() => import('./modules/driver/pages/DriverIncentives'));
@@ -788,7 +796,12 @@ function App() {
               <Route path="/bus/details" element={<BusDetails />} />
               <Route path="/bus/confirm" element={<BusConfirm />} />
               <Route path="/hotel" element={<HotelHome />} />
-              <Route path="/tours" element={<ComingSoon />} />
+              <Route path="/hotel/rooms" element={<HotelRooms />} />
+              <Route path="/hotel/checkout" element={<HotelCheckout />} />
+              <Route path="/tours" element={<ToursHome />} />
+              <Route path="/tours/details" element={<TourDetails />} />
+              <Route path="/international" element={<InternationalHome />} />
+              <Route path="/international/details" element={<InternationalDetails />} />
 
               <Route path="/activity" element={<Activity />} />
               <Route path="/profile" element={<Profile />} />
@@ -959,7 +972,12 @@ function App() {
               <Route path="/taxi/user/bus/checkout" element={<BusDetails />} />
               <Route path="/taxi/user/bus/confirm" element={<BusConfirm />} />
               <Route path="/taxi/user/hotel" element={<HotelHome />} />
-              <Route path="/taxi/user/tours" element={<ComingSoon />} />
+              <Route path="/taxi/user/hotel/rooms" element={<HotelRooms />} />
+              <Route path="/taxi/user/hotel/checkout" element={<HotelCheckout />} />
+              <Route path="/taxi/user/tours" element={<ToursHome />} />
+              <Route path="/taxi/user/tours/details" element={<TourDetails />} />
+              <Route path="/taxi/user/international" element={<InternationalHome />} />
+              <Route path="/taxi/user/international/details" element={<InternationalDetails />} />
 
               <Route path="/taxi/user/activity" element={<Activity />} />
               <Route path="/taxi/user/profile" element={<Profile />} />
@@ -1051,6 +1069,8 @@ function App() {
                 <Route path="profile" element={<DriverProfile />} />
                 <Route path="profile/bank-details" element={<DriverBankDetailsPage />} />
                 <Route path="service-center" element={<ServiceCenterDashboard />} />
+                <Route path="handover" element={<StaffHandoverQueue />} />
+                <Route path="handover/:jobId" element={<StaffHandoverFlow />} />
                 <Route path="service-center/vehicles/new" element={<ServiceCenterVehicleDetails />} />
                 <Route path="service-center/vehicles/:vehicleId" element={<ServiceCenterVehicleDetails />} />
                 <Route path="history" element={<RideRequests />} />

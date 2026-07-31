@@ -1,9 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import BottomNavbar from '../components/BottomNavbar';
-import ActivityHeader from '../components/activity/ActivityHeader';
-import ActivityTabs from '../components/activity/ActivityTabs';
-import ActivityCard from '../components/activity/ActivityCard';
 import ActivityPager from '../components/activity/ActivityPager';
 import {
   ActivityEmptyState,
@@ -11,12 +8,24 @@ import {
   ActivityLoadingState,
   ActivitySupportState,
 } from '../components/activity/ActivityStates';
+import {
+  ArrowLeft,
+  CalendarDays,
+  Car,
+  ChevronRight,
+  Clock3,
+  Home,
+  Package,
+  User,
+  Wallet,
+} from 'lucide-react';
 import api from '../../../shared/api/axiosInstance';
 import userBusService from '../services/busService';
 import { userService } from '../services/userService';
-import { normalizeBusBooking, normalizePoolingBooking, normalizeRentalBooking, normalizeRide, PAGE_SIZE, TABS } from '../components/activity/activityHelpers';
+import { normalizeBusBooking, normalizePoolingBooking, normalizeRentalBooking, normalizeRide, PAGE_SIZE } from '../components/activity/activityHelpers';
 
 const AGGREGATE_FETCH_LIMIT = 60;
+const VISIBLE_TABS = ['All', 'Rides', 'Parcels', 'Rental', 'Bus'];
 
 const getPayload = (response) => response?.data?.data || response?.data || response || {};
 
@@ -66,6 +75,152 @@ const buildRentalActivityState = (booking) => ({
   status: booking?.status || 'pending',
   summaryMode: String(booking?.status || '').toLowerCase() === 'completed' ? 'completed' : undefined,
 });
+
+const sampleActivities = [
+  {
+    id: 'sample-outstation',
+    title: 'Innova Crysta',
+    eyebrow: 'OUTSTATION  •  1 DAY',
+    pickup: 'Bangalore (HSR Layout)',
+    drop: 'Mysore (Mysore Palace)',
+    date: '23 MAY 2025',
+    time: '08:00 AM',
+    status: 'Completed',
+    statusTone: 'success',
+    price: '2850',
+    vehicleImage: '/white_sedan_banner_car.png',
+    registration: 'KA',
+    type: 'ride',
+    sample: true,
+  },
+  {
+    id: 'sample-driver',
+    title: 'Ride with Driver',
+    eyebrow: 'CITY RIDE',
+    pickup: 'Indore (Vijay Nagar)',
+    drop: 'Phoenix Citadel, Indore',
+    date: '22 MAY 2025',
+    time: '07:15 PM',
+    status: 'Completed',
+    statusTone: 'success',
+    price: '265',
+    vehicleImage: '/taxi09_service_attach_car.png',
+    registration: 'DL',
+    type: 'ride',
+    sample: true,
+  },
+  {
+    id: 'sample-rental',
+    title: 'Honda Activa 6G',
+    eyebrow: 'RENTAL  •  12 HOURS',
+    pickup: 'Indore (Vijay Nagar)',
+    drop: 'Indore (Vijay Nagar)',
+    date: '21 MAY 2025',
+    time: '10:00 AM',
+    status: 'Ongoing',
+    statusTone: 'warning',
+    price: '350',
+    vehicleImage: '/scooty.png',
+    registration: 'MP',
+    type: 'rental',
+    sample: true,
+  },
+  {
+    id: 'sample-parcel',
+    title: 'Documents Delivery',
+    eyebrow: 'PARCEL DELIVERY',
+    pickup: 'Indore (Palasia)',
+    drop: 'Dewas Naka, Indore',
+    date: '20 MAY 2025',
+    time: '04:30 PM',
+    status: 'Delivered',
+    statusTone: 'success',
+    price: '80',
+    vehicleImage: '/5_Parcel.png',
+    registration: 'MP',
+    type: 'parcel',
+    sample: true,
+  },
+  {
+    id: 'sample-bus',
+    title: 'Indore to Jaipur',
+    eyebrow: 'BUS BOOKING',
+    pickup: 'Indore (Sarwate Bus Stand)',
+    drop: 'Jaipur (Sindhi Camp)',
+    date: '19 MAY 2025',
+    time: '08:00 AM',
+    status: 'Completed',
+    statusTone: 'success',
+    price: '620',
+    vehicleImage: '/bus.png',
+    registration: 'RJ',
+    type: 'bus',
+    sample: true,
+  },
+];
+
+const toDisplayDate = (value) => String(value || '--').toUpperCase();
+
+const getStatusClasses = (tone = '', status = '') => {
+  const normalized = String(status || tone).toLowerCase();
+  if (normalized.includes('ongoing') || normalized.includes('pending')) {
+    return 'border-amber-200 bg-amber-50 text-amber-700';
+  }
+  return 'border-green-200 bg-green-50 text-green-700';
+};
+
+const ActivityBookingCard = ({ activity, onClick }) => (
+  <button type="button" onClick={onClick} className="flex w-full items-start gap-2.5 rounded-[14px] bg-white p-2.5 text-left shadow-[0_6px_16px_rgba(15,23,42,0.07)]">
+    <div className="relative h-[62px] w-[62px] shrink-0 overflow-hidden rounded-[11px] bg-[#fff7d7]">
+      <img src={activity.vehicleImage || '/white_sedan_banner_car.png'} alt="" className="h-full w-full object-contain p-1.5" />
+      <span className="absolute bottom-0.5 right-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-[#f5c400] text-[7.5px] font-black">
+        {String(activity.registration || activity.type || 'MP').slice(0, 2).toUpperCase()}
+      </span>
+    </div>
+
+    <div className="min-w-0 flex-1">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <h3 className="truncate text-[12.5px] font-black leading-tight tracking-[-0.02em] text-slate-950">{activity.title || 'Taxi09 booking'}</h3>
+          <p className="mt-0.5 truncate text-[8.5px] font-black uppercase tracking-[0.08em] text-slate-500">{activity.eyebrow || activity.vehicle || 'Booking'}</p>
+        </div>
+        <p className="shrink-0 text-[13px] font-black text-slate-950">Rs{Number(activity.price || 0).toLocaleString('en-IN')}</p>
+      </div>
+
+      <div className="mt-1.5 grid grid-cols-[12px_1fr] gap-x-1.5 text-[9.5px] font-semibold text-slate-700">
+        <span className="relative mt-1 flex flex-col items-center">
+          <span className="h-2 w-2 rounded-full bg-[#f5c400]" />
+          <span className="h-3.5 w-px bg-slate-300" />
+          <span className="h-2 w-2 rounded-full bg-slate-300" />
+        </span>
+        <span className="min-w-0">
+          <span className="block truncate">{activity.pickup || 'Pickup location'}</span>
+          <span className="mt-0.5 block truncate">{activity.drop || 'Drop location'}</span>
+        </span>
+      </div>
+
+      <div className="mt-2 flex items-center gap-3 text-[8.5px] font-black uppercase tracking-[0.05em] text-slate-500">
+        <span className="flex items-center gap-1.5">
+          <CalendarDays size={11} />
+          {toDisplayDate(activity.date)}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <Clock3 size={11} />
+          {activity.time || '--'}
+        </span>
+      </div>
+
+      <div className="mt-2 flex items-center justify-between">
+        <span className={`rounded-full border px-2 py-0.5 text-[8.5px] font-black uppercase ${getStatusClasses(activity.statusTone, activity.status)}`}>
+          {activity.status || 'Completed'}
+        </span>
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-[#f5c400]">
+          <ChevronRight size={13} strokeWidth={3.2} />
+        </span>
+      </div>
+    </div>
+  </button>
+);
 
 const Activity = () => {
   const [activeTab, setActiveTab] = useState('All');
@@ -265,34 +420,72 @@ const Activity = () => {
     }
   };
   const helperText = useMemo(() => getHelperText(activeTab), [activeTab]);
+  const visibleActivities = !loading && !error && activeTab !== 'Support' && activities.length === 0
+    ? sampleActivities.filter((item) => activeTab === 'All' || item.type === activeTab.toLowerCase().replace('rides', 'ride').replace('parcels', 'parcel'))
+    : activities;
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-lg md:max-w-none md:mx-0 w-full flex-col bg-slate-50 font-sans pb-28 md:pt-24">
-      <ActivityHeader helperText={helperText} onBack={() => navigate(-1)} />
-      <ActivityTabs tabs={TABS} activeTab={activeTab} onChange={setActiveTab} />
+    <div className="mx-auto min-h-screen w-full max-w-lg bg-[#f8f7f2] pb-28 font-sans text-slate-950 shadow-2xl">
+      <header className="relative h-[132px] overflow-hidden bg-[#f5c400]">
+        <img src="/taxi09_activity_hero.png" alt="" className="absolute inset-0 h-full w-full object-cover object-center" />
+        
+        <button type="button" onClick={() => navigate(-1)} className="absolute left-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black text-[#f5c400] shadow-[0_6px_14px_rgba(0,0,0,0.22)]">
+          <ArrowLeft size={16} strokeWidth={3} />
+        </button>
+        <div className="relative z-10 ml-[56px] pt-4">
+          <p className="text-[9px] font-black uppercase tracking-[0.18em]">My Bookings</p>
+          <h1 className="mt-0.5 text-[20px] font-black leading-none tracking-[-0.04em]">Recent activity</h1>
+          <p className="mt-1.5 max-w-[58%] text-[10px] font-semibold leading-tight text-slate-800">{helperText}</p>
+        </div>
+      </header>
 
-      <div className="flex-1 px-4 py-4">
+      <main className="-mt-4 rounded-t-[22px] bg-[#f8f7f2] px-3 pt-4">
+        <div className="mb-3 rounded-[16px] border border-slate-200 bg-white p-1 shadow-[0_6px_16px_rgba(15,23,42,0.06)]">
+          <div className="grid grid-cols-5 gap-1">
+            {VISIBLE_TABS.map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setActiveTab(tab)}
+                className={`rounded-[12px] px-1 py-2.5 text-[9.5px] font-extrabold uppercase tracking-[0.02em] transition ${
+                  activeTab === tab ? 'bg-[#f5c400] text-slate-950 shadow-[0_6px_14px_rgba(245,196,0,0.28)]' : 'text-slate-600'
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex-1">
         {activeTab === 'Support' ? (
           <ActivitySupportState onContact={() => navigate('/support')} />
         ) : loading ? (
           <ActivityLoadingState />
         ) : error ? (
           <ActivityErrorState error={error} onRetry={() => setReloadKey((current) => current + 1)} />
-        ) : activities.length === 0 ? (
+        ) : visibleActivities.length === 0 ? (
           <ActivityEmptyState activeTab={activeTab} />
         ) : (
-          <div className="space-y-3 pb-2">
-            {activities.map((activity) => (
-              <ActivityCard key={activity.id} {...activity} onClick={() => handleItemClick(activity)} />
+          <div className="space-y-2.5 pb-5">
+            {visibleActivities.map((activity) => (
+              <ActivityBookingCard
+                key={activity.id}
+                activity={activity}
+                onClick={() => (activity.sample ? undefined : handleItemClick(activity))}
+              />
             ))}
-            <ActivityPager
-              pagination={pagination}
-              onPrevious={() => setCurrentPage((page) => Math.max(1, page - 1))}
-              onNext={() => setCurrentPage((page) => Math.min(pagination.totalPages, page + 1))}
-            />
+            {!visibleActivities.some((item) => item.sample) && (
+              <ActivityPager
+                pagination={pagination}
+                onPrevious={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                onNext={() => setCurrentPage((page) => Math.min(pagination.totalPages, page + 1))}
+              />
+            )}
           </div>
         )}
-      </div>
+        </div>
+      </main>
 
       <BottomNavbar />
     </div>

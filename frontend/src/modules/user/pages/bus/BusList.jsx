@@ -837,7 +837,7 @@ const BusList = () => {
         ) : null}
 
         {!loading && !error ? (
-          <section className="mt-2.5 space-y-2.5">
+          <section className="mt-2.5 space-y-2.5 app-grid">
             {visibleBuses.map((bus, index) => {
               const rated = hasBusRating(bus);
               const topAmenities = Array.isArray(bus.amenities) ? bus.amenities.slice(0, 4) : [];

@@ -1462,7 +1462,7 @@ const RentalVehicleDetail = () => {
     }
 
     return (
-      <div className="min-h-screen max-w-lg mx-auto bg-white pb-28 text-black font-sans shadow-2xl border-x border-slate-100">
+      <div className="min-h-screen max-w-lg lg:max-w-[1240px] mx-auto bg-white lg:bg-[var(--background)] pb-28 lg:pb-10 text-black font-sans shadow-2xl lg:shadow-none border-x border-slate-100 lg:border-x-0">
         <header className="sticky top-0 z-40 bg-white/95 px-3 pt-3 pb-2 backdrop-blur-xl">
           <div className="flex items-center justify-between">
             <button
@@ -1473,7 +1473,7 @@ const RentalVehicleDetail = () => {
               <ArrowLeft size={19} strokeWidth={2.5} />
             </button>
             <div className="text-center">
-              <h1 className="text-[18px] font-black leading-tight">Car Details</h1>
+              <h1 className="text-[18px] lg:text-[22px] font-black leading-tight">Car Details</h1>
               <p className="text-[10px] font-semibold text-slate-600">Review & Book</p>
             </div>
             <div className="flex items-center gap-2">
@@ -1489,9 +1489,10 @@ const RentalVehicleDetail = () => {
           </div>
         </header>
 
-        <main className="space-y-2.5 px-2.5">
-          <section className="grid grid-cols-[39%_1fr] overflow-hidden rounded-[13px] border border-slate-100 bg-white shadow-[0_5px_16px_rgba(15,23,42,0.06)]">
-            <div className="relative min-h-[132px] bg-gradient-to-br from-amber-50 via-slate-100 to-slate-200">
+        <main className="space-y-2.5 px-2.5 lg:grid lg:grid-cols-[1fr_360px] lg:items-start lg:gap-5 lg:space-y-0 lg:px-6 lg:pt-4">
+          <div className="space-y-2.5 lg:min-w-0">
+          <section className="grid grid-cols-[39%_1fr] lg:grid-cols-[46%_1fr] overflow-hidden rounded-[13px] lg:rounded-[18px] border border-slate-100 bg-white shadow-[0_5px_16px_rgba(15,23,42,0.06)]">
+            <div className="relative min-h-[132px] lg:min-h-[300px] bg-gradient-to-br from-amber-50 via-slate-100 to-slate-200">
               <span className="absolute left-2 top-2 z-10 rounded-[7px] bg-[#fff0b8] px-1.5 py-0.5 text-[8px] font-black">Most Popular</span>
               {selectedImage ? (
                 <img src={selectedImage} alt={displayName} className="absolute inset-0 h-full w-full object-contain p-2.5" />
@@ -1548,7 +1549,7 @@ const RentalVehicleDetail = () => {
 
           <section>
             <div className="mb-1.5 flex items-center justify-between">
-              <h3 className="flex items-center gap-1 text-[12px] font-black tracking-tight">Choose KM Plan <Info size={11} /></h3>
+              <h3 className="flex items-center gap-1 text-[12px] lg:text-[15px] font-black tracking-tight">Choose KM Plan <Info size={11} /></h3>
               <button className="flex items-center gap-1 text-[10px] font-bold text-slate-700"><PackageCheck size={12} />Compare</button>
             </div>
             <div className="grid grid-cols-3 gap-1.5">
@@ -1599,7 +1600,7 @@ const RentalVehicleDetail = () => {
           <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
               <div>
-                <h3 className="text-[13px] font-black">Add-ons (Optional)</h3>
+                <h3 className="text-[13px] lg:text-[15px] font-black">Add-ons (Optional)</h3>
                 <p className="text-[10px] font-semibold text-slate-600">Customize your trip</p>
               </div>
               <button
@@ -1637,7 +1638,7 @@ const RentalVehicleDetail = () => {
           </section>
 
           <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
-            <h3 className="text-[13px] font-black">Package Includes</h3>
+            <h3 className="text-[13px] lg:text-[15px] font-black">Package Includes</h3>
             <div className="mt-3 grid grid-cols-5 gap-2 text-center">
               {[
                 ['Insurance', Shield],
@@ -1656,7 +1657,7 @@ const RentalVehicleDetail = () => {
           </section>
 
           <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
-            <h3 className="text-[13px] font-black">Rental Information</h3>
+            <h3 className="text-[13px] lg:text-[15px] font-black">Rental Information</h3>
             <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1.5 text-[10.5px] font-semibold">
               <span className="text-slate-600">Fuel Policy</span><span className="text-right">Full to Full</span>
               <span className="text-slate-600">Security Deposit</span><span className="text-right">₹2000 Refundable</span>
@@ -1665,6 +1666,10 @@ const RentalVehicleDetail = () => {
             </div>
           </section>
 
+          </div>
+
+          {/* Booking rail - sticky beside the content on desktop */}
+          <aside className="space-y-2.5 lg:sticky lg:top-4">
           <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
             <h3 className="text-[13px] font-black">Price Summary <span className="font-semibold text-slate-600">({selectedPlan.title})</span></h3>
             <div className="mt-2 space-y-1.5 text-[11px] font-semibold">
@@ -1685,9 +1690,29 @@ const RentalVehicleDetail = () => {
             </div>
             <button className="rounded-[9px] border border-green-300 px-3 py-2 text-[11px] font-black text-green-700">Apply</button>
           </section>
+
+          {/* Desktop CTA: the fixed mobile bar is hidden at lg, so the rail owns it */}
+          <div className="hidden lg:block rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
+            <div className="flex items-baseline justify-between">
+              <span className="text-[11px] font-semibold text-slate-600">Total Payable</span>
+              <span className="text-[22px] font-black leading-none">₹{totalPayable}</span>
+            </div>
+            <button
+              type="button"
+              onClick={continueFromDetail}
+              disabled={!selectedPackage || locationsLoading || !selectedServiceLocation}
+              className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-[10px] bg-[#f5b700] text-[14px] font-black text-black disabled:opacity-60"
+            >
+              Continue to Book <ChevronRight size={20} />
+            </button>
+            <p className="mt-2 text-center text-[10px] font-semibold text-slate-600">
+              Secure Booking • No Hidden Charges
+            </p>
+          </div>
+          </aside>
         </main>
 
-        <footer className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-lg bg-white px-3 pb-[max(env(safe-area-inset-bottom),8px)] pt-2 shadow-[0_-8px_24px_rgba(15,23,42,0.10)]">
+        <footer className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-lg bg-white px-3 pb-[max(env(safe-area-inset-bottom),8px)] pt-2 shadow-[0_-8px_24px_rgba(15,23,42,0.10)] lg:hidden">
           <div className="flex items-center gap-3">
             <div className="w-[38%]">
               <p className="text-[18px] font-black leading-tight">₹{totalPayable}</p>

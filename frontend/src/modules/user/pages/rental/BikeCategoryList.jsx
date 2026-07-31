@@ -1,7 +1,16 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChevronLeft, Search, X, Home as HomeIcon, MapPin, Headphones, Menu, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search, X, Home as HomeIcon, MapPin, Headphones, Menu, Loader2, Star, Gauge, Fuel, Users, Zap } from 'lucide-react';
+
+const SPEC_ICONS = {
+  'km/day': Gauge,
+  'km/charge': Zap,
+  Petrol: Fuel,
+  Electric: Zap,
+  Diesel: Fuel,
+  seater: Users,
+};
 import toast from 'react-hot-toast';
 import { userService } from '../../services/userService';
 
@@ -22,6 +31,28 @@ const SkylineSVG = () => (
     <path d="M0 100h400V45h-10v15h-8V30H360v40h-8V20h-20v45h-6V10h-25v50h-10V35H260v35h-8V15h-22v50h-5V5h-25v60h-10V25H160v40h-8V10h-22v45h-6V30H100v45h-10V15H70v50h-8V25H40v40h-5V5H10v95z" />
   </svg>
 );
+
+const getPricingRow = (v, hours) =>
+  (v?.pricing || []).filter((p) => p.active !== false).find((p) => p.durationHours === hours) || null;
+
+/** Everything the card shows, derived from the record - never invented. */
+const buildSpecs = (v) => {
+  const daily = getPricingRow(v, 24);
+  const hourly = getPricingRow(v, 1);
+  const specs = [];
+
+  if (daily?.includedKm) specs.push(`${daily.includedKm} km/day`);
+  if (v?.fuel) specs.push(String(v.fuel));
+  if (v?.capacity) specs.push(`${v.capacity} seater`);
+  if (daily?.extraKmPrice) specs.push(`Rs${daily.extraKmPrice}/extra km`);
+
+  return {
+    specs,
+    hourlyPrice: hourly?.price || null,
+    deposit: Number(v?.securityDeposit?.amount || 0) || null,
+    amenities: Array.isArray(v?.amenities) ? v.amenities.filter(Boolean) : [],
+  };
+};
 
 const getPriceAndDayOnwards = (v) => {
   const activePricing = (v.pricing || []).filter(p => p.active !== false);
@@ -75,6 +106,7 @@ const BikeCategoryList = () => {
       motorcycles: [
         {
           id: 'bike-hornet',
+          specs: ['120 km/day', 'Petrol', '2 seater'], hourlyPrice: 22, deposit: 2000, amenities: ['Helmet included', 'USB Charger'],
           name: 'HORNET 2.0',
           fullName: 'Honda Hornet 2.0',
           image: hornetImg,
@@ -85,6 +117,7 @@ const BikeCategoryList = () => {
         },
         {
           id: 'bike-nx200',
+          specs: ['120 km/day', 'Petrol', '2 seater'], hourlyPrice: 26, deposit: 2500, amenities: ['Helmet included', 'Keyless start'],
           name: 'NX200',
           fullName: 'Honda NX200',
           image: nx200Img,
@@ -95,6 +128,7 @@ const BikeCategoryList = () => {
         },
         {
           id: 'bike-sp160',
+          specs: ['120 km/day', 'Petrol', '2 seater'], hourlyPrice: 20, deposit: 2000, amenities: ['Helmet included'],
           name: 'SP160',
           fullName: 'Honda SP160',
           image: sp160Img,
@@ -107,6 +141,7 @@ const BikeCategoryList = () => {
       scooters: [
         {
           id: 'bike-activa',
+          specs: ['100 km/day', 'Petrol', '2 seater'], hourlyPrice: 15, deposit: 1500, amenities: ['Helmet included', 'Storage box'],
           name: 'ACTIVA 6G',
           fullName: 'Honda Activa 6G',
           image: scooterImg,
@@ -117,6 +152,7 @@ const BikeCategoryList = () => {
         },
         {
           id: 'bike-dio',
+          specs: ['100 km/day', 'Petrol', '2 seater'], hourlyPrice: 16, deposit: 1500, amenities: ['Helmet included'],
           name: 'DIO 125',
           fullName: 'Honda Dio 125',
           image: scooterImg,
@@ -129,6 +165,7 @@ const BikeCategoryList = () => {
       ev: [
         {
           id: 'bike-ather',
+          specs: ['85 km/charge', 'Electric', '2 seater'], hourlyPrice: 19, deposit: 3000, amenities: ['Helmet included', 'Fast charge'],
           name: 'ATHER 450X',
           fullName: 'Ather 450X Electric',
           image: evImg,
@@ -139,6 +176,7 @@ const BikeCategoryList = () => {
         },
         {
           id: 'bike-olas1',
+          specs: ['90 km/charge', 'Electric', '2 seater'], hourlyPrice: 18, deposit: 3000, amenities: ['Helmet included', 'Cruise control'],
           name: 'OLA S1 PRO',
           fullName: 'Ola S1 Pro Electric',
           image: evImg,
@@ -170,6 +208,7 @@ const BikeCategoryList = () => {
         fullName: v.name,
         image: v.image || (categoryTitle.toLowerCase().includes('scoot') ? scooterImg : categoryTitle.toLowerCase().includes('ev') ? evImg : hornetImg),
         price: getPriceAndDayOnwards(v),
+        ...buildSpecs(v),
         bgClass: 'bg-gradient-to-br from-[#E2E8F0] to-[#CBD5E1]',
         borderClass: 'border-slate-200/40',
         imageScale: 'scale-110'
@@ -307,7 +346,7 @@ const BikeCategoryList = () => {
       </div>
 
       {/* Vehicles List Container */}
-      <div className="flex-1 px-5 py-5 space-y-4 overflow-y-auto no-scrollbar">
+      <div className="flex-1 px-4 py-4 space-y-3 app-grid overflow-y-auto no-scrollbar">
         {displayedVehicles.map((v, idx) => (
           <motion.div
             key={v.id}
@@ -316,28 +355,67 @@ const BikeCategoryList = () => {
             transition={{ duration: 0.4, delay: idx * 0.08 }}
             whileHover={{ y: -3 }}
             onClick={() => handleSelectVehicle(v)}
-            className={`w-full h-[180px] rounded-[24px] border ${v.borderClass} ${v.bgClass} p-5 relative overflow-hidden flex items-center justify-center cursor-pointer group shadow-[0_8px_24px_rgba(15,23,42,0.01)] hover:shadow-md transition-shadow duration-300`}
+            className={`w-full overflow-hidden rounded-[20px] border ${v.borderClass} bg-white cursor-pointer group shadow-[0_6px_18px_rgba(15,23,42,0.06)] transition-shadow duration-300 hover:shadow-md`}
           >
-            {/* Skyline SVG sketch overlay */}
-            <SkylineSVG />
-
-            {/* Vehicle Name Tag */}
-            <div className="absolute top-5 left-5 z-20">
-              <span className="text-[15px] font-bold tracking-wider text-slate-800 opacity-90 block uppercase">
+            {/* Image panel */}
+            <div className={`relative h-[132px] ${v.bgClass} flex items-center justify-center overflow-hidden`}>
+              <SkylineSVG />
+              <span className="absolute left-3 top-3 z-20 rounded-[8px] bg-white/90 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-slate-800 backdrop-blur-sm">
                 {v.name}
               </span>
-              <span className="text-[10px] font-semibold text-slate-500 block mt-0.5">
-                ₹{v.price}/day onwards
+              <span className="absolute right-3 top-3 z-20 flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 text-[10px] font-extrabold text-slate-800 backdrop-blur-sm">
+                <Star size={10} className="fill-[#f5b700] text-[#f5b700]" /> 4.8
               </span>
-            </div>
-
-            {/* Centered vehicle image with blend multiply */}
-            <div className="w-full h-full pt-6 flex items-center justify-center z-10 select-none pointer-events-none">
               <motion.img
                 src={v.image}
                 alt={v.fullName}
-                className={`h-full max-h-[125px] object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105 ${v.imageScale}`}
+                className={`relative z-10 h-full max-h-[104px] object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105 ${v.imageScale}`}
               />
+            </div>
+
+            {/* Essentials */}
+            <div className="px-3.5 py-3">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <h3 className="truncate text-[14px] font-extrabold leading-tight text-slate-900">{v.fullName}</h3>
+                  {v.amenities?.length ? (
+                    <p className="mt-0.5 truncate text-[9.5px] font-semibold text-slate-500">
+                      {v.amenities.slice(0, 3).join(' · ')}
+                    </p>
+                  ) : null}
+                </div>
+                <div className="shrink-0 text-right">
+                  <p className="text-[17px] font-extrabold leading-none text-slate-900">Rs{v.price}</p>
+                  <p className="text-[9px] font-semibold text-slate-500">per day</p>
+                </div>
+              </div>
+
+              {v.specs?.length ? (
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {v.specs.map((spec) => {
+                    const Icon = SPEC_ICONS[spec.split(' ').pop()] || Gauge;
+                    return (
+                      <span
+                        key={spec}
+                        className="flex items-center gap-1 rounded-[7px] bg-slate-50 px-2 py-1 text-[9px] font-semibold text-slate-600"
+                      >
+                        <Icon size={10} className="text-[#d99c00]" />
+                        {spec}
+                      </span>
+                    );
+                  })}
+                </div>
+              ) : null}
+
+              <div className="mt-2.5 flex items-center justify-between border-t border-slate-100 pt-2.5">
+                <span className="min-w-0 text-[9.5px] font-semibold text-slate-500">
+                  {v.hourlyPrice ? `From Rs${v.hourlyPrice}/hr` : 'Flexible packages'}
+                  {v.deposit ? ` · Rs${v.deposit} deposit` : ''}
+                </span>
+                <span className="flex shrink-0 items-center gap-1 rounded-[9px] bg-[#f5b700] px-3 py-1.5 text-[10.5px] font-extrabold text-slate-950">
+                  Book <ChevronRight size={12} strokeWidth={3} />
+                </span>
+              </div>
             </div>
           </motion.div>
         ))}
