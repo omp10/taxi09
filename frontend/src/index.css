@@ -30,6 +30,41 @@
   font-family: 'Poppins', sans-serif;
 }
 
+/* Shimmer sweep for skeleton placeholders. Reads better than a plain pulse
+   because the moving highlight signals "loading" rather than "disabled". */
+@keyframes taxi09-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: #ece9e2;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.55) 45%,
+    rgba(255, 255, 255, 0.85) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: taxi09-shimmer 1.4s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    animation: none;
+  }
+}
+
 :root {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   line-height: 1.5;
@@ -124,39 +159,99 @@ body {
   --shadow-soft: 0 4px 20px -2px rgba(0,0,0,0.05);
 }
 
-/* Global Typography Styles based on Design Direction */
-h1, .screen-title {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--color-text-primary);
+/* Wrapped in @layer base: unlayered element selectors beat Tailwind's
+   utilities, so a bare `h1 { color }` was overriding `text-white`. */
+@layer base {
+  /* Global Typography Styles based on Design Direction */
+  h1, .screen-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  h2, .section-heading {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  h3, .card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  p, .body-text {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+  }
+
+  button, .button-text {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .nav-label {
+    font-size: 12px;
+    font-weight: 500;
+  }
 }
 
-h2, .section-heading {
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--color-text-primary);
+
+/* =========================================================================
+   Desktop layout pass.
+
+   Every screen was built as a fixed `max-w-lg` phone column, which on a wide
+   display left the content stranded in the middle. These rules widen the page
+   shell at tablet/desktop and let card lists flow into columns, without
+   touching 78 individual files.
+
+   Scoped to `.min-h-screen.max-w-lg` so only page shells widen - narrow
+   elements inside a page (modals, sheets) keep their intended width.
+   `:where()` keeps specificity at 0 so any page can still override locally.
+   ========================================================================= */
+@media (min-width: 768px) {
+  /* `:not(.md\:max-w-none)` is load-bearing: 12 pages already go full-width on
+     desktop via that utility. Without the guard this rule (being unlayered, so
+     it outranks Tailwind utilities) would clamp them back to a narrow column. */
+  .min-h-screen.max-w-lg:not(.md\:max-w-none) {
+    max-width: 46rem;
+  }
+
+  /* Bottom bars are positioned against the shell, so they must match it. */
+  .fixed.bottom-0.max-w-lg:not(.md\:max-w-none) {
+    max-width: 46rem;
+  }
 }
 
-h3, .card-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--color-text-primary);
+@media (min-width: 1280px) {
+  .min-h-screen.max-w-lg:not(.md\:max-w-none) {
+    max-width: 60rem;
+  }
+
+  .fixed.bottom-0.max-w-lg:not(.md\:max-w-none) {
+    max-width: 60rem;
+  }
+
+  /* Opt-in: pages tag a list with `app-grid` to flow into two columns. */
+  .app-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    align-items: start;
+  }
+
+  .app-grid > * {
+    margin-top: 0 !important;
+  }
 }
 
-p, .body-text {
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--color-text-secondary);
-}
-
-button, .button-text {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.nav-label {
-  font-size: 12px;
-  font-weight: 500;
+/* A mobile-width column on a huge screen should look deliberate, not stranded. */
+@media (min-width: 768px) {
+  body {
+    background-color: #EFF1F4;
+  }
 }
 
 /* Global scrollbar hiding for a cleaner mobile experience */

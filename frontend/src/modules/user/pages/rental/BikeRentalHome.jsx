@@ -591,7 +591,7 @@ const BikeRentalHome = () => {
       };
 
       return (
-        <div className="min-h-screen max-w-lg mx-auto bg-white text-black font-sans relative overflow-x-hidden pb-28 shadow-2xl border-x border-slate-100">
+        <div className="min-h-screen max-w-lg md:max-w-none md:mx-0 mx-auto bg-white text-black font-sans relative overflow-x-hidden pb-28 shadow-2xl md:shadow-none border-x border-slate-100 md:border-x-0">
           <header className="px-5 pt-5 pb-3">
             <div className="relative flex items-center justify-center">
               <button
@@ -618,7 +618,7 @@ const BikeRentalHome = () => {
             </div>
           </header>
 
-          <main className="px-3">
+          <main className="px-3 md:mx-auto md:max-w-[1480px] md:px-8">
             <section className="grid grid-cols-[1fr_auto_1fr] items-center rounded-[14px] border border-slate-100 bg-white p-3 shadow-[0_6px_18px_rgba(15,23,42,0.07)]">
               <div className="flex items-start gap-2">
                 <span className="mt-5 h-3 w-3 rounded-full bg-[#22c55e]" />
@@ -755,7 +755,7 @@ const BikeRentalHome = () => {
               </div>
             )}
 
-            <section className="mt-3 space-y-3">
+            <section className="mt-3 space-y-3 lg:grid lg:grid-cols-2 lg:gap-3 lg:space-y-0 xl:grid-cols-3 [&>*]:lg:mt-0">
               {filteredListingCars.length === 0 ? (
                 <div className="rounded-[14px] border border-slate-100 bg-white p-5 text-center shadow-[0_5px_18px_rgba(15,23,42,0.06)]">
                   <p className="text-[14px] font-black text-slate-900">No cars match these filters</p>
@@ -1136,7 +1136,7 @@ const BikeRentalHome = () => {
     };
 
     return (
-      <div className="min-h-screen max-w-lg mx-auto bg-white text-black font-sans relative overflow-x-hidden pb-28 shadow-2xl border-x border-slate-100">
+      <div className="min-h-screen max-w-lg md:max-w-none md:mx-0 mx-auto bg-white text-black font-sans relative overflow-x-hidden pb-28 shadow-2xl md:shadow-none border-x border-slate-100 md:border-x-0">
         <section className="relative h-[285px] overflow-hidden bg-slate-950">
           <img
             src="/taxi09_rental_hero_banner.png"

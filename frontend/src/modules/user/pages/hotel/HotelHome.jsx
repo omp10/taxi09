@@ -1,96 +1,210 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import {
-  Bell,
-  BriefcaseBusiness,
+  BedDouble,
   CalendarDays,
   ChevronDown,
   ChevronRight,
-  Gift,
+  Clock3,
   Heart,
   Home,
   Hotel,
   MapPin,
-  Menu,
+  Minus,
+  Plus,
   Search,
+  Car,
+  CircleCheck,
+  Coffee,
+  Dumbbell,
+  SlidersHorizontal,
+  Sparkles,
   Star,
+  Wallet,
+  Waves,
+  Wifi,
   Tag,
   User,
   Users,
 } from 'lucide-react';
+import AppHeader from '../../components/AppHeader';
 
 const getRoutePrefix = (pathname = '') => (pathname.startsWith('/taxi/user') ? '/taxi/user' : '');
 
+const CITIES = ['Goa', 'Delhi', 'Mumbai', 'Udaipur', 'Hyderabad', 'Jaipur'];
+
 const destinations = [
-  { city: 'Goa', price: 899, image: '/rajwada_palace.png', gradient: 'from-emerald-500/30 to-sky-900/70' },
-  { city: 'Delhi', price: 699, image: '/temple.png', gradient: 'from-orange-500/25 to-slate-950/70' },
-  { city: 'Mumbai', price: 799, image: '/taxi09_bus_hero_city.png', gradient: 'from-sky-500/25 to-slate-950/70' },
-  { city: 'Udaipur', price: 899, image: '/services_hero.png', gradient: 'from-amber-500/25 to-slate-950/70' },
+  { city: 'Goa', price: 899, image: '/taxi09_hotel_destination_goa.png' },
+  { city: 'Delhi', price: 699, image: '/taxi09_hotel_destination_delhi.png' },
+  { city: 'Mumbai', price: 799, image: '/taxi09_hotel_destination_mumbai.png' },
+  { city: 'Udaipur', price: 899, image: '/taxi09_hotel_destination_udaipur.png' },
 ];
 
-const offerCards = [
-  { icon: <Tag size={16} strokeWidth={2.4} />, title: 'FLAT 10% OFF', subtitle: 'On All Bookings', code: 'HOTEL10', tone: 'bg-[#fff6dc] text-[#d08a00]' },
-  { icon: <BriefcaseBusiness size={16} strokeWidth={2.4} />, title: 'UPTO 25% OFF', subtitle: 'On Business Hotels', code: 'BIZ25', tone: 'bg-[#e9f9ec] text-emerald-700' },
-  { icon: <Gift size={16} strokeWidth={2.4} />, title: 'UPTO 40% OFF', subtitle: 'On First Booking', code: 'FIRST40', tone: 'bg-[#f4ebff] text-violet-700' },
+const heroSlides = [
+  {
+    image: '/taxi09_hotel_hero.png',
+    title: 'Find the perfect stay for your trip',
+    subtitle: 'Comfortable stays. Best prices. Verified hotels.',
+    offer: '40% OFF',
+    code: 'FIRST40',
+  },
+  {
+    image: '/taxi09_hotel_hero_city_v2.png',
+    title: 'Premium city stays, taxi-fast deals',
+    subtitle: 'Wake up near business hubs, cafes and landmarks.',
+    offer: '25% OFF',
+    code: 'CITY25',
+  },
+  {
+    image: '/taxi09_hotel_hero_resort_v2.png',
+    title: 'Resort breaks made easy',
+    subtitle: 'Poolside escapes with verified rooms and instant booking.',
+    offer: '30% OFF',
+    code: 'RELAX30',
+  },
+];
+
+const SORTS = [
+  { id: 'recommended', label: 'Recommended' },
+  { id: 'price-asc', label: 'Price: Low to High' },
+  { id: 'price-desc', label: 'Price: High to Low' },
+  { id: 'rating-desc', label: 'Top Rated' },
 ];
 
 const hotels = [
-  {
-    name: 'The Grand Orion',
-    area: 'Connaught Place, New Delhi',
-    distance: '2.3 km from City Centre',
-    image: '/taxi09_hotel_hero.png',
-    badge: 'Popular',
-    rating: '4.5',
-    reviews: '2.5K',
-    oldPrice: 3499,
-    price: 2649,
-    off: '24% OFF',
-  },
-  {
-    name: 'Hotel Sapphire Inn',
-    area: 'Banjara Hills, Hyderabad',
-    distance: '1.8 km from City Centre',
-    image: '/premium_grid_map.png',
-    badge: 'Best Value',
-    rating: '4.2',
-    reviews: '1.3K',
-    oldPrice: 3299,
-    price: 2739,
-    off: '18% OFF',
-  },
+  { id: 'grand-orion', name: 'The Grand Orion', city: 'Delhi', area: 'Connaught Place, New Delhi', distance: '2.3 km from City Centre', image: '/taxi09_hotel_hero.png', badge: 'Popular', rating: 4.5, reviews: '2.5K', oldPrice: 3499, price: 2649, amenities: ['Free Wi-Fi', 'Breakfast', 'Free Cancellation', 'Pay at Hotel'] },
+  { id: 'sapphire-inn', name: 'Hotel Sapphire Inn', city: 'Hyderabad', area: 'Banjara Hills, Hyderabad', distance: '1.8 km from City Centre', image: '/taxi09_hotel_hero_city_v2.png', badge: 'Best Value', rating: 4.2, reviews: '1.3K', oldPrice: 3299, price: 2739, amenities: ['Free Wi-Fi', 'Pool', 'Parking', 'Pay at Hotel'] },
+  { id: 'palm-vista', name: 'Palm Vista Resort', city: 'Goa', area: 'Candolim Beach, Goa', distance: '900 m from Beach', image: '/taxi09_hotel_hero_resort_v2.png', badge: 'Beach Stay', rating: 4.7, reviews: '3.1K', oldPrice: 5199, price: 3899, amenities: ['Beachfront', 'Pool', 'Breakfast', 'Pay at Hotel'] },
+  { id: 'lake-palace', name: 'Heritage Lake Palace', city: 'Udaipur', area: 'Pichola Road, Udaipur', distance: '1.2 km from Lake Pichola', image: '/taxi09_hotel_destination_udaipur.png', badge: 'Premium', rating: 4.6, reviews: '1.9K', oldPrice: 4599, price: 3299, amenities: ['Lake View', 'Spa', 'Breakfast', 'Pay at Hotel'] },
+  { id: 'marine-bay', name: 'Marine Bay Suites', city: 'Mumbai', area: 'Colaba, Mumbai', distance: '2.1 km from Gateway', image: '/taxi09_hotel_destination_mumbai.png', badge: 'City View', rating: 4.4, reviews: '2.2K', oldPrice: 4299, price: 3199, amenities: ['Sea View', 'Gym', 'Free Wi-Fi', 'Pay at Hotel'] },
+  { id: 'imperial-courtyard', name: 'The Imperial Courtyard', city: 'Delhi', area: 'Karol Bagh, Delhi', distance: '3.4 km from Connaught Place', image: '/taxi09_hotel_destination_delhi.png', badge: 'Top Rated', rating: 4.5, reviews: '1.7K', oldPrice: 3799, price: 2849, amenities: ['Free Wi-Fi', 'Breakfast', 'Parking', 'Pay at Hotel'] },
+  { id: 'saffron-suites', name: 'Saffron Business Suites', city: 'Delhi', area: 'Aerocity, New Delhi', distance: '1.1 km from Airport', image: '/taxi09_hotel_room_1.jpg', badge: 'Business', rating: 4.3, reviews: '980', oldPrice: 4199, price: 3149, amenities: ['Airport Shuttle', 'Free Wi-Fi', 'Gym', 'Pay at Hotel'] },
+  { id: 'coral-cove', name: 'Coral Cove Beach Villas', city: 'Goa', area: 'Anjuna, North Goa', distance: '400 m from Beach', image: '/taxi09_hotel_room_2.jpg', badge: 'Villa', rating: 4.8, reviews: '1.4K', oldPrice: 6499, price: 4799, amenities: ['Private Pool', 'Beachfront', 'Breakfast', 'Pay at Hotel'] },
+  { id: 'pink-city', name: 'Pink City Haveli', city: 'Jaipur', area: 'Hawa Mahal Road, Jaipur', distance: '600 m from Hawa Mahal', image: '/taxi09_hotel_room_3.jpg', badge: 'Heritage', rating: 4.4, reviews: '2.0K', oldPrice: 3599, price: 2499, amenities: ['Heritage', 'Rooftop', 'Breakfast', 'Pay at Hotel'] },
+  { id: 'harbour-view', name: 'Harbour View Residency', city: 'Mumbai', area: 'Bandra West, Mumbai', distance: '3.0 km from Bandstand', image: '/taxi09_hotel_room_4.jpg', badge: 'New', rating: 4.1, reviews: '540', oldPrice: 3899, price: 2599, amenities: ['Free Wi-Fi', 'Parking', 'Free Cancellation', 'Pay at Hotel'] },
+  { id: 'deccan-grand', name: 'Deccan Grand Hyderabad', city: 'Hyderabad', area: 'Gachibowli, Hyderabad', distance: '2.6 km from HITEC City', image: '/taxi09_hotel_hero_city_v2.png', badge: 'Business', rating: 4.2, reviews: '1.1K', oldPrice: 3299, price: 2299, amenities: ['Free Wi-Fi', 'Gym', 'Breakfast', 'Pay at Hotel'] },
+  { id: 'aravalli-retreat', name: 'Aravalli Hill Retreat', city: 'Udaipur', area: 'Fateh Sagar, Udaipur', distance: '2.0 km from Fateh Sagar', image: '/taxi09_hotel_hero_resort_v2.png', badge: 'Retreat', rating: 4.6, reviews: '860', oldPrice: 5299, price: 3699, amenities: ['Hill View', 'Spa', 'Pool', 'Pay at Hotel'] },
 ];
+
+const toDateKey = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const addDays = (dateStr, offset) => {
+  const base = new Date(`${dateStr}T00:00:00`);
+  if (Number.isNaN(base.getTime())) return dateStr;
+  base.setDate(base.getDate() + offset);
+  return toDateKey(base);
+};
+
+const nightsBetween = (checkIn, checkOut) => {
+  const start = new Date(`${checkIn}T00:00:00`);
+  const end = new Date(`${checkOut}T00:00:00`);
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return 1;
+  return Math.max(1, Math.round((end - start) / 86400000));
+};
+
+const formatShortDate = (value) => {
+  const parsed = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return value;
+  return parsed.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+};
+
+const AMENITY_ICONS = {
+  'free wi-fi': Wifi,
+  breakfast: Coffee,
+  'free cancellation': CircleCheck,
+  'pay at hotel': Wallet,
+  parking: Car,
+  pool: Waves,
+  beachfront: Waves,
+  'private pool': Waves,
+  gym: Dumbbell,
+  spa: Sparkles,
+  'sea view': Waves,
+  'lake view': Waves,
+  'hill view': Sparkles,
+  heritage: Sparkles,
+  rooftop: Sparkles,
+  'airport shuttle': Car,
+};
+
+const getAmenityIcon = (label) => AMENITY_ICONS[String(label).toLowerCase()] || CircleCheck;
+
+/** Five stars with a clipped overlay so 4.5 renders as a real half star. */
+const StarRating = ({ value, size = 11 }) => (
+  <span className="flex items-center gap-[1px]">
+    {Array.from({ length: 5 }).map((_, index) => {
+      const fill = Math.max(0, Math.min(1, value - index));
+      return (
+        <span key={index} className="relative inline-flex">
+          <Star size={size} className="fill-slate-200 text-slate-200" />
+          {fill > 0 ? (
+            <span className="absolute inset-0 overflow-hidden" style={{ width: `${fill * 100}%` }}>
+              <Star size={size} className="fill-[var(--primary)] text-[var(--primary)]" />
+            </span>
+          ) : null}
+        </span>
+      );
+    })}
+  </span>
+);
+
+const rupees = (value) => `₹${Number(value).toLocaleString('en-IN')}`;
+
+const SectionTitle = ({ title, actionLabel, onAction }) => (
+  <div className="mb-2.5 mt-5 flex items-center justify-between px-1">
+    <h2 className="text-[17px] font-extrabold tracking-[-0.02em] text-[var(--text)]">{title}</h2>
+    {actionLabel ? (
+      <button
+        type="button"
+        onClick={onAction}
+        className="flex items-center gap-1 text-[11.5px] font-bold text-[var(--primary-dark)]"
+      >
+        {actionLabel} <ChevronRight size={13} strokeWidth={2.8} />
+      </button>
+    ) : null}
+  </div>
+);
 
 const HotelBottomNav = ({ routePrefix }) => {
   const navigate = useNavigate();
   const items = [
-    { icon: <Home size={21} strokeWidth={2.2} />, centerIcon: <Home size={26} strokeWidth={2.5} />, label: 'Home', path: routePrefix || '/user' },
-    { icon: <CalendarDays size={21} strokeWidth={2.2} />, centerIcon: <CalendarDays size={26} strokeWidth={2.5} />, label: 'Bookings', path: `${routePrefix}/activity` },
-    { icon: <Hotel size={21} strokeWidth={2.2} />, centerIcon: <Hotel size={26} strokeWidth={2.5} />, label: 'Hotels', path: `${routePrefix}/hotel`, center: true },
-    { icon: <Tag size={21} strokeWidth={2.2} />, centerIcon: <Tag size={26} strokeWidth={2.5} />, label: 'Offers', path: `${routePrefix}/promo` },
-    { icon: <User size={21} strokeWidth={2.2} />, centerIcon: <User size={26} strokeWidth={2.5} />, label: 'Account', path: `${routePrefix}/profile` },
+    { icon: Home, label: 'Home', path: routePrefix || '/user' },
+    { icon: CalendarDays, label: 'Bookings', path: `${routePrefix}/activity` },
+    { icon: Hotel, label: 'Hotels', path: `${routePrefix}/hotel`, center: true },
+    { icon: Tag, label: 'Offers', path: `${routePrefix}/promo` },
+    { icon: User, label: 'Account', path: `${routePrefix}/profile` },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 mx-auto w-full max-w-lg bg-white px-2 pb-[max(env(safe-area-inset-bottom),10px)] pt-2 shadow-[0_-8px_24px_rgba(15,23,42,0.08)]">
+    <nav className="fixed bottom-0 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 border-t border-[var(--border)] bg-white px-2 pb-[max(env(safe-area-inset-bottom),10px)] pt-2 shadow-[0_-8px_24px_rgba(15,23,42,0.08)]">
       <div className="flex items-end justify-around">
-        {items.map(({ icon, centerIcon, label, path, center }) => (
+        {items.map(({ icon: Icon, label, path, center }) => (
           <button
             key={label}
             type="button"
             onClick={() => navigate(path)}
-            className="flex flex-1 flex-col items-center gap-1 text-slate-600"
+            className="flex flex-1 flex-col items-center gap-1"
           >
             <span
               className={
                 center
-                  ? '-mt-7 flex h-[58px] w-[58px] items-center justify-center rounded-full bg-[#f5b700] text-slate-950 shadow-[0_8px_20px_rgba(245,183,0,0.42)] ring-4 ring-white'
-                  : 'flex h-6 items-center justify-center'
+                  ? '-mt-7 flex h-[54px] w-[54px] items-center justify-center rounded-full bg-[var(--primary)] text-[var(--text)] shadow-[0_8px_20px_rgba(245,183,0,0.42)] ring-4 ring-white'
+                  : 'flex h-6 items-center justify-center text-[var(--text-light)]'
               }
             >
-              {center ? centerIcon : icon}
+              <Icon size={center ? 25 : 21} strokeWidth={center ? 2.5 : 2.2} />
             </span>
-            <span className={`text-[10px] ${center ? 'font-black text-slate-950' : 'font-semibold'}`}>{label}</span>
+            <span
+              className={`text-[10.5px] ${center ? 'font-extrabold text-[var(--text)]' : 'font-semibold text-[var(--text-light)]'}`}
+            >
+              {label}
+            </span>
           </button>
         ))}
       </div>
@@ -100,182 +214,441 @@ const HotelBottomNav = ({ routePrefix }) => {
 
 const HotelHome = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const routePrefix = useMemo(() => getRoutePrefix(location.pathname), [location.pathname]);
-  const [destination, setDestination] = useState('Goa, India');
-  const [checkIn, setCheckIn] = useState('2026-07-28');
-  const [checkOut, setCheckOut] = useState('2026-07-29');
+
+  const today = useMemo(() => toDateKey(new Date()), []);
+  const [destination, setDestination] = useState('Goa');
+  const [checkIn, setCheckIn] = useState(today);
+  const [checkOut, setCheckOut] = useState(() => addDays(today, 1));
   const [mode, setMode] = useState('hotel');
+  const [rooms, setRooms] = useState(1);
+  const [guests, setGuests] = useState(2);
+  const [guestPickerOpen, setGuestPickerOpen] = useState(false);
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [wishlist, setWishlist] = useState([]);
+  const [sortBy, setSortBy] = useState('recommended');
+  const [sortOpen, setSortOpen] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+  const [searchedFor, setSearchedFor] = useState('');
+
+  const activeHero = heroSlides[heroIndex];
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setHeroIndex((current) => (current + 1) % heroSlides.length);
+    }, 4500);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const nights = nightsBetween(checkIn, checkOut);
+
+  const visibleHotels = useMemo(() => {
+    const filtered = hotels.filter((hotel) => !searchedFor || hotel.city === searchedFor);
+    const sorted = [...filtered];
+
+    if (sortBy === 'price-asc') sorted.sort((a, b) => a.price - b.price);
+    else if (sortBy === 'price-desc') sorted.sort((a, b) => b.price - a.price);
+    else if (sortBy === 'rating-desc') sorted.sort((a, b) => b.rating - a.rating);
+
+    return sorted;
+  }, [searchedFor, sortBy]);
+
+  const listedHotels = showAll ? visibleHotels : visibleHotels.slice(0, 4);
+
+  const handleSearch = () => {
+    if (mode === 'hourly') {
+      toast('Hourly stays are coming soon');
+      return;
+    }
+    setSearchedFor(destination);
+    setShowAll(true);
+    toast.success(`${destination}: ${hotels.filter((h) => h.city === destination).length} stays found`);
+  };
+
+  const toggleWishlist = (id) =>
+    setWishlist((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
+
+  const pickDestination = (city) => {
+    setDestination(city);
+    setSearchedFor(city);
+    setShowAll(true);
+  };
 
   return (
-    <div className="min-h-screen max-w-lg mx-auto bg-[#f8fafc] pb-24 font-sans text-slate-950 shadow-2xl">
-      <header className="bg-[#f5b700] px-3 pb-10 pt-2">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button type="button" className="flex h-8 w-8 items-center justify-center rounded-full text-slate-950">
-              <Menu size={21} strokeWidth={2.6} />
-            </button>
-            <p className="text-[25px] font-black italic leading-none tracking-tight">
-              TAXI<span className="text-white">09</span>
+    <div className="min-h-screen max-w-lg mx-auto bg-[var(--background)] pb-28 text-[var(--text)]">
+      <AppHeader subtitle="HOTEL BOOKING" />
+
+      {/* Hero */}
+      <section className="relative h-[210px] overflow-hidden bg-slate-900">
+        {heroSlides.map((slide, index) => (
+          <img
+            key={slide.image}
+            src={slide.image}
+            alt=""
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+              index === heroIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+        ))}
+        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/85 via-45% to-transparent" />
+
+        <div className="relative z-10 flex h-full flex-col justify-center px-4">
+          <div className="max-w-[56%]">
+            <h1 className="text-[21px] font-extrabold leading-[1.12] tracking-[-0.03em]">{activeHero.title}</h1>
+            <p className="mt-2 text-[11px] font-medium leading-[1.45] text-[var(--text-light)]">
+              {activeHero.subtitle}
             </p>
+            <span className="mt-3 block h-1 w-12 rounded-full bg-[var(--primary)]" />
           </div>
-          <div className="flex items-center gap-3">
-            <button type="button" className="flex items-center gap-1 text-[11px] font-black">
-              <Heart size={18} /> My Trips
-            </button>
-            <Bell size={19} strokeWidth={2.4} />
+
+          <div className="absolute bottom-3 left-4 flex gap-1.5">
+            {heroSlides.map((slide, index) => (
+              <button
+                key={slide.code}
+                type="button"
+                aria-label={`Banner ${index + 1}`}
+                onClick={() => setHeroIndex(index)}
+                className={`h-1.5 rounded-full transition-all ${
+                  index === heroIndex ? 'w-7 bg-[var(--primary)]' : 'w-1.5 bg-slate-900/25'
+                }`}
+              />
+            ))}
           </div>
         </div>
+      </section>
 
-        <section className="relative mt-3 overflow-hidden rounded-[18px] bg-white shadow-[0_12px_28px_rgba(105,73,0,0.16)]">
-          <img src="/taxi09_hotel_hero.png" alt="Hotel stay" className="absolute inset-0 h-full w-full object-cover object-right" />
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/86 via-43% to-transparent" />
-          <div className="relative z-10 min-h-[162px] px-4 py-4">
-            <div className="max-w-[48%]">
-              <h1 className="text-[19px] font-black leading-[1.12]">Find the perfect stay for your trip</h1>
-              <p className="mt-2 text-[10px] font-semibold leading-4 text-slate-600">Comfortable stays. Best prices. Verified hotels.</p>
-              <span className="mt-4 block h-1 w-12 rounded-full bg-[#f5b700]" />
-            </div>
-
-            <div className="absolute right-3 top-4 w-[105px] rounded-[16px] bg-[#f5b700] p-2.5 text-center shadow-[0_10px_22px_rgba(245,183,0,0.32)]">
-              <Tag size={17} className="mx-auto" strokeWidth={2.6} />
-              <p className="mt-1 text-[8px] font-black uppercase">Upto</p>
-              <p className="text-[18px] font-black leading-none">40% OFF</p>
-              <p className="mt-1 text-[7px] font-bold">On First Hotel Booking</p>
-              <button type="button" className="mt-2 rounded-full bg-slate-950 px-3 py-1.5 text-[7px] font-black uppercase text-white">
-                Book Now
-              </button>
-            </div>
-          </div>
-        </section>
-      </header>
-
-      <main className="-mt-8 px-3">
-        <section className="rounded-[18px] bg-white p-3 shadow-[0_12px_30px_rgba(15,23,42,0.09)]">
-          <div className="grid grid-cols-2 gap-2 border-b border-slate-100 pb-3">
+      <main className="px-3">
+        {/* Search card - sits below the hero, no negative overlap */}
+        <section className="relative z-20 -mt-5 rounded-[18px] bg-white p-3 shadow-[var(--shadow-md)]">
+          <div className="grid grid-cols-2 gap-2 border-b border-[var(--border)] pb-3">
             {[
-              ['hotel', <Hotel key="hotel-icon" size={14} strokeWidth={2.4} />, 'Hotels'],
-              ['hourly', <ClockIcon key="hourly-icon" />, 'Hourly Stays'],
-            ].map(([id, icon, label]) => (
+              { id: 'hotel', icon: Hotel, label: 'Hotels' },
+              { id: 'hourly', icon: Clock3, label: 'Hourly Stays' },
+            ].map(({ id, icon: Icon, label }) => (
               <button
                 key={id}
                 type="button"
                 onClick={() => setMode(id)}
-                className={`flex items-center gap-2 rounded-[12px] px-3 py-2 text-[11px] font-black ${
-                  mode === id ? 'bg-[#fff7d6] text-[#c48600]' : 'bg-slate-50 text-slate-600'
+                className={`flex items-center justify-center gap-1.5 rounded-[12px] px-3 py-2.5 text-[12px] font-extrabold transition-colors ${
+                  mode === id ? 'bg-[var(--secondary)] text-[var(--primary-dark)]' : 'bg-slate-50 text-[var(--text-light)]'
                 }`}
               >
-                {icon}
+                <Icon size={14} strokeWidth={2.4} />
                 {label}
               </button>
             ))}
           </div>
 
-          <div className="mt-3 grid grid-cols-3 gap-2">
-            <button type="button" className="col-span-1 rounded-[13px] border border-slate-100 px-2.5 py-2 text-left">
-              <p className="text-[7px] font-black uppercase tracking-[0.12em] text-slate-400">Destination</p>
-              <div className="mt-1 flex items-center gap-1.5">
-                <MapPin size={13} className="text-slate-500" />
-                <select value={destination} onChange={(event) => setDestination(event.target.value)} className="min-w-0 flex-1 bg-transparent text-[10px] font-black outline-none">
-                  {['Goa, India', 'Delhi, India', 'Mumbai, India', 'Udaipur, India'].map((city) => (
-                    <option key={city}>{city}</option>
-                  ))}
-                </select>
-              </div>
-            </button>
+          <div className="mt-3 rounded-[13px] border border-[var(--border)] px-3 py-2.5">
+            <p className="text-[8.5px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">Destination</p>
+            <div className="mt-1 flex items-center gap-1.5">
+              <MapPin size={14} className="shrink-0 text-[var(--primary-dark)]" />
+              <select
+                value={destination}
+                onChange={(event) => setDestination(event.target.value)}
+                className="min-w-0 flex-1 appearance-none bg-transparent text-[13px] font-extrabold outline-none"
+              >
+                {CITIES.map((city) => (
+                  <option key={city} value={city}>
+                    {city}, India
+                  </option>
+                ))}
+              </select>
+              <ChevronDown size={14} className="shrink-0 text-[var(--text-light)]" />
+            </div>
+          </div>
 
-            <label className="rounded-[13px] border border-slate-100 px-2.5 py-2 text-left">
-              <p className="text-[7px] font-black uppercase tracking-[0.12em] text-slate-400">Check-in</p>
-              <input type="date" value={checkIn} onChange={(event) => setCheckIn(event.target.value)} className="mt-1 w-full bg-transparent text-[9px] font-black outline-none" />
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <label className="rounded-[13px] border border-[var(--border)] px-3 py-2.5">
+              <span className="block text-[8.5px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">
+                Check-in
+              </span>
+              <input
+                type="date"
+                min={today}
+                value={checkIn}
+                onChange={(event) => {
+                  const nextCheckIn = event.target.value;
+                  setCheckIn(nextCheckIn);
+                  // Keep the stay at least one night long.
+                  if (checkOut <= nextCheckIn) setCheckOut(addDays(nextCheckIn, 1));
+                }}
+                className="mt-1 w-full bg-transparent text-[12px] font-extrabold outline-none"
+              />
             </label>
-
-            <label className="rounded-[13px] border border-slate-100 px-2.5 py-2 text-left">
-              <p className="text-[7px] font-black uppercase tracking-[0.12em] text-slate-400">Check-out</p>
-              <input type="date" value={checkOut} onChange={(event) => setCheckOut(event.target.value)} className="mt-1 w-full bg-transparent text-[9px] font-black outline-none" />
+            <label className="rounded-[13px] border border-[var(--border)] px-3 py-2.5">
+              <span className="block text-[8.5px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">
+                Check-out
+              </span>
+              <input
+                type="date"
+                min={addDays(checkIn, 1)}
+                value={checkOut}
+                onChange={(event) => setCheckOut(event.target.value)}
+                className="mt-1 w-full bg-transparent text-[12px] font-extrabold outline-none"
+              />
             </label>
           </div>
 
-          <div className="mt-2 grid grid-cols-[1fr_126px] gap-2">
-            <button type="button" className="flex items-center justify-between rounded-[13px] border border-slate-100 px-3 py-3 text-left">
-              <span className="flex items-center gap-2 text-[11px] font-black">
-                <Users size={14} />
-                1 Room, 2 Guests
+          <p className="mt-1.5 px-1 text-[10px] font-semibold text-[var(--text-light)]">
+            {nights} night{nights > 1 ? 's' : ''} · {formatShortDate(checkIn)} — {formatShortDate(checkOut)}
+          </p>
+
+          <div className="relative mt-2 grid grid-cols-[1fr_128px] gap-2">
+            <button
+              type="button"
+              onClick={() => setGuestPickerOpen((current) => !current)}
+              className="flex items-center justify-between rounded-[13px] border border-[var(--border)] px-3 py-3 text-left"
+            >
+              <span className="flex items-center gap-2 text-[12px] font-extrabold">
+                <Users size={15} className="text-[var(--primary-dark)]" />
+                {rooms} Room{rooms > 1 ? 's' : ''}, {guests} Guest{guests > 1 ? 's' : ''}
               </span>
-              <ChevronDown size={14} />
+              <ChevronDown
+                size={14}
+                className={`text-[var(--text-light)] transition-transform ${guestPickerOpen ? 'rotate-180' : ''}`}
+              />
             </button>
-            <button type="button" className="flex items-center justify-center gap-2 rounded-[13px] bg-[#f5b700] text-[11px] font-black text-slate-950 shadow-[0_8px_18px_rgba(245,183,0,0.24)]">
-              <Search size={14} strokeWidth={2.8} />
-              Search Hotels
+            <button
+              type="button"
+              onClick={handleSearch}
+              className="flex items-center justify-center gap-1.5 rounded-[13px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] text-[12.5px] font-extrabold text-[var(--text)] shadow-[0_8px_18px_rgba(245,183,0,0.35)] active:scale-[0.98] transition-transform"
+            >
+              <Search size={15} strokeWidth={2.8} />
+              Search
             </button>
+
+            {guestPickerOpen ? (
+              <div className="absolute left-0 top-[56px] z-30 w-full rounded-[16px] border border-[var(--border)] bg-white p-3 shadow-[var(--shadow-lg)]">
+                {[
+                  { label: 'Rooms', value: rooms, set: setRooms, min: 1, max: 6 },
+                  { label: 'Guests', value: guests, set: setGuests, min: 1, max: 20 },
+                ].map(({ label, value, set, min, max }) => (
+                  <div key={label} className="flex items-center justify-between py-2">
+                    <span className="text-[12px] font-extrabold">{label}</span>
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        disabled={value <= min}
+                        onClick={() => set(value - 1)}
+                        className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] disabled:opacity-30"
+                      >
+                        <Minus size={13} strokeWidth={3} />
+                      </button>
+                      <span className="w-5 text-center text-[13px] font-extrabold">{value}</span>
+                      <button
+                        type="button"
+                        disabled={value >= max}
+                        onClick={() => set(value + 1)}
+                        className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] disabled:opacity-30"
+                      >
+                        <Plus size={13} strokeWidth={3} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => setGuestPickerOpen(false)}
+                  className="mt-1 w-full rounded-[12px] bg-[var(--secondary)] py-2.5 text-[12px] font-extrabold text-[var(--primary-dark)]"
+                >
+                  Done
+                </button>
+              </div>
+            ) : null}
           </div>
         </section>
 
-        <SectionTitle title="Offers for you" />
-        <div className="grid grid-cols-3 gap-2">
-          {offerCards.map(({ icon, title, subtitle, code, tone }) => (
-            <div key={code} className="rounded-[15px] bg-white p-2.5 shadow-[0_8px_20px_rgba(15,23,42,0.06)]">
-              <span className={`flex h-8 w-8 items-center justify-center rounded-[10px] ${tone}`}>
-                {icon}
-              </span>
-              <p className="mt-2 text-[8.5px] font-black leading-tight">{title}</p>
-              <p className="mt-0.5 text-[7px] font-semibold text-slate-500">{subtitle}</p>
-              <p className="mt-2 rounded-full bg-slate-50 px-1.5 py-1 text-center text-[6.5px] font-black text-slate-600">Code: {code}</p>
-            </div>
-          ))}
-        </div>
-
-        <SectionTitle title="Popular Destinations" />
-        <div className="flex gap-2 overflow-x-auto pb-1">
-          {destinations.map(({ city, price, image, gradient }) => (
-            <button key={city} type="button" className="relative h-[105px] w-[84px] shrink-0 overflow-hidden rounded-[15px] bg-slate-900 text-left shadow-[0_10px_22px_rgba(15,23,42,0.12)]">
+        <SectionTitle
+          title="Popular Destinations"
+          actionLabel={searchedFor ? 'Clear' : 'View All'}
+          onAction={() => {
+            setSearchedFor('');
+            setShowAll(true);
+          }}
+        />
+        <div className="flex gap-2.5 overflow-x-auto pb-2 no-scrollbar">
+          {destinations.map(({ city, price, image }) => (
+            <button
+              key={city}
+              type="button"
+              onClick={() => pickDestination(city)}
+              className={`group relative h-[118px] w-[98px] shrink-0 overflow-hidden rounded-[16px] bg-slate-900 text-left shadow-[var(--shadow-sm)] ${
+                searchedFor === city ? 'ring-2 ring-[var(--primary)]' : ''
+              }`}
+            >
               <img src={image} alt={city} className="h-full w-full object-cover" />
-              <div className={`absolute inset-0 bg-gradient-to-t ${gradient}`} />
-              <div className="absolute bottom-2 left-2 right-2 text-white">
-                <p className="text-[10px] font-black">{city}</p>
-                <p className="text-[7.5px] font-bold">Starting Rs{price}</p>
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
+              <div className="absolute inset-x-2 bottom-2">
+                <div className="flex items-end justify-between gap-1">
+                  <div className="min-w-0">
+                    <p className="truncate text-[12px] font-extrabold leading-none text-white">{city}</p>
+                    <p className="mt-1 text-[9px] font-semibold leading-none text-white/80">From {rupees(price)}</p>
+                  </div>
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--primary)]">
+                    <ChevronRight size={12} strokeWidth={3} className="text-slate-950" />
+                  </span>
+                </div>
               </div>
             </button>
           ))}
         </div>
 
-        <SectionTitle title="Recommended Hotels" />
-        <div className="space-y-3 pb-4">
-          {hotels.map((hotel) => (
-            <button key={hotel.name} type="button" className="flex w-full gap-3 rounded-[17px] bg-white p-2.5 text-left shadow-[0_10px_24px_rgba(15,23,42,0.07)]">
-              <div className="relative h-[104px] w-[118px] shrink-0 overflow-hidden rounded-[14px] bg-slate-200">
-                <img src={hotel.image} alt={hotel.name} className="h-full w-full object-cover" />
-                <span className="absolute left-1.5 top-1.5 rounded-full bg-[#f5b700] px-2 py-1 text-[7px] font-black">{hotel.badge}</span>
-                <span className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-white/95">
-                  <Heart size={14} />
-                </span>
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="truncate text-[12px] font-black text-slate-950">{hotel.name}</h3>
-                  <span className="rounded-md bg-emerald-50 px-1.5 py-1 text-[7px] font-black text-emerald-700">{hotel.off}</span>
-                </div>
-                <p className="mt-1 flex items-center gap-1 text-[8px] font-black text-[#f5b700]">
-                  {Array.from({ length: 5 }).map((_, starIndex) => (
-                    <Star key={starIndex} size={8} className="fill-current" />
-                  ))}
-                  <span className="text-slate-500">{hotel.rating} ({hotel.reviews} review)</span>
-                </p>
-                <p className="mt-1 truncate text-[7.5px] font-semibold text-slate-500">{hotel.area} · {hotel.distance}</p>
-                <div className="mt-1.5 flex flex-wrap gap-1 text-[7px] font-bold text-slate-500">
-                  <span>Free Wi-Fi</span>
-                  <span>Breakfast</span>
-                  <span>Free Cancellation</span>
-                </div>
-                <div className="mt-2 flex items-end justify-between">
-                  <div className="text-right sm:text-left">
-                    <p className="text-[8px] font-bold text-slate-400 line-through">Rs{hotel.oldPrice.toLocaleString('en-IN')}</p>
-                    <p className="text-[15px] font-black leading-none">Rs{hotel.price.toLocaleString('en-IN')}</p>
-                    <p className="text-[7px] font-semibold text-slate-500">/ night</p>
-                  </div>
-                  <span className="rounded-[10px] bg-[#f5b700] px-3 py-2 text-[8px] font-black">View Rooms</span>
-                </div>
-              </div>
+        <div className="mb-2.5 mt-5 flex items-center justify-between px-1">
+          <h2 className="text-[17px] font-extrabold tracking-[-0.02em]">
+            {searchedFor ? `Stays in ${searchedFor}` : 'Recommended Hotels'}
+            <span className="ml-1.5 text-[11px] font-semibold text-[var(--text-light)]">
+              ({visibleHotels.length})
+            </span>
+          </h2>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setSortOpen((current) => !current)}
+              className="flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-white px-3 py-1.5 text-[11px] font-bold"
+            >
+              <SlidersHorizontal size={12} />
+              {SORTS.find((item) => item.id === sortBy)?.label.split(':')[0]}
             </button>
-          ))}
+            {sortOpen ? (
+              <div className="absolute right-0 top-[38px] z-30 w-[190px] rounded-[14px] border border-[var(--border)] bg-white p-1.5 shadow-[var(--shadow-lg)]">
+                {SORTS.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => {
+                      setSortBy(option.id);
+                      setSortOpen(false);
+                    }}
+                    className={`w-full rounded-[10px] px-3 py-2 text-left text-[11.5px] font-bold ${
+                      sortBy === option.id ? 'bg-[var(--secondary)] text-[var(--primary-dark)]' : ''
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="space-y-3 app-grid">
+          {listedHotels.map((hotel) => {
+            const liked = wishlist.includes(hotel.id);
+            const off = Math.round(((hotel.oldPrice - hotel.price) / hotel.oldPrice) * 100);
+            return (
+              <div
+                key={hotel.id}
+                className="flex gap-3 rounded-[18px] border border-[var(--border)] bg-white p-3 shadow-[var(--shadow-sm)]"
+              >
+                <div className="relative h-[124px] w-[108px] shrink-0 overflow-hidden rounded-[14px] bg-slate-200">
+                  <img src={hotel.image} alt={hotel.name} className="h-full w-full object-cover" />
+                  <span className="absolute left-1.5 top-1.5 rounded-full bg-[var(--primary)] px-2 py-0.5 text-[8.5px] font-extrabold">
+                    {hotel.badge}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => toggleWishlist(hotel.id)}
+                    aria-label={liked ? 'Remove from wishlist' : 'Save to wishlist'}
+                    className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-white/95 active:scale-90 transition-transform"
+                  >
+                    <Heart
+                      size={14}
+                      className={liked ? 'fill-rose-500 text-rose-500' : 'text-slate-500'}
+                    />
+                  </button>
+                </div>
+
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="min-w-0 flex-1 text-[14px] font-extrabold leading-tight">{hotel.name}</h3>
+                    <span className="shrink-0 rounded-[6px] bg-emerald-50 px-1.5 py-0.5 text-[9px] font-extrabold text-[var(--success)]">
+                      {off}% OFF
+                    </span>
+                  </div>
+
+                  <div className="mt-1 flex items-center gap-1.5">
+                    <StarRating value={hotel.rating} />
+                    <span className="text-[11px] font-extrabold">{hotel.rating}</span>
+                    <span className="text-[10px] font-medium text-[var(--text-light)]">({hotel.reviews} reviews)</span>
+                  </div>
+
+                  <p className="mt-1.5 flex items-start gap-1 text-[10px] font-medium leading-[1.35] text-[var(--text-light)]">
+                    <MapPin size={11} className="mt-[1px] shrink-0" />
+                    <span className="min-w-0">
+                      {hotel.area} <span className="text-slate-300">•</span> {hotel.distance}
+                    </span>
+                  </p>
+
+                  <div className="mt-1.5 flex flex-wrap gap-x-2.5 gap-y-1">
+                    {hotel.amenities.slice(0, 4).map((amenity) => {
+                      const Icon = getAmenityIcon(amenity);
+                      return (
+                        <span
+                          key={amenity}
+                          className="flex items-center gap-1 text-[9px] font-semibold text-[var(--text-light)]"
+                        >
+                          <Icon size={10} className="shrink-0 text-[var(--primary-dark)]" />
+                          {amenity}
+                        </span>
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-auto pt-2">
+                    <p className="flex flex-wrap items-baseline gap-x-1.5">
+                      <span className="text-[10px] font-medium text-slate-400 line-through">
+                        {rupees(hotel.oldPrice)}
+                      </span>
+                      <span className="text-[17px] font-extrabold leading-none">{rupees(hotel.price)}</span>
+                      <span className="text-[9px] font-medium text-[var(--text-light)]">
+                        / night{nights > 1 ? ` · ${rupees(hotel.price * nights)} total` : ''}
+                      </span>
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        navigate(`${routePrefix}/hotel/rooms`, {
+                          state: { hotel, checkIn, checkOut, rooms, guests },
+                        })
+                      }
+                      className="mt-2 w-full rounded-[10px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-2.5 text-[11.5px] font-extrabold shadow-[0_6px_14px_rgba(245,183,0,0.32)] active:scale-[0.98] transition-transform"
+                    >
+                      View Rooms
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {visibleHotels.length === 0 ? (
+            <div className="rounded-[16px] border border-dashed border-[var(--border)] bg-white px-4 py-10 text-center">
+              <BedDouble size={26} className="mx-auto text-slate-300" />
+              <p className="mt-2 text-[13px] font-extrabold">No stays in {searchedFor}</p>
+              <p className="mt-1 text-[11px] font-medium text-[var(--text-light)]">
+                Try another destination or clear the filter.
+              </p>
+              <button
+                type="button"
+                onClick={() => setSearchedFor('')}
+                className="mt-3 rounded-[12px] bg-[var(--secondary)] px-4 py-2 text-[11.5px] font-extrabold text-[var(--primary-dark)]"
+              >
+                Show all hotels
+              </button>
+            </div>
+          ) : null}
+
+          {!showAll && visibleHotels.length > 4 ? (
+            <button
+              type="button"
+              onClick={() => setShowAll(true)}
+              className="w-full rounded-[14px] border border-[var(--border)] bg-white py-3 text-[12px] font-extrabold shadow-[var(--shadow-sm)]"
+            >
+              Show all {visibleHotels.length} hotels
+            </button>
+          ) : null}
         </div>
       </main>
 
@@ -283,18 +656,5 @@ const HotelHome = () => {
     </div>
   );
 };
-
-const ClockIcon = ({ size = 14, strokeWidth = 2.4 }) => (
-  <CalendarDays size={size} strokeWidth={strokeWidth} />
-);
-
-const SectionTitle = ({ title }) => (
-  <div className="mb-2 mt-4 flex items-center justify-between px-1">
-    <h2 className="text-[14px] font-black text-slate-950">{title}</h2>
-    <button type="button" className="flex items-center gap-1 text-[9px] font-black text-slate-600">
-      View All <ChevronRight size={12} />
-    </button>
-  </div>
-);
 
 export default HotelHome;

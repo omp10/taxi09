@@ -59,6 +59,14 @@ const getCurrentRideIcon = (ride) => {
   return carIcon;
 };
 
+/**
+ * Banner placeholder. Height is set by an aspect ratio matching the real
+ * artwork so swapping in the image causes no layout shift.
+ */
+const BannerSkeleton = ({ ratio, full = false }) => (
+  <div className={`skeleton w-full ${full ? '' : 'rounded-[28px]'}`} style={{ aspectRatio: ratio }} />
+);
+
 const unwrapApiPayload = (response) => response?.data?.data || response?.data || response;
 
 const formatScheduledDateTime = (value) => {
@@ -113,8 +121,11 @@ const MobileHome = () => {
 
   const [currentRide, setCurrentRide] = useState(() => getCurrentRide());
   const [clockNow, setClockNow] = useState(() => Date.now());
-  const [topBanners, setTopBanners] = useState([{ image: STATIC_TOP_BANNER }]);
-  const [bottomBanners, setBottomBanners] = useState([{ image: STATIC_BOTTOM_BANNER }]);
+  const [topBanners, setTopBanners] = useState([]);
+  const [bottomBanners, setBottomBanners] = useState([]);
+  const [bannersFetched, setBannersFetched] = useState(false);
+  const [topImageReady, setTopImageReady] = useState(false);
+  const [bottomImageReady, setBottomImageReady] = useState(false);
 
   const resolveBannerImage = (img) => {
     if (!img) return '';
@@ -133,10 +144,14 @@ const MobileHome = () => {
         ]);
         const topResults = unwrapApiPayload(topRes)?.results || [];
         const bottomResults = unwrapApiPayload(bottomRes)?.results || [];
-        if (topResults.length) setTopBanners(topResults);
-        if (bottomResults.length) setBottomBanners(bottomResults);
+        setTopBanners(topResults.length ? topResults : [{ image: STATIC_TOP_BANNER }]);
+        setBottomBanners(bottomResults.length ? bottomResults : [{ image: STATIC_BOTTOM_BANNER }]);
       } catch (error) {
         console.log('Failed to hydrate homepage banners:', error);
+        setTopBanners([{ image: STATIC_TOP_BANNER }]);
+        setBottomBanners([{ image: STATIC_BOTTOM_BANNER }]);
+      } finally {
+        setBannersFetched(true);
       }
     };
     fetchBanners();
@@ -282,7 +297,7 @@ const MobileHome = () => {
       title: 'Self Drive',
       subtitle: 'Drive on your terms',
       image: RENTAL_SELF_DRIVE_IMAGE,
-      path: '/taxi/user/rental/type',
+      path: '/taxi/user/rental',
     },
     {
       icon: UserCheck,
@@ -301,11 +316,11 @@ const MobileHome = () => {
   ];
 
   const moreServices = [
-    { iconImage: '/taxi09_service_hotel.png', label: 'Hotel\nBooking', path: null },
+    { iconImage: '/taxi09_service_hotel.png', label: 'Hotel\nBooking', path: '/taxi/user/hotel' },
     { iconImage: '/taxi09_service_subscription.png', label: 'Monthly\nSubscription', path: '/taxi/user/profile/subscriptions' },
     { iconImage: '/taxi09_service_travel.png', label: 'Travel\nPackages', path: '/taxi/user/cab/spiritual' },
     { iconImage: '/taxi09_service_bookings.png', label: 'My\nBookings', path: '/taxi/user/activity' },
-    { iconImage: '/taxi09_service_attach_car.png', label: 'Attach\nCar', path: '/taxi/driver/login' },
+    { iconImage: '/taxi09_service_travel.png', label: 'International\nTrips', path: '/taxi/user/international' },
     { iconImage: '/taxi09_service_driver.png', label: 'Driver\nRegistration', path: '/taxi/driver/login' },
   ];
 
@@ -398,12 +413,15 @@ const MobileHome = () => {
           </div>
         )}
 
-        <section className="mt-1">
+        <section className="-mx-4 mt-1">
+          {!bannersFetched || !topImageReady ? <BannerSkeleton ratio="16 / 9" full /> : null}
           <div
             onTouchStart={handleTouchStart}
             onTouchEnd={(e) => handleTouchEnd(e, topBanners.length, setTopIndex)}
             onClick={() => openBanner(topBanners[topIndex], '/taxi/user/ride/select-location')}
-            className="relative w-full cursor-pointer touch-pan-y select-none overflow-hidden rounded-[28px] border border-[#f0eadf] bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)]"
+            className={`relative w-full cursor-pointer touch-pan-y select-none overflow-hidden bg-white ${
+              bannersFetched && topImageReady ? 'block' : 'hidden'
+            }`}
           >
             <div
               className="flex w-full transition-transform duration-500 ease-out"
@@ -416,6 +434,8 @@ const MobileHome = () => {
                   alt="Taxi09 offer banner"
                   className="block h-auto w-full shrink-0"
                   draggable={false}
+                  onLoad={idx === 0 ? () => setTopImageReady(true) : undefined}
+                  onError={idx === 0 ? () => setTopImageReady(true) : undefined}
                 />
               ))}
             </div>
@@ -503,11 +523,14 @@ const MobileHome = () => {
         </section>
 
         <section className="mt-7">
+          {!bannersFetched || !bottomImageReady ? <BannerSkeleton ratio="16 / 7" /> : null}
           <div
             onTouchStart={handleTouchStart}
             onTouchEnd={(e) => handleTouchEnd(e, bottomBanners.length, setBottomIndex)}
             onClick={() => openBanner(bottomBanners[bottomIndex], '/taxi/user/cab/spiritual')}
-            className="relative w-full cursor-pointer touch-pan-y select-none overflow-hidden rounded-[28px] border border-[#f1ede6] bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)]"
+            className={`relative w-full cursor-pointer touch-pan-y select-none overflow-hidden rounded-[28px] border border-[#f1ede6] bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)] ${
+              bannersFetched && bottomImageReady ? 'block' : 'hidden'
+            }`}
           >
             <div
               className="flex w-full transition-transform duration-500 ease-out"
@@ -520,6 +543,8 @@ const MobileHome = () => {
                   alt="Taxi09 travel packages banner"
                   className="block h-auto w-full shrink-0"
                   draggable={false}
+                  onLoad={idx === 0 ? () => setBottomImageReady(true) : undefined}
+                  onError={idx === 0 ? () => setBottomImageReady(true) : undefined}
                 />
               ))}
             </div>

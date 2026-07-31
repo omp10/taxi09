@@ -2,17 +2,17 @@ import React from 'react';
 
 const ActivityTabs = ({ tabs, activeTab, onChange }) => {
   return (
-    <div className="border-b border-slate-200 bg-white px-5 py-3">
-      <div className="inline-flex max-w-full gap-2 overflow-x-auto no-scrollbar rounded-full border border-slate-200 bg-slate-50 p-1">
+    <div className="sticky top-0 z-20 -mt-3 rounded-t-[18px] bg-white px-3 pb-2.5 pt-3 shadow-[0_4px_14px_rgba(15,23,42,0.05)]">
+      <div className="flex gap-2 overflow-x-auto no-scrollbar">
         {tabs.map((tab, index) => (
           <button
             key={`${String(tab || '').trim() || 'tab'}-${index}`}
             type="button"
             onClick={() => onChange(tab)}
-            className={`shrink-0 rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors active:scale-[0.99] ${
+            className={`shrink-0 rounded-full px-4 py-2 text-[10.5px] font-extrabold uppercase tracking-[0.1em] transition-colors ${
               activeTab === tab
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-500 hover:text-slate-700'
+                ? 'bg-[var(--primary)] text-[var(--text)] shadow-[0_6px_14px_rgba(245,183,0,0.32)]'
+                : 'bg-slate-50 text-[var(--text-light)]'
             }`}
           >
             {tab}
