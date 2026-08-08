@@ -840,8 +840,24 @@ const AdminLayout = () => {
             icon: ImageIcon,
             label: 'Bookings',
             subItems: [
+              // Every product on one screen; each product also keeps its own
+              // bookings inside its own group, the way Rental and Bus already do.
               { label: 'All Bookings', path: '/admin/bookings/all', permission: 'promotions.view' },
+            ],
+          },
+          {
+            icon: Home,
+            label: 'Hotel Management',
+            subItems: [
+              { label: 'Hotels', path: '/admin/content/hotels', permission: 'promotions.view' },
               { label: 'Hotel Bookings', path: '/admin/bookings/hotels', permission: 'promotions.view' },
+            ],
+          },
+          {
+            icon: Package,
+            label: 'Tours & Packages',
+            subItems: [
+              { label: 'Travel Packages', path: '/admin/content/travel-packages', permission: 'promotions.view' },
               { label: 'Package Bookings', path: '/admin/bookings/packages', permission: 'promotions.view' },
             ],
           },
@@ -849,8 +865,6 @@ const AdminLayout = () => {
             icon: FileText,
             label: 'App Content',
             subItems: [
-              { label: 'Travel Packages', path: '/admin/content/travel-packages', permission: 'promotions.view' },
-              { label: 'Hotels', path: '/admin/content/hotels', permission: 'promotions.view' },
               { label: 'Drivers for Hire', path: '/admin/content/hire-drivers', permission: 'promotions.view' },
               { label: 'Membership', path: '/admin/content/membership', permission: 'promotions.view' },
               { label: 'Attached Vehicles', path: '/admin/content/attached-vehicles', permission: 'promotions.view' },

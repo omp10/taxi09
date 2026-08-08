@@ -27,6 +27,7 @@ import { RentalBookingRequest } from '../../admin/models/RentalBookingRequest.js
 import { priceRentalBooking } from '../services/rentalPricingService.js';
 import { isRentalVehicleAvailable } from '../services/rentalAvailabilityService.js';
 import { getMemberDiscountPercent } from '../services/membershipService.js';
+import { priceBusBooking } from '../services/busPricingService.js';
 import { priceHireDriverTrip } from '../services/hireDriverPricingService.js';
 import { RentalQuoteRequest } from '../../admin/models/RentalQuoteRequest.js';
 import { RentalVehicleType } from '../../admin/models/RentalVehicleType.js';
@@ -837,6 +838,17 @@ const serializeBusSearchResult = ({ busService, schedule, availableSeats, travel
   id: `${String(busService._id)}:${String(schedule.id)}:${travelDate}`,
   busServiceId: String(busService._id),
   scheduleId: String(schedule.id || ''),
+  // The extras this service offers, so the booking screen renders the
+  // catalogue rather than carrying its own copy.
+  addOns: (busService.addOns || [])
+    .filter((item) => item?.active !== false)
+    .map((item) => ({
+      id: item.id,
+      label: item.label,
+      hint: item.hint || '',
+      price: Number(item.price || 0),
+      perSeat: Boolean(item.perSeat),
+    })),
   operator: busService.operatorName || '',
   operatorName: busService.operatorName || '',
   busName: busService.busName || '',
@@ -3325,25 +3337,6 @@ export const getBusSeatLayout = async (req, res) => {
 };
 
 // Prices live here, not on the client, so a tampered payload cannot discount the order.
-const BUS_ADD_ON_CATALOG = {
-  insurance: { id: 'insurance', label: 'Travel Insurance', price: 49 },
-  meal_veg: { id: 'meal_veg', label: 'Meal (Veg)', price: 99 },
-};
-
-const resolveBusAddOns = (rawAddOns) => {
-  const ids = Array.isArray(rawAddOns) ? rawAddOns : [];
-  const seen = new Set();
-  const resolved = [];
-
-  ids.forEach((entry) => {
-    const id = toCleanString(typeof entry === 'string' ? entry : entry?.id);
-    if (!id || seen.has(id) || !BUS_ADD_ON_CATALOG[id]) return;
-    seen.add(id);
-    resolved.push({ ...BUS_ADD_ON_CATALOG[id] });
-  });
-
-  return resolved;
-};
 
 export const createBusBookingOrder = async (req, res) => {
   await ensureBusServiceEnabled();
@@ -3391,9 +3384,6 @@ export const createBusBookingOrder = async (req, res) => {
   validatePhone(passenger.phone);
   validateEmail(passenger.email);
 
-  const addOns = resolveBusAddOns(req.body?.addOns);
-  const addOnsAmount = addOns.reduce((sum, item) => sum + Number(item.price || 0), 0);
-
   const busService = await BusService.findById(busServiceId).lean();
   if (!busService || String(busService.status || '') !== 'active') {
     throw new ApiError(404, 'Bus service not found');
@@ -3413,11 +3403,18 @@ export const createBusBookingOrder = async (req, res) => {
     throw new ApiError(400, `Seat ${invalidSeat} is not available for booking`);
   }
 
-  const seatAmount = seatIds.reduce(
-    (sum, seatId) => sum + resolveBusSeatPrice(busService, seatCellMap.get(seatId)),
-    0,
-  );
-  const amount = Math.round((seatAmount + addOnsAmount) * 100) / 100;
+  // Every figure comes from the shared pricing service: seat prices from the
+  // service's blueprint, extras from its own catalogue, and the membership
+  // discount read from the database rather than taken from the request.
+  const quote = priceBusBooking({
+    seatPrices: seatIds.map((seatId) => resolveBusSeatPrice(busService, seatCellMap.get(seatId))),
+    addOnCatalog: busService.addOns,
+    addOnIds: req.body?.addOns,
+    memberDiscountPercent: await getMemberDiscountPercent(userId),
+  });
+
+  const { addOns } = quote;
+  const amount = quote.totalAmount;
   if (amount <= 0) {
     throw new ApiError(400, 'Bus fare is not configured');
   }
@@ -3458,6 +3455,10 @@ export const createBusBookingOrder = async (req, res) => {
     passenger,
     passengers,
     addOns,
+    seatAmount: quote.seatAmount,
+    addOnsTotal: quote.addOnsTotal,
+    memberDiscountPercent: quote.memberDiscountPercent,
+    memberDiscount: quote.memberDiscount,
     amount,
     currency: busService.fareCurrency || 'INR',
     status: 'pending',

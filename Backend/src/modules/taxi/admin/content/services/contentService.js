@@ -119,7 +119,10 @@ export const updateTravelPackage = async (id, payload) => {
   if (!existing) throw new ApiError(404, 'Package not found');
 
   const normalized = normalizePackagePayload({ ...existing.toObject(), ...payload });
-  if (payload.slug || payload.title) {
+  // Only a slug the admin actually typed changes the address. Regenerating it
+  // from a renamed title would silently 404 every link already shared, and
+  // orphan the slug snapshotted on past bookings.
+  if (payload.slug) {
     normalized.slug = await ensureUniqueSlug(TravelPackage, payload.slug || normalized.title, id);
   }
 
@@ -274,7 +277,10 @@ export const updateHotel = async (id, payload) => {
   if (!existing) throw new ApiError(404, 'Hotel not found');
 
   const normalized = normalizeHotelPayload({ ...existing.toObject(), ...payload });
-  if (payload.slug || payload.name) {
+  // Only a slug the admin actually typed changes the address. Regenerating it
+  // from a renamed title would silently 404 every link already shared, and
+  // orphan the slug snapshotted on past bookings.
+  if (payload.slug) {
     normalized.slug = await ensureUniqueSlug(Hotel, payload.slug || normalized.name, id);
   }
 
@@ -405,7 +411,10 @@ export const updateHireDriver = async (id, payload) => {
   if (!existing) throw new ApiError(404, 'Driver not found');
 
   const normalized = normalizeHireDriverPayload({ ...existing.toObject(), ...payload });
-  if (payload.slug || payload.name) {
+  // Only a slug the admin actually typed changes the address. Regenerating it
+  // from a renamed title would silently 404 every link already shared, and
+  // orphan the slug snapshotted on past bookings.
+  if (payload.slug) {
     normalized.slug = await ensureUniqueSlug(HireDriver, payload.slug || normalized.name, id);
   }
 
@@ -501,7 +510,10 @@ export const updateMembershipPlan = async (id, payload) => {
   if (!existing) throw new ApiError(404, 'Membership plan not found');
 
   const normalized = normalizeMembershipPlanPayload({ ...existing.toObject(), ...payload });
-  if (payload.slug || payload.name) {
+  // Only a slug the admin actually typed changes the address. Regenerating it
+  // from a renamed title would silently 404 every link already shared, and
+  // orphan the slug snapshotted on past bookings.
+  if (payload.slug) {
     normalized.slug = await ensureUniqueSlug(MembershipPlan, payload.slug || normalized.name, id);
   }
 

@@ -148,6 +148,11 @@ const busBookingSchema = new mongoose.Schema(
       ],
       default: [],
     },
+    // What the booking was made of, so a lower total is explainable.
+    seatAmount: { type: Number, default: 0, min: 0 },
+    addOnsTotal: { type: Number, default: 0, min: 0 },
+    memberDiscountPercent: { type: Number, default: 0, min: 0, max: 100 },
+    memberDiscount: { type: Number, default: 0, min: 0 },
     amount: {
       type: Number,
       default: 0,

@@ -355,6 +355,25 @@ const busServiceSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    // Extras offered with this service. Priced from here, never from the
+    // request, so a client can only ever choose an id.
+    addOns: {
+      type: [
+        new mongoose.Schema(
+          {
+            id: { type: String, required: true, trim: true },
+            label: { type: String, required: true, trim: true },
+            hint: { type: String, default: '', trim: true },
+            price: { type: Number, default: 0, min: 0 },
+            // A per-seat extra (a meal) bills per passenger; a flat one does not.
+            perSeat: { type: Boolean, default: false },
+            active: { type: Boolean, default: true },
+          },
+          { _id: false },
+        ),
+      ],
+      default: [],
+    },
     adminCommissionPercentage: {
       type: Number,
       default: 0,

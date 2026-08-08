@@ -19,10 +19,9 @@ const getRoutePrefix = (pathname = '') => (pathname.startsWith('/taxi/user') ? '
 
 // Ids and prices must match BUS_ADD_ON_CATALOG on the server, which is the
 // authority on pricing - these values are display only.
-const ADD_ONS = [
-  { id: 'insurance', label: 'Travel Insurance', hint: 'Secure your journey', price: 49, icon: ShieldCheck },
-  { id: 'meal_veg', label: 'Meal (Veg)', hint: 'Dinner on board', price: 99, icon: Utensils },
-];
+// Extras come from the bus service itself. Only the icon stays here, since an
+// admin sets a label and a price, not a React component.
+const ADD_ON_ICONS = { insurance: ShieldCheck, meal_veg: Utensils };
 
 const GENDERS = ['Male', 'Female', 'Other'];
 
@@ -236,10 +235,14 @@ const BusDetails = () => {
       current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
     );
 
-  const addOnsTotal = ADD_ONS.filter((item) => selectedAddOns.includes(item.id)).reduce(
-    (sum, item) => sum + item.price,
-    0,
-  );
+  const availableAddOns = Array.isArray(bus?.addOns) ? bus.addOns : [];
+  const seatCount = (selectedSeats || []).length || 1;
+
+  // Mirrors the server's rule: a per-seat extra bills once per passenger. The
+  // figure below is only a preview - the amount charged is the server's.
+  const addOnsTotal = availableAddOns
+    .filter((item) => selectedAddOns.includes(item.id))
+    .reduce((sum, item) => sum + Number(item.price || 0) * (item.perSeat ? seatCount : 1), 0);
   const payableAmount = Number(totalFare || 0) + addOnsTotal;
   const isSleeperBus = String(bus?.type || '').toLowerCase().includes('sleeper');
   const hasRating = Number(bus?.ratingCount || 0) > 0 && Number(bus?.rating || 0) > 0;
@@ -514,7 +517,8 @@ const BusDetails = () => {
             Add Ons <span className="text-[11px] font-medium text-[var(--text-light)]">(Optional)</span>
           </p>
           <div className="mt-2.5 space-y-2">
-            {ADD_ONS.map(({ id, label, hint, price, icon: Icon }) => {
+            {availableAddOns.map(({ id, label, hint, price, perSeat }) => {
+              const Icon = ADD_ON_ICONS[id] || ShieldCheck;
               const checked = selectedAddOns.includes(id);
               return (
                 <button
@@ -530,7 +534,15 @@ const BusDetails = () => {
                     <span className="block text-[12px] font-extrabold leading-tight">{label}</span>
                     <span className="block text-[9.5px] font-medium text-[var(--text-light)]">{hint}</span>
                   </span>
-                  <span className="shrink-0 text-[12px] font-extrabold">Rs{price}</span>
+                  <span className="shrink-0 text-right text-[12px] font-extrabold">
+                    Rs{perSeat ? Number(price) * seatCount : price}
+                    {/* A per-seat extra costs more with more passengers - say so. */}
+                    {perSeat && seatCount > 1 ? (
+                      <span className="block text-[9px] font-medium text-[var(--text-light)]">
+                        Rs{price} x {seatCount}
+                      </span>
+                    ) : null}
+                  </span>
                   <span
                     className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border-2 ${
                       checked ? 'border-[var(--primary-dark)] bg-[var(--primary)]' : 'border-[var(--border)] bg-white'
@@ -559,7 +571,7 @@ const BusDetails = () => {
               </span>
               <span>Rs{Number(totalFare || 0)}</span>
             </div>
-            {ADD_ONS.filter((item) => selectedAddOns.includes(item.id)).map((item) => (
+            {availableAddOns.filter((item) => selectedAddOns.includes(item.id)).map((item) => (
               <div key={item.id} className="flex items-center justify-between">
                 <span className="text-[var(--text-light)]">{item.label}</span>
                 <span>Rs{item.price}</span>
