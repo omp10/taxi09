@@ -19,12 +19,20 @@ import {
  * the service tiles reuse the same images the mobile home already ships.
  */
 
-const STATS = [
-  { icon: Users, value: '10,000+', label: 'Happy Customers' },
-  { icon: Car, value: '500+', label: 'Cars Available' },
-  { icon: MapPin, value: '50+', label: 'Cities Covered' },
-  { icon: Headphones, value: '24/7', label: 'Customer Support' },
-];
+/**
+ * The strip is built from counts the server actually holds. Only "24/7" is
+ * fixed, because it describes the service rather than measuring it, and a
+ * tile with nothing to show is left out rather than padded with a guess.
+ */
+const buildStats = (stats) =>
+  [
+    { icon: Users, value: stats.customers, label: stats.customers === 1 ? 'Customer' : 'Customers' },
+    { icon: Car, value: stats.rentalVehicles, label: 'Cars for hire' },
+    { icon: MapPin, value: stats.cities, label: stats.cities === 1 ? 'City covered' : 'Cities covered' },
+  ]
+    .filter((item) => Number(item.value) > 0)
+    .map((item) => ({ ...item, value: Number(item.value).toLocaleString('en-IN') }))
+    .concat([{ icon: Headphones, value: '24/7', label: 'Customer support' }]);
 
 const DesktopHome = () => {
   const navigate = useNavigate();
@@ -32,9 +40,16 @@ const DesktopHome = () => {
   const [banners, setBanners] = useState([]);
   const [search, setSearch] = useState({ pickup: '', drop: '', date: '', time: '' });
   const [fleet, setFleet] = useState([]);
+  const [platformStats, setPlatformStats] = useState(null);
 
   // Hero artwork is admin-managed through the same banner feed the mobile
   // home uses, so uploading a top banner updates both surfaces.
+  useEffect(() => {
+    api.get('/users/platform-stats')
+      .then((response) => setPlatformStats(response?.data || null))
+      .catch(() => {});
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
     api
@@ -117,7 +132,13 @@ const DesktopHome = () => {
                   4.9
                 </span>
               </div>
-              <span className="text-[15px] font-semibold text-[var(--dh-text)]">Trusted by 10,000+ Happy Customers</span>
+              {/* The count is the real one, so the badge is dropped until there
+                  is a figure to stand behind. */}
+              <span className="text-[15px] font-semibold text-[var(--dh-text)]">
+                {platformStats?.customers > 0
+                  ? `Trusted by ${Number(platformStats.customers).toLocaleString('en-IN')} customers`
+                  : 'Trusted by travellers across India'}
+              </span>
             </div>
 
             <div className="mt-8 flex items-center gap-6">
@@ -266,8 +287,8 @@ const DesktopHome = () => {
 
       {/* ------------------------------------------------------------- Stats */}
       <section className="mx-auto mt-10 max-w-[1440px] px-8 pb-16 xl:px-12">
-        <div className="grid grid-cols-4 gap-6 rounded-[20px] bg-[#FFF9E6] px-10 py-7">
-          {STATS.map(({ icon: Icon, value, label }) => (
+        <div className="flex flex-wrap justify-between gap-6 rounded-[20px] bg-[#FFF9E6] px-10 py-7">
+          {buildStats(platformStats || {}).map(({ icon: Icon, value, label }) => (
             <div key={label} className="flex items-center gap-4">
               <Icon size={34} className="shrink-0 text-[#F5B700]" strokeWidth={2} />
               <div>

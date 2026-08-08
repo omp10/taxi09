@@ -512,3 +512,40 @@ export const adminListCertificates = asyncHandler(async (_req, res) => {
   const { Certificate } = await import('../models/Internship.js');
   ok(res, { results: await Certificate.find().sort({ issuedAt: -1 }).limit(500).lean() });
 });
+
+/* ------------------------------------------------------------ platform */
+
+/**
+ * Headline counts for the marketing strip.
+ *
+ * Counted from the database rather than written into the page, so the figures
+ * cannot claim more than the platform actually has. A count of zero is returned
+ * as zero; it is the page's job to hide a tile it cannot fill.
+ */
+export const getPlatformStats = asyncHandler(async (_req, res) => {
+  const [{ User }, { RentalVehicleType }, { Ride }] = await Promise.all([
+    import('../../../user/models/User.js'),
+    import('../../../admin/models/RentalVehicleType.js'),
+    import('../../../user/models/Ride.js'),
+  ]);
+  const { Hotel } = await import('../models/Hotel.js');
+  const { TravelPackage } = await import('../models/TravelPackage.js');
+
+  const [customers, rentalVehicles, hotels, packages, ridesCompleted, hotelCities] = await Promise.all([
+    User.countDocuments({}),
+    RentalVehicleType.countDocuments({ status: 'active' }),
+    Hotel.countDocuments({ active: true }),
+    TravelPackage.countDocuments({ active: true }),
+    Ride.countDocuments({ status: 'completed' }).catch(() => 0),
+    Hotel.distinct('city', { active: true }),
+  ]);
+
+  ok(res, {
+    customers,
+    rentalVehicles,
+    hotels,
+    packages,
+    ridesCompleted,
+    cities: hotelCities.filter(Boolean).length,
+  });
+});

@@ -101,6 +101,7 @@ import {
   postTravelStory,
   postTravelStoryLike,
   getMyTravelStories,
+  getPlatformStats,
   getPublicInternshipTracks,
   getPublicInternshipStats,
   getMyInternshipApplications,
@@ -158,6 +159,7 @@ userRouter.post('/travel-stories/:slug/like', authenticate(['user']), postTravel
 userRouter.get('/travel-stories/:slug', getPublicTravelStoryBySlug);
 
 // Internship programme and courses. Reading is public; applying needs a session.
+userRouter.get('/platform-stats', getPlatformStats);
 userRouter.get('/internship/tracks', getPublicInternshipTracks);
 userRouter.get('/internship/stats', getPublicInternshipStats);
 userRouter.get('/internship/mine', authenticate(['user']), getMyInternshipApplications);
