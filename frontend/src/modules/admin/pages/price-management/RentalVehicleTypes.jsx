@@ -474,6 +474,48 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
     }));
   };
 
+  /**
+   * Every distinct add-on already defined across the fleet, so a common extra
+   * can be ticked onto another car instead of being retyped. Derived from the
+   * vehicles already loaded - no separate catalogue to keep in step.
+   */
+  const addOnLibrary = useMemo(() => {
+    const seen = new Map();
+    items.forEach((vehicle) => {
+      (vehicle.addOns || []).forEach((addOn) => {
+        const label = String(addOn?.label || '').trim();
+        if (!label || seen.has(label.toLowerCase())) return;
+        seen.set(label.toLowerCase(), {
+          label,
+          price: Number(addOn.price || 0),
+          originalPrice: Number(addOn.originalPrice || 0),
+          description: String(addOn.description || ''),
+          icon: addOn.icon || 'Package',
+        });
+      });
+    });
+    return [...seen.values()];
+  }, [items]);
+
+  /** Copies a library entry onto this vehicle; the price stays editable after. */
+  const applyLibraryAddOn = (item) => {
+    setFormData((current) => ({
+      ...current,
+      addOns: [
+        ...(current.addOns || []),
+        {
+          id: `addon-${(current.addOns?.length || 0) + 1}`,
+          label: item.label,
+          description: item.description,
+          price: item.price,
+          originalPrice: item.originalPrice,
+          icon: item.icon,
+          active: true,
+        },
+      ],
+    }));
+  };
+
   const addAddOn = () => {
     setFormData((current) => ({
       ...current,
@@ -1571,6 +1613,41 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
                 </button>
               </div>
 
+              {/* Pick from add-ons already defined on other vehicles, so a
+                  common extra does not have to be retyped for every car. */}
+              {addOnLibrary.length > 0 ? (
+                <div className="mt-3 rounded-xl bg-slate-50 p-3">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-slate-500">
+                    Use one you already offer
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {addOnLibrary.map((item) => {
+                      const alreadyOn = (formData.addOns || []).some(
+                        (existing) => String(existing.label).trim().toLowerCase() === item.label.toLowerCase(),
+                      );
+                      return (
+                        <button
+                          key={item.label}
+                          type="button"
+                          disabled={alreadyOn}
+                          onClick={() => applyLibraryAddOn(item)}
+                          className={`rounded-lg border px-2.5 py-1.5 text-[12px] font-semibold transition-colors ${
+                            alreadyOn
+                              ? 'border-slate-200 bg-white text-slate-400'
+                              : 'border-slate-300 bg-white text-slate-700 hover:border-amber-400 hover:bg-amber-50'
+                          }`}
+                        >
+                          {alreadyOn ? '✓ ' : '+ '}{item.label}
+                          <span className="ml-1 text-slate-400">₹{item.price}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <p className="mt-2 text-[11px] text-slate-500">
+                    Added to this vehicle only. Change the price afterwards and it stays specific to this car.
+                  </p>
+                </div>
+              ) : null}
               {(formData.addOns || []).length === 0 ? (
                 <p className="mt-4 rounded-xl bg-slate-50 px-3 py-4 text-center text-xs text-slate-500">
                   No add-ons yet. Customers will not see an add-ons section for this vehicle.
