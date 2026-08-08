@@ -283,7 +283,9 @@ const DesktopHome = () => {
             </button>
           </div>
 
-          <div className="grid grid-cols-6 gap-3.5">
+          {/* items-start, so one long caption does not leave every other card with a
+              void between its text and its arrow. */}
+          <div className="grid grid-cols-6 items-start gap-3.5">
             {SERVICES.map((service, index) => (
               <ServiceCard key={service.title} {...service} badge={index === 0 ? 'Popular' : undefined} />
             ))}
