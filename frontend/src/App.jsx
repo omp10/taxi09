@@ -48,6 +48,7 @@ const RideTracking = lazy(() => import('./modules/user/pages/ride/RideTracking')
 const RideComplete = lazy(() => import('./modules/user/pages/ride/RideComplete'));
 const Chat = lazy(() => import('./modules/user/pages/ride/Chat'));
 const Support = lazy(() => import('./modules/user/pages/ride/Support'));
+const SupportRoute = lazy(() => import('./modules/user/pages/support/SupportRoute'));
 const RideDetail = lazy(() => import('./modules/user/pages/ride/RideDetail'));
 
 // Parcel Module Pages
@@ -904,7 +905,7 @@ function App() {
                 element={<RideComplete />}
               />
               <Route path="/taxi/user/ride/chat" element={<Chat />} />
-              <Route path="/taxi/user/support" element={<Support />} />
+              <Route path="/taxi/user/support" element={<SupportRoute />} />
               <Route
                 path="/taxi/user/ride/detail/:id"
                 element={<RideDetail />}
