@@ -16,6 +16,7 @@ export const NAV_LINKS = [
   { label: 'Bus Booking', path: '/taxi/user/bus' },
   { label: 'Hotel Booking', path: '/taxi/user/hotel' },
   { label: 'Tour Packages', path: '/taxi/user/tours' },
+  { label: 'Travel Stories', path: '/taxi/user/stories' },
   { label: 'Contact Us', path: '/taxi/user/support' },
 ];
 

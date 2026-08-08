@@ -27,6 +27,9 @@ import {
   getAdminMemberships,
   getAdminAttachedVehicles,
   updateAdminAttachedVehicle,
+  getAdminTravelStories,
+  adminUpdateTravelStory,
+  adminDeleteTravelStory,
 } from '../controllers/contentController.js';
 import {
   getAdminAllBookings,
@@ -83,5 +86,10 @@ contentRouter.get('/admin/memberships', getAdminMemberships);
 // Cars owners have offered to the platform
 contentRouter.get('/admin/attached-vehicles', getAdminAttachedVehicles);
 contentRouter.patch('/admin/attached-vehicles/:id', updateAdminAttachedVehicle);
+
+// Travel stories, including moderating reader submissions
+contentRouter.get('/admin/travel-stories', getAdminTravelStories);
+contentRouter.patch('/admin/travel-stories/:id', adminUpdateTravelStory);
+contentRouter.delete('/admin/travel-stories/:id', adminDeleteTravelStory);
 
 export default contentRouter;

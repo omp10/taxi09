@@ -22,6 +22,9 @@ import './App.css';
 const UserHome = lazy(() => import('./modules/user/pages/Home'));
 const UserMembership = lazy(() => import('./modules/user/pages/membership/Membership'));
 const UserAttachCar = lazy(() => import('./modules/user/pages/attach/AttachCar'));
+const UserTravelStories = lazy(() => import('./modules/user/pages/stories/TravelStoriesRoute'));
+const UserTravelStoryDetail = lazy(() => import('./modules/user/pages/stories/TravelStoryDetail'));
+const UserCreateTravelStory = lazy(() => import('./modules/user/pages/stories/CreateTravelStory'));
 const UserMembershipCheckout = lazy(() => import('./modules/user/pages/membership/MembershipCheckout'));
 const WithDriverHome = lazy(() => import('./modules/user/pages/WithDriverHome'));
 const WithDriverRoute = lazy(() => import('./modules/user/pages/withdriver/WithDriverRoute'));
@@ -262,6 +265,7 @@ const AdminPackageBookings = lazy(() => import('./modules/admin/pages/bookings/P
 const AdminHotels = lazy(() => import('./modules/admin/pages/content/HotelsAdmin'));
 const AdminMembership = lazy(() => import('./modules/admin/pages/content/MembershipAdmin'));
 const AdminAttachedVehicles = lazy(() => import('./modules/admin/pages/content/AttachedVehiclesAdmin'));
+const AdminTravelStories = lazy(() => import('./modules/admin/pages/content/TravelStoriesAdmin'));
 const AdminContentBlocks = lazy(() => import('./modules/admin/pages/content/ContentBlocksAdmin'));
 const AdminHireDrivers = lazy(() => import('./modules/admin/pages/content/HireDriversAdmin'));
 const AdminRentalCoupons = lazy(() => import('./modules/admin/pages/promotions/RentalCoupons'));
@@ -1014,6 +1018,9 @@ function App() {
               <Route path="/taxi/user/profile" element={<Profile />} />
               <Route path="/taxi/user/membership" element={<UserMembership />} />
               <Route path="/taxi/user/attach-car" element={<UserAttachCar />} />
+              <Route path="/taxi/user/stories" element={<UserTravelStories />} />
+              <Route path="/taxi/user/stories/new" element={<UserCreateTravelStory />} />
+              <Route path="/taxi/user/stories/:slug" element={<UserTravelStoryDetail />} />
               <Route path="/taxi/user/membership/checkout" element={<UserMembershipCheckout />} />
               <Route path="/taxi/user/wallet" element={<Wallet />} />
               <Route
@@ -1384,6 +1391,7 @@ function App() {
                 <Route path="content/hotels" element={<AdminHotels />} />
                 <Route path="content/membership" element={<AdminMembership />} />
                 <Route path="content/attached-vehicles" element={<AdminAttachedVehicles />} />
+                <Route path="content/travel-stories" element={<AdminTravelStories />} />
                 <Route path="content/blocks" element={<AdminContentBlocks />} />
                 <Route path="content/hire-drivers" element={<AdminHireDrivers />} />
                 <Route

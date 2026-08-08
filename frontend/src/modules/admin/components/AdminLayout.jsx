@@ -852,6 +852,7 @@ const AdminLayout = () => {
               { label: 'Drivers for Hire', path: '/admin/content/hire-drivers', permission: 'promotions.view' },
               { label: 'Membership', path: '/admin/content/membership', permission: 'promotions.view' },
               { label: 'Attached Vehicles', path: '/admin/content/attached-vehicles', permission: 'promotions.view' },
+              { label: 'Travel Stories', path: '/admin/content/travel-stories', permission: 'promotions.view' },
               { label: 'Page Content', path: '/admin/content/blocks', permission: 'promotions.view' },
             ],
           },

@@ -94,6 +94,13 @@ import {
   postAttachedVehicle,
   patchAttachedVehicle,
   postAttachedVehicleSubmit,
+  getPublicTravelStories,
+  getPublicTravelStoryBySlug,
+  getTravelStoryFacets,
+  getTravelStoryPins,
+  postTravelStory,
+  postTravelStoryLike,
+  getMyTravelStories,
 } from '../../admin/content/controllers/contentController.js';
 import { getAppBootstrap, getAppModules, getGeneralSettingsCategory, getGoodsTypes, getPublicBanners, getPublicRideFares, getPublicRentalVehicleCatalog, getPublicRentalVehicleSubcategories, getPublicVehicleTypeCatalog } from '../../admin/controllers/adminController.js';
 import { triggerUserSosAlert } from '../../safety/controllers/safetyController.js';
@@ -132,6 +139,16 @@ userRouter.get('/attached-vehicles/:id', authenticate(['user']), getMyAttachedVe
 userRouter.post('/attached-vehicles', authenticate(['user']), postAttachedVehicle);
 userRouter.patch('/attached-vehicles/:id', authenticate(['user']), patchAttachedVehicle);
 userRouter.post('/attached-vehicles/:id/submit', authenticate(['user']), postAttachedVehicleSubmit);
+
+// Travel stories. Reading is public; writing and liking need a session.
+// The static segments are declared before /:slug so they cannot be shadowed.
+userRouter.get('/travel-stories/facets', getTravelStoryFacets);
+userRouter.get('/travel-stories/pins', getTravelStoryPins);
+userRouter.get('/travel-stories/mine', authenticate(['user']), getMyTravelStories);
+userRouter.get('/travel-stories', getPublicTravelStories);
+userRouter.post('/travel-stories', authenticate(['user']), postTravelStory);
+userRouter.post('/travel-stories/:slug/like', authenticate(['user']), postTravelStoryLike);
+userRouter.get('/travel-stories/:slug', getPublicTravelStoryBySlug);
 userRouter.get('/package-bookings', authenticate(['user']), getMyPackageBookings);
 
 // kind is 'hotel' or 'package'; the amount always comes from the stored booking.

@@ -166,4 +166,10 @@ export const userService = {
   submitAttachedVehicle: async (id) => api.post(`/users/attached-vehicles/${id}/submit`),
   uploadImage: async (dataUrl, folder = 'attached-vehicles') =>
     api.post('/common/upload/image', { image: dataUrl, folder }),
+
+  // Travel stories
+  listTravelStories: async (query = '') => api.get(`/users/travel-stories${query}`),
+  getTravelStory: async (slug) => api.get(`/users/travel-stories/${slug}`),
+  likeTravelStory: async (slug) => api.post(`/users/travel-stories/${slug}/like`),
+  createTravelStory: async (payload) => api.post('/users/travel-stories', payload),
 };

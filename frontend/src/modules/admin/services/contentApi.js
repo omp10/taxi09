@@ -61,6 +61,11 @@ export const contentApi = {
   listAttachedVehicles: (params = '') => request(`/attached-vehicles${params}`),
   updateAttachedVehicle: (id, body) => request(`/attached-vehicles/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
 
+  // Travel stories
+  listTravelStories: (params = '') => request(`/travel-stories${params}`),
+  updateTravelStory: (id, body) => request(`/travel-stories/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  deleteTravelStory: (id) => request(`/travel-stories/${id}`, { method: 'DELETE' }),
+
   // Content blocks
   listBlocks: () => request('/content-blocks'),
   saveBlock: (body) => request('/content-blocks', { method: 'PUT', body: JSON.stringify(body) }),

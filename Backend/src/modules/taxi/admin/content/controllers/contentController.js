@@ -1,4 +1,5 @@
 import { asyncHandler } from '../../../../../utils/asyncHandler.js';
+import { ApiError } from '../../../../../utils/ApiError.js';
 import * as contentService from '../services/contentService.js';
 import { priceHotelStay } from '../../../user/services/hotelPricingService.js';
 import { quotePackage } from '../../../user/services/travelPackagePricingService.js';
@@ -304,4 +305,102 @@ export const updateAdminAttachedVehicle = asyncHandler(async (req, res) => {
   ).lean();
 
   ok(res, updated);
+});
+
+/* ------------------------------------------------------- travel stories */
+
+const storyService = () => import('../../../user/services/travelStoryService.js');
+
+export const getPublicTravelStories = asyncHandler(async (req, res) => {
+  const service = await storyService();
+  ok(res, await service.listTravelStories({
+    category: req.query.category,
+    tab: req.query.tab,
+    q: req.query.q,
+    limit: req.query.limit,
+  }));
+});
+
+export const getPublicTravelStoryBySlug = asyncHandler(async (req, res) => {
+  const service = await storyService();
+  ok(res, await service.getTravelStoryBySlug(req.params.slug));
+});
+
+export const getTravelStoryFacets = asyncHandler(async (_req, res) => {
+  const service = await storyService();
+  ok(res, await service.getTravelStoryFacets());
+});
+
+export const getTravelStoryPins = asyncHandler(async (_req, res) => {
+  const service = await storyService();
+  ok(res, { results: await service.listTravelStoryPins() });
+});
+
+export const postTravelStory = asyncHandler(async (req, res) => {
+  const service = await storyService();
+  const { User } = await import('../../../user/models/User.js');
+  const author = await User.findById(req.auth?.sub).select('name profileImage').lean();
+
+  ok(res, await service.createTravelStory({ userId: req.auth?.sub, author, payload: req.body || {} }), 201);
+});
+
+export const postTravelStoryLike = asyncHandler(async (req, res) => {
+  const service = await storyService();
+  ok(res, await service.toggleStoryLike({ slug: req.params.slug, userId: req.auth?.sub }));
+});
+
+export const getMyTravelStories = asyncHandler(async (req, res) => {
+  const service = await storyService();
+  ok(res, { results: await service.listMyTravelStories(req.auth?.sub) });
+});
+
+/* ------------------------------------------------------------ admin */
+
+export const getAdminTravelStories = asyncHandler(async (req, res) => {
+  const { TravelStory } = await import('../models/TravelStory.js');
+
+  const query = {};
+  if (req.query.status) query.status = req.query.status;
+
+  const term = String(req.query.search || '').trim();
+  if (term) {
+    query.$or = ['title', 'location', 'authorName'].map((field) => ({
+      [field]: { $regex: term, $options: 'i' },
+    }));
+  }
+
+  const results = await TravelStory.find(query)
+    .sort({ createdAt: -1 })
+    .limit(Math.min(500, Number(req.query.limit) || 200))
+    .lean();
+
+  ok(res, { results, total: await TravelStory.countDocuments(query) });
+});
+
+export const adminUpdateTravelStory = asyncHandler(async (req, res) => {
+  const { TravelStory } = await import('../models/TravelStory.js');
+
+  const update = {};
+  ['title', 'excerpt', 'body', 'category', 'coverImage', 'location', 'state',
+   'authorName', 'status'].forEach((key) => {
+    if (req.body?.[key] !== undefined) update[key] = req.body[key];
+  });
+  ['days', 'distanceKm', 'cost', 'latitude', 'longitude'].forEach((key) => {
+    if (req.body?.[key] !== undefined) update[key] = Number(req.body[key]) || 0;
+  });
+  if (req.body?.featured !== undefined) update.featured = Boolean(req.body.featured);
+  if (req.body?.hashtags !== undefined) {
+    update.hashtags = (Array.isArray(req.body.hashtags) ? req.body.hashtags : String(req.body.hashtags).split(','))
+      .map((tag) => String(tag).trim().replace(/^#/, ''))
+      .filter(Boolean);
+  }
+
+  ok(res, await TravelStory.findByIdAndUpdate(req.params.id, { $set: update }, { new: true }).lean());
+});
+
+export const adminDeleteTravelStory = asyncHandler(async (req, res) => {
+  const { TravelStory } = await import('../models/TravelStory.js');
+  const deleted = await TravelStory.findByIdAndDelete(req.params.id);
+  if (!deleted) throw new ApiError(404, 'Story not found');
+  ok(res, { id: req.params.id });
 });
