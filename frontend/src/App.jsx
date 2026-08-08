@@ -23,6 +23,7 @@ const UserHome = lazy(() => import('./modules/user/pages/Home'));
 const UserMembership = lazy(() => import('./modules/user/pages/membership/Membership'));
 const UserAttachCar = lazy(() => import('./modules/user/pages/attach/AttachCar'));
 const UserTravelStories = lazy(() => import('./modules/user/pages/stories/TravelStoriesRoute'));
+const BikeRentalRoute = lazy(() => import('./modules/user/pages/rental/BikeRentalRoute'));
 const UserTravelStoryDetail = lazy(() => import('./modules/user/pages/stories/TravelStoryDetail'));
 const UserCreateTravelStory = lazy(() => import('./modules/user/pages/stories/CreateTravelStory'));
 const UserMembershipCheckout = lazy(() => import('./modules/user/pages/membership/MembershipCheckout'));
@@ -933,7 +934,7 @@ function App() {
               <Route path="/taxi/user/pooling/seats/:id" element={<UserPoolingSeats />} />
               <Route path="/taxi/user/pooling/confirm" element={<UserPoolingConfirm />} />
               <Route path="/taxi/user/rental/type" element={<RentalTypeSelection />} />
-              <Route path="/taxi/user/rental/bike-categories" element={<BikeCategoriesSelection />} />
+              <Route path="/taxi/user/rental/bike-categories" element={<BikeRentalRoute />} />
               <Route path="/taxi/user/rental/bikes-list" element={<BikeCategoryList />} />
               <Route path="/taxi/user/rental" element={<RentalHome />} />
               <Route path="/taxi/user/rental/subscriptions" element={<BikeRentalHome />} />
