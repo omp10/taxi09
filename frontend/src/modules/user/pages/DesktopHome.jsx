@@ -283,8 +283,14 @@ const DesktopHome = () => {
             </button>
           </div>
 
-          {/* items-start, so one long caption does not leave every other card with a
-              void between its text and its arrow. */}
+          {/* Rows stretch again so every card is the same height. The void this
+              used to cause came from the caption's flex-1, not from stretching:
+              with the caption at its natural height the tallest card is now
+              265px rather than 352px, so the others sit flush with it. */}
+          {/* items-start because the row itself is taller than any card; letting
+              cards stretch into it reopens a ~100px void under every caption.
+              The captions carry a min-height instead, so the cards match each
+              other without being padded out to the row. */}
           <div className="grid grid-cols-6 items-start gap-3.5">
             {SERVICES.map((service, index) => (
               <ServiceCard key={service.title} {...service} badge={index === 0 ? 'Popular' : undefined} />

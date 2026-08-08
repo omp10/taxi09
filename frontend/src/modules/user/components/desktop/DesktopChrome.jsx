@@ -156,8 +156,8 @@ export const ServiceCard = ({ title, copy, image, path, badge, highlighted }) =>
         </span>
       )}
       <img src={image} alt="" className="h-[92px] w-full object-contain" />
-      <span className="mt-2.5 block text-[15px] font-black tracking-[-0.02em] text-[var(--dh-text)]">{title}</span>
-      <span className="mt-1.5 block text-[12px] font-medium leading-[1.45] text-[var(--dh-muted)]">{copy}</span>
+      <span className="mt-2.5 block min-h-[40px] text-[15px] font-black leading-[1.3] tracking-[-0.02em] text-[var(--dh-text)]">{title}</span>
+      <span className="mt-1.5 block min-h-[70px] text-[12px] font-medium leading-[1.45] text-[var(--dh-muted)]">{copy}</span>
       <span className="mt-auto flex h-8 w-8 items-center justify-center self-end rounded-full border border-[#F5B700] mt-3 text-[#F5B700] transition-colors group-hover:bg-[#F5B700] group-hover:text-slate-950">
         <ArrowRight size={15} strokeWidth={2.8} />
       </span>
