@@ -38,6 +38,15 @@ const hotelSchema = new mongoose.Schema(
     area: { type: String, default: '', trim: true },
     distance: { type: String, default: '', trim: true },
 
+    // Map position, so search can work by proximity rather than by matching
+    // city strings. `location` mirrors lat/lng for the 2dsphere index.
+    latitude: { type: Number, default: null },
+    longitude: { type: Number, default: null },
+    location: {
+      type: { type: String, enum: ['Point'], default: 'Point' },
+      coordinates: { type: [Number], default: undefined },
+    },
+
     badge: { type: String, default: '', trim: true },
     image: { type: String, default: '', trim: true },
     gallery: { type: [String], default: [] },
@@ -92,5 +101,8 @@ const hotelSchema = new mongoose.Schema(
 );
 
 hotelSchema.index({ active: 1, city: 1, sortOrder: 1 });
+
+// Sparse: hotels without coordinates simply don't participate in geo queries.
+hotelSchema.index({ location: '2dsphere' }, { sparse: true });
 
 export const Hotel = mongoose.models.TaxiHotel || mongoose.model('TaxiHotel', hotelSchema);

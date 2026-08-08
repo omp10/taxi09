@@ -6315,15 +6315,50 @@ export const listPublicVehicleCatalog = async () => {
   return payload;
 };
 
-export const listPublicRentalVehicleCatalog = async () => {
-  const items = await RentalVehicleType.find({
-    active: true,
-    status: 'active',
-  })
-    .sort({ createdAt: -1 })
-    .lean();
+/**
+ * @param location     optional store name/address to filter the fleet by
+ * @param pickupDateTime / returnDateTime  when set, each vehicle is marked
+ *        available or held, based on overlapping bookings
+ */
+export const listPublicRentalVehicleCatalog = async ({
+  location = '',
+  pickupDateTime = '',
+  returnDateTime = '',
+} = {}) => {
+  const query = { active: true, status: 'active' };
 
-  return items.map((item) => serializeRentalVehicleType(item));
+  const place = String(location || '').trim();
+  if (place) {
+    const stores = await ServiceStore.find({
+      $or: [
+        { name: { $regex: place, $options: 'i' } },
+        { address: { $regex: place, $options: 'i' } },
+      ],
+    })
+      .select('_id')
+      .lean();
+
+    // A location with no branch matches nothing, rather than everything.
+    query.serviceStoreIds = { $in: stores.map((store) => store._id) };
+  }
+
+  const items = await RentalVehicleType.find(query).sort({ createdAt: -1 }).lean();
+
+  const { getRentalAvailability } = await import('../../user/services/rentalAvailabilityService.js');
+  const availability = await getRentalAvailability({
+    pickupDateTime,
+    returnDateTime,
+    vehicleIds: items.map((item) => item._id),
+  });
+
+  return items.map((item) => {
+    const state = availability.get(String(item._id)) || { available: true, availableFrom: null };
+    return {
+      ...serializeRentalVehicleType(item),
+      available: state.available,
+      availableFrom: state.availableFrom,
+    };
+  });
 };
 
 export const listVehiclePreferences = async () => {

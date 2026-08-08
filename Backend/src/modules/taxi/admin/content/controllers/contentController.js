@@ -105,7 +105,14 @@ export const getPublicTravelPackages = asyncHandler(async (req, res) => {
 });
 
 export const getPublicHotels = asyncHandler(async (req, res) => {
-  const { results } = await contentService.listHotels({ city: req.query.city, active: true });
+  const { results } = await contentService.listHotels({
+    city: req.query.city,
+    q: req.query.q,
+    lat: req.query.lat,
+    lng: req.query.lng,
+    radiusKm: req.query.radiusKm,
+    active: true,
+  });
   ok(res, { results });
 });
 

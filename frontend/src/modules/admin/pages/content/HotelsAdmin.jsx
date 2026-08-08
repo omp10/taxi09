@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { BedDouble, Loader2, Pencil, Plus, Save, Trash2, X } from 'lucide-react';
 import contentApi from '../../services/contentApi';
+import LocationPicker from '../../components/LocationPicker';
 
 const emptyRoom = () => ({
   key: '',
@@ -31,6 +32,8 @@ const emptyForm = () => ({
   reviews: '0',
   propertyType: '',
   starRating: 0,
+  latitude: '',
+  longitude: '',
   price: '',
   oldPrice: '',
   checkInTime: '2:00 PM',
@@ -292,6 +295,19 @@ const HotelsAdmin = () => {
               <Field label="Strike-through rate (₹)">
                 <input type="number" min="0" className={input} value={form.oldPrice} onChange={(e) => setForm({ ...form, oldPrice: e.target.value })} />
               </Field>
+              <Field label="Latitude" hint="Map position; enables nearby search">
+                <input type="number" step="0.0001" className={input} value={form.latitude} onChange={(e) => setForm({ ...form, latitude: e.target.value })} />
+              </Field>
+              <Field label="Longitude">
+                <input type="number" step="0.0001" className={input} value={form.longitude} onChange={(e) => setForm({ ...form, longitude: e.target.value })} />
+              </Field>
+              <div className="col-span-3">
+                <LocationPicker
+                  latitude={form.latitude}
+                  longitude={form.longitude}
+                  onPick={({ latitude, longitude }) => setForm((prev) => ({ ...prev, latitude, longitude }))}
+                />
+              </div>
               <Field label="Property type">
                 <select className={input} value={form.propertyType} onChange={(e) => setForm({ ...form, propertyType: e.target.value })}>
                   <option value="">Unclassified</option>

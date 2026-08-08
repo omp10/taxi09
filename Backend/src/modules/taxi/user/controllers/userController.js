@@ -25,6 +25,7 @@ import { BusSeatHold } from '../models/BusSeatHold.js';
 import { BusBooking } from '../models/BusBooking.js';
 import { RentalBookingRequest } from '../../admin/models/RentalBookingRequest.js';
 import { priceRentalBooking } from '../services/rentalPricingService.js';
+import { isRentalVehicleAvailable } from '../services/rentalAvailabilityService.js';
 import { priceHireDriverTrip } from '../services/hireDriverPricingService.js';
 import { RentalQuoteRequest } from '../../admin/models/RentalQuoteRequest.js';
 import { RentalVehicleType } from '../../admin/models/RentalVehicleType.js';
@@ -4031,6 +4032,70 @@ export const quoteRentalBooking = async (req, res) => {
   res.json({ success: true, data: rest });
 };
 
+/**
+ * Confirms with the provider that a rental advance was really collected.
+ *
+ * The booking request carries a `paid` flag from the client, and a flag is not
+ * proof - anything that skipped the payment screen can send one. Every claim is
+ * checked against the source of truth instead. A claim that cannot be confirmed
+ * is downgraded to pending rather than rejected, so a real payment behind a
+ * flaky verification still leaves the admin a booking to reconcile.
+ */
+const confirmRentalAdvancePaid = async ({ userId, bookingReference, payment = {} }) => {
+  const provider = toCleanString(payment.provider).toLowerCase();
+
+  try {
+    if (provider === 'wallet') {
+      const wallet = await UserWallet.findOne({ userId }).lean();
+      const referenceKey = `rental_advance_${bookingReference}`;
+      return (wallet?.transactions || []).some(
+        (item) => item?.kind === 'debit' && String(item.referenceKey || '') === referenceKey,
+      );
+    }
+
+    if (provider === 'razorpay') {
+      const orderId = toCleanString(payment.orderId || payment.razorpay_order_id);
+      const paymentId = toCleanString(payment.paymentId || payment.razorpay_payment_id);
+      const signature = toCleanString(payment.signature || payment.razorpay_signature);
+      if (!orderId || !paymentId || !signature) return false;
+
+      const { keySecret } = await resolveRazorpayCredentials();
+      const expected = crypto.createHmac('sha256', keySecret).update(`${orderId}|${paymentId}`).digest('hex');
+
+      // timingSafeEqual throws on a length mismatch, which is already a failure.
+      return (
+        expected.length === signature.length &&
+        crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature))
+      );
+    }
+
+    if (provider === 'phonepe') {
+      const merchantTransactionId = toCleanString(
+        payment.merchantTransactionId || payment.transactionId || payment.orderId,
+      );
+      if (!merchantTransactionId) return false;
+
+      const { clientId, clientSecret, clientVersion, environment } = await resolvePhonePeCredentials();
+      const status = await phonePeRequest({
+        method: 'GET',
+        path: `/checkout/v2/order/${encodeURIComponent(merchantTransactionId)}/status?details=false`,
+        clientId,
+        clientSecret,
+        clientVersion,
+        environment,
+      });
+
+      return String(status?.state || '').trim().toUpperCase() === 'COMPLETED';
+    }
+  } catch (error) {
+    // A gateway outage must never hand out a free booking.
+    console.error('[rental] advance payment verification failed:', error?.message || error);
+    return false;
+  }
+
+  return false;
+};
+
 export const createRentalBookingRequest = async (req, res) => {
   const payload = req.body || {};
   const vehicleTypeId = String(payload.vehicleTypeId || payload.vehicleId || '').trim();
@@ -4076,6 +4141,31 @@ export const createRentalBookingRequest = async (req, res) => {
     throw new ApiError(404, 'User not found');
   }
 
+  // The car may have been taken between the list being rendered and this
+  // submit, so availability is settled here rather than trusted from the client.
+  const availability = await isRentalVehicleAvailable({
+    vehicleId: vehicleTypeId,
+    pickupDateTime,
+    returnDateTime,
+    excludeBookingReference: bookingReference,
+  });
+
+  if (!availability.available) {
+    const freeFrom = availability.availableFrom
+      ? availability.availableFrom.toLocaleString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        })
+      : '';
+    throw new ApiError(
+      409,
+      freeFrom
+        ? `This vehicle is already booked for those dates. It is free from ${freeFrom}.`
+        : 'This vehicle is already booked for those dates.',
+    );
+  }
+
   const requestedHours = Math.max(
     0,
     Math.round((((returnDateTime.getTime() - pickupDateTime.getTime()) / 3600000) + Number.EPSILON) * 100) / 100,
@@ -4096,8 +4186,15 @@ export const createRentalBookingRequest = async (req, res) => {
 
   const { matchedPackage, addOns: selectedAddOns, addOnsTotal, totalCost, payableNow } = quote;
   const advancePaymentLabel = quote.advancePayment.label;
+  // "paid" from the client is a claim, not proof - it only survives if the
+  // provider confirms it. Anything unconfirmed is stored pending.
+  const confirmedPaid =
+    payableNow > 0 &&
+    paymentStatus === 'paid' &&
+    (await confirmRentalAdvancePaid({ userId: user._id, bookingReference, payment: paymentPayload }));
+
   const normalizedPaymentStatus = payableNow > 0
-    ? paymentStatus === 'paid'
+    ? confirmedPaid
       ? 'paid'
       : paymentStatus === 'failed'
         ? 'failed'
@@ -4204,10 +4301,9 @@ export const createRentalBookingRequest = async (req, res) => {
     paymentMethodLabel,
     payment: {
       provider: toCleanString(paymentPayload.provider),
-      status: toCleanString(paymentPayload.status) || normalizedPaymentStatus,
-      amount: normalizedPaymentStatus === 'not_required'
-        ? 0
-        : Math.max(0, Number(paymentPayload.amount || payableNow || 0)),
+      // Mirrors the verified outcome, not what the client said about itself.
+      status: normalizedPaymentStatus,
+      amount: confirmedPaid ? payableNow : 0,
       currency: toCleanString(paymentPayload.currency) || 'INR',
       orderId: toCleanString(paymentPayload.orderId || paymentPayload.razorpay_order_id),
       paymentId: toCleanString(paymentPayload.paymentId || paymentPayload.razorpay_payment_id),

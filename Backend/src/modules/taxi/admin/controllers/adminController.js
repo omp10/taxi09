@@ -662,8 +662,14 @@ export const getPublicRideFares = asyncHandler(async (req, res) =>
     }),
   }),
 );
-export const getPublicRentalVehicleCatalog = asyncHandler(async (_req, res) =>
-  ok(res, { results: await adminService.listPublicRentalVehicleCatalog() }),
+export const getPublicRentalVehicleCatalog = asyncHandler(async (req, res) =>
+  ok(res, {
+    results: await adminService.listPublicRentalVehicleCatalog({
+      location: req.query.location,
+      pickupDateTime: req.query.pickup || req.query.pickupDateTime,
+      returnDateTime: req.query.return || req.query.returnDateTime,
+    }),
+  }),
 );
 export const getPublicRentalVehicleSubcategories = asyncHandler(async (_req, res) =>
   ok(res, { results: await adminService.listPublicRentalVehicleSubcategories() }),

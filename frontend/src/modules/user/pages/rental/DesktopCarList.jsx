@@ -73,6 +73,13 @@ const lowestPrice = (vehicle) => {
   return prices.length ? Math.min(...prices) : 0;
 };
 
+/** "12 Jun, 10:00 am" - when a held vehicle frees up. */
+const formatWhen = (value) => {
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return '';
+  return parsed.toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+};
+
 const bucketOf = (vehicle) =>
   vehicle.rentalSubcategoryName || titleCase(vehicle.vehicleCategory) || 'Other';
 
@@ -133,13 +140,19 @@ const DesktopCarList = () => {
 
   useEffect(() => {
     let cancelled = false;
+    const params = new URLSearchParams();
+    const place = searchParams.get('location');
+    if (place) params.set('location', place);
+    if (searchParams.get('pickupISO')) params.set('pickup', searchParams.get('pickupISO'));
+    if (searchParams.get('returnISO')) params.set('return', searchParams.get('returnISO'));
+
     api
-      .get('/users/rental-vehicles')
+      .get(`/users/rental-vehicles${params.toString() ? `?${params}` : ''}`)
       .then((response) => { if (!cancelled) setVehicles(unwrapResults(response)); })
       .catch(() => { if (!cancelled) setVehicles([]); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     const onScroll = () => setShowTop(window.scrollY > 600);
@@ -348,7 +361,9 @@ const DesktopCarList = () => {
                      ones that have more spec rows filled in. */
                   <article
                     key={id}
-                    className="grid min-h-[190px] grid-cols-[286px_minmax(0,1fr)_216px] overflow-hidden rounded-[18px] bg-[var(--dh-surface)] shadow-[0_8px_24px_rgba(15,23,42,0.07)] ring-1 ring-[var(--dh-border)]"
+                    className={`grid min-h-[190px] grid-cols-[286px_minmax(0,1fr)_216px] overflow-hidden rounded-[18px] bg-[var(--dh-surface)] shadow-[0_8px_24px_rgba(15,23,42,0.07)] ring-1 ring-[var(--dh-border)] ${
+                      vehicle.available === false ? 'opacity-60' : ''
+                    }`}
                   >
                     <div className="relative bg-[var(--dh-chip)]">
                       {/* Absolute so a tall source image fills the cell instead of
@@ -430,12 +445,25 @@ const DesktopCarList = () => {
                         <p className="text-[14px] font-bold text-[var(--dh-muted)]">Price on request</p>
                       )}
 
-                      <button
-                        onClick={() => openRentalVehicle(navigate, vehicle)}
-                        className="mt-1 w-full rounded-[11px] bg-[#F5B700] py-2.5 text-[14px] font-bold text-slate-950 transition-transform hover:-translate-y-0.5"
-                      >
-                        View Details
-                      </button>
+                      {vehicle.available === false ? (
+                        <>
+                          <span className="mt-1 w-full rounded-[11px] bg-[var(--dh-chip)] py-2.5 text-center text-[13px] font-bold text-[var(--dh-muted)]">
+                            Booked
+                          </span>
+                          {vehicle.availableFrom && (
+                            <span className="text-[11px] font-semibold text-rose-600">
+                              Free from {formatWhen(vehicle.availableFrom)}
+                            </span>
+                          )}
+                        </>
+                      ) : (
+                        <button
+                          onClick={() => openRentalVehicle(navigate, vehicle)}
+                          className="mt-1 w-full rounded-[11px] bg-[#F5B700] py-2.5 text-[14px] font-bold text-slate-950 transition-transform hover:-translate-y-0.5"
+                        >
+                          View Details
+                        </button>
+                      )}
 
                       {(vehicle.addOns || []).length > 0 && (
                         <p className="text-[12px] font-bold text-[var(--dh-muted)]">

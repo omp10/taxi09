@@ -4,6 +4,24 @@ import { Hotel } from '../models/Hotel.js';
 import { ContentBlock } from '../models/ContentBlock.js';
 import { HireDriver } from '../models/HireDriver.js';
 
+/**
+ * Keeps `location` in step with the lat/lng an admin types. GeoJSON wants
+ * [lng, lat], and a hotel without both simply has no point.
+ */
+const buildHotelLocation = (payload) => {
+  const latitude = Number(payload.latitude);
+  const longitude = Number(payload.longitude);
+
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+    return { latitude: null, longitude: null, location: undefined };
+  }
+  return {
+    latitude,
+    longitude,
+    location: { type: 'Point', coordinates: [longitude, latitude] },
+  };
+};
+
 const PROPERTY_TYPES = ['Hotel', 'Resort', 'Apartment', 'Guest House', 'Villa', 'Homestay', 'Hostel'];
 
 const clean = (value) => String(value ?? '').trim();
@@ -160,6 +178,7 @@ const normalizeHotelPayload = (payload = {}) => {
     facilities: toArray(payload.facilities),
     // Star class is a whole number; anything outside 1-5 means unclassified.
     starRating: Math.min(5, Math.max(0, Math.round(toNumber(payload.starRating, 0)))),
+    ...buildHotelLocation(payload),
     propertyType: PROPERTY_TYPES.includes(clean(payload.propertyType)) ? clean(payload.propertyType) : '',
     rating: Math.min(5, Math.max(0, toNumber(payload.rating, 0))),
     reviews: clean(payload.reviews) || '0',
@@ -173,12 +192,61 @@ const normalizeHotelPayload = (payload = {}) => {
   };
 };
 
-export const listHotels = async ({ city, active } = {}) => {
+/** Great-circle distance in km, for labelling results against a search point. */
+const distanceKm = (lat1, lng1, lat2, lng2) => {
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const R = 6371;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return Math.round(2 * R * Math.asin(Math.sqrt(a)) * 10) / 10;
+};
+
+/**
+ * @param q       free text matched against name, city and area
+ * @param lat/lng when given, results are ordered by distance from that point
+ * @param radiusKm limit for the geo search (default 25km)
+ */
+export const listHotels = async ({ city, active, q, lat, lng, radiusKm } = {}) => {
   const filter = {};
   if (city) filter.city = city;
   if (active !== undefined) filter.active = active === true || active === 'true';
 
-  const results = await Hotel.find(filter).sort({ sortOrder: 1, createdAt: -1 }).lean();
+  const term = clean(q);
+  if (term) {
+    filter.$or = [
+      { name: { $regex: term, $options: 'i' } },
+      { city: { $regex: term, $options: 'i' } },
+      { area: { $regex: term, $options: 'i' } },
+    ];
+  }
+
+  const latitude = Number(lat);
+  const longitude = Number(lng);
+  const hasPoint = Number.isFinite(latitude) && Number.isFinite(longitude);
+
+  if (hasPoint) {
+    const radius = Math.max(1, Number(radiusKm) || 25);
+    // $near returns nearest-first, so no extra sort is needed.
+    filter.location = {
+      $near: {
+        $geometry: { type: 'Point', coordinates: [longitude, latitude] },
+        $maxDistance: radius * 1000,
+      },
+    };
+  }
+
+  const query = Hotel.find(filter);
+  if (!hasPoint) query.sort({ sortOrder: 1, createdAt: -1 });
+
+  const results = (await query.lean()).map((hotel) =>
+    hasPoint && hotel.latitude != null && hotel.longitude != null
+      ? { ...hotel, distanceKm: distanceKm(latitude, longitude, hotel.latitude, hotel.longitude) }
+      : hotel,
+  );
+
   return { results, total: results.length };
 };
 

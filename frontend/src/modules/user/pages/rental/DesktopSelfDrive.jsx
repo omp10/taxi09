@@ -104,6 +104,16 @@ const DesktopSelfDrive = () => {
     if (search.drop) params.set('drop', search.drop);
     if (search.date) params.set('date', search.date);
     if (search.time) params.set('time', search.time);
+
+    // The results page checks availability against this window. Default to a
+    // 24-hour rental so a date alone still filters out cars that are out.
+    if (search.date) {
+      const from = new Date(`${search.date}T${search.time || '10:00'}`);
+      if (!Number.isNaN(from.getTime())) {
+        params.set('pickupISO', from.toISOString());
+        params.set('returnISO', new Date(from.getTime() + 24 * 60 * 60 * 1000).toISOString());
+      }
+    }
     navigate(`/taxi/user/rental?${params.toString()}`);
   };
 

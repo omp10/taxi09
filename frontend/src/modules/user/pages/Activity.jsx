@@ -141,7 +141,11 @@ const ActivityBookingCard = ({ activity, onClick }) => (
 );
 
 const Activity = () => {
-  const [activeTab, setActiveTab] = useState('All');
+  const { state: navState, pathname } = useLocation();
+  // Callers (the app drawer, for one) can land straight on a tab.
+  const [activeTab, setActiveTab] = useState(() =>
+    VISIBLE_TABS.includes(navState?.tab) ? navState.tab : 'All',
+  );
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -156,8 +160,7 @@ const Activity = () => {
     hasPrevPage: false,
   });
   const navigate = useNavigate();
-  const location = useLocation();
-  const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
+  const routePrefix = pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
 
   useEffect(() => {
     let active = true;

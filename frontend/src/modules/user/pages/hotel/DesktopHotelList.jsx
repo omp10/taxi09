@@ -101,13 +101,18 @@ const DesktopHotelList = () => {
 
   useEffect(() => {
     let cancelled = false;
+    // Search runs on the server so it can match area names and, when a map
+    // point is supplied, order by real distance.
+    const params = new URLSearchParams();
+    if (search.location.trim()) params.set('q', search.location.trim());
+
     api
-      .get('/users/hotels')
+      .get(`/users/hotels${params.toString() ? `?${params}` : ''}`)
       .then((response) => { if (!cancelled) setHotels(unwrapResults(response)); })
       .catch(() => { if (!cancelled) setHotels([]); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, []);
+  }, [search.location]);
 
   const priceCeiling = useMemo(
     () => hotels.reduce((max, hotel) => Math.max(max, Number(hotel.price || 0)), 0),
@@ -151,11 +156,6 @@ const DesktopHotelList = () => {
         const min = Math.min(...guestBands.map((label) => GUEST_BANDS.find((b) => b.label === label)?.min ?? 0));
         if (Number(hotel.rating || 0) < min) return false;
       }
-      if (search.location.trim()) {
-        const needle = search.location.trim().toLowerCase();
-        const haystack = `${hotel.name} ${hotel.city} ${hotel.area}`.toLowerCase();
-        if (!haystack.includes(needle)) return false;
-      }
       return true;
     });
 
@@ -165,7 +165,7 @@ const DesktopHotelList = () => {
     if (sort === 'recommended') list = [...list].sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
 
     return list;
-  }, [hotels, cities, propertyTypes, stars, amenities, guestBands, maxPrice, sort, search.location]);
+  }, [hotels, cities, propertyTypes, stars, amenities, guestBands, maxPrice, sort]);
 
   const openHotel = (hotel) => {
     const payload = { hotel, search };
@@ -373,7 +373,11 @@ const DesktopHotelList = () => {
                           {(hotel.area || hotel.distance) && (
                             <p className="mt-1.5 flex items-center gap-1.5 text-[12.5px] font-semibold text-[var(--dh-muted)]">
                               <MapPin size={13} strokeWidth={2.2} className="shrink-0" />
-                              <span className="truncate">{[hotel.area, hotel.distance].filter(Boolean).join(' · ')}</span>
+                              <span className="truncate">
+                                {[hotel.area, hotel.distanceKm != null ? `${hotel.distanceKm} km away` : hotel.distance]
+                                  .filter(Boolean)
+                                  .join(' · ')}
+                              </span>
                             </p>
                           )}
 

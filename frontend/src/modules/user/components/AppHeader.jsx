@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Bell, Menu } from 'lucide-react';
+import AppSidebar from './AppSidebar';
 
 /**
  * Shared Taxi09 top app bar.
@@ -8,11 +9,13 @@ import { ArrowLeft, Bell, Menu } from 'lucide-react';
  */
 const AppHeader = ({ showBack = false, subtitle = '' }) => {
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
 
   return (
     <header className="bg-[#fffdf8] h-[64px] flex items-center justify-between px-5 w-full sticky top-0 z-50 select-none">
       <button
-        onClick={() => (showBack ? navigate(-1) : navigate('/taxi/user/profile'))}
+        onClick={() => (showBack ? navigate(-1) : setMenuOpen(true))}
         className="text-slate-900 active:scale-95 transition-transform"
         aria-label={showBack ? 'Back' : 'Menu'}
       >
@@ -48,6 +51,8 @@ const AppHeader = ({ showBack = false, subtitle = '' }) => {
         <Bell size={21} strokeWidth={2.2} />
         <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#F5B700] rounded-full border-2 border-white" />
       </button>
+
+      <AppSidebar open={menuOpen} onClose={closeMenu} />
     </header>
   );
 };
