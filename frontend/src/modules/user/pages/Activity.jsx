@@ -140,7 +140,7 @@ const ActivityBookingCard = ({ activity, onClick }) => (
   </button>
 );
 
-const Activity = () => {
+const Activity = ({ embedded = false }) => {
   const { state: navState, pathname } = useLocation();
   // Callers (the app drawer, for one) can land straight on a tab.
   const [activeTab, setActiveTab] = useState(() =>
@@ -344,7 +344,14 @@ const Activity = () => {
   const visibleActivities = activities;
 
   return (
-    <div className="mx-auto min-h-screen w-full max-w-lg bg-[#f8f7f2] pb-28 font-sans text-slate-950 shadow-2xl">
+    <div
+      className={
+        embedded
+          ? 'w-full bg-[#f8f7f2] font-sans text-slate-950'
+          : 'mx-auto min-h-screen w-full max-w-lg bg-[#f8f7f2] pb-28 font-sans text-slate-950 shadow-2xl'
+      }
+    >
+      {embedded ? null : (
       <header className="relative h-[132px] overflow-hidden bg-[#f5c400]">
         <img src="/taxi09_activity_hero.png" alt="" className="absolute inset-0 h-full w-full object-cover object-center" />
         
@@ -357,6 +364,7 @@ const Activity = () => {
           <p className="mt-1.5 max-w-[58%] text-[10px] font-semibold leading-tight text-slate-800">{helperText}</p>
         </div>
       </header>
+      )}
 
       <main className="-mt-4 rounded-t-[22px] bg-[#f8f7f2] px-3 pt-4">
         <div className="mb-3 rounded-[16px] border border-slate-200 bg-white p-1 shadow-[0_6px_16px_rgba(15,23,42,0.06)]">
@@ -404,7 +412,7 @@ const Activity = () => {
         </div>
       </main>
 
-      <BottomNavbar />
+      {embedded ? null : <BottomNavbar />}
     </div>
   );
 };

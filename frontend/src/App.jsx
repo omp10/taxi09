@@ -57,6 +57,7 @@ const SenderReceiverDetails = lazy(() => import('./modules/user/pages/parcel/Sen
 
 // Profile & History
 const Activity = lazy(() => import('./modules/user/pages/Activity'));
+const ActivityRoute = lazy(() => import('./modules/user/pages/activity/ActivityRoute'));
 const Profile = lazy(() => import('./modules/user/pages/Profile'));
 const ProfileRoute = lazy(() => import('./modules/user/pages/profile/ProfileRoute'));
 const Wallet = lazy(() => import('./modules/user/pages/Wallet'));
@@ -1020,7 +1021,7 @@ function App() {
               <Route path="/taxi/user/international/details" element={<InternationalDetailsRoute />} />
               <Route path="/taxi/user/international/details/:slug" element={<InternationalDetailsRoute />} />
 
-              <Route path="/taxi/user/activity" element={<Activity />} />
+              <Route path="/taxi/user/activity" element={<ActivityRoute />} />
               <Route path="/taxi/user/profile" element={<ProfileRoute />} />
               <Route path="/taxi/user/membership" element={<UserMembership />} />
               <Route path="/taxi/user/attach-car" element={<UserAttachCar />} />
