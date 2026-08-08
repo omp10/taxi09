@@ -1,9 +1,15 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 // Exercise the surcharge normalizer through the module's own source so the
 // catalogue and the test can't drift apart.
-const src = readFileSync('src/modules/taxi/services/rideService.js', 'utf8');
+// Resolved against this file, not the working directory, so the suite passes
+// wherever it is run from.
+const src = readFileSync(
+  fileURLToPath(new URL('../src/modules/taxi/services/rideService.js', import.meta.url)),
+  'utf8',
+);
 const start = src.indexOf('const HIRE_DRIVER_JOURNEY_OPTIONS');
 const end = src.indexOf('const ensureUserWallet');
 const { normalizeHireDriver } = await import(
