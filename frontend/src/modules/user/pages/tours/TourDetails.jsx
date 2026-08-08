@@ -29,18 +29,25 @@ const getRoutePrefix = (pathname = '') => (pathname.startsWith('/taxi/user') ? '
 
 const rupees = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`;
 
-const INCLUSIONS = [
-  { label: 'Hotel stay with breakfast', icon: BedDouble },
-  { label: 'All meals as per itinerary', icon: Utensils },
-  { label: 'Private cab for transfers', icon: Plane },
-  { label: 'Sightseeing & entry tickets', icon: Camera },
-  { label: 'Driver allowance & tolls', icon: CircleCheck },
+/**
+ * Inclusions come from the package's own `includes` list. Only the icon is
+ * matched here, since an admin types a line rather than picking a component,
+ * and anything unrecognised still shows with a neutral tick.
+ */
+const INCLUSION_ICONS = [
+  [/hotel|stay|room/i, BedDouble],
+  [/meal|breakfast|lunch|dinner|food/i, Utensils],
+  [/flight|cab|transfer|transport|airport/i, Plane],
+  [/sightsee|ticket|entry|tour|guide/i, Camera],
 ];
 
-const EXCLUSIONS = [
+const inclusionIcon = (label) =>
+  (INCLUSION_ICONS.find(([pattern]) => pattern.test(String(label))) || [null, CircleCheck])[1];
+
+/** Shown only when the package lists them; nothing is assumed on its behalf. */
+const DEFAULT_EXCLUSIONS = [
   'Airfare / train tickets',
   'Personal expenses & tips',
-  'Adventure activity charges',
   'Anything not in inclusions',
 ];
 
@@ -92,6 +99,12 @@ const TourDetails = () => {
   const [paying, setPaying] = useState(false);
   const [slide, setSlide] = useState(0);
   const [showAllInclusions, setShowAllInclusions] = useState(false);
+
+  // What this package actually includes, as set in the admin panel.
+  const inclusions = (tour?.includes || []).filter(Boolean);
+  const exclusions = (tour?.excludes || []).filter(Boolean).length
+    ? tour.excludes.filter(Boolean)
+    : DEFAULT_EXCLUSIONS;
 
   const itinerary = useMemo(() => buildItinerary(tour), [tour]);
   const gallery = useMemo(() => {
@@ -280,29 +293,32 @@ const TourDetails = () => {
         <section className="rounded-[16px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
           <h2 className="text-[14px] font-extrabold">What&apos;s Included</h2>
           <div className="mt-2.5 space-y-1.5">
-            {(showAllInclusions ? INCLUSIONS : INCLUSIONS.slice(0, 3)).map(({ label, icon: Icon }) => (
+            {(showAllInclusions ? inclusions : inclusions.slice(0, 3)).map((label) => {
+              const Icon = inclusionIcon(label);
+              return (
               <p key={label} className="flex items-center gap-2 text-[11px] font-semibold">
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-50">
                   <Icon size={12} className="text-[var(--success)]" />
                 </span>
                 {label}
               </p>
-            ))}
+              );
+            })}
           </div>
-          {INCLUSIONS.length > 3 ? (
+          {inclusions.length > 3 ? (
             <button
               type="button"
               onClick={() => setShowAllInclusions((current) => !current)}
               className="mt-2 text-[11px] font-bold text-[var(--primary-dark)]"
             >
-              {showAllInclusions ? 'Show less' : `+${INCLUSIONS.length - 3} more inclusions`}
+              {showAllInclusions ? 'Show less' : `+${inclusions.length - 3} more inclusions`}
             </button>
           ) : null}
 
           <div className="mt-3 border-t border-[var(--border)] pt-3">
             <h3 className="text-[12px] font-extrabold text-[var(--text-light)]">Not included</h3>
             <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1">
-              {EXCLUSIONS.map((item) => (
+              {exclusions.map((item) => (
                 <span key={item} className="flex items-center gap-1 text-[10px] font-medium text-[var(--text-light)]">
                   <X size={10} className="shrink-0 text-[var(--danger)]" /> {item}
                 </span>

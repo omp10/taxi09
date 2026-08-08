@@ -32,13 +32,17 @@ const getRoutePrefix = (pathname = '') => (pathname.startsWith('/taxi/user') ? '
 
 const rupees = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`;
 
-const FACILITIES = [
-  { label: 'Free Wi-Fi', icon: Wifi },
-  { label: 'Swimming Pool', icon: Waves },
-  { label: 'Breakfast', icon: Coffee },
-  { label: 'Spa', icon: Sparkles },
-  { label: 'Gym', icon: Dumbbell },
-];
+/** Facilities are the hotel's own; only the icon is matched by label here. */
+const FACILITY_ICONS = {
+  'free wi-fi': Wifi,
+  'swimming pool': Waves,
+  breakfast: Coffee,
+  'free breakfast': Coffee,
+  spa: Sparkles,
+  gym: Dumbbell,
+};
+
+const facilityIcon = (label) => FACILITY_ICONS[String(label).trim().toLowerCase()] || Sparkles;
 
 const STEPS = ['Search', 'Select Room', 'Checkout', 'Payment'];
 
@@ -330,12 +334,15 @@ const HotelCheckout = () => {
           </div>
 
           <div className="mt-3 flex justify-between gap-1 border-t border-[var(--border)] pt-3">
-            {FACILITIES.map(({ label, icon: Icon }) => (
+            {(hotel?.facilities || []).filter(Boolean).map((label) => {
+              const Icon = facilityIcon(label);
+              return (
               <span key={label} className="flex min-w-0 flex-col items-center gap-1 text-center">
                 <Icon size={15} className="text-[var(--primary-dark)]" />
                 <span className="text-[8px] font-semibold leading-tight text-[var(--text-light)]">{label}</span>
               </span>
-            ))}
+              );
+            })}
           </div>
 
           <div className="mt-3 grid grid-cols-2 gap-y-3 rounded-[12px] bg-[var(--secondary)] p-3">

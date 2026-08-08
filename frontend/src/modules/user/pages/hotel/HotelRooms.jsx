@@ -28,23 +28,22 @@ const getRoutePrefix = (pathname = '') => (pathname.startsWith('/taxi/user') ? '
 
 const rupees = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`;
 
-const HOTEL_FACILITIES = [
-  { label: 'Free Wi-Fi', icon: Wifi },
-  { label: 'Swimming Pool', icon: Waves },
-  { label: 'Spa', icon: Sparkles },
-  { label: 'Gym', icon: Dumbbell },
-  { label: 'Restaurant', icon: Utensils },
-  { label: 'Free Breakfast', icon: Coffee },
-  { label: 'Parking', icon: Car },
-];
+/**
+ * Facilities are whatever the hotel lists. Only the icon is matched here, since
+ * an admin types a label rather than picking a React component; anything
+ * unrecognised still shows, with a neutral icon.
+ */
+const FACILITY_ICONS = {
+  'free wi-fi': Wifi,
+  'swimming pool': Waves,
+  spa: Sparkles,
+  gym: Dumbbell,
+  restaurant: Utensils,
+  'free breakfast': Coffee,
+  parking: Car,
+};
 
-const GALLERY = [
-  '/taxi09_hotel_room_1.jpg',
-  '/taxi09_hotel_room_2.jpg',
-  '/taxi09_hotel_room_3.jpg',
-  '/taxi09_hotel_room_4.jpg',
-  '/taxi09_hotel_hero.png',
-];
+const facilityIcon = (label) => FACILITY_ICONS[String(label).trim().toLowerCase()] || Sparkles;
 
 /**
  * Room catalogue. `multiplier` is applied to the hotel's nightly rate so every
@@ -103,6 +102,16 @@ const HotelRooms = () => {
 
   const todayKey = useMemo(() => toDateKey(new Date()), []);
   const nights = nightsBetween(checkIn, checkOut);
+
+  // The hotel's own photos. A hotel with none falls back to its cover image
+  // rather than showing a fixed set of rooms it does not have.
+  const gallery = useMemo(() => {
+    const shots = (hotel?.gallery || []).filter(Boolean);
+    if (shots.length) return shots;
+    return hotel?.image ? [hotel.image] : [];
+  }, [hotel]);
+
+  const facilities = useMemo(() => (hotel?.facilities || []).filter(Boolean), [hotel]);
 
   const roomList = useMemo(
     () => {
@@ -164,7 +173,7 @@ const HotelRooms = () => {
 
       {/* Gallery */}
       <section className="relative h-[220px] overflow-hidden bg-slate-900">
-        {GALLERY.map((image, index) => (
+        {gallery.map((image, index) => (
           <img
             key={image}
             src={index === 0 ? hotel.image || image : image}
@@ -177,7 +186,7 @@ const HotelRooms = () => {
 
         <button
           type="button"
-          onClick={() => setGalleryIndex((i) => (i - 1 + GALLERY.length) % GALLERY.length)}
+          onClick={() => setGalleryIndex((i) => (i - 1 + gallery.length) % gallery.length)}
           aria-label="Previous photo"
           className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-sm"
         >
@@ -185,7 +194,7 @@ const HotelRooms = () => {
         </button>
         <button
           type="button"
-          onClick={() => setGalleryIndex((i) => (i + 1) % GALLERY.length)}
+          onClick={() => setGalleryIndex((i) => (i + 1) % gallery.length)}
           aria-label="Next photo"
           className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-sm"
         >
@@ -193,7 +202,7 @@ const HotelRooms = () => {
         </button>
 
         <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm">
-          {galleryIndex + 1} / {GALLERY.length}
+          {galleryIndex + 1} / {gallery.length}
         </span>
         <span className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90">
           <Images size={15} className="text-slate-700" />
@@ -226,7 +235,9 @@ const HotelRooms = () => {
           </div>
 
           <div className="mt-3 flex gap-3 overflow-x-auto border-t border-[var(--border)] pt-3 no-scrollbar">
-            {HOTEL_FACILITIES.map(({ label, icon: Icon }) => (
+            {facilities.map((label) => {
+              const Icon = facilityIcon(label);
+              return (
               <span
                 key={label}
                 className="flex shrink-0 flex-col items-center gap-1 text-[8.5px] font-semibold text-[var(--text-light)]"
@@ -234,7 +245,8 @@ const HotelRooms = () => {
                 <Icon size={15} className="text-[var(--primary-dark)]" />
                 {label}
               </span>
-            ))}
+              );
+            })}
           </div>
         </section>
 
