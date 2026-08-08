@@ -161,21 +161,36 @@ const DesktopBikeRental = () => {
       .finally(() => setLoading(false));
   }, [location, pickup, dropoff]);
 
-  useEffect(load, [load]);
+  // Debounced so typing a location does not fire a request per keystroke, and
+  // so the loading flag is not set synchronously inside the effect.
+  useEffect(() => {
+    const handle = setTimeout(load, 250);
+    return () => clearTimeout(handle);
+  }, [load]);
 
-  /* The rail price is the server's, not a figure computed here. */
+  /* The rail price is the server's, not a figure computed here. The quote is
+     tagged with the bike it belongs to, so a stale reply for a bike the user
+     has already moved on from is ignored rather than shown against the new one. */
   useEffect(() => {
     const packageId = (selected?.pricing || [])[0]?.id;
-    if (!selected?._id || !packageId) { setQuote(null); return undefined; }
+    if (!selected?._id || !packageId) return undefined;
 
     let cancelled = false;
+    const vehicleId = selected._id;
+
     api
-      .post('/users/rental-bookings/quote', { vehicleTypeId: selected._id, packageId })
-      .then((response) => !cancelled && setQuote(response?.data || null))
-      .catch(() => !cancelled && setQuote(null));
+      .post('/users/rental-bookings/quote', { vehicleTypeId: vehicleId, packageId })
+      .then((response) => {
+        if (!cancelled) setQuote({ vehicleId, ...(response?.data || {}) });
+      })
+      .catch(() => {
+        if (!cancelled) setQuote({ vehicleId });
+      });
 
     return () => { cancelled = true; };
   }, [selected]);
+
+  const activeQuote = quote?.vehicleId === selected?._id && quote?.totalCost !== undefined ? quote : null;
 
   const visible = useMemo(
     () =>
@@ -350,32 +365,32 @@ const DesktopBikeRental = () => {
                     </div>
                   </dl>
 
-                  {quote ? (
+                  {activeQuote ? (
                     <dl className="mt-3 space-y-2 border-t border-slate-100 pt-3 text-[12.5px]">
                       <div className="flex justify-between">
-                        <dt className="text-slate-500">{quote.packageLabel || 'Rental charge'}</dt>
-                        <dd className="font-semibold text-slate-800">{money(quote.packagePrice)}</dd>
+                        <dt className="text-slate-500">{activeQuote.packageLabel || 'Rental charge'}</dt>
+                        <dd className="font-semibold text-slate-800">{money(activeQuote.packagePrice)}</dd>
                       </div>
-                      {quote.addOnsTotal > 0 ? (
+                      {activeQuote.addOnsTotal > 0 ? (
                         <div className="flex justify-between">
                           <dt className="text-slate-500">Add-ons</dt>
-                          <dd className="font-semibold text-slate-800">{money(quote.addOnsTotal)}</dd>
+                          <dd className="font-semibold text-slate-800">{money(activeQuote.addOnsTotal)}</dd>
                         </div>
                       ) : null}
-                      {quote.memberDiscount > 0 ? (
+                      {activeQuote.memberDiscount > 0 ? (
                         <div className="flex justify-between">
-                          <dt className="text-slate-500">Member discount ({quote.memberDiscountPercent}%)</dt>
-                          <dd className="font-semibold text-emerald-600">− {money(quote.memberDiscount)}</dd>
+                          <dt className="text-slate-500">Member discount ({activeQuote.memberDiscountPercent}%)</dt>
+                          <dd className="font-semibold text-emerald-600">− {money(activeQuote.memberDiscount)}</dd>
                         </div>
                       ) : null}
 
                       <div className="flex justify-between border-t border-dashed border-slate-200 pt-2">
                         <dt className="text-[14px] font-black text-slate-900">Total Amount</dt>
-                        <dd className="text-[16px] font-black text-slate-900">{money(quote.totalCost)}</dd>
+                        <dd className="text-[16px] font-black text-slate-900">{money(activeQuote.totalCost)}</dd>
                       </div>
-                      {quote.payableNow > 0 && quote.payableNow < quote.totalCost ? (
+                      {activeQuote.payableNow > 0 && activeQuote.payableNow < activeQuote.totalCost ? (
                         <p className="text-[11px] text-slate-500">
-                          {money(quote.payableNow)} payable now, {money(quote.balanceDue)} at pick-up
+                          {money(activeQuote.payableNow)} payable now, {money(activeQuote.balanceDue)} at pick-up
                         </p>
                       ) : null}
                     </dl>
