@@ -34,6 +34,9 @@ const travelPackageSchema = new mongoose.Schema(
 
     stops: { type: [String], default: [] },
     includes: { type: [String], default: [] },
+    // What the fare does not cover. Kept per package rather than assumed, since
+    // it differs between a domestic tour and an overseas one.
+    excludes: { type: [String], default: [] },
     perks: { type: [String], default: [] },
     highlights: { type: [String], default: [] },
 

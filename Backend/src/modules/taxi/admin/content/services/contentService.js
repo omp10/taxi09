@@ -82,6 +82,7 @@ const normalizePackagePayload = (payload = {}) => {
     badgeTone: clean(payload.badgeTone) || 'bg-[#FFC107] text-[#111827]',
     stops: toArray(payload.stops),
     includes: toArray(payload.includes),
+    excludes: toArray(payload.excludes),
     perks: toArray(payload.perks),
     highlights: toArray(payload.highlights),
     image: clean(payload.image),

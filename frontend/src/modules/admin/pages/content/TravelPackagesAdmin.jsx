@@ -17,6 +17,7 @@ const emptyForm = (scope) => ({
   badge: '',
   stops: '',
   includes: '',
+  excludes: '',
   perks: '',
   highlights: '',
   image: '',
@@ -37,6 +38,7 @@ const toForm = (pkg) => ({
   ...pkg,
   stops: (pkg.stops || []).join(', '),
   includes: (pkg.includes || []).join(', '),
+  excludes: (pkg.excludes || []).join(', '),
   perks: (pkg.perks || []).join(', '),
   highlights: (pkg.highlights || []).join(', '),
   gallery: pkg.gallery || [],
@@ -340,6 +342,13 @@ const TravelPackagesAdmin = () => {
                   </Field>
                   <Field label="Perks" hint="Comma separated" span={3}>
                     <input className={inputClass} value={form.perks} onChange={set('perks')} />
+                  </Field>
+                  <Field
+                    label="Not included"
+                    hint="Comma separated - airfare, personal expenses... Left empty, a general note is shown instead."
+                    span={3}
+                  >
+                    <input className={inputClass} value={form.excludes} onChange={set('excludes')} />
                   </Field>
                 </>
               ),
