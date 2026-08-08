@@ -46,7 +46,8 @@ const formatPickedDate = (value) => {
 
 const rupees = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`;
 
-const DESTINATIONS = ['Any Destination', 'Himachal Pradesh', 'Goa', 'Kashmir', 'Uttarakhand', 'Rajasthan', 'Kerala'];
+/** The first option always means "no filter"; the rest come from the packages. */
+const ANY_DESTINATION = 'Any Destination';
 const TRAVELERS = ['1 Adult', '2 Adults', '2 Adults, 1 Child', '4 Adults', 'Family (6+)'];
 const BUDGETS = [
   { id: 'any', label: 'Any Budget', min: 0, max: Infinity },
@@ -133,7 +134,7 @@ const ToursHome = () => {
   const location = useLocation();
   const routePrefix = useMemo(() => getRoutePrefix(location.pathname), [location.pathname]);
 
-  const [destination, setDestination] = useState(DESTINATIONS[0]);
+  const [destination, setDestination] = useState(ANY_DESTINATION);
   const [travelers, setTravelers] = useState(TRAVELERS[1]);
   const [budgetId, setBudgetId] = useState(BUDGETS[0].id);
   const [startDate, setStartDate] = useState('');
@@ -160,6 +161,16 @@ const ToursHome = () => {
     if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return 0;
     return Math.max(1, Math.round((end - start) / 86400000) + 1);
   }, [endDate, startDate]);
+
+  // Regions we actually run packages to, so a new one appears without an edit
+  // here and a retired one stops being offered.
+  const destinations = useMemo(
+    () => [
+      ANY_DESTINATION,
+      ...[...new Set(packages.map((pkg) => pkg?.state || pkg?.country).filter(Boolean))].sort(),
+    ],
+    [packages],
+  );
 
   const visiblePackages = useMemo(() => {
     const range = BUDGETS.find((item) => item.id === budgetId) || BUDGETS[0];
@@ -235,7 +246,7 @@ const ToursHome = () => {
                     onChange={(event) => setDestination(event.target.value)}
                     className="w-full min-w-0 appearance-none truncate bg-transparent pr-3.5 text-[10.5px] font-bold text-white outline-none"
                   >
-                    {DESTINATIONS.map((option) => (
+                    {destinations.map((option) => (
                       <option key={option} value={option} className="text-slate-900">
                         {option}
                       </option>

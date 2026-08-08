@@ -33,7 +33,6 @@ import contentService from '../../services/contentService';
 
 const getRoutePrefix = (pathname = '') => (pathname.startsWith('/taxi/user') ? '/taxi/user' : '');
 
-const CITIES = ['Goa', 'Delhi', 'Mumbai', 'Udaipur', 'Hyderabad', 'Jaipur'];
 
 const destinations = [
   { city: 'Goa', price: 899, image: '/taxi09_hotel_destination_goa.png' },
@@ -238,6 +237,13 @@ const HotelHome = () => {
     return () => window.clearInterval(timer);
   }, []);
 
+  // The cities we actually have hotels in. A hotel added in a seventh city
+  // shows up here on its own; a hardcoded list would have left it unreachable.
+  const cities = useMemo(
+    () => [...new Set(hotels.map((hotel) => hotel?.city).filter(Boolean))].sort(),
+    [hotels],
+  );
+
   const nights = nightsBetween(checkIn, checkOut);
 
   const visibleHotels = useMemo(() => {
@@ -346,7 +352,7 @@ const HotelHome = () => {
                 onChange={(event) => setDestination(event.target.value)}
                 className="min-w-0 flex-1 appearance-none bg-transparent text-[13px] font-extrabold outline-none"
               >
-                {CITIES.map((city) => (
+                {cities.map((city) => (
                   <option key={city} value={city}>
                     {city}, India
                   </option>
