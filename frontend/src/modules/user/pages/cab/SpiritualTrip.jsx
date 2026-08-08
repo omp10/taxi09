@@ -4,18 +4,9 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, ChevronRight, MapPin } from 'lucide-react';
 import contentService from '../../services/contentService';
 
-const FALLBACK_DESTINATIONS = [
-  { id: 'ujjain',      name: 'Ujjain',       subtitle: 'Mahakaleshwar Jyotirlinga', dist: '55 km',  fare: '₹800–₹1,200',  emoji: '🛕', accent: 'bg-[linear-gradient(135deg,#FDF4FF_0%,#F3E8FF_100%)]' },
-  { id: 'omkareshwar', name: 'Omkareshwar',  subtitle: 'Jyotirlinga on Narmada',   dist: '77 km',  fare: '₹1,000–₹1,500', emoji: '🙏', accent: 'bg-[linear-gradient(135deg,#FFF7ED_0%,#FFE5C2_100%)]' },
-  { id: 'maheshwar',   name: 'Maheshwar',    subtitle: 'Ahilya Fort & Ghats',      dist: '91 km',  fare: '₹1,200–₹1,800', emoji: '⛵', accent: 'bg-[linear-gradient(135deg,#EFF6FF_0%,#DBEAFE_100%)]' },
-  { id: 'orchha',      name: 'Orchha',       subtitle: 'Ram Raja Temple',          dist: '320 km', fare: '₹3,500–₹5,000', emoji: '🏯', accent: 'bg-[linear-gradient(135deg,#F0FDF4_0%,#BBF7D0_100%)]' },
-  { id: 'omkareshwar2',name: 'Pitambara Peeth', subtitle: 'Datia, Madhya Pradesh', dist: '210 km', fare: '₹2,500–₹3,500', emoji: '🌸', accent: 'bg-[linear-gradient(135deg,#FDF4FF_0%,#FBCFE8_100%)]' },
-  { id: 'amarkantak',  name: 'Amarkantak',   subtitle: 'Source of Narmada River',  dist: '380 km', fare: '₹4,000–₹5,500', emoji: '🏔️', accent: 'bg-[linear-gradient(135deg,#F0FDF4_0%,#D1FAE5_100%)]' },
-];
-
 const SpiritualTrip = () => {
   const navigate = useNavigate();
-  const [destinations, setDestinations] = useState(FALLBACK_DESTINATIONS);
+  const [destinations, setDestinations] = useState([]);
 
   useEffect(() => {
     let cancelled = false;

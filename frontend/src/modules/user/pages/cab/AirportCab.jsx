@@ -4,12 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, MapPin, Calendar, Clock, ChevronRight, AlertCircle, Plane } from 'lucide-react';
 import { getRideFares } from '../../services/userService';
 
-const FALLBACK_VEHICLES = [
-  { id: 'mini',  name: 'Mini Cab', icon: '🚕', fare: 499,  desc: 'Swift, Alto, WagonR',    seats: 4 },
-  { id: 'sedan', name: 'Sedan',    icon: '🚗', fare: 699,  desc: 'Dzire, Amaze, Aspire',   seats: 4 },
-  { id: 'suv',   name: 'SUV',      icon: '🚙', fare: 999,  desc: 'Ertiga, Innova, Crysta', seats: 6 },
-];
-
 const TERMINALS = ['T1', 'T2', 'T3'];
 
 const AirportCab = () => {
@@ -18,15 +12,15 @@ const AirportCab = () => {
   const [terminal, setTerminal] = useState('');
   const [date,     setDate]     = useState('');
   const [time,     setTime]     = useState('');
-  const [vehicles, setVehicles] = useState(FALLBACK_VEHICLES);
-  const [vehicle,  setVehicle]  = useState(FALLBACK_VEHICLES[0].id);
+  const [vehicles, setVehicles] = useState([]);
+  const [vehicle,  setVehicle]  = useState('');
   const [errors,   setErrors]   = useState({});
 
   const selectedVehicle = vehicles.find(v => v.id === vehicle) || vehicles[0];
 
   useEffect(() => {
     let cancelled = false;
-    getRideFares({ transportType: 'taxi' }, FALLBACK_VEHICLES).then((results) => {
+    getRideFares({ transportType: 'taxi' }).then((results) => {
       if (cancelled) return;
       setVehicles(results);
       setVehicle(results[0]?.id);
@@ -47,7 +41,7 @@ const AirportCab = () => {
   const handleBook = () => {
     if (!validate()) return;
     navigate('/cab/airport-confirm', {
-      state: { isAirport: true, pickup, terminal, date, time, vehicle: selectedVehicle, fare: selectedVehicle.fare },
+      state: { isAirport: true, pickup, terminal, date, time, vehicle: selectedVehicle, fare: selectedVehicle?.fare },
     });
   };
 

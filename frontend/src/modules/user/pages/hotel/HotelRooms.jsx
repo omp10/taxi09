@@ -50,74 +50,6 @@ const GALLERY = [
  * Room catalogue. `multiplier` is applied to the hotel's nightly rate so every
  * hotel gets a consistent, sensibly-priced ladder of rooms.
  */
-const FALLBACK_ROOM_TEMPLATES = [
-  {
-    id: 'deluxe',
-    name: 'Deluxe Room',
-    category: 'Deluxe',
-    sqft: 300,
-    adults: 2,
-    children: 1,
-    bed: '1 King Bed',
-    multiplier: 1,
-    perks: ['Breakfast Included', 'Free Cancellation'],
-    image: '/taxi09_hotel_room_1.jpg',
-    left: 3,
-  },
-  {
-    id: 'premium-deluxe',
-    name: 'Premium Deluxe Room',
-    category: 'Premium',
-    sqft: 380,
-    adults: 2,
-    children: 1,
-    bed: '1 King Bed',
-    multiplier: 1.21,
-    perks: ['Breakfast Included', 'Free Cancellation'],
-    image: '/taxi09_hotel_room_2.jpg',
-    left: 5,
-  },
-  {
-    id: 'executive-suite',
-    name: 'Executive Suite',
-    category: 'Suite',
-    sqft: 520,
-    adults: 2,
-    children: 2,
-    bed: '1 King Bed',
-    multiplier: 1.66,
-    perks: ['Breakfast Included', 'Free Cancellation'],
-    image: '/taxi09_hotel_room_3.jpg',
-    left: 2,
-  },
-  {
-    id: 'family-suite',
-    name: 'Family Suite',
-    category: 'Family',
-    sqft: 650,
-    adults: 4,
-    children: 2,
-    bed: '2 King Beds',
-    multiplier: 2.22,
-    perks: ['Breakfast Included', 'Free Cancellation'],
-    image: '/taxi09_hotel_room_4.jpg',
-    left: 1,
-  },
-  {
-    id: 'presidential',
-    name: 'Presidential Suite',
-    category: 'Premium',
-    sqft: 900,
-    adults: 4,
-    children: 2,
-    bed: '2 King Beds',
-    multiplier: 3.1,
-    perks: ['Breakfast Included', 'Airport Pickup', 'Free Cancellation'],
-    image: '/taxi09_hotel_hero.png',
-    left: 1,
-  },
-];
-
 const TABS = ['All Rooms', 'Deluxe', 'Suite', 'Family', 'Premium'];
 
 const formatRange = (checkIn, checkOut) => {
@@ -178,7 +110,9 @@ const HotelRooms = () => {
         ? hotel.rooms
             .filter((room) => room.active !== false)
             .map((room) => ({ ...room, id: room.key, multiplier: room.priceMultiplier, left: room.roomsLeft }))
-        : FALLBACK_ROOM_TEMPLATES;
+        // A hotel with no room types has none to show. Inventing five would
+        // quote prices for rooms that do not exist.
+        : [];
 
       return templates.map((template) => {
         const price = Math.round(((hotel?.price || 0) * template.multiplier) / 10) * 10;

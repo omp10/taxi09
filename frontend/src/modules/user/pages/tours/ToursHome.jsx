@@ -75,99 +75,6 @@ const TRUST = [
   { icon: Headset, title: '24/7 Support', sub: "We're here to help" },
 ];
 
-const FALLBACK_PACKAGES = [
-  {
-    id: 'himachal',
-    gallery: ['/taxi09_pkg_himachal.jpg', '/taxi09_tours_hero_mountain.png', '/taxi09_pkg_kashmir.jpg'],
-    tag: 'Bestseller',
-    tagTone: 'bg-[var(--primary)] text-[var(--text)]',
-    title: 'Himachal Delight',
-    stops: ['Shimla', 'Manali', 'Solang Valley', 'Dharamshala'],
-    state: 'Himachal Pradesh',
-    category: 'Adventure',
-    image: '/taxi09_pkg_himachal.jpg',
-    days: '5 Days / 4 Nights',
-    durationDays: 5,
-    includes: ['Meals', 'Stay', 'Sightseeing'],
-    rating: 4.6,
-    reviews: '1.2K',
-    oldPrice: 16999,
-    price: 11999,
-  },
-  {
-    id: 'goa',
-    gallery: ['/taxi09_pkg_goa.jpg', '/taxi09_tours_hero_beach.png', '/taxi09_hotel_hero_resort_v2.png'],
-    tag: 'Popular',
-    tagTone: 'bg-[var(--primary)] text-[var(--text)]',
-    title: 'Goa Beach Escape',
-    stops: ['North Goa', 'South Goa', 'Cruise', 'Water Sports'],
-    state: 'Goa',
-    category: 'Beach',
-    image: '/taxi09_pkg_goa.jpg',
-    days: '4 Days / 3 Nights',
-    durationDays: 4,
-    includes: ['Meals', 'Stay', 'Sightseeing'],
-    rating: 4.4,
-    reviews: '890',
-    oldPrice: 13499,
-    price: 8999,
-  },
-  {
-    id: 'kashmir',
-    gallery: ['/taxi09_pkg_kashmir.jpg', '/taxi09_tours_hero_mountain.png', '/taxi09_pkg_himachal.jpg'],
-    tag: 'New',
-    tagTone: 'bg-emerald-100 text-emerald-700',
-    title: 'Kashmir Paradise',
-    stops: ['Srinagar', 'Gulmarg', 'Pahalgam', 'Dal Lake'],
-    state: 'Kashmir',
-    category: 'Honeymoon',
-    image: '/taxi09_pkg_kashmir.jpg',
-    days: '6 Days / 5 Nights',
-    durationDays: 6,
-    includes: ['Meals', 'Stay', 'Sightseeing'],
-    rating: 4.8,
-    reviews: '756',
-    oldPrice: 22999,
-    price: 16999,
-  },
-  {
-    id: 'rishikesh',
-    gallery: ['/taxi09_pkg_rishikesh.jpg', '/taxi09_tours_hero_spiritual.png', '/taxi09_pkg_himachal.jpg'],
-    tag: 'Spiritual',
-    tagTone: 'bg-violet-100 text-violet-700',
-    title: 'Rishikesh Yoga Retreat',
-    stops: ['Rishikesh', 'Haridwar', 'Yoga Sessions', 'Ganga Aarti'],
-    state: 'Uttarakhand',
-    category: 'Pilgrimage',
-    image: '/taxi09_pkg_rishikesh.jpg',
-    days: '3 Days / 2 Nights',
-    durationDays: 3,
-    includes: ['Meals', 'Stay', 'Activities'],
-    rating: 4.5,
-    reviews: '612',
-    oldPrice: 9999,
-    price: 6499,
-  },
-  {
-    id: 'udaipur',
-    gallery: ['/taxi09_pkg_rajasthan.jpg', '/taxi09_hotel_destination_udaipur.png', '/taxi09_hotel_room_3.jpg'],
-    tag: 'Luxury',
-    tagTone: 'bg-amber-100 text-amber-700',
-    title: 'Royal Rajasthan',
-    stops: ['Udaipur', 'Jodhpur', 'Jaisalmer', 'Desert Camp'],
-    state: 'Rajasthan',
-    category: 'Luxury',
-    image: '/taxi09_pkg_rajasthan.jpg',
-    days: '7 Days / 6 Nights',
-    durationDays: 7,
-    includes: ['Meals', 'Stay', 'Sightseeing'],
-    rating: 4.7,
-    reviews: '1.1K',
-    oldPrice: 34999,
-    price: 26999,
-  },
-];
-
 const INCLUDE_ICONS = { Meals: Luggage, Stay: BedDouble, Sightseeing: Camera, Activities: Plane };
 
 /** API records use durationLabel/includes; the card expects days/includes. */
@@ -233,11 +140,11 @@ const ToursHome = () => {
   const [endDate, setEndDate] = useState('');
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [category, setCategory] = useState('All Packages');
-  const [packages, setPackages] = useState(FALLBACK_PACKAGES);
+  const [packages, setPackages] = useState([]);
 
   useEffect(() => {
     let active = true;
-    contentService.getTravelPackages('domestic', FALLBACK_PACKAGES).then((results) => {
+    contentService.getTravelPackages('domestic').then((results) => {
       if (active) setPackages(results.map((item) => (item.slug ? fromApi(item) : item)));
     });
     return () => {

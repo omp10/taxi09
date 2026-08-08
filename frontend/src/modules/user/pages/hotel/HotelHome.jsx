@@ -73,21 +73,6 @@ const SORTS = [
   { id: 'rating-desc', label: 'Top Rated' },
 ];
 
-const FALLBACK_HOTELS = [
-  { id: 'grand-orion', name: 'The Grand Orion', city: 'Delhi', area: 'Connaught Place, New Delhi', distance: '2.3 km from City Centre', image: '/taxi09_hotel_hero.png', badge: 'Popular', rating: 4.5, reviews: '2.5K', oldPrice: 3499, price: 2649, amenities: ['Free Wi-Fi', 'Breakfast', 'Free Cancellation', 'Pay at Hotel'] },
-  { id: 'sapphire-inn', name: 'Hotel Sapphire Inn', city: 'Hyderabad', area: 'Banjara Hills, Hyderabad', distance: '1.8 km from City Centre', image: '/taxi09_hotel_hero_city_v2.png', badge: 'Best Value', rating: 4.2, reviews: '1.3K', oldPrice: 3299, price: 2739, amenities: ['Free Wi-Fi', 'Pool', 'Parking', 'Pay at Hotel'] },
-  { id: 'palm-vista', name: 'Palm Vista Resort', city: 'Goa', area: 'Candolim Beach, Goa', distance: '900 m from Beach', image: '/taxi09_hotel_hero_resort_v2.png', badge: 'Beach Stay', rating: 4.7, reviews: '3.1K', oldPrice: 5199, price: 3899, amenities: ['Beachfront', 'Pool', 'Breakfast', 'Pay at Hotel'] },
-  { id: 'lake-palace', name: 'Heritage Lake Palace', city: 'Udaipur', area: 'Pichola Road, Udaipur', distance: '1.2 km from Lake Pichola', image: '/taxi09_hotel_destination_udaipur.png', badge: 'Premium', rating: 4.6, reviews: '1.9K', oldPrice: 4599, price: 3299, amenities: ['Lake View', 'Spa', 'Breakfast', 'Pay at Hotel'] },
-  { id: 'marine-bay', name: 'Marine Bay Suites', city: 'Mumbai', area: 'Colaba, Mumbai', distance: '2.1 km from Gateway', image: '/taxi09_hotel_destination_mumbai.png', badge: 'City View', rating: 4.4, reviews: '2.2K', oldPrice: 4299, price: 3199, amenities: ['Sea View', 'Gym', 'Free Wi-Fi', 'Pay at Hotel'] },
-  { id: 'imperial-courtyard', name: 'The Imperial Courtyard', city: 'Delhi', area: 'Karol Bagh, Delhi', distance: '3.4 km from Connaught Place', image: '/taxi09_hotel_destination_delhi.png', badge: 'Top Rated', rating: 4.5, reviews: '1.7K', oldPrice: 3799, price: 2849, amenities: ['Free Wi-Fi', 'Breakfast', 'Parking', 'Pay at Hotel'] },
-  { id: 'saffron-suites', name: 'Saffron Business Suites', city: 'Delhi', area: 'Aerocity, New Delhi', distance: '1.1 km from Airport', image: '/taxi09_hotel_room_1.jpg', badge: 'Business', rating: 4.3, reviews: '980', oldPrice: 4199, price: 3149, amenities: ['Airport Shuttle', 'Free Wi-Fi', 'Gym', 'Pay at Hotel'] },
-  { id: 'coral-cove', name: 'Coral Cove Beach Villas', city: 'Goa', area: 'Anjuna, North Goa', distance: '400 m from Beach', image: '/taxi09_hotel_room_2.jpg', badge: 'Villa', rating: 4.8, reviews: '1.4K', oldPrice: 6499, price: 4799, amenities: ['Private Pool', 'Beachfront', 'Breakfast', 'Pay at Hotel'] },
-  { id: 'pink-city', name: 'Pink City Haveli', city: 'Jaipur', area: 'Hawa Mahal Road, Jaipur', distance: '600 m from Hawa Mahal', image: '/taxi09_hotel_room_3.jpg', badge: 'Heritage', rating: 4.4, reviews: '2.0K', oldPrice: 3599, price: 2499, amenities: ['Heritage', 'Rooftop', 'Breakfast', 'Pay at Hotel'] },
-  { id: 'harbour-view', name: 'Harbour View Residency', city: 'Mumbai', area: 'Bandra West, Mumbai', distance: '3.0 km from Bandstand', image: '/taxi09_hotel_room_4.jpg', badge: 'New', rating: 4.1, reviews: '540', oldPrice: 3899, price: 2599, amenities: ['Free Wi-Fi', 'Parking', 'Free Cancellation', 'Pay at Hotel'] },
-  { id: 'deccan-grand', name: 'Deccan Grand Hyderabad', city: 'Hyderabad', area: 'Gachibowli, Hyderabad', distance: '2.6 km from HITEC City', image: '/taxi09_hotel_hero_city_v2.png', badge: 'Business', rating: 4.2, reviews: '1.1K', oldPrice: 3299, price: 2299, amenities: ['Free Wi-Fi', 'Gym', 'Breakfast', 'Pay at Hotel'] },
-  { id: 'aravalli-retreat', name: 'Aravalli Hill Retreat', city: 'Udaipur', area: 'Fateh Sagar, Udaipur', distance: '2.0 km from Fateh Sagar', image: '/taxi09_hotel_hero_resort_v2.png', badge: 'Retreat', rating: 4.6, reviews: '860', oldPrice: 5299, price: 3699, amenities: ['Hill View', 'Spa', 'Pool', 'Pay at Hotel'] },
-];
-
 const toDateKey = (date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -232,11 +217,11 @@ const HotelHome = () => {
   const [sortOpen, setSortOpen] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [searchedFor, setSearchedFor] = useState('');
-  const [hotels, setHotels] = useState(FALLBACK_HOTELS);
+  const [hotels, setHotels] = useState([]);
 
   useEffect(() => {
     let active = true;
-    contentService.getHotels(FALLBACK_HOTELS).then((results) => {
+    contentService.getHotels().then((results) => {
       if (active) setHotels(results.map((item) => ({ ...item, id: item.slug || item._id || item.id })));
     });
     return () => {

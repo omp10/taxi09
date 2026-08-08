@@ -4,13 +4,6 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Users, ChevronRight, Calendar, Clock, MapPin } from 'lucide-react';
 import { getRideFares } from '../../services/userService';
 
-const FALLBACK_VEHICLES = [
-  { id: 'mini',  name: 'Mini Cab', icon: '🚕', baseFare: 800,  desc: 'Swift, Alto',       maxSeats: 4 },
-  { id: 'sedan', name: 'Sedan',    icon: '🚗', baseFare: 1100, desc: 'Dzire, Amaze',      maxSeats: 4 },
-  { id: 'suv',   name: 'SUV',      icon: '🚙', baseFare: 1600, desc: 'Ertiga, Innova',    maxSeats: 6 },
-  { id: 'tempo', name: 'Traveller',icon: '🚐', baseFare: 3200, desc: 'Force Traveller',   maxSeats: 12 },
-];
-
 const SpiritualTripVehicle = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -18,13 +11,13 @@ const SpiritualTripVehicle = () => {
 
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [vehicles, setVehicles] = useState(FALLBACK_VEHICLES);
-  const [vehicle, setVehicle] = useState(FALLBACK_VEHICLES[1].id);
+  const [vehicles, setVehicles] = useState([]);
+  const [vehicle, setVehicle] = useState('');
   const [seats, setSeats] = useState(2);
 
   useEffect(() => {
     let cancelled = false;
-    getRideFares({ transportType: 'taxi' }, FALLBACK_VEHICLES).then((results) => {
+    getRideFares({ transportType: 'taxi' }).then((results) => {
       if (cancelled) return;
       setVehicles(results);
       // Sedan-equivalent is the sensible default; fall back to the first class.
@@ -40,7 +33,19 @@ const SpiritualTripVehicle = () => {
 
   const selectedVehicle = vehicles.find(v => v.id === vehicle) || vehicles[0];
 
-  
+  // Nothing to price until the fares have loaded. This used to be hidden by a
+  // hardcoded vehicle list, which meant a real empty response rendered invented
+  // prices instead of saying nothing was available.
+  if (!selectedVehicle) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#fffdf8] px-6 text-center">
+        <p className="text-[13.5px] font-semibold text-slate-500">
+          {vehicles.length === 0 ? 'Loading vehicles…' : 'No vehicles are available right now.'}
+        </p>
+      </div>
+    );
+  }
+
   // Calculate approximate fare based on base vehicle fare and trip multiplier
   const multiplier = trip.dist.includes('km') ? parseInt(trip.dist) / 50 : 1;
   const estimatedFare = Math.round(selectedVehicle.baseFare * multiplier);

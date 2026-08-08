@@ -18,45 +18,6 @@ import {
 } from 'lucide-react';
 import BottomNavbar from '../components/BottomNavbar';
 
-const FALLBACK_DRIVERS = [
-  {
-    name: 'Rohit Sharma',
-    rating: '4.9',
-    badge: 'Top Rated',
-    eta: '18 min',
-    distance: '6.2 km away',
-    experience: '6+ Years',
-    trips: '3200+ Trips',
-    language: 'Hindi, English',
-    car: 'Toyota Innova Crysta',
-    plate: 'MP09 AB 1234',
-  },
-  {
-    name: 'Aman Verma',
-    rating: '4.8',
-    badge: 'Experienced',
-    eta: '22 min',
-    distance: '7.3 km away',
-    experience: '5+ Years',
-    trips: '2800+ Trips',
-    language: 'Hindi, English',
-    car: 'Mahindra XUV700',
-    plate: 'MP09 CD 5678',
-  },
-  {
-    name: 'Vikram Singh',
-    rating: '4.7',
-    badge: 'Very Reliable',
-    eta: '24 min',
-    distance: '8.1 km away',
-    experience: '7+ Years',
-    trips: '4100+ Trips',
-    language: 'Hindi, English',
-    car: 'Toyota Fortuner',
-    plate: 'MP09 EF 9123',
-  },
-];
-
 // Real drivers in working attire - uniform/formal shirt, face to camera.
 // Studio fashion headshots and driving-POV shots both read wrong here.
 const driverImages = [
@@ -81,11 +42,11 @@ const fromApi = (item) => ({
 
 const PermanentDriverSearch = () => {
   const navigate = useNavigate();
-  const [drivers, setDrivers] = useState(FALLBACK_DRIVERS);
+  const [drivers, setDrivers] = useState([]);
 
   useEffect(() => {
     let active = true;
-    contentService.getHireDrivers('permanent', FALLBACK_DRIVERS).then((results) => {
+    contentService.getHireDrivers('permanent').then((results) => {
       if (active) setDrivers(results.map((item) => (item.slug ? fromApi(item) : item)));
     });
     return () => {

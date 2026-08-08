@@ -28,13 +28,6 @@ const fromApi = (promo) => {
   };
 };
 
-const FALLBACK_PROMOS = [
-  { id: '1', code: 'RYDON50',  discount: 50,  type: 'flat',    service: 'All Rides',    expiry: '30 Apr 2026', minFare: 100 },
-  { id: '2', code: 'GOFREE',   discount: 100, type: 'flat',    service: 'Cab Only',     expiry: '15 Apr 2026', minFare: 150 },
-  { id: '3', code: 'SAVE20',   discount: 20,  type: 'percent', service: 'Parcel',       expiry: '30 Apr 2026', minFare: 50  },
-  { id: '4', code: 'NEWUSER',  discount: 75,  type: 'flat',    service: 'First Ride',   expiry: '30 Apr 2026', minFare: 80  },
-];
-
 const SkeletonCard = () => (
   <div className="animate-pulse rounded-[20px] bg-white/70 border border-white/80 p-4 space-y-3">
     <div className="flex justify-between">
@@ -74,9 +67,9 @@ const PromoCodes = () => {
         const results = unwrap(promoRes);
         const list = Array.isArray(results) ? results : results?.results || [];
 
-        if (active) setPromos(list.length ? list.map(fromApi) : FALLBACK_PROMOS);
+        if (active) setPromos(list.map(fromApi));
       } catch {
-        if (active) setPromos(FALLBACK_PROMOS);
+        if (active) setPromos([]);
       } finally {
         if (active) setLoading(false);
       }
