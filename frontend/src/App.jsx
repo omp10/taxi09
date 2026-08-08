@@ -24,7 +24,7 @@ const UserMembership = lazy(() => import('./modules/user/pages/membership/Member
 const UserAttachCar = lazy(() => import('./modules/user/pages/attach/AttachCar'));
 const UserTravelStories = lazy(() => import('./modules/user/pages/stories/TravelStoriesRoute'));
 const BikeRentalRoute = lazy(() => import('./modules/user/pages/rental/BikeRentalRoute'));
-const UserInternship = lazy(() => import('./modules/user/pages/internship/DesktopInternship'));
+const UserInternship = lazy(() => import('./modules/user/pages/internship/InternshipRoute'));
 const UserVerifyCertificate = lazy(() => import('./modules/user/pages/internship/VerifyCertificate'));
 const UserTravelStoryDetail = lazy(() => import('./modules/user/pages/stories/TravelStoryDetail'));
 const UserCreateTravelStory = lazy(() => import('./modules/user/pages/stories/CreateTravelStory'));
