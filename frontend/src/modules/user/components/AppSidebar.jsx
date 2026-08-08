@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import {
   ChevronRight,
+  Crown,
   FileText,
   Gift,
   Headset,
@@ -19,6 +20,7 @@ import {
   X,
 } from 'lucide-react';
 import { clearLocalUserSession, userAuthService } from '../services/authService';
+import { userService } from '../services/userService';
 
 /**
  * Slide-in navigation drawer for the mobile app bar.
@@ -39,6 +41,7 @@ const NAV_SECTIONS = [
       { icon: FileText, label: 'My Bookings', path: '/taxi/user/activity' },
       { icon: MapPin, label: 'My Trips', path: '/taxi/user/activity', state: { tab: 'Rides' } },
       { icon: Wallet, label: 'Wallet', path: '/taxi/user/wallet', showsBalance: true },
+      { icon: Crown, label: 'Membership', path: '/taxi/user/membership', showsTier: true },
       { icon: MapPin, label: 'Favourite Locations', path: '/taxi/user/profile/addresses' },
       { icon: Tag, label: 'Offers & Deals', path: '/taxi/user/promo', badge: 'NEW' },
       { icon: Gift, label: 'Refer & Earn', path: '/taxi/user/referral', badge: 'EARN' },
@@ -67,6 +70,7 @@ const AppSidebar = ({ open, onClose }) => {
   const location = useLocation();
   const [profile, setProfile] = useState({ name: '', phone: '', image: '' });
   const [wallet, setWallet] = useState(null);
+  const [membership, setMembership] = useState(null);
 
   // Loaded on first open, so a user who never opens the drawer pays nothing.
   useEffect(() => {
@@ -75,8 +79,12 @@ const AppSidebar = ({ open, onClose }) => {
 
     const pick = (payload) => payload?.data || payload?.result || payload || {};
 
-    Promise.allSettled([userAuthService.getCurrentUser(), userAuthService.getWallet()]).then(
-      ([userResult, walletResult]) => {
+    Promise.allSettled([
+      userAuthService.getCurrentUser(),
+      userAuthService.getWallet(),
+      userService.getMyMembership(),
+    ]).then(
+      ([userResult, walletResult, membershipResult]) => {
         if (cancelled) return;
 
         if (userResult.status === 'fulfilled') {
@@ -88,6 +96,10 @@ const AppSidebar = ({ open, onClose }) => {
             phone: user.phone || '',
             image: user.profileImage || user.image || '',
           });
+        }
+
+        if (membershipResult.status === 'fulfilled') {
+          setMembership(pick(membershipResult.value).active || null);
         }
 
         if (walletResult.status === 'fulfilled') {
@@ -186,8 +198,15 @@ const AppSidebar = ({ open, onClose }) => {
               </span>
             )}
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-[15px] font-black text-slate-900">
-                {profile.name || 'Your account'}
+              <span className="flex items-center gap-1.5">
+                <span className="truncate text-[15px] font-black text-slate-900">
+                  {profile.name || 'Your account'}
+                </span>
+                {membership ? (
+                  <span className="flex shrink-0 items-center gap-1 rounded-md bg-[#FFF0B8] px-1.5 py-0.5 text-[9.5px] font-black text-[#9A6B00]">
+                    <Crown size={10} fill="currentColor" /> {membership.planName}
+                  </span>
+                ) : null}
               </span>
               <span className="block truncate text-[12.5px] font-semibold text-slate-500">
                 {profile.phone || 'Tap to view profile'}
@@ -227,6 +246,13 @@ const AppSidebar = ({ open, onClose }) => {
                     {item.badge ? (
                       <span className="rounded-md bg-[#FFF0B8] px-1.5 py-0.5 text-[9.5px] font-black text-[#9A6B00]">
                         {item.badge}
+                      </span>
+                    ) : null}
+
+                    {/* The tier only appears once a membership is actually held. */}
+                    {item.showsTier && membership ? (
+                      <span className="rounded-md bg-[#FFF0B8] px-1.5 py-0.5 text-[10px] font-black text-[#9A6B00]">
+                        {membership.planName}
                       </span>
                     ) : null}
 

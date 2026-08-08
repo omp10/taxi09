@@ -13,6 +13,7 @@ import api from '../../../shared/api/axiosInstance';
 import BottomNavbar from '../components/BottomNavbar';
 import AppHeader from '../components/AppHeader';
 import { userAuthService } from '../services/authService';
+import { userService } from '../services/userService';
 import {
   CURRENT_RIDE_UPDATED_EVENT,
   getCurrentRide,
@@ -27,6 +28,15 @@ const STATIC_BOTTOM_BANNER = '/taxi09_home_bottom_banner.png';
 const RENTAL_SELF_DRIVE_IMAGE = '/taxi09_rental_self_drive.png';
 const RENTAL_WITH_DRIVER_IMAGE = '/taxi09_rental_with_driver.png';
 const RENTAL_BIKE_IMAGE = '/taxi09_rental_bike.png';
+
+/** How each application state reads on the homepage. */
+const ATTACH_STATUS = {
+  draft: { label: 'Draft - finish your application', chip: 'Draft', tone: 'bg-slate-100 text-slate-600' },
+  submitted: { label: 'Submitted for verification', chip: 'In review', tone: 'bg-amber-50 text-amber-700' },
+  under_review: { label: 'Being verified by our team', chip: 'In review', tone: 'bg-amber-50 text-amber-700' },
+  approved: { label: 'Approved and live', chip: 'Live', tone: 'bg-emerald-50 text-emerald-700' },
+  rejected: { label: 'Needs changes - tap to fix', chip: 'Action needed', tone: 'bg-red-50 text-red-600' },
+};
 
 const getCurrentRideIcon = (ride) => {
   const customIcon = String(
@@ -322,7 +332,24 @@ const MobileHome = () => {
     { iconImage: '/taxi09_service_bookings.png', label: 'My\nBookings', path: '/taxi/user/activity' },
     { iconImage: '/taxi09_service_travel.png', label: 'International\nTrips', path: '/taxi/user/international' },
     { iconImage: '/taxi09_service_driver.png', label: 'Driver\nRegistration', path: '/taxi/driver/login' },
+    { iconImage: '/taxi09_service_attach_car.png', label: 'Attach\nYour Car', path: '/taxi/user/attach-car' },
   ];
+
+  // The owner's own car listing, so the homepage can show where it stands.
+  const [attachedVehicle, setAttachedVehicle] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    userService
+      .listAttachedVehicles()
+      .then((response) => {
+        if (cancelled) return;
+        const rows = response?.data?.results || [];
+        setAttachedVehicle(rows[0] || null);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
 
   const [topIndex, setTopIndex] = useState(0);
   const [bottomIndex, setBottomIndex] = useState(0);
@@ -412,6 +439,27 @@ const MobileHome = () => {
             </div>
           </div>
         )}
+
+        {/* Where the owner's car listing stands, if they have one. */}
+        {attachedVehicle ? (
+          <div
+            onClick={() => navigate('/taxi/user/attach-car')}
+            className="mt-2 flex items-center gap-3 rounded-2xl border border-slate-100 bg-white p-3.5 shadow-sm cursor-pointer"
+          >
+            <img src="/taxi09_service_attach_car.png" alt="" className="h-10 w-10 object-contain" />
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[13px] font-black text-slate-900">
+                {[attachedVehicle.brand, attachedVehicle.model].filter(Boolean).join(' ') || 'Your car listing'}
+              </p>
+              <p className="text-[11.5px] text-slate-500">
+                {attachedVehicle.reference} · {ATTACH_STATUS[attachedVehicle.status]?.label || attachedVehicle.status}
+              </p>
+            </div>
+            <span className={`rounded-lg px-2 py-1 text-[10.5px] font-black ${ATTACH_STATUS[attachedVehicle.status]?.tone || 'bg-slate-100 text-slate-600'}`}>
+              {ATTACH_STATUS[attachedVehicle.status]?.chip || attachedVehicle.status}
+            </span>
+          </div>
+        ) : null}
 
         <section className="-mx-4 mt-1">
           {!bannersFetched || !topImageReady ? <BannerSkeleton ratio="16 / 9" full /> : null}

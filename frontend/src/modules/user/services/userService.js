@@ -153,4 +153,17 @@ export const userService = {
     const response = await api.get('/users/pooling/bookings');
     return response;
   },
+  // Membership: plans are public; buying and reading your own need a session.
+  getMembershipPlans: async () => api.get('/users/membership-plans'),
+  getMyMembership: async () => api.get('/users/membership'),
+  purchaseMembership: async (planId) => api.post('/users/membership/purchase', { planId }),
+
+  // Attach your car
+  listAttachedVehicles: async () => api.get('/users/attached-vehicles'),
+  getAttachedVehicle: async (id) => api.get(`/users/attached-vehicles/${id}`),
+  createAttachedVehicle: async (payload) => api.post('/users/attached-vehicles', payload),
+  updateAttachedVehicle: async (id, payload) => api.patch(`/users/attached-vehicles/${id}`, payload),
+  submitAttachedVehicle: async (id) => api.post(`/users/attached-vehicles/${id}/submit`),
+  uploadImage: async (dataUrl, folder = 'attached-vehicles') =>
+    api.post('/common/upload/image', { image: dataUrl, folder }),
 };

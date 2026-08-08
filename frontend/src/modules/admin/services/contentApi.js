@@ -49,6 +49,18 @@ export const contentApi = {
   updatePackageBooking: (id, body) => request(`/package-bookings/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
   listAllBookings: () => request('/all-bookings'),
 
+  // Membership tiers and the memberships sold
+  listMembershipPlans: () => request('/membership-plans'),
+  createMembershipPlan: (body) => request('/membership-plans', { method: 'POST', body: JSON.stringify(body) }),
+  updateMembershipPlan: (id, body) => request(`/membership-plans/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  toggleMembershipPlan: (id) => request(`/membership-plans/${id}/toggle`, { method: 'PATCH' }),
+  deleteMembershipPlan: (id) => request(`/membership-plans/${id}`, { method: 'DELETE' }),
+  listMemberships: (params = '') => request(`/memberships${params}`),
+
+  // Cars owners have offered to the platform
+  listAttachedVehicles: (params = '') => request(`/attached-vehicles${params}`),
+  updateAttachedVehicle: (id, body) => request(`/attached-vehicles/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+
   // Content blocks
   listBlocks: () => request('/content-blocks'),
   saveBlock: (body) => request('/content-blocks', { method: 'PUT', body: JSON.stringify(body) }),

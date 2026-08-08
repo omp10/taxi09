@@ -3,6 +3,7 @@ import { TravelPackage } from '../models/TravelPackage.js';
 import { Hotel } from '../models/Hotel.js';
 import { ContentBlock } from '../models/ContentBlock.js';
 import { HireDriver } from '../models/HireDriver.js';
+import { MembershipPlan } from '../models/MembershipPlan.js';
 
 /**
  * Keeps `location` in step with the lat/lng an admin types. GeoJSON wants
@@ -424,5 +425,101 @@ export const toggleHireDriver = async (id) => {
 export const deleteHireDriver = async (id) => {
   const deleted = await HireDriver.findByIdAndDelete(id);
   if (!deleted) throw new ApiError(404, 'Driver not found');
+  return { id };
+};
+
+/* ------------------------------------------------------------------ */
+/* Membership plans                                                    */
+/* ------------------------------------------------------------------ */
+
+const THEMES = ['gold', 'silver', 'black'];
+
+/**
+ * Benefits arrive either as objects from the admin form or as plain lines
+ * ("Priority Booking: Faster confirmations") when seeded or pasted in bulk.
+ */
+const toBenefits = (value) => {
+  const rows = Array.isArray(value)
+    ? value
+    : typeof value === 'string'
+      ? value.split('\n')
+      : [];
+
+  return rows
+    .map((row) => {
+      if (row && typeof row === 'object') {
+        return {
+          icon: clean(row.icon) || 'check',
+          title: clean(row.title),
+          subtitle: clean(row.subtitle),
+        };
+      }
+      const [title, ...rest] = String(row || '').split(':');
+      return { icon: 'check', title: clean(title), subtitle: clean(rest.join(':')) };
+    })
+    .filter((row) => row.title);
+};
+
+const normalizeMembershipPlanPayload = (payload = {}) => ({
+  name: clean(payload.name),
+  tagline: clean(payload.tagline) || 'MEMBER',
+  discountPercent: Math.min(100, Math.max(0, toNumber(payload.discountPercent, 0))),
+  price: Math.max(0, toNumber(payload.price, 0)),
+  oldPrice: Math.max(0, toNumber(payload.oldPrice, 0)),
+  durationMonths: Math.max(1, Math.round(toNumber(payload.durationMonths, 1))),
+  benefits: toBenefits(payload.benefits),
+  theme: THEMES.includes(clean(payload.theme)) ? clean(payload.theme) : 'gold',
+  badge: clean(payload.badge),
+  sortOrder: toNumber(payload.sortOrder, 0),
+  active: payload.active === undefined ? true : Boolean(payload.active),
+});
+
+export const listMembershipPlans = async ({ active } = {}) => {
+  const query = {};
+  if (active !== undefined) query.active = Boolean(active);
+
+  const results = await MembershipPlan.find(query).sort({ sortOrder: 1, price: 1 }).lean();
+  return { results };
+};
+
+export const getMembershipPlan = async (id) => {
+  const plan = await MembershipPlan.findById(id).lean();
+  if (!plan) throw new ApiError(404, 'Membership plan not found');
+  return plan;
+};
+
+export const createMembershipPlan = async (payload) => {
+  const normalized = normalizeMembershipPlanPayload(payload);
+  if (!normalized.name) throw new ApiError(400, 'Plan name is required');
+
+  const slug = await ensureUniqueSlug(MembershipPlan, payload.slug || normalized.name);
+  return MembershipPlan.create({ ...normalized, slug });
+};
+
+export const updateMembershipPlan = async (id, payload) => {
+  const existing = await MembershipPlan.findById(id);
+  if (!existing) throw new ApiError(404, 'Membership plan not found');
+
+  const normalized = normalizeMembershipPlanPayload({ ...existing.toObject(), ...payload });
+  if (payload.slug || payload.name) {
+    normalized.slug = await ensureUniqueSlug(MembershipPlan, payload.slug || normalized.name, id);
+  }
+
+  Object.assign(existing, normalized);
+  await existing.save();
+  return existing;
+};
+
+export const toggleMembershipPlan = async (id) => {
+  const existing = await MembershipPlan.findById(id);
+  if (!existing) throw new ApiError(404, 'Membership plan not found');
+  existing.active = !existing.active;
+  await existing.save();
+  return existing;
+};
+
+export const deleteMembershipPlan = async (id) => {
+  const deleted = await MembershipPlan.findByIdAndDelete(id);
+  if (!deleted) throw new ApiError(404, 'Membership plan not found');
   return { id };
 };

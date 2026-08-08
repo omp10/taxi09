@@ -86,6 +86,14 @@ import {
   getPublicHotels,
   getPublicTravelPackages,
   getPublicHireDrivers,
+  getPublicMembershipPlans,
+  getMyMembership,
+  postMembershipPurchase,
+  getMyAttachedVehicles,
+  getMyAttachedVehicle,
+  postAttachedVehicle,
+  patchAttachedVehicle,
+  postAttachedVehicleSubmit,
 } from '../../admin/content/controllers/contentController.js';
 import { getAppBootstrap, getAppModules, getGeneralSettingsCategory, getGoodsTypes, getPublicBanners, getPublicRideFares, getPublicRentalVehicleCatalog, getPublicRentalVehicleSubcategories, getPublicVehicleTypeCatalog } from '../../admin/controllers/adminController.js';
 import { triggerUserSosAlert } from '../../safety/controllers/safetyController.js';
@@ -112,6 +120,18 @@ userRouter.get('/travel-packages/:slug', getPublicTravelPackageBySlug);
 userRouter.post('/hotel-bookings', authenticate(['user']), postHotelBooking);
 userRouter.get('/hotel-bookings', authenticate(['user']), getMyHotelBookings);
 userRouter.post('/package-bookings', authenticate(['user']), postPackageBooking);
+
+// Membership: plans are public, buying and reading your own needs a session.
+userRouter.get('/membership-plans', getPublicMembershipPlans);
+userRouter.get('/membership', authenticate(['user']), getMyMembership);
+userRouter.post('/membership/purchase', authenticate(['user']), postMembershipPurchase);
+
+// Attach your car: drafts are private to the owner until submitted.
+userRouter.get('/attached-vehicles', authenticate(['user']), getMyAttachedVehicles);
+userRouter.get('/attached-vehicles/:id', authenticate(['user']), getMyAttachedVehicle);
+userRouter.post('/attached-vehicles', authenticate(['user']), postAttachedVehicle);
+userRouter.patch('/attached-vehicles/:id', authenticate(['user']), patchAttachedVehicle);
+userRouter.post('/attached-vehicles/:id/submit', authenticate(['user']), postAttachedVehicleSubmit);
 userRouter.get('/package-bookings', authenticate(['user']), getMyPackageBookings);
 
 // kind is 'hotel' or 'package'; the amount always comes from the stored booking.

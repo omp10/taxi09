@@ -19,6 +19,14 @@ import {
   adminListHireDrivers,
   adminToggleHireDriver,
   adminUpdateHireDriver,
+  adminListMembershipPlans,
+  adminCreateMembershipPlan,
+  adminUpdateMembershipPlan,
+  adminToggleMembershipPlan,
+  adminDeleteMembershipPlan,
+  getAdminMemberships,
+  getAdminAttachedVehicles,
+  updateAdminAttachedVehicle,
 } from '../controllers/contentController.js';
 import {
   getAdminAllBookings,
@@ -63,5 +71,17 @@ contentRouter.patch('/admin/hotel-bookings/:id', updateAdminHotelBooking);
 contentRouter.get('/admin/package-bookings', getAdminPackageBookings);
 contentRouter.patch('/admin/package-bookings/:id', updateAdminPackageBooking);
 contentRouter.get('/admin/all-bookings', getAdminAllBookings);
+
+// Membership tiers, and the memberships sold against them
+contentRouter.get('/admin/membership-plans', adminListMembershipPlans);
+contentRouter.post('/admin/membership-plans', adminCreateMembershipPlan);
+contentRouter.patch('/admin/membership-plans/:id', adminUpdateMembershipPlan);
+contentRouter.patch('/admin/membership-plans/:id/toggle', adminToggleMembershipPlan);
+contentRouter.delete('/admin/membership-plans/:id', adminDeleteMembershipPlan);
+contentRouter.get('/admin/memberships', getAdminMemberships);
+
+// Cars owners have offered to the platform
+contentRouter.get('/admin/attached-vehicles', getAdminAttachedVehicles);
+contentRouter.patch('/admin/attached-vehicles/:id', updateAdminAttachedVehicle);
 
 export default contentRouter;

@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import { ApiError } from '../../../../utils/ApiError.js';
 import { HotelBooking } from '../../admin/content/models/HotelBooking.js';
 import { PackageBooking } from '../../admin/content/models/PackageBooking.js';
+import { UserMembership } from '../../admin/content/models/UserMembership.js';
 import { resolveConfiguredGatewayCredentials } from '../../services/paymentGatewayService.js';
 
 /**
@@ -12,7 +13,9 @@ import { resolveConfiguredGatewayCredentials } from '../../services/paymentGatew
  * booking is only marked paid once the signature verifies.
  */
 
-const MODELS = { hotel: HotelBooking, package: PackageBooking };
+// Memberships ride the same order-and-verify path; the model activates itself
+// once its paymentStatus flips to paid.
+const MODELS = { hotel: HotelBooking, package: PackageBooking, membership: UserMembership };
 
 /**
  * Rupees to paise. Going through toPrecision first avoids binary drift - a

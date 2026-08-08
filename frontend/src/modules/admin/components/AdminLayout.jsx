@@ -850,6 +850,8 @@ const AdminLayout = () => {
               { label: 'Travel Packages', path: '/admin/content/travel-packages', permission: 'promotions.view' },
               { label: 'Hotels', path: '/admin/content/hotels', permission: 'promotions.view' },
               { label: 'Drivers for Hire', path: '/admin/content/hire-drivers', permission: 'promotions.view' },
+              { label: 'Membership', path: '/admin/content/membership', permission: 'promotions.view' },
+              { label: 'Attached Vehicles', path: '/admin/content/attached-vehicles', permission: 'promotions.view' },
               { label: 'Page Content', path: '/admin/content/blocks', permission: 'promotions.view' },
             ],
           },

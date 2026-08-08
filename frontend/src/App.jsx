@@ -20,6 +20,9 @@ import './App.css';
 
 // Lazy loading pages for performance
 const UserHome = lazy(() => import('./modules/user/pages/Home'));
+const UserMembership = lazy(() => import('./modules/user/pages/membership/Membership'));
+const UserAttachCar = lazy(() => import('./modules/user/pages/attach/AttachCar'));
+const UserMembershipCheckout = lazy(() => import('./modules/user/pages/membership/MembershipCheckout'));
 const WithDriverHome = lazy(() => import('./modules/user/pages/WithDriverHome'));
 const WithDriverRoute = lazy(() => import('./modules/user/pages/withdriver/WithDriverRoute'));
 const DesktopWithDriverReview = lazy(() => import('./modules/user/pages/withdriver/DesktopWithDriverReview'));
@@ -257,6 +260,8 @@ const AdminAllBookings = lazy(() => import('./modules/admin/pages/bookings/AllBo
 const AdminHotelBookings = lazy(() => import('./modules/admin/pages/bookings/HotelBookings'));
 const AdminPackageBookings = lazy(() => import('./modules/admin/pages/bookings/PackageBookings'));
 const AdminHotels = lazy(() => import('./modules/admin/pages/content/HotelsAdmin'));
+const AdminMembership = lazy(() => import('./modules/admin/pages/content/MembershipAdmin'));
+const AdminAttachedVehicles = lazy(() => import('./modules/admin/pages/content/AttachedVehiclesAdmin'));
 const AdminContentBlocks = lazy(() => import('./modules/admin/pages/content/ContentBlocksAdmin'));
 const AdminHireDrivers = lazy(() => import('./modules/admin/pages/content/HireDriversAdmin'));
 const AdminRentalCoupons = lazy(() => import('./modules/admin/pages/promotions/RentalCoupons'));
@@ -1007,6 +1012,9 @@ function App() {
 
               <Route path="/taxi/user/activity" element={<Activity />} />
               <Route path="/taxi/user/profile" element={<Profile />} />
+              <Route path="/taxi/user/membership" element={<UserMembership />} />
+              <Route path="/taxi/user/attach-car" element={<UserAttachCar />} />
+              <Route path="/taxi/user/membership/checkout" element={<UserMembershipCheckout />} />
               <Route path="/taxi/user/wallet" element={<Wallet />} />
               <Route
                 path="/taxi/user/notifications"
@@ -1374,6 +1382,8 @@ function App() {
                 <Route path="bookings/hotels" element={<AdminHotelBookings />} />
                 <Route path="bookings/packages" element={<AdminPackageBookings />} />
                 <Route path="content/hotels" element={<AdminHotels />} />
+                <Route path="content/membership" element={<AdminMembership />} />
+                <Route path="content/attached-vehicles" element={<AdminAttachedVehicles />} />
                 <Route path="content/blocks" element={<AdminContentBlocks />} />
                 <Route path="content/hire-drivers" element={<AdminHireDrivers />} />
                 <Route

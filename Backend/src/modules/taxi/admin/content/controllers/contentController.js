@@ -162,3 +162,142 @@ export const quoteTravelPackage = asyncHandler(async (req, res) => {
 export const getPublicContentBlocks = asyncHandler(async (req, res) =>
   ok(res, { blocks: await contentService.getContentBlockMap(req.query.keys) }),
 );
+
+/* ----------------------------------------------------- membership plans */
+
+export const adminListMembershipPlans = asyncHandler(async (req, res) =>
+  ok(res, await contentService.listMembershipPlans({ active: req.query.active })),
+);
+
+export const adminCreateMembershipPlan = asyncHandler(async (req, res) =>
+  ok(res, await contentService.createMembershipPlan(req.body), 201),
+);
+
+export const adminUpdateMembershipPlan = asyncHandler(async (req, res) =>
+  ok(res, await contentService.updateMembershipPlan(req.params.id, req.body)),
+);
+
+export const adminToggleMembershipPlan = asyncHandler(async (req, res) =>
+  ok(res, await contentService.toggleMembershipPlan(req.params.id)),
+);
+
+export const adminDeleteMembershipPlan = asyncHandler(async (req, res) =>
+  ok(res, await contentService.deleteMembershipPlan(req.params.id)),
+);
+
+/** Every membership sold, newest first. */
+export const getAdminMemberships = asyncHandler(async (req, res) => {
+  const { UserMembership } = await import('../models/UserMembership.js');
+
+  const query = {};
+  if (req.query.status) query.status = req.query.status;
+  if (req.query.planSlug) query.planSlug = req.query.planSlug;
+
+  const term = String(req.query.search || '').trim();
+  if (term) {
+    query.$or = ['bookingReference', 'planName'].map((field) => ({
+      [field]: { $regex: term, $options: 'i' },
+    }));
+  }
+
+  const results = await UserMembership.find(query)
+    .populate('userId', 'name phone email')
+    .sort({ createdAt: -1 })
+    .limit(Math.min(500, Number(req.query.limit) || 200))
+    .lean();
+
+  ok(res, { results, total: await UserMembership.countDocuments(query) });
+});
+
+/* ------------------------------------------------------- user facing */
+
+export const getPublicMembershipPlans = asyncHandler(async (req, res) =>
+  ok(res, await contentService.listMembershipPlans({ active: true })),
+);
+
+export const getMyMembership = asyncHandler(async (req, res) => {
+  const { getActiveMembership, listMyMemberships } = await import(
+    '../../../user/services/membershipService.js'
+  );
+
+  ok(res, {
+    active: await getActiveMembership(req.auth?.sub),
+    history: await listMyMemberships(req.auth?.sub),
+  });
+});
+
+export const postMembershipPurchase = asyncHandler(async (req, res) => {
+  const { purchaseMembership } = await import('../../../user/services/membershipService.js');
+
+  ok(res, await purchaseMembership({ userId: req.auth?.sub, planId: req.body?.planId }), 201);
+});
+
+/* ------------------------------------------------- attach your car */
+
+const attachedVehicleService = () => import('../../../user/services/attachedVehicleService.js');
+
+export const getMyAttachedVehicles = asyncHandler(async (req, res) => {
+  const { listMyAttachedVehicles } = await attachedVehicleService();
+  ok(res, { results: await listMyAttachedVehicles(req.auth?.sub) });
+});
+
+export const getMyAttachedVehicle = asyncHandler(async (req, res) => {
+  const service = await attachedVehicleService();
+  ok(res, await service.getMyAttachedVehicle({ id: req.params.id, userId: req.auth?.sub }));
+});
+
+export const postAttachedVehicle = asyncHandler(async (req, res) => {
+  const { saveAttachedVehicle } = await attachedVehicleService();
+  ok(res, await saveAttachedVehicle({ userId: req.auth?.sub, payload: req.body || {} }), 201);
+});
+
+export const patchAttachedVehicle = asyncHandler(async (req, res) => {
+  const { saveAttachedVehicle } = await attachedVehicleService();
+  ok(res, await saveAttachedVehicle({ userId: req.auth?.sub, id: req.params.id, payload: req.body || {} }));
+});
+
+export const postAttachedVehicleSubmit = asyncHandler(async (req, res) => {
+  const { submitAttachedVehicle } = await attachedVehicleService();
+  ok(res, await submitAttachedVehicle({ userId: req.auth?.sub, id: req.params.id }));
+});
+
+/* ------------------------------------------------------------ admin */
+
+export const getAdminAttachedVehicles = asyncHandler(async (req, res) => {
+  const { AttachedVehicle } = await import('../models/AttachedVehicle.js');
+
+  // Drafts are the owner's private workspace and never reach the admin queue.
+  const query = { status: { $ne: 'draft' } };
+  if (req.query.status) query.status = req.query.status;
+
+  const term = String(req.query.search || '').trim();
+  if (term) {
+    query.$or = ['reference', 'registrationNumber', 'brand', 'model', 'city'].map((field) => ({
+      [field]: { $regex: term, $options: 'i' },
+    }));
+  }
+
+  const results = await AttachedVehicle.find(query)
+    .populate('userId', 'name phone email')
+    .sort({ submittedAt: -1, createdAt: -1 })
+    .limit(Math.min(500, Number(req.query.limit) || 200))
+    .lean();
+
+  ok(res, { results, total: await AttachedVehicle.countDocuments(query) });
+});
+
+export const updateAdminAttachedVehicle = asyncHandler(async (req, res) => {
+  const { AttachedVehicle } = await import('../models/AttachedVehicle.js');
+
+  const update = { reviewedAt: new Date() };
+  if (req.body?.status) update.status = req.body.status;
+  if (req.body?.reviewNote !== undefined) update.reviewNote = String(req.body.reviewNote || '').trim();
+
+  const updated = await AttachedVehicle.findByIdAndUpdate(
+    req.params.id,
+    { $set: update },
+    { new: true },
+  ).lean();
+
+  ok(res, updated);
+});
