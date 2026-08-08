@@ -56,6 +56,18 @@ export const getActiveMembership = async (userId) => {
 };
 
 /**
+ * The booking discount the user is entitled to right now, as a percentage.
+ *
+ * Read from the database on every quote rather than trusted from the request,
+ * and 0 for everyone without a live membership - which is what makes it safe to
+ * call from any pricing path.
+ */
+export const getMemberDiscountPercent = async (userId) => {
+  const membership = await getActiveMembership(userId);
+  return Math.min(100, Math.max(0, Number(membership?.discountPercent) || 0));
+};
+
+/**
  * Starts a purchase. Returns the unpaid membership row; the caller then raises a
  * payment order against it.
  */

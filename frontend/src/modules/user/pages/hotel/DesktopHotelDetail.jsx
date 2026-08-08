@@ -460,6 +460,12 @@ const DesktopHotelDetail = () => {
                     <span>Room Charges ({quote.nights} Night{quote.nights === 1 ? '' : 's'})</span>
                     <span className="text-[var(--dh-text)]">{formatMoney(quote.roomCharges)}</span>
                   </div>
+                  {quote.memberDiscount > 0 ? (
+                    <div className="flex justify-between">
+                      <span>Member discount ({quote.memberDiscountPercent}%)</span>
+                      <span className="text-emerald-600">− {formatMoney(quote.memberDiscount)}</span>
+                    </div>
+                  ) : null}
                   <div className="flex justify-between text-[13px] font-semibold text-[var(--dh-muted)]">
                     <span>Taxes &amp; Fees ({quote.taxPercent}% GST)</span>
                     <span className="text-[var(--dh-text)]">{formatMoney(quote.taxes)}</span>

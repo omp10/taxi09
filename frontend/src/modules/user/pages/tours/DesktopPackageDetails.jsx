@@ -451,6 +451,12 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
                   {quote.discount > 0 && (
                     <Row label={`Coupon discount (${quote.couponPercent}%)`} value={`− ${formatMoney(quote.discount)}`} />
                   )}
+                  {quote.memberDiscount > 0 && (
+                    <Row
+                      label={`Member discount (${quote.memberDiscountPercent}%)`}
+                      value={`− ${formatMoney(quote.memberDiscount)}`}
+                    />
+                  )}
                   <Row label={`GST (${Math.round(quote.gstRate * 100)}%)`} value={formatMoney(quote.gst)} />
                   {quote.tcs > 0 && (
                     <Row

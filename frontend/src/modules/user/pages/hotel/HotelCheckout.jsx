@@ -224,6 +224,7 @@ const HotelCheckout = () => {
   // desktop checkout uses - so the two can never disagree.
   const roomCharges = quote?.roomCharges ?? 0;
   const taxes = quote?.taxes ?? 0;
+  const memberDiscount = quote?.memberDiscount ?? 0;
   const discount = 0;
   const total = quote?.totalAmount ?? 0;
   const breakfastTotal = quote?.addOns?.find((a) => a.id === 'breakfast')?.price ?? 0;
@@ -632,6 +633,14 @@ const HotelCheckout = () => {
                 <div className="flex justify-between">
                   <span className="text-[var(--text-light)]">Airport Pickup</span>
                   <span>{rupees(pickupTotal)}</span>
+                </div>
+              ) : null}
+              {memberDiscount > 0 ? (
+                <div className="flex justify-between">
+                  <span className="text-[var(--text-light)]">
+                    Member discount ({quote?.memberDiscountPercent}%)
+                  </span>
+                  <span className="text-[var(--success)]">-{rupees(memberDiscount)}</span>
                 </div>
               ) : null}
               <div className="flex justify-between">

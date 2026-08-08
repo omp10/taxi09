@@ -4,6 +4,7 @@ import { PackageBooking } from '../../admin/content/models/PackageBooking.js';
 import * as contentService from '../../admin/content/services/contentService.js';
 import { priceHotelStay } from './hotelPricingService.js';
 import { quotePackage } from './travelPackagePricingService.js';
+import { getMemberDiscountPercent } from './membershipService.js';
 
 /**
  * Creation and listing for hotel and package bookings.
@@ -26,9 +27,11 @@ const clean = (value) => String(value || '').trim();
 export const createHotelBooking = async ({ userId, payload }) => {
   const hotel = await contentService.getHotelBySlug(payload.slug || payload.hotelSlug);
 
-  // Re-priced here; the request's own totals are ignored.
+  // Re-priced here; the request's own totals are ignored, and the membership
+  // discount is read from the database rather than taken from the request.
   const quote = priceHotelStay({
     hotel,
+    memberDiscountPercent: await getMemberDiscountPercent(userId),
     roomKey: payload.roomKey,
     checkIn: payload.checkIn,
     checkOut: payload.checkOut,
@@ -63,6 +66,8 @@ export const createHotelBooking = async ({ userId, payload }) => {
     addOnsTotal: quote.addOnsTotal,
     taxPercent: quote.taxPercent,
     taxes: quote.taxes,
+    memberDiscountPercent: quote.memberDiscountPercent,
+    memberDiscount: quote.memberDiscount,
     totalAmount: quote.totalAmount,
     paymentStatus: 'pending',
     paymentMethod: clean(payload.paymentMethod),
@@ -79,6 +84,7 @@ export const createPackageBooking = async ({ userId, payload }) => {
 
   const quote = await quotePackage({
     pkg,
+    memberDiscountPercent: await getMemberDiscountPercent(userId),
     travellers: payload.travellers,
     couponCode: payload.couponCode,
     addOns: payload.addOns,
@@ -109,6 +115,8 @@ export const createPackageBooking = async ({ userId, payload }) => {
     discount: quote.discount,
     gstRate: quote.gstRate,
     gst: quote.gst,
+    memberDiscountPercent: quote.memberDiscountPercent,
+    memberDiscount: quote.memberDiscount,
     tcsRate: quote.tcsRate,
     tcs: quote.tcs,
     totalAmount: quote.totalAmount,

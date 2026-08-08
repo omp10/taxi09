@@ -459,6 +459,12 @@ const InternationalDetails = () => {
                       value={rupees(insuranceTotal)}
                     />
                   ) : null}
+                  {quote?.memberDiscount > 0 && (
+                    <Row
+                      label={`Member discount (${quote.memberDiscountPercent}%)`}
+                      value={`− ${rupees(quote.memberDiscount)}`}
+                    />
+                  )}
                   <Row label={`GST (${Math.round(GST_RATE * 100)}%)`} value={rupees(gst)} />
                   <Row label={`TCS (${Math.round(TCS_RATE * 100)}%)`} value={rupees(tcs)} hint="Collected at source on overseas tour packages" />
                   {discount > 0 ? (

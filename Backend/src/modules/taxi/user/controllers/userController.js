@@ -26,6 +26,7 @@ import { BusBooking } from '../models/BusBooking.js';
 import { RentalBookingRequest } from '../../admin/models/RentalBookingRequest.js';
 import { priceRentalBooking } from '../services/rentalPricingService.js';
 import { isRentalVehicleAvailable } from '../services/rentalAvailabilityService.js';
+import { getMemberDiscountPercent } from '../services/membershipService.js';
 import { priceHireDriverTrip } from '../services/hireDriverPricingService.js';
 import { RentalQuoteRequest } from '../../admin/models/RentalQuoteRequest.js';
 import { RentalVehicleType } from '../../admin/models/RentalVehicleType.js';
@@ -4025,6 +4026,7 @@ export const quoteRentalBooking = async (req, res) => {
     packageId: payload.packageId || payload.selectedPackage?.id,
     addOns: payload.addOns,
     extraHours,
+    memberDiscountPercent: await getMemberDiscountPercent(req.auth?.sub),
   });
 
   const { matchedPackage, ...rest } = quote;
@@ -4182,6 +4184,8 @@ export const createRentalBookingRequest = async (req, res) => {
     packageId: selectedPackage.id || selectedPackage.packageId,
     addOns: payload.addOns,
     extraHours: payload.extraHours,
+    // Read from the database, never from the request.
+    memberDiscountPercent: await getMemberDiscountPercent(user._id),
   });
 
   const { matchedPackage, addOns: selectedAddOns, addOnsTotal, totalCost, payableNow } = quote;
@@ -4293,6 +4297,8 @@ export const createRentalBookingRequest = async (req, res) => {
     pickupDateTime,
     returnDateTime,
     requestedHours,
+    memberDiscountPercent: quote.memberDiscountPercent,
+    memberDiscount: quote.memberDiscount,
     totalCost,
     payableNow,
     advancePaymentLabel,

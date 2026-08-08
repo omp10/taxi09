@@ -277,6 +277,9 @@ const rentalBookingRequestSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
+    // What a membership took off this booking.
+    memberDiscountPercent: { type: Number, default: 0, min: 0, max: 100 },
+    memberDiscount: { type: Number, default: 0, min: 0 },
     totalCost: {
       type: Number,
       default: 0,

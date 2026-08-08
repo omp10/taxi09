@@ -41,6 +41,9 @@ const packageBookingSchema = new mongoose.Schema(
     couponCode: { type: String, default: '', trim: true, uppercase: true },
     discount: { type: Number, default: 0, min: 0 },
 
+    // What a membership took off this booking, so a lower total is explainable.
+    memberDiscountPercent: { type: Number, default: 0, min: 0, max: 100 },
+    memberDiscount: { type: Number, default: 0, min: 0 },
     gstRate: { type: Number, default: 0, min: 0 },
     gst: { type: Number, default: 0, min: 0 },
     tcsRate: { type: Number, default: 0, min: 0 },

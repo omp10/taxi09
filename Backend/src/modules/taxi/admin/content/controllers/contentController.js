@@ -131,9 +131,11 @@ export const getPublicHotelBySlug = asyncHandler(async (req, res) =>
 export const quoteHotelStay = asyncHandler(async (req, res) => {
   const payload = req.body || {};
   const hotel = await contentService.getHotelBySlug(payload.slug || payload.hotelSlug);
+  const { getMemberDiscountPercent } = await import('../../../user/services/membershipService.js');
 
   ok(res, priceHotelStay({
     hotel,
+    memberDiscountPercent: await getMemberDiscountPercent(req.auth?.sub),
     roomKey: payload.roomKey,
     checkIn: payload.checkIn,
     checkOut: payload.checkOut,
@@ -150,9 +152,11 @@ export const quoteHotelStay = asyncHandler(async (req, res) => {
 export const quoteTravelPackage = asyncHandler(async (req, res) => {
   const payload = req.body || {};
   const pkg = await contentService.getTravelPackageBySlug(payload.slug);
+  const { getMemberDiscountPercent } = await import('../../../user/services/membershipService.js');
 
   ok(res, await quotePackage({
     pkg,
+    memberDiscountPercent: await getMemberDiscountPercent(req.auth?.sub),
     travellers: payload.travellers,
     couponCode: payload.couponCode,
     addOns: payload.addOns,

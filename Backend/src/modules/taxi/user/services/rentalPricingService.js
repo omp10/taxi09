@@ -9,6 +9,9 @@ import { ApiError } from '../../../../utils/ApiError.js';
  * amount is read from the vehicle's own admin-managed catalogue.
  */
 
+/** Percentages arrive from stored data; keep them inside a sane range. */
+const clampPercent = (value) => Math.min(100, Math.max(0, Number(value) || 0));
+
 const round2 = (value) => Math.round((Number(value || 0) + Number.EPSILON) * 100) / 100;
 
 const resolvePackage = (vehicle, packageId) => {
@@ -68,7 +71,7 @@ const resolveAdvanceAmount = (config, totalCost) => {
  * @param addOns  ids (or {id} objects) of the chosen add-ons
  * @param extraHours  hours beyond the package duration, charged at extraHourPrice
  */
-export const priceRentalBooking = ({ vehicle, packageId, addOns = [], extraHours = 0 }) => {
+export const priceRentalBooking = ({ vehicle, packageId, addOns = [], extraHours = 0, memberDiscountPercent = 0 }) => {
   const matchedPackage = resolvePackage(vehicle, packageId);
   const selectedAddOns = resolveAddOns(vehicle, addOns);
 
@@ -82,7 +85,12 @@ export const priceRentalBooking = ({ vehicle, packageId, addOns = [], extraHours
   const billableExtraHours = Math.max(0, Number(extraHours || 0));
   const extraHoursTotal = round2(extraHourPrice * billableExtraHours);
 
-  const totalCost = round2(packagePrice + addOnsTotal + extraHoursTotal);
+  // A membership discounts the whole rental. The advance is derived from the
+  // total below, so it follows the discounted figure without extra handling.
+  const subtotal = round2(packagePrice + addOnsTotal + extraHoursTotal);
+  const memberPercent = clampPercent(memberDiscountPercent);
+  const memberDiscount = round2((subtotal * memberPercent) / 100);
+  const totalCost = Math.max(0, round2(subtotal - memberDiscount));
 
   const advanceConfig = vehicle.advancePayment || {};
   const payableNow = Math.min(totalCost, round2(Math.max(0, resolveAdvanceAmount(advanceConfig, totalCost))));
@@ -100,6 +108,9 @@ export const priceRentalBooking = ({ vehicle, packageId, addOns = [], extraHours
     addOns: selectedAddOns,
     addOnsTotal,
     addOnsSavings,
+    subtotal,
+    memberDiscountPercent: memberPercent,
+    memberDiscount,
     totalCost,
     payableNow,
     balanceDue: round2(totalCost - payableNow),

@@ -41,6 +41,9 @@ const hotelBookingSchema = new mongoose.Schema(
     ],
     addOnsTotal: { type: Number, default: 0, min: 0 },
     taxPercent: { type: Number, default: 0, min: 0 },
+    // What a membership took off this booking, so a lower total is explainable.
+    memberDiscountPercent: { type: Number, default: 0, min: 0, max: 100 },
+    memberDiscount: { type: Number, default: 0, min: 0 },
     taxes: { type: Number, default: 0, min: 0 },
     totalAmount: { type: Number, default: 0, min: 0 },
 

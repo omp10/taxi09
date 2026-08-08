@@ -16,6 +16,9 @@ import { RentalCoupon } from '../../admin/models/RentalCoupon.js';
  * an `applies_to` scope) so codes can be added or retired without a deploy.
  */
 
+/** Percentages arrive from stored data; keep them inside a sane range. */
+const clampPercent = (value) => Math.min(100, Math.max(0, Number(value) || 0));
+
 const round0 = (value) => Math.round(Number(value || 0));
 
 export const GST_RATE = 0.05;
@@ -69,7 +72,7 @@ export const resolvePackageCoupon = async ({ code, scope, packageId, baseFare })
 };
 
 /** Resolves the code then prices the package - what the endpoint calls. */
-export const quotePackage = async ({ pkg, travellers = 1, couponCode = '', addOns = [] }) => {
+export const quotePackage = async ({ pkg, travellers = 1, couponCode = '', addOns = [], memberDiscountPercent = 0 }) => {
   if (!pkg) throw new ApiError(404, 'Package not found');
 
   const scope = pkg.scope === 'international' ? 'international' : 'tour';
@@ -77,7 +80,7 @@ export const quotePackage = async ({ pkg, travellers = 1, couponCode = '', addOn
   const baseFare = perPerson * Math.max(1, Math.floor(Number(travellers) || 1));
 
   const coupon = await resolvePackageCoupon({ code: couponCode, scope, packageId: pkg._id, baseFare });
-  return priceTravelPackage({ pkg, travellers, coupon, addOns });
+  return priceTravelPackage({ pkg, travellers, coupon, addOns, memberDiscountPercent });
 };
 
 /**
@@ -105,7 +108,13 @@ const resolveAddOns = (pkg, requested, travellers) => {
     });
 };
 
-export const priceTravelPackage = ({ pkg, travellers = 1, coupon = { code: '', percent: 0, discount: 0 }, addOns = [] }) => {
+export const priceTravelPackage = ({
+  pkg,
+  travellers = 1,
+  coupon = { code: '', percent: 0, discount: 0 },
+  addOns = [],
+  memberDiscountPercent = 0,
+}) => {
   if (!pkg) {
     throw new ApiError(404, 'Package not found');
   }
@@ -118,12 +127,18 @@ export const priceTravelPackage = ({ pkg, travellers = 1, coupon = { code: '', p
   const selectedAddOns = resolveAddOns(pkg, addOns, count);
   const addOnsTotal = round0(selectedAddOns.reduce((sum, item) => sum + item.price, 0));
 
-  // Extras are taxed with the fare but, like the fare, sit outside the TCS base
-  // only insofar as TCS follows the pre-discount package fare.
-  const taxable = Math.max(0, baseFare - coupon.discount) + addOnsTotal;
+  // A coupon and a membership stack, the membership taking its cut of whatever
+  // is left once the coupon has been applied - so the two can never combine to
+  // more than the fare itself.
+  const afterCoupon = Math.max(0, baseFare - coupon.discount) + addOnsTotal;
+  const memberPercent = clampPercent(memberDiscountPercent);
+  const memberDiscount = round0((afterCoupon * memberPercent) / 100);
+
+  const taxable = Math.max(0, afterCoupon - memberDiscount);
 
   const gst = round0(taxable * GST_RATE);
-  // Overseas packages only, and on the fare before any discount.
+  // Overseas packages only, and on the fare before any discount - s.206C(1G)
+  // follows the gross fare, so neither the coupon nor the membership reduces it.
   const tcs = scope === 'international' ? round0(baseFare * TCS_RATE) : 0;
 
   return {
@@ -138,6 +153,8 @@ export const priceTravelPackage = ({ pkg, travellers = 1, coupon = { code: '', p
     couponCode: coupon.code,
     couponPercent: coupon.percent,
     discount: coupon.discount,
+    memberDiscountPercent: memberPercent,
+    memberDiscount,
     taxable,
     gstRate: GST_RATE,
     gst,

@@ -13,6 +13,10 @@ import { ApiError } from '../../../../utils/ApiError.js';
 
 const round2 = (value) => Math.round((Number(value || 0) + Number.EPSILON) * 100) / 100;
 
+/** Percentages arrive from stored data; keep them inside a sane range. */
+const clampPercent = (value) => Math.min(100, Math.max(0, Number(value) || 0));
+
+
 const GST_THRESHOLD = 7500;
 const GST_BELOW = 12;
 const GST_ABOVE = 18;
@@ -58,7 +62,16 @@ const resolveAddOns = ({ hotel, requested, nights, rooms }) => {
     });
 };
 
-export const priceHotelStay = ({ hotel, roomKey, checkIn, checkOut, rooms = 1, guests = 1, addOns = [] }) => {
+export const priceHotelStay = ({
+  hotel,
+  roomKey,
+  checkIn,
+  checkOut,
+  rooms = 1,
+  guests = 1,
+  addOns = [],
+  memberDiscountPercent = 0,
+}) => {
   if (!hotel) {
     throw new ApiError(404, 'Hotel not found');
   }
@@ -83,10 +96,17 @@ export const priceHotelStay = ({ hotel, roomKey, checkIn, checkOut, rooms = 1, g
   const selectedAddOns = resolveAddOns({ hotel, requested: addOns, nights, rooms: roomCount });
   const addOnsTotal = round2(selectedAddOns.reduce((sum, item) => sum + item.price, 0));
 
+  // A membership takes its cut off the pre-tax subtotal, so GST is charged on
+  // what the guest actually pays rather than on the undiscounted price.
+  const memberPercent = clampPercent(memberDiscountPercent);
+  const memberDiscount = round2(((roomCharges + addOnsTotal) * memberPercent) / 100);
+  const taxable = Math.max(0, round2(roomCharges + addOnsTotal - memberDiscount));
+
   // The slab is decided by the per-night tariff, not the booking total, and
-  // extras are taxed at the same rate as the room they accompany.
+  // extras are taxed at the same rate as the room they accompany. The tariff
+  // decides the slab, so a discount cannot drop the stay into a cheaper band.
   const taxPercent = gstPercentFor(nightlyRate);
-  const taxes = round2(((roomCharges + addOnsTotal) * taxPercent) / 100);
+  const taxes = round2((taxable * taxPercent) / 100);
 
   return {
     hotelSlug: hotel.slug,
@@ -102,9 +122,11 @@ export const priceHotelStay = ({ hotel, roomKey, checkIn, checkOut, rooms = 1, g
     roomCharges,
     addOns: selectedAddOns,
     addOnsTotal,
+    memberDiscountPercent: memberPercent,
+    memberDiscount,
     taxPercent,
     taxes,
-    totalAmount: round2(roomCharges + addOnsTotal + taxes),
+    totalAmount: round2(taxable + taxes),
     // Only a genuinely higher figure is a saving.
     savings: Number(hotel.oldPrice) > basePrice
       ? round2((Number(hotel.oldPrice) - basePrice) * multiplier * nights * roomCount)
