@@ -30,6 +30,16 @@ import {
   getAdminTravelStories,
   adminUpdateTravelStory,
   adminDeleteTravelStory,
+  adminListInternshipTracks,
+  adminSaveInternshipTrack,
+  adminDeleteInternshipTrack,
+  adminListCourses,
+  adminSaveCourse,
+  adminDeleteCourse,
+  adminListApplications,
+  adminUpdateApplication,
+  adminIssueCertificate,
+  adminListCertificates,
 } from '../controllers/contentController.js';
 import {
   getAdminAllBookings,
@@ -91,5 +101,19 @@ contentRouter.patch('/admin/attached-vehicles/:id', updateAdminAttachedVehicle);
 contentRouter.get('/admin/travel-stories', getAdminTravelStories);
 contentRouter.patch('/admin/travel-stories/:id', adminUpdateTravelStory);
 contentRouter.delete('/admin/travel-stories/:id', adminDeleteTravelStory);
+
+// Internship tracks, courses, applications and certificates
+contentRouter.get('/admin/internship/tracks', adminListInternshipTracks);
+contentRouter.post('/admin/internship/tracks', adminSaveInternshipTrack);
+contentRouter.patch('/admin/internship/tracks/:id', adminSaveInternshipTrack);
+contentRouter.delete('/admin/internship/tracks/:id', adminDeleteInternshipTrack);
+contentRouter.get('/admin/courses', adminListCourses);
+contentRouter.post('/admin/courses', adminSaveCourse);
+contentRouter.patch('/admin/courses/:id', adminSaveCourse);
+contentRouter.delete('/admin/courses/:id', adminDeleteCourse);
+contentRouter.get('/admin/internship/applications', adminListApplications);
+contentRouter.patch('/admin/internship/applications/:id', adminUpdateApplication);
+contentRouter.post('/admin/internship/applications/:id/certificate', adminIssueCertificate);
+contentRouter.get('/admin/certificates', adminListCertificates);
 
 export default contentRouter;

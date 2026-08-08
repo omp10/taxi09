@@ -24,6 +24,7 @@ const UserMembership = lazy(() => import('./modules/user/pages/membership/Member
 const UserAttachCar = lazy(() => import('./modules/user/pages/attach/AttachCar'));
 const UserTravelStories = lazy(() => import('./modules/user/pages/stories/TravelStoriesRoute'));
 const BikeRentalRoute = lazy(() => import('./modules/user/pages/rental/BikeRentalRoute'));
+const UserInternship = lazy(() => import('./modules/user/pages/internship/DesktopInternship'));
 const UserTravelStoryDetail = lazy(() => import('./modules/user/pages/stories/TravelStoryDetail'));
 const UserCreateTravelStory = lazy(() => import('./modules/user/pages/stories/CreateTravelStory'));
 const UserMembershipCheckout = lazy(() => import('./modules/user/pages/membership/MembershipCheckout'));
@@ -1020,6 +1021,7 @@ function App() {
               <Route path="/taxi/user/membership" element={<UserMembership />} />
               <Route path="/taxi/user/attach-car" element={<UserAttachCar />} />
               <Route path="/taxi/user/stories" element={<UserTravelStories />} />
+              <Route path="/taxi/user/internship" element={<UserInternship />} />
               <Route path="/taxi/user/stories/new" element={<UserCreateTravelStory />} />
               <Route path="/taxi/user/stories/:slug" element={<UserTravelStoryDetail />} />
               <Route path="/taxi/user/membership/checkout" element={<UserMembershipCheckout />} />

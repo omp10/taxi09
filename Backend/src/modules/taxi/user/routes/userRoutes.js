@@ -101,6 +101,13 @@ import {
   postTravelStory,
   postTravelStoryLike,
   getMyTravelStories,
+  getPublicInternshipTracks,
+  getPublicInternshipStats,
+  getMyInternshipApplications,
+  postInternshipApplication,
+  getPublicCourses,
+  getPublicCourseBySlug,
+  getVerifyCertificate,
 } from '../../admin/content/controllers/contentController.js';
 import { getAppBootstrap, getAppModules, getGeneralSettingsCategory, getGoodsTypes, getPublicBanners, getPublicRideFares, getPublicRentalVehicleCatalog, getPublicRentalVehicleSubcategories, getPublicVehicleTypeCatalog } from '../../admin/controllers/adminController.js';
 import { triggerUserSosAlert } from '../../safety/controllers/safetyController.js';
@@ -149,6 +156,15 @@ userRouter.get('/travel-stories', getPublicTravelStories);
 userRouter.post('/travel-stories', authenticate(['user']), postTravelStory);
 userRouter.post('/travel-stories/:slug/like', authenticate(['user']), postTravelStoryLike);
 userRouter.get('/travel-stories/:slug', getPublicTravelStoryBySlug);
+
+// Internship programme and courses. Reading is public; applying needs a session.
+userRouter.get('/internship/tracks', getPublicInternshipTracks);
+userRouter.get('/internship/stats', getPublicInternshipStats);
+userRouter.get('/internship/mine', authenticate(['user']), getMyInternshipApplications);
+userRouter.post('/internship/apply', authenticate(['user']), postInternshipApplication);
+userRouter.get('/courses', getPublicCourses);
+userRouter.get('/courses/:slug', getPublicCourseBySlug);
+userRouter.get('/certificates/verify/:number', getVerifyCertificate);
 userRouter.get('/package-bookings', authenticate(['user']), getMyPackageBookings);
 
 // kind is 'hotel' or 'package'; the amount always comes from the stored booking.

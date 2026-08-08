@@ -404,3 +404,111 @@ export const adminDeleteTravelStory = asyncHandler(async (req, res) => {
   if (!deleted) throw new ApiError(404, 'Story not found');
   ok(res, { id: req.params.id });
 });
+
+/* ---------------------------------------------------- internship & courses */
+
+const internship = () => import('../../../user/services/internshipService.js');
+
+export const getPublicInternshipTracks = asyncHandler(async (_req, res) =>
+  ok(res, await (await internship()).listInternshipTracks({ active: true })),
+);
+
+export const getPublicCourses = asyncHandler(async (req, res) =>
+  ok(res, await (await internship()).listCourses({ active: true, mode: req.query.mode })),
+);
+
+export const getPublicCourseBySlug = asyncHandler(async (req, res) =>
+  ok(res, await (await internship()).getCourseBySlug(req.params.slug)),
+);
+
+export const getPublicInternshipStats = asyncHandler(async (_req, res) =>
+  ok(res, await (await internship()).getInternshipStats()),
+);
+
+export const getVerifyCertificate = asyncHandler(async (req, res) =>
+  ok(res, await (await internship()).verifyCertificate(req.params.number)),
+);
+
+export const postInternshipApplication = asyncHandler(async (req, res) =>
+  ok(res, await (await internship()).applyForInternship({ userId: req.auth?.sub, payload: req.body || {} }), 201),
+);
+
+export const getMyInternshipApplications = asyncHandler(async (req, res) => {
+  const service = await internship();
+  ok(res, {
+    applications: await service.listMyApplications(req.auth?.sub),
+    certificates: await service.listMyCertificates(req.auth?.sub),
+  });
+});
+
+/* ------------------------------------------------------------------ admin */
+
+export const adminListInternshipTracks = asyncHandler(async (_req, res) =>
+  ok(res, await (await internship()).listInternshipTracks()),
+);
+
+export const adminSaveInternshipTrack = asyncHandler(async (req, res) =>
+  ok(res, await (await internship()).saveInternshipTrack({ id: req.params.id, payload: req.body || {} })),
+);
+
+export const adminDeleteInternshipTrack = asyncHandler(async (req, res) => {
+  const { InternshipTrack } = await import('../models/Internship.js');
+  const deleted = await InternshipTrack.findByIdAndDelete(req.params.id);
+  if (!deleted) throw new ApiError(404, 'Track not found');
+  ok(res, { id: req.params.id });
+});
+
+export const adminListCourses = asyncHandler(async (_req, res) =>
+  ok(res, await (await internship()).listCourses()),
+);
+
+export const adminSaveCourse = asyncHandler(async (req, res) =>
+  ok(res, await (await internship()).saveCourse({ id: req.params.id, payload: req.body || {} })),
+);
+
+export const adminDeleteCourse = asyncHandler(async (req, res) => {
+  const { Course } = await import('../models/Internship.js');
+  const deleted = await Course.findByIdAndDelete(req.params.id);
+  if (!deleted) throw new ApiError(404, 'Course not found');
+  ok(res, { id: req.params.id });
+});
+
+export const adminListApplications = asyncHandler(async (req, res) => {
+  const { InternshipApplication } = await import('../models/Internship.js');
+
+  const query = {};
+  if (req.query.status) query.status = req.query.status;
+  const term = String(req.query.search || '').trim();
+  if (term) {
+    query.$or = ['reference', 'fullName', 'phone', 'email', 'trackTitle', 'courseTitle'].map((f) => ({
+      [f]: { $regex: term, $options: 'i' },
+    }));
+  }
+
+  const results = await InternshipApplication.find(query)
+    .populate('userId', 'name phone email')
+    .sort({ createdAt: -1 })
+    .limit(Math.min(500, Number(req.query.limit) || 200))
+    .lean();
+
+  ok(res, { results, total: await InternshipApplication.countDocuments(query) });
+});
+
+export const adminUpdateApplication = asyncHandler(async (req, res) => {
+  const { InternshipApplication } = await import('../models/Internship.js');
+
+  const update = {};
+  if (req.body?.status) update.status = req.body.status;
+  if (req.body?.reviewNote !== undefined) update.reviewNote = String(req.body.reviewNote || '').trim();
+
+  ok(res, await InternshipApplication.findByIdAndUpdate(req.params.id, { $set: update }, { new: true }).lean());
+});
+
+export const adminIssueCertificate = asyncHandler(async (req, res) =>
+  ok(res, await (await internship()).issueCertificate({ applicationId: req.params.id }), 201),
+);
+
+export const adminListCertificates = asyncHandler(async (_req, res) => {
+  const { Certificate } = await import('../models/Internship.js');
+  ok(res, { results: await Certificate.find().sort({ issuedAt: -1 }).limit(500).lean() });
+});
