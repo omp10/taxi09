@@ -166,6 +166,9 @@ const toNumberOrZero = (value) => {
   return Number.isFinite(parsed) ? parsed : 0;
 };
 
+/** The editor's sections, in the order an admin fills them in. */
+const EDITOR_STEPS = ['Identity', 'Media', 'Options', 'Layout', 'Pricing', 'Publish'];
+
 const createEmptyPricingRow = (id, label = 'Custom Package') => ({
   id,
   label,
@@ -347,6 +350,10 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
   const [formData, setFormData] = useState(buildDefaultForm);
   const [togglingIds, setTogglingIds] = useState([]);
   const [galleryImageUrl, setGalleryImageUrl] = useState('');
+  const [step, setStep] = useState(0);
+
+  // Hidden rather than unmounted, so a half-filled section is never discarded.
+  const stepClass = (index) => (index === step ? 'contents' : 'hidden');
 
   useEffect(() => {
     let mounted = true;
@@ -1238,6 +1245,43 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
 
       <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
         <div className="grid grid-cols-1 gap-8 p-6 lg:grid-cols-2 lg:p-8">
+          {/* Numbered steps. The sections stay mounted and are hidden rather
+              than unmounted, so nothing typed on an earlier one is lost and
+              required fields elsewhere still block the browser's own submit. */}
+          <div className="lg:col-span-2 -mt-2 flex flex-wrap gap-1.5 border-b border-slate-200 pb-3">
+            {EDITOR_STEPS.map((label, index) => {
+              const done = index < step;
+              const active = index === step;
+              return (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => setStep(index)}
+                  className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-bold transition-colors ${
+                    active
+                      ? 'bg-indigo-50 text-indigo-700'
+                      : done
+                        ? 'text-emerald-700 hover:bg-slate-50'
+                        : 'text-slate-500 hover:bg-slate-50'
+                  }`}
+                >
+                  <span
+                    className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] ${
+                      active
+                        ? 'bg-indigo-600 text-white'
+                        : done
+                          ? 'bg-emerald-500 text-white'
+                          : 'bg-slate-200 text-slate-600'
+                    }`}
+                  >
+                    {index + 1}
+                  </span>
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+          <div className={stepClass(0)}>
           <div className="lg:col-span-2 rounded-[24px] border border-slate-200 bg-slate-50/70 px-5 py-4">
             <p className="text-[10px] font-black uppercase tracking-[0.22em] text-indigo-500">Section 1</p>
             <h2 className="mt-1 text-lg font-black text-slate-900">Vehicle Identity</h2>
@@ -1386,6 +1430,8 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
             <p className="mt-2 text-xs text-slate-500">Add a fuller explanation of the vehicle, comfort, or intended use.</p>
           </div>
 
+          </div>
+          <div className={stepClass(1)}>
           <div className="lg:col-span-2 rounded-[24px] border border-slate-200 bg-slate-50/70 px-5 py-4">
             <p className="text-[10px] font-black uppercase tracking-[0.22em] text-indigo-500">Section 2</p>
             <h2 className="mt-1 text-lg font-black text-slate-900">Media And Preview</h2>
@@ -1505,6 +1551,8 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
             <p className="mt-2 text-xs text-slate-500">Cover stays separate. Gallery images are shown as supporting detail shots.</p>
           </div>
 
+          </div>
+          <div className={stepClass(2)}>
           <div className="space-y-6">
             <div className="rounded-[24px] border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-slate-50 p-4">
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Live Summary</p>
@@ -1952,6 +2000,8 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
             </div>
           </div>
 
+          </div>
+          <div className={stepClass(3)}>
           <div className="lg:col-span-2">
             <div className="mb-4 flex items-center justify-between">
               <div>
@@ -1992,6 +2042,8 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
             </p>
           </div>
 
+          </div>
+          <div className={stepClass(4)}>
           <div className="lg:col-span-2 rounded-[24px] border border-slate-200 bg-slate-50/70 px-5 py-4">
             <p className="text-[10px] font-black uppercase tracking-[0.22em] text-indigo-500">Section 3</p>
             <h2 className="mt-1 text-lg font-black text-slate-900">Pricing Setup</h2>
@@ -2109,6 +2161,8 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
         </div>
 
         <div className="grid grid-cols-1 gap-4 border-t border-slate-100 bg-slate-50/50 p-6 lg:grid-cols-[1fr_auto] lg:items-center">
+          </div>
+          <div className={stepClass(5)}>
           <div className="space-y-3">
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.22em] text-indigo-500">Section 4</p>
@@ -2149,6 +2203,7 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
             >
               Cancel
             </button>
+          </div>
           </div>
         </div>
       </div>
