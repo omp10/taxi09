@@ -377,7 +377,8 @@ const SidebarGroup = ({
         }}
       >
         <div className="flex min-w-0 items-center gap-3.5">
-          {React.createElement(icon, {
+          {/* A group without an icon must not take the whole panel down with it. */}
+          {React.createElement(icon || Layers, {
             size: 18,
             strokeWidth: (isActive || isExpanded) ? 2.5 : 2,
             className: `shrink-0 transition-all duration-300 ${(isActive || isExpanded) ? 'opacity-100' : 'opacity-90 group-hover:opacity-100'}`,
@@ -845,6 +846,7 @@ const AdminLayout = () => {
             ],
           },
           {
+            icon: FileText,
             label: 'App Content',
             subItems: [
               { label: 'Travel Packages', path: '/admin/content/travel-packages', permission: 'promotions.view' },
@@ -853,6 +855,7 @@ const AdminLayout = () => {
               { label: 'Membership', path: '/admin/content/membership', permission: 'promotions.view' },
               { label: 'Attached Vehicles', path: '/admin/content/attached-vehicles', permission: 'promotions.view' },
               { label: 'Travel Stories', path: '/admin/content/travel-stories', permission: 'promotions.view' },
+              { label: 'Internship & Courses', path: '/admin/content/internship', permission: 'promotions.view' },
               { label: 'Page Content', path: '/admin/content/blocks', permission: 'promotions.view' },
             ],
           },
@@ -956,7 +959,8 @@ const AdminLayout = () => {
               { label: 'Subscription', path: '/admin/drivers/subscription', permission: 'drivers.view' },
               { label: 'Drivers Ratings', path: '/admin/drivers/ratings', permission: 'drivers.view' },
               {
-                label: 'Driver Wallet',
+                icon: Wallet,
+            label: 'Driver Wallet',
                 subItems: [
                   { label: 'Withdrawal Requests', path: '/admin/drivers/wallet/withdrawals', permission: 'wallet.view' },
                   { label: 'Negative Balance Drivers', path: '/admin/drivers/wallet/negative', permission: 'wallet.view' },
@@ -1084,11 +1088,13 @@ const AdminLayout = () => {
               { label: 'Pending Owners', path: '/admin/owners/pending', permission: 'owners.view' },
               { label: 'Manage Owners', path: '/admin/owners', permission: 'owners.view' },
               {
-                label: 'Owner Wallet',
+                icon: Wallet,
+            label: 'Owner Wallet',
                 subItems: [{ label: 'Withdrawal Requests', path: '/admin/owners/wallet/withdrawals', permission: 'wallet.view' }],
               },
               {
-                label: 'Fleet Management',
+                icon: Car,
+            label: 'Fleet Management',
                 subItems: [
                   { label: 'Fleet Drivers', path: '/admin/fleet/drivers', permission: 'owners.view' },
                   { label: 'Pending Fleet Drivers', path: '/admin/fleet/blocked', permission: 'owners.view' },

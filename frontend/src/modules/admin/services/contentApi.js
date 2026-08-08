@@ -61,6 +61,29 @@ export const contentApi = {
   listAttachedVehicles: (params = '') => request(`/attached-vehicles${params}`),
   updateAttachedVehicle: (id, body) => request(`/attached-vehicles/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
 
+  // Internship programme
+  listInternshipTracks: () => request('/internship/tracks'),
+  saveInternshipTrack: (id, body) =>
+    request(id ? `/internship/tracks/${id}` : '/internship/tracks', {
+      method: id ? 'PATCH' : 'POST',
+      body: JSON.stringify(body),
+    }),
+  deleteInternshipTrack: (id) => request(`/internship/tracks/${id}`, { method: 'DELETE' }),
+
+  listAdminCourses: () => request('/courses'),
+  saveCourse: (id, body) =>
+    request(id ? `/courses/${id}` : '/courses', {
+      method: id ? 'PATCH' : 'POST',
+      body: JSON.stringify(body),
+    }),
+  deleteCourse: (id) => request(`/courses/${id}`, { method: 'DELETE' }),
+
+  listInternshipApplications: (params = '') => request(`/internship/applications${params}`),
+  updateInternshipApplication: (id, body) =>
+    request(`/internship/applications/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  issueCertificate: (id) => request(`/internship/applications/${id}/certificate`, { method: 'POST' }),
+  listCertificates: () => request('/certificates'),
+
   // Travel stories
   listTravelStories: (params = '') => request(`/travel-stories${params}`),
   updateTravelStory: (id, body) => request(`/travel-stories/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),

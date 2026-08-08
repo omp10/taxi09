@@ -268,6 +268,7 @@ const AdminHotels = lazy(() => import('./modules/admin/pages/content/HotelsAdmin
 const AdminMembership = lazy(() => import('./modules/admin/pages/content/MembershipAdmin'));
 const AdminAttachedVehicles = lazy(() => import('./modules/admin/pages/content/AttachedVehiclesAdmin'));
 const AdminTravelStories = lazy(() => import('./modules/admin/pages/content/TravelStoriesAdmin'));
+const AdminInternship = lazy(() => import('./modules/admin/pages/content/InternshipAdmin'));
 const AdminContentBlocks = lazy(() => import('./modules/admin/pages/content/ContentBlocksAdmin'));
 const AdminHireDrivers = lazy(() => import('./modules/admin/pages/content/HireDriversAdmin'));
 const AdminRentalCoupons = lazy(() => import('./modules/admin/pages/promotions/RentalCoupons'));
@@ -1395,6 +1396,7 @@ function App() {
                 <Route path="content/membership" element={<AdminMembership />} />
                 <Route path="content/attached-vehicles" element={<AdminAttachedVehicles />} />
                 <Route path="content/travel-stories" element={<AdminTravelStories />} />
+                <Route path="content/internship" element={<AdminInternship />} />
                 <Route path="content/blocks" element={<AdminContentBlocks />} />
                 <Route path="content/hire-drivers" element={<AdminHireDrivers />} />
                 <Route
