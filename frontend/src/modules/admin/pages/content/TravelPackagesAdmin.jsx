@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Globe2, Loader2, MapPin, Pencil, Plus, Save, Trash2, X } from 'lucide-react';
 import contentApi from '../../services/contentApi';
+import { FormWizard, Field, ImageField, GalleryField, inputClass } from '../../components/FormWizard';
 
 const SCOPES = [
   { id: 'domestic', label: 'Domestic Tours', icon: MapPin },
@@ -19,7 +20,7 @@ const emptyForm = (scope) => ({
   perks: '',
   highlights: '',
   image: '',
-  gallery: '',
+  gallery: [],
   durationDays: 3,
   durationLabel: '',
   departureDate: '',
@@ -38,19 +39,8 @@ const toForm = (pkg) => ({
   includes: (pkg.includes || []).join(', '),
   perks: (pkg.perks || []).join(', '),
   highlights: (pkg.highlights || []).join(', '),
-  gallery: (pkg.gallery || []).join(', '),
+  gallery: pkg.gallery || [],
 });
-
-const Field = ({ label, children, hint }) => (
-  <label className="block">
-    <span className="text-[11px] font-semibold text-slate-600">{label}</span>
-    <div className="mt-1">{children}</div>
-    {hint ? <span className="mt-1 block text-[10px] text-slate-400">{hint}</span> : null}
-  </label>
-);
-
-const input =
-  'w-full rounded-lg border border-slate-200 px-3 py-2 text-[13px] text-slate-800 outline-none focus:border-amber-400';
 
 const TravelPackagesAdmin = () => {
   const [scope, setScope] = useState('domestic');
@@ -89,6 +79,8 @@ const TravelPackagesAdmin = () => {
     setEditing(pkg._id);
     setForm(toForm(pkg));
   };
+
+  const set = (key) => (e) => setForm((current) => ({ ...current, [key]: e.target.value }));
 
   const submit = async (event) => {
     event.preventDefault();
@@ -252,94 +244,129 @@ const TravelPackagesAdmin = () => {
       )}
 
       {editing ? (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/40 p-6">
-          <form onSubmit={submit} className="w-full max-w-3xl rounded-2xl bg-white p-6 shadow-xl">
-            <div className="flex items-center justify-between">
-              <h2 className="text-[18px] font-bold text-slate-900">
-                {editing === 'new' ? 'Add' : 'Edit'} {isInternational ? 'international trip' : 'tour package'}
-              </h2>
-              <button type="button" onClick={() => setEditing(null)} className="rounded-lg p-2 text-slate-500">
-                <X size={18} />
-              </button>
-            </div>
-
-            <div className="mt-4 grid grid-cols-2 gap-4">
-              <Field label="Title *">
-                <input className={input} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
-              </Field>
-              <Field label={isInternational ? 'Country' : 'State'}>
-                <input
-                  className={input}
-                  value={isInternational ? form.country : form.state}
-                  onChange={(e) => setForm({ ...form, [isInternational ? 'country' : 'state']: e.target.value })}
-                />
-              </Field>
-              <Field label="Category" hint={isInternational ? 'beach, city, honeymoon, luxury, family' : 'Adventure, Beach, Honeymoon, Pilgrimage, Luxury'}>
-                <input className={input} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
-              </Field>
-              <Field label="Badge" hint="Bestseller, New, Luxury…">
-                <input className={input} value={form.badge} onChange={(e) => setForm({ ...form, badge: e.target.value })} />
-              </Field>
-              <Field label="Stops" hint="Comma separated">
-                <input className={input} value={form.stops} onChange={(e) => setForm({ ...form, stops: e.target.value })} />
-              </Field>
-              <Field label={isInternational ? 'Perks' : 'Includes'} hint="Comma separated">
-                <input
-                  className={input}
-                  value={isInternational ? form.perks : form.includes}
-                  onChange={(e) => setForm({ ...form, [isInternational ? 'perks' : 'includes']: e.target.value })}
-                />
-              </Field>
-              <Field label="Cover image URL">
-                <input className={input} value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} />
-              </Field>
-              <Field label="Gallery" hint="Comma separated image URLs">
-                <input className={input} value={form.gallery} onChange={(e) => setForm({ ...form, gallery: e.target.value })} />
-              </Field>
-              <Field label="Duration (days) *">
-                <input type="number" min="1" className={input} value={form.durationDays} onChange={(e) => setForm({ ...form, durationDays: e.target.value })} required />
-              </Field>
-              <Field label="Duration label" hint="e.g. 5 Days / 4 Nights">
-                <input className={input} value={form.durationLabel} onChange={(e) => setForm({ ...form, durationLabel: e.target.value })} />
-              </Field>
-              {isInternational ? (
-                <Field label="Next departure" hint="e.g. 18 Jun 2026">
-                  <input className={input} value={form.departureDate} onChange={(e) => setForm({ ...form, departureDate: e.target.value })} />
-                </Field>
-              ) : null}
-              <Field label="Rating" hint="0 – 5">
-                <input type="number" step="0.1" min="0" max="5" className={input} value={form.rating} onChange={(e) => setForm({ ...form, rating: e.target.value })} />
-              </Field>
-              <Field label="Reviews label" hint="e.g. 1.2K">
-                <input className={input} value={form.reviews} onChange={(e) => setForm({ ...form, reviews: e.target.value })} />
-              </Field>
-              <Field label="Price (₹) *">
-                <input type="number" min="0" className={input} value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
-              </Field>
-              <Field label="Strike-through price (₹)">
-                <input type="number" min="0" className={input} value={form.oldPrice} onChange={(e) => setForm({ ...form, oldPrice: e.target.value })} />
-              </Field>
-              <Field label="Sort order" hint="Lower shows first">
-                <input type="number" className={input} value={form.sortOrder} onChange={(e) => setForm({ ...form, sortOrder: e.target.value })} />
-              </Field>
-            </div>
-
-            <label className="mt-4 flex items-center gap-2">
-              <input type="checkbox" checked={form.active} onChange={(e) => setForm({ ...form, active: e.target.checked })} />
-              <span className="text-[13px] font-semibold text-slate-700">Visible in the app</span>
-            </label>
-
-            <div className="mt-5 flex justify-end gap-3">
-              <button type="button" onClick={() => setEditing(null)} className="rounded-lg border border-slate-200 px-4 py-2 text-[13px] font-semibold text-slate-600">
-                Cancel
-              </button>
-              <button type="submit" disabled={saving} className="flex items-center gap-2 rounded-lg bg-amber-400 px-5 py-2 text-[13px] font-bold text-slate-900 disabled:opacity-60">
-                {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
-                {editing === 'new' ? 'Create' : 'Save changes'}
-              </button>
-            </div>
-          </form>
-        </div>
+        <FormWizard
+          title={`${editing === 'new' ? 'Add' : 'Edit'} ${isInternational ? 'international' : 'tour'} package`}
+          saving={saving}
+          onClose={() => setEditing(null)}
+          onSubmit={submit}
+          submitLabel={editing === 'new' ? 'Create package' : 'Save changes'}
+          steps={[
+            {
+              title: 'Basics',
+              hint: 'What the trip is and where it goes.',
+              isComplete: () => Boolean(String(form.title).trim()),
+              incompleteMessage: 'A title is required.',
+              render: () => (
+                <>
+                  <Field label="Title *" span={2}>
+                    <input className={inputClass} value={form.title} onChange={set('title')} required />
+                  </Field>
+                  <Field label={isInternational ? 'Country' : 'State'}>
+                    <input
+                      className={inputClass}
+                      value={isInternational ? form.country : form.state}
+                      onChange={set(isInternational ? 'country' : 'state')}
+                    />
+                  </Field>
+                  <Field label="Category" hint="Honeymoon, Family, Adventure...">
+                    <input className={inputClass} value={form.category} onChange={set('category')} />
+                  </Field>
+                  <Field label="Badge" hint="Bestseller, New...">
+                    <input className={inputClass} value={form.badge} onChange={set('badge')} />
+                  </Field>
+                  <Field label="Sort order" hint="Lower shows first">
+                    <input type="number" className={inputClass} value={form.sortOrder} onChange={set('sortOrder')} />
+                  </Field>
+                  <Field label="Stops" hint="Comma separated, in order" span={3}>
+                    <input className={inputClass} value={form.stops} onChange={set('stops')} />
+                  </Field>
+                </>
+              ),
+            },
+            {
+              title: 'Itinerary',
+              hint: 'How long it runs, and when it leaves.',
+              render: () => (
+                <>
+                  <Field label="Duration (days)">
+                    <input type="number" min="1" className={inputClass} value={form.durationDays} onChange={set('durationDays')} />
+                  </Field>
+                  <Field label="Duration label" hint="e.g. 5 Days / 4 Nights" span={2}>
+                    <input className={inputClass} value={form.durationLabel} onChange={set('durationLabel')} />
+                  </Field>
+                  <Field label="Departure date">
+                    <input className={inputClass} value={form.departureDate} onChange={set('departureDate')} />
+                  </Field>
+                  <Field label="Guest rating" hint="0 - 5">
+                    <input type="number" step="0.1" min="0" max="5" className={inputClass} value={form.rating} onChange={set('rating')} />
+                  </Field>
+                  <Field label="Review count">
+                    <input className={inputClass} value={form.reviews} onChange={set('reviews')} />
+                  </Field>
+                  <Field label="Highlights" hint="Comma separated" span={3}>
+                    <input className={inputClass} value={form.highlights} onChange={set('highlights')} />
+                  </Field>
+                </>
+              ),
+            },
+            {
+              title: 'Photos',
+              hint: 'Upload from your computer, or paste a URL if the image is already hosted.',
+              render: () => (
+                <>
+                  <ImageField
+                    label="Cover image"
+                    hint="Shown on the package card and at the top of the detail page"
+                    span={3}
+                    value={form.image}
+                    onChange={(url) => setForm((f) => ({ ...f, image: url }))}
+                  />
+                  <GalleryField
+                    label="Gallery"
+                    hint="Extra photos on the detail page"
+                    value={form.gallery}
+                    onChange={(list) => setForm((f) => ({ ...f, gallery: list }))}
+                  />
+                </>
+              ),
+            },
+            {
+              title: "What's included",
+              hint: 'Shown as the inclusions and perks on the detail page.',
+              render: () => (
+                <>
+                  <Field label="Includes" hint="Comma separated - meals, stay, sightseeing..." span={3}>
+                    <input className={inputClass} value={form.includes} onChange={set('includes')} />
+                  </Field>
+                  <Field label="Perks" hint="Comma separated" span={3}>
+                    <input className={inputClass} value={form.perks} onChange={set('perks')} />
+                  </Field>
+                </>
+              ),
+            },
+            {
+              title: 'Pricing',
+              hint: 'Per person. Tax is added by the server at booking time.',
+              isComplete: () => String(form.price).trim() !== '',
+              incompleteMessage: 'A price is required.',
+              render: () => (
+                <>
+                  <Field label="Price per person (Rs) *">
+                    <input type="number" min="0" className={inputClass} value={form.price} onChange={set('price')} required />
+                  </Field>
+                  <Field label="Strike-through price (Rs)">
+                    <input type="number" min="0" className={inputClass} value={form.oldPrice} onChange={set('oldPrice')} />
+                  </Field>
+                  <label className="col-span-3 flex items-center gap-2">
+                    <input type="checkbox" checked={form.active} onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))} />
+                    <span className="text-[12.5px] font-bold text-slate-800">Show this package to travellers</span>
+                  </label>
+                  {error ? <p className="col-span-3 text-[12.5px] font-semibold text-red-600">{error}</p> : null}
+                </>
+              ),
+            },
+          ]}
+        />
       ) : null}
     </div>
   );
