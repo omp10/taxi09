@@ -78,7 +78,13 @@ const DesktopHome = () => {
     return () => { cancelled = true; };
   }, []);
 
+  // Prefer artwork uploaded for wide screens. A phone banner cropped to a
+  // desktop hero loses its subject, which is why the two are separate; a banner
+  // with only the phone image still works, it just crops the same as before.
   const heroImage = useMemo(() => {
+    const wide = banners.find((banner) => banner?.desktopImage);
+    if (wide) return resolveBannerImage(wide.desktopImage);
+
     const first = banners.find((banner) => banner?.image);
     return first ? resolveBannerImage(first.image) : '/taxi09_home_top_banner.png';
   }, [banners]);

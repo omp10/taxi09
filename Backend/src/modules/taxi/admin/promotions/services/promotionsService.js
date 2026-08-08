@@ -155,6 +155,9 @@ const serializeBannerMinimal = (item) => ({
   _id: item._id,
   title: item.title || '',
   image: item.image || '',
+  // Blank unless wide-screen artwork was uploaded; the desktop home falls
+  // back to `image` when it is.
+  desktopImage: item.desktopImage || '',
   active: item.active !== false,
   type: item.type || 'rental',
 });
@@ -381,6 +384,8 @@ const normalizeBannerPayload = async (payload, existing = null) => {
   const generatedTitle = `Banner ${new Date().toISOString()}`;
   const title = normalizeText(payload.title ?? existing?.title ?? generatedTitle);
   let image = normalizeText(payload.image ?? payload.image_url ?? existing?.image);
+  // Optional wide-screen artwork; blank means the phone image serves both.
+  let desktopImage = normalizeText(payload.desktopImage ?? payload.desktop_image ?? existing?.desktopImage ?? '');
   const rawLinkType = normalizeText(payload.link_type ?? payload.redirect_type ?? existing?.link_type ?? 'external_link');
   const linkType = rawLinkType === 'app_route' ? 'deep_link' : rawLinkType;
   const redirectUrl = normalizeText(
@@ -410,6 +415,19 @@ const normalizeBannerPayload = async (payload, existing = null) => {
     }
   }
 
+  if (desktopImage.startsWith('data:')) {
+    try {
+      const uploaded = await uploadDataUrlToCloudinary({
+        dataUrl: desktopImage,
+        publicIdPrefix: 'banner-desktop',
+      });
+      desktopImage = uploaded.secureUrl;
+    } catch (error) {
+      console.error('Cloudinary upload error:', error);
+      throw new ApiError(500, `Failed to upload desktop banner image: ${error.message}`);
+    }
+  }
+
   if (!['external_link', 'deep_link'].includes(linkType)) {
     throw new ApiError(400, 'Link type must be external_link or deep_link');
   }
@@ -417,6 +435,7 @@ const normalizeBannerPayload = async (payload, existing = null) => {
   return {
     title,
     image,
+    desktopImage,
     link_type: linkType,
     external_link: linkType === 'external_link' ? redirectUrl : '',
     deep_link: linkType === 'deep_link' ? redirectUrl : '',

@@ -18,6 +18,7 @@ const Motion = motion;
 const createInitialFormData = (type) => ({
   image: null,
   image_url: '',
+  desktopImage: null,
   use_url: false,
   type: type || 'top',
 });
@@ -34,6 +35,7 @@ const HomepageBanners = ({ type = 'top', mode = 'list' }) => {
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState(() => createInitialFormData(type));
   const [imagePreview, setImagePreview] = useState(null);
+  const [desktopPreview, setDesktopPreview] = useState(null);
 
   const token = localStorage.getItem('adminToken') || '';
   const baseUrl = globalThis.__LEGACY_BACKEND_ORIGIN__ + '/api/v1/admin';
@@ -98,6 +100,14 @@ const HomepageBanners = ({ type = 'top', mode = 'list' }) => {
     setImagePreview(URL.createObjectURL(file));
   };
 
+  /** Optional wide-screen artwork; without it the phone image serves both. */
+  const handleDesktopImageChange = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setFormData((current) => ({ ...current, desktopImage: file }));
+    setDesktopPreview(URL.createObjectURL(file));
+  };
+
   const handleSave = async (event) => {
     event.preventDefault();
 
@@ -124,8 +134,19 @@ const HomepageBanners = ({ type = 'top', mode = 'list' }) => {
         });
       }
 
+      let desktopData = '';
+      if (formData.desktopImage instanceof File) {
+        desktopData = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(formData.desktopImage);
+        });
+      }
+
       const payload = {
         image: imageData,
+        desktopImage: desktopData,
         image_url: formData.image_url.trim(),
         use_url: formData.use_url,
         type: type, // Hardcoded type from props
@@ -365,6 +386,44 @@ const HomepageBanners = ({ type = 'top', mode = 'list' }) => {
                     </label>
                   )}
                 </div>
+
+              {/* Optional wide-screen artwork. The desktop hero is a much wider
+                  crop than the phone banner, so a portrait image loses its
+                  subject there; leaving this empty keeps the old behaviour. */}
+              <div className="mt-5">
+                <p className="text-[15px] font-medium text-gray-900">Desktop banner</p>
+                <p className="mt-0.5 text-[13px] text-gray-500">
+                  Optional. Wider artwork for large screens — the phone image is used if this is left empty.
+                </p>
+
+                <div className="mt-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50">
+                  {desktopPreview ? (
+                    <div className="flex flex-col items-center gap-3 p-4">
+                      <img src={desktopPreview} alt="" className="max-h-40 w-full rounded-lg object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setDesktopPreview(null);
+                          setFormData((current) => ({ ...current, desktopImage: null }));
+                        }}
+                        className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50"
+                      >
+                        Remove desktop image
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="flex cursor-pointer flex-col items-center justify-center gap-3 py-6 text-center">
+                      <input type="file" className="hidden" accept="image/*" onChange={handleDesktopImageChange} />
+                      <span className="text-[22px] text-gray-500">
+                        <Upload size={28} />
+                      </span>
+                      <div>
+                        <p className="text-[15px] font-medium text-gray-900">Upload desktop image</p>
+                      </div>
+                    </label>
+                  )}
+                </div>
+              </div>
               </div>
 
               <div className="space-y-3">

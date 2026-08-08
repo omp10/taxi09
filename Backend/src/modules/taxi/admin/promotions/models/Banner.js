@@ -13,6 +13,16 @@ const bannerSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    /**
+     * Artwork for wide screens. The two layouts crop very differently - a
+     * portrait phone banner loses its subject on a desktop hero - so a separate
+     * image can be uploaded. Empty means the phone artwork is used for both.
+     */
+    desktopImage: {
+      type: String,
+      default: '',
+      trim: true,
+    },
     link_type: {
       type: String,
       enum: ['external_link', 'deep_link'],
