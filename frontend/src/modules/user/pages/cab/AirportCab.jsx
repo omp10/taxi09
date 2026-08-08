@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, MapPin, Calendar, Clock, ChevronRight, AlertCircle, Plane } from 'lucide-react';
+import { getRideFares } from '../../services/userService';
 
-const VEHICLES = [
+const FALLBACK_VEHICLES = [
   { id: 'mini',  name: 'Mini Cab', icon: '🚕', fare: 499,  desc: 'Swift, Alto, WagonR',    seats: 4 },
   { id: 'sedan', name: 'Sedan',    icon: '🚗', fare: 699,  desc: 'Dzire, Amaze, Aspire',   seats: 4 },
   { id: 'suv',   name: 'SUV',      icon: '🚙', fare: 999,  desc: 'Ertiga, Innova, Crysta', seats: 6 },
@@ -17,10 +18,21 @@ const AirportCab = () => {
   const [terminal, setTerminal] = useState('');
   const [date,     setDate]     = useState('');
   const [time,     setTime]     = useState('');
-  const [vehicle,  setVehicle]  = useState('mini');
+  const [vehicles, setVehicles] = useState(FALLBACK_VEHICLES);
+  const [vehicle,  setVehicle]  = useState(FALLBACK_VEHICLES[0].id);
   const [errors,   setErrors]   = useState({});
 
-  const selectedVehicle = VEHICLES.find(v => v.id === vehicle);
+  const selectedVehicle = vehicles.find(v => v.id === vehicle) || vehicles[0];
+
+  useEffect(() => {
+    let cancelled = false;
+    getRideFares({ transportType: 'taxi' }, FALLBACK_VEHICLES).then((results) => {
+      if (cancelled) return;
+      setVehicles(results);
+      setVehicle(results[0]?.id);
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   const validate = () => {
     const e = {};
@@ -120,7 +132,7 @@ const AirportCab = () => {
         <div>
           <p className="text-[10px] font-black uppercase tracking-[0.26em] text-slate-400 mb-2">Choose Vehicle</p>
           <div className="space-y-2">
-            {VEHICLES.map(v => (
+            {vehicles.map(v => (
               <motion.button key={v.id} whileTap={{ scale: 0.98 }} onClick={() => setVehicle(v.id)}
                 className={`w-full flex items-center gap-4 p-4 rounded-[18px] border-2 transition-all text-left ${
                   vehicle === v.id ? 'border-blue-300 bg-blue-50/50 shadow-sm' : 'border-slate-100 bg-white/90'

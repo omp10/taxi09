@@ -69,10 +69,30 @@ const rideSchema = new mongoose.Schema(
     },
     serviceType: {
       type: String,
-      enum: ['ride', 'parcel', 'intercity'],
+      enum: ['ride', 'parcel', 'intercity', 'hire_driver'],
       default: 'ride',
       lowercase: true,
       trim: true,
+    },
+    // Set when the ride came from the "hire a driver" flow. Surcharges are
+    // priced on the server; the client only sends which options were picked.
+    hireDriver: {
+      hireType: { type: String, default: '', trim: true },
+      tripType: { type: String, default: '', trim: true },
+      driverPreference: { type: String, default: '', trim: true },
+      journeyOptions: [
+        {
+          _id: false,
+          key: { type: String, default: '', trim: true },
+          label: { type: String, default: '', trim: true },
+          price: { type: Number, default: 0 },
+        },
+      ],
+      surchargeTotal: { type: Number, default: 0 },
+      travelDate: { type: String, default: '', trim: true },
+      travelTime: { type: String, default: '', trim: true },
+      returnDate: { type: String, default: '', trim: true },
+      returnTime: { type: String, default: '', trim: true },
     },
     intercity: {
       bookingId: {

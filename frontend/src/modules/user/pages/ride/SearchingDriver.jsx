@@ -625,6 +625,7 @@ const SearchingDriver = () => {
           paymentMethod: routeState.paymentMethod || 'Cash',
           serviceType: routeState.serviceType || 'ride',
           intercity: routeState.intercity || undefined,
+          hireDriver: routeState.hireDriver || undefined,
           promo_code: routeState.promo_code || '',
           zone_id: routeState.zone_id || routeState.zoneId || '',
           service_location_id: routeState.service_location_id || routeState.serviceLocationId || '',

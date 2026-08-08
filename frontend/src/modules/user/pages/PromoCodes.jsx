@@ -3,8 +3,32 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Tag, CheckCircle2, X, ChevronRight, Ticket } from 'lucide-react';
 import BottomNavbar from '../components/BottomNavbar';
+import api from '../../../shared/api/axiosInstance';
 
-const MOCK_PROMOS = [
+const unwrap = (response) => response?.data?.data || response?.data || response || {};
+
+/**
+ * The API returns raw promo records; the card renders a flat display shape.
+ * Percentage promos carry `discount_percentage`, flat ones use
+ * `maximum_discount_amount` as the amount.
+ */
+const fromApi = (promo) => {
+  const percent = Number(promo.discount_percentage || 0);
+  const cap = Number(promo.maximum_discount_amount || 0);
+  return {
+    id: promo._id,
+    code: promo.code,
+    type: percent > 0 ? 'percent' : 'flat',
+    discount: percent > 0 ? percent : cap,
+    service: promo.transport_type ? String(promo.transport_type).replace(/_/g, ' ') : 'All Rides',
+    minFare: Number(promo.minimum_trip_amount || 0),
+    expiry: promo.to_date
+      ? new Date(promo.to_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
+      : 'No expiry',
+  };
+};
+
+const FALLBACK_PROMOS = [
   { id: '1', code: 'RYDON50',  discount: 50,  type: 'flat',    service: 'All Rides',    expiry: '30 Apr 2026', minFare: 100 },
   { id: '2', code: 'GOFREE',   discount: 100, type: 'flat',    service: 'Cab Only',     expiry: '15 Apr 2026', minFare: 150 },
   { id: '3', code: 'SAVE20',   discount: 20,  type: 'percent', service: 'Parcel',       expiry: '30 Apr 2026', minFare: 50  },
@@ -33,12 +57,35 @@ const PromoCodes = () => {
   const [applying, setApplying] = useState(null);
 
   useEffect(() => {
+    let active = true;
+
     const load = async () => {
-      await new Promise(r => setTimeout(r, 700));
-      setPromos(MOCK_PROMOS);
-      setLoading(false);
+      try {
+        // The promos endpoint is scoped to a service location, so resolve one first.
+        const locationsRes = await api.get('/users/service-locations');
+        const locations = unwrap(locationsRes)?.results || [];
+        const locationId = locations[0]?._id || locations[0]?.id;
+
+        if (!locationId) throw new Error('no service location');
+
+        const promoRes = await api.get('/promos/available', {
+          params: { service_location_id: locationId, limit: 20 },
+        });
+        const results = unwrap(promoRes);
+        const list = Array.isArray(results) ? results : results?.results || [];
+
+        if (active) setPromos(list.length ? list.map(fromApi) : FALLBACK_PROMOS);
+      } catch {
+        if (active) setPromos(FALLBACK_PROMOS);
+      } finally {
+        if (active) setLoading(false);
+      }
     };
+
     load();
+    return () => {
+      active = false;
+    };
   }, []);
 
   const showToast = (msg, type = 'success') => {
@@ -50,9 +97,8 @@ const PromoCodes = () => {
     if (appliedCode === code) return; // idempotence guard
     setApplying(code);
     try {
-      await new Promise(r => setTimeout(r, 600));
-      // POST /api/v1/request/promocode-redeem
-      if (code === 'INVALID') throw new Error('Promo code is expired or invalid');
+      // Server is the authority on whether a code is valid for this user.
+      await api.post('/promos/validate', { code });
       setAppliedCode(code);
       showToast(`"${code}" applied successfully!`, 'success');
       setErrorBanner(null);

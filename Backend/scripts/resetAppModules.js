@@ -7,7 +7,9 @@ dotenv.config();
 
 const resetAppModules = async () => {
     try {
-        await mongoose.connect(process.env.MONGODB_URI);
+        await mongoose.connect(process.env.MONGODB_URI, {
+            dbName: process.env.MONGODB_DB_NAME || 'appzeto_taxi',
+        });
         console.log('Database connected');
 
         // Get existing settings or create new ones

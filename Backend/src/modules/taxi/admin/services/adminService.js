@@ -65,6 +65,7 @@ import { buildRentalTrackingSnapshot, listActiveRentalTrackingBookings } from '.
 import { sendEmail } from '../../services/mailService.js';
 import { getActivePaymentGateway, normalizePaymentSettingsPayload } from '../../services/paymentGatewayService.js';
 import { signAccessToken } from '../../services/tokenService.js';
+import { SECRET_FIELDS, encryptSecret, maskSecret } from '../../../../utils/secretCrypto.js';
 import {
   ADMIN_PERMISSIONS,
   SUPERADMIN_PERMISSION,
@@ -948,6 +949,48 @@ const normalizeRentalPricingItem = (item = {}, index = 0) => ({
   active: item.active === undefined ? true : normalizeBoolean(item.active),
 });
 
+const slugifyAddOnId = (value, index) =>
+  String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || `addon-${index + 1}`;
+
+/**
+ * Add-on rows are keyed by `id`; duplicates are dropped so a booking can never
+ * match the same add-on twice.
+ */
+const normalizeRentalAddOns = (value) => {
+  if (!Array.isArray(value)) return [];
+
+  const seen = new Set();
+  return value
+    .map((item, index) => {
+      const label = sanitizeBusText(item?.label, '');
+      if (!label) return null;
+
+      const id = slugifyAddOnId(item?.id || label, index);
+      if (seen.has(id)) return null;
+      seen.add(id);
+
+      const price = Math.max(0, sanitizeBusSeatPrice(item?.price, 0));
+      const originalPrice = Math.max(0, sanitizeBusSeatPrice(item?.originalPrice, 0));
+
+      return {
+        id,
+        label,
+        description: sanitizeBusText(item?.description, ''),
+        price,
+        // Only a genuinely higher figure is a discount; anything else would
+        // render as a struck-through price that is not a saving.
+        originalPrice: originalPrice > price ? originalPrice : 0,
+        icon: sanitizeBusText(item?.icon, 'Package'),
+        active: normalizeBoolean(item?.active ?? true),
+      };
+    })
+    .filter(Boolean);
+};
+
 const normalizeRentalAdvancePayment = (value = {}, existing = {}) => {
   const paymentMode = ['full', 'percentage', 'fixed'].includes(value?.paymentMode)
     ? value.paymentMode
@@ -1074,6 +1117,13 @@ const normalizeRentalVehiclePayload = (payload = {}, existing = {}) => {
       : Array.isArray(existing.pricing) && existing.pricing.length
         ? existing.pricing.map((item, index) => normalizeRentalPricingItem(item, index))
         : DEFAULT_RENTAL_PRICING.map((item, index) => normalizeRentalPricingItem(item, index)),
+    // Omitting addOns entirely keeps the existing list; sending [] clears it.
+    transmission: ['manual', 'automatic'].includes(String(payload.transmission || existing.transmission || '').toLowerCase())
+      ? String(payload.transmission || existing.transmission).toLowerCase()
+      : '',
+    addOns: normalizeRentalAddOns(
+      Array.isArray(payload.addOns) ? payload.addOns : existing.addOns,
+    ),
     advancePayment: normalizeRentalAdvancePayment(
       payload.advancePayment,
       existing.advancePayment,
@@ -1225,6 +1275,8 @@ export const serializeRentalVehicleType = (item = {}) => ({
   short_description: item.short_description || '',
   description: item.description || '',
   vehicleCategory: item.vehicleCategory || 'Car',
+  fuel: item.fuel || '',
+  transmission: item.transmission || '',
   rentalSubcategoryId: item.rentalSubcategoryId ? String(item.rentalSubcategoryId) : '',
   rentalSubcategoryName: item.rentalSubcategoryName || '',
   image: item.image || '',
@@ -1243,6 +1295,7 @@ export const serializeRentalVehicleType = (item = {}) => ({
     ? item.serviceStoreIds.map((storeId) => String(storeId))
     : [],
   poolingEnabled: Boolean(item.poolingEnabled),
+  addOns: normalizeRentalAddOns(item.addOns),
   advancePayment: normalizeRentalAdvancePayment(item.advancePayment),
   subscription: normalizeRentalSubscription(item.subscription),
   blueprint: {
@@ -6152,6 +6205,64 @@ export const getVehicleTypeById = async (id) => {
   };
 };
 
+/**
+ * Vehicle classes with their admin-configured fares, for the customer-facing
+ * booking screens. Joins the Vehicle catalogue with SetPrice rather than
+ * introducing a second pricing source - Set Prices stays the only place fares
+ * are edited.
+ */
+export const listPublicRideFares = async ({ transportType = 'taxi', serviceLocationId = '' } = {}) => {
+  const vehicles = await Vehicle.find({ transport_type: transportType, status: { $ne: 0 } })
+    .select('name short_description description capacity image icon icon_types transport_type status active')
+    .sort({ createdAt: 1 })
+    .lean();
+
+  const priceQuery = { transport_type: transportType, active: { $ne: false } };
+  if (serviceLocationId && mongoose.isValidObjectId(serviceLocationId)) {
+    priceQuery.service_location_id = serviceLocationId;
+  }
+
+  const prices = await SetPrice.find(priceQuery)
+    .select('vehicle_type base_price base_distance price_per_distance time_price airport_surge enable_airport_ride enable_outstation_ride outstation_base_price outstation_base_distance outstation_price_per_distance service_tax service_location_id')
+    .lean();
+
+  // A vehicle type can be priced per service location; without one pinned we
+  // take the first row so the screen still shows a fare instead of zero.
+  const priceByVehicle = new Map();
+  for (const price of prices) {
+    const key = String(price.vehicle_type || '');
+    if (key && !priceByVehicle.has(key)) priceByVehicle.set(key, price);
+  }
+
+  return vehicles
+    .filter((vehicle) => vehicle.active !== false)
+    // A class with no configured fare would render as "Rs.0" on the booking
+    // screens, so leave it out until Set Prices has a row for it.
+    .filter((vehicle) => Number(priceByVehicle.get(String(vehicle._id))?.base_price || 0) > 0)
+    .map((vehicle) => {
+      const price = priceByVehicle.get(String(vehicle._id)) || {};
+      return {
+        id: String(vehicle._id),
+        name: vehicle.name || '',
+        description: vehicle.short_description || vehicle.description || '',
+        capacity: Number(vehicle.capacity || 0),
+        image: vehicle.image || vehicle.icon || '',
+        iconType: vehicle.icon_types || 'car',
+        basePrice: Number(price.base_price || 0),
+        baseDistance: Number(price.base_distance || 0),
+        pricePerDistance: Number(price.price_per_distance || 0),
+        timePrice: Number(price.time_price || 0),
+        serviceTaxPercent: Number(price.service_tax || 0),
+        airportSurge: Number(price.airport_surge || 0),
+        airportRide: price.enable_airport_ride === undefined ? true : Boolean(Number(price.enable_airport_ride)),
+        outstationRide: Boolean(Number(price.outstation_base_price || 0)) || Boolean(Number(price.enable_outstation_ride)),
+        outstationBasePrice: Number(price.outstation_base_price || 0),
+        outstationBaseDistance: Number(price.outstation_base_distance || 0),
+        outstationPricePerDistance: Number(price.outstation_price_per_distance || 0),
+      };
+    });
+};
+
 export const listPublicVehicleCatalog = async () => {
   if (publicVehicleCatalogCache.value && publicVehicleCatalogCache.expiresAt > Date.now()) {
     return publicVehicleCatalogCache.value;
@@ -10015,22 +10126,68 @@ export const listOwnerDocumentUploadFields = async ({ activeOnly = true } = {}) 
     return true;
   };
 
+
+/**
+ * Secrets are stored encrypted and never leave the server in the clear - the
+ * admin UI receives a masked stand-in. A field left untouched arrives back as
+ * that mask, which must not overwrite the real stored value.
+ */
+const MASK_PATTERN = /^[^•]*•{2,}/;
+
+const sealPaymentSecrets = (incoming = {}, existing = {}) => {
+  const out = Array.isArray(incoming) ? [...incoming] : { ...incoming };
+
+  for (const [key, value] of Object.entries(out)) {
+    if (value && typeof value === 'object') {
+      out[key] = sealPaymentSecrets(value, existing?.[key] || {});
+      continue;
+    }
+    if (!SECRET_FIELDS.has(key)) continue;
+
+    const text = String(value ?? '');
+    // Untouched field: keep whatever is already stored.
+    if (!text || MASK_PATTERN.test(text)) {
+      out[key] = existing?.[key] ?? '';
+      continue;
+    }
+    out[key] = encryptSecret(text);
+  }
+  return out;
+};
+
+const maskPaymentSecrets = (node = {}) => {
+  const out = Array.isArray(node) ? [...node] : { ...node };
+
+  for (const [key, value] of Object.entries(out)) {
+    if (value && typeof value === 'object') {
+      out[key] = maskPaymentSecrets(value);
+      continue;
+    }
+    if (SECRET_FIELDS.has(key)) out[key] = maskSecret(value);
+  }
+  return out;
+};
+
   export const getPaymentSettings = async () => {
     const settings = await ensureThirdPartySettings();
     const activeGateway = await getActivePaymentGateway();
-    return { settings: settings.payment || {}, active_gateway: activeGateway };
+    // Masked: the browser never receives a usable secret.
+    return { settings: maskPaymentSecrets(settings.payment || {}), active_gateway: activeGateway };
   };
 
   export const updatePaymentSettings = async (payload) => {
     const settings = await ensureThirdPartySettings();
-    settings.payment = normalizePaymentSettingsPayload(
+    settings.payment = sealPaymentSecrets(
+      normalizePaymentSettingsPayload(
+        settings.payment || {},
+        deepMerge(settings.payment || {}, payload),
+      ),
       settings.payment || {},
-      deepMerge(settings.payment || {}, payload),
     );
     settings.markModified('payment');
     await settings.save();
     const activeGateway = await getActivePaymentGateway();
-    return { settings: settings.payment, active_gateway: activeGateway };
+    return { settings: maskPaymentSecrets(settings.payment), active_gateway: activeGateway };
   };
 
   export const getSMSSettings = async () => {

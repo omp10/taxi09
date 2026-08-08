@@ -76,88 +76,6 @@ const buildRentalActivityState = (booking) => ({
   summaryMode: String(booking?.status || '').toLowerCase() === 'completed' ? 'completed' : undefined,
 });
 
-const sampleActivities = [
-  {
-    id: 'sample-outstation',
-    title: 'Innova Crysta',
-    eyebrow: 'OUTSTATION  •  1 DAY',
-    pickup: 'Bangalore (HSR Layout)',
-    drop: 'Mysore (Mysore Palace)',
-    date: '23 MAY 2025',
-    time: '08:00 AM',
-    status: 'Completed',
-    statusTone: 'success',
-    price: '2850',
-    vehicleImage: '/white_sedan_banner_car.png',
-    registration: 'KA',
-    type: 'ride',
-    sample: true,
-  },
-  {
-    id: 'sample-driver',
-    title: 'Ride with Driver',
-    eyebrow: 'CITY RIDE',
-    pickup: 'Indore (Vijay Nagar)',
-    drop: 'Phoenix Citadel, Indore',
-    date: '22 MAY 2025',
-    time: '07:15 PM',
-    status: 'Completed',
-    statusTone: 'success',
-    price: '265',
-    vehicleImage: '/taxi09_service_attach_car.png',
-    registration: 'DL',
-    type: 'ride',
-    sample: true,
-  },
-  {
-    id: 'sample-rental',
-    title: 'Honda Activa 6G',
-    eyebrow: 'RENTAL  •  12 HOURS',
-    pickup: 'Indore (Vijay Nagar)',
-    drop: 'Indore (Vijay Nagar)',
-    date: '21 MAY 2025',
-    time: '10:00 AM',
-    status: 'Ongoing',
-    statusTone: 'warning',
-    price: '350',
-    vehicleImage: '/scooty.png',
-    registration: 'MP',
-    type: 'rental',
-    sample: true,
-  },
-  {
-    id: 'sample-parcel',
-    title: 'Documents Delivery',
-    eyebrow: 'PARCEL DELIVERY',
-    pickup: 'Indore (Palasia)',
-    drop: 'Dewas Naka, Indore',
-    date: '20 MAY 2025',
-    time: '04:30 PM',
-    status: 'Delivered',
-    statusTone: 'success',
-    price: '80',
-    vehicleImage: '/5_Parcel.png',
-    registration: 'MP',
-    type: 'parcel',
-    sample: true,
-  },
-  {
-    id: 'sample-bus',
-    title: 'Indore to Jaipur',
-    eyebrow: 'BUS BOOKING',
-    pickup: 'Indore (Sarwate Bus Stand)',
-    drop: 'Jaipur (Sindhi Camp)',
-    date: '19 MAY 2025',
-    time: '08:00 AM',
-    status: 'Completed',
-    statusTone: 'success',
-    price: '620',
-    vehicleImage: '/bus.png',
-    registration: 'RJ',
-    type: 'bus',
-    sample: true,
-  },
-];
 
 const toDisplayDate = (value) => String(value || '--').toUpperCase();
 
@@ -420,9 +338,7 @@ const Activity = () => {
     }
   };
   const helperText = useMemo(() => getHelperText(activeTab), [activeTab]);
-  const visibleActivities = !loading && !error && activeTab !== 'Support' && activities.length === 0
-    ? sampleActivities.filter((item) => activeTab === 'All' || item.type === activeTab.toLowerCase().replace('rides', 'ride').replace('parcels', 'parcel'))
-    : activities;
+  const visibleActivities = activities;
 
   return (
     <div className="mx-auto min-h-screen w-full max-w-lg bg-[#f8f7f2] pb-28 font-sans text-slate-950 shadow-2xl">
@@ -472,16 +388,14 @@ const Activity = () => {
               <ActivityBookingCard
                 key={activity.id}
                 activity={activity}
-                onClick={() => (activity.sample ? undefined : handleItemClick(activity))}
+                onClick={() => handleItemClick(activity)}
               />
             ))}
-            {!visibleActivities.some((item) => item.sample) && (
-              <ActivityPager
-                pagination={pagination}
-                onPrevious={() => setCurrentPage((page) => Math.max(1, page - 1))}
-                onNext={() => setCurrentPage((page) => Math.min(pagination.totalPages, page + 1))}
-              />
-            )}
+            <ActivityPager
+              pagination={pagination}
+              onPrevious={() => setCurrentPage((page) => Math.max(1, page - 1))}
+              onNext={() => setCurrentPage((page) => Math.min(pagination.totalPages, page + 1))}
+            />
           </div>
         )}
         </div>

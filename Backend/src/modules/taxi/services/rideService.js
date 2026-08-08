@@ -82,7 +82,48 @@ const normalizeRidePaymentMethod = (paymentMethod) => (
 
 const normalizeServiceType = (serviceType) => {
   const normalized = String(serviceType || 'ride').trim().toLowerCase();
-  return ['parcel', 'intercity'].includes(normalized) ? normalized : 'ride';
+  return ['parcel', 'intercity', 'hire_driver'].includes(normalized) ? normalized : 'ride';
+};
+
+/**
+ * Server-authoritative surcharges for the "hire a driver" flow. The client
+ * sends only which options the rider ticked - never the price - so a tampered
+ * payload cannot change what is charged.
+ */
+const HIRE_DRIVER_JOURNEY_OPTIONS = {
+  night: { label: 'Night Journey', price: 500 },
+  hill: { label: 'Hill Driving', price: 300 },
+  luggage: { label: 'Extra Luggage', price: 150 },
+  stops: { label: 'Multiple Stops', price: 250 },
+};
+
+const normalizeHireDriver = (input) => {
+  if (!input || typeof input !== 'object') return null;
+
+  // Accept either { night: true } or ['night'] - the booking screen tracks the
+  // toggles as a map, but a list is the more natural wire format.
+  const raw = input.journeyOptions;
+  const selectedKeys = Array.isArray(raw)
+    ? raw.map((item) => String(item || '').trim())
+    : Object.entries(raw || {})
+        .filter(([, enabled]) => Boolean(enabled))
+        .map(([key]) => key);
+
+  const journeyOptions = selectedKeys
+    .filter((key) => Object.hasOwn(HIRE_DRIVER_JOURNEY_OPTIONS, key))
+    .map((key) => ({ key, ...HIRE_DRIVER_JOURNEY_OPTIONS[key] }));
+
+  return {
+    hireType: String(input.hireType || input.hireDriverType || '').trim(),
+    tripType: String(input.tripType || '').trim(),
+    driverPreference: String(input.driverPreference || '').trim(),
+    journeyOptions,
+    surchargeTotal: journeyOptions.reduce((total, option) => total + option.price, 0),
+    travelDate: String(input.travelDate || '').trim(),
+    travelTime: String(input.travelTime || '').trim(),
+    returnDate: String(input.returnDate || '').trim(),
+    returnTime: String(input.returnTime || '').trim(),
+  };
 };
 
 const ensureUserWallet = async (userId) => {
@@ -867,6 +908,7 @@ export const createRideRecord = async ({
   serviceType,
   parcel,
   intercity,
+  hireDriver,
   promo_code,
   zone_id,
   service_location_id,
@@ -884,13 +926,21 @@ export const createRideRecord = async ({
 
   await clearUserActiveRideIfPresent(user);
 
-  const safeFare = Number(fare);
+  const baseFareFromClient = Number(fare);
   const safeEstimatedDistanceMeters = Math.max(0, Number(estimatedDistanceMeters || 0));
   const safeEstimatedDurationMinutes = Math.max(0, Number(estimatedDurationMinutes || 0));
 
-  if (!Number.isFinite(safeFare) || safeFare < 0) {
+  if (!Number.isFinite(baseFareFromClient) || baseFareFromClient < 0) {
     throw new ApiError(400, 'fare must be a positive number or zero');
   }
+
+  const normalizedHireDriver =
+    normalizeServiceType(serviceType) === 'hire_driver' ? normalizeHireDriver(hireDriver) : null;
+
+  // The client's fare covers the base ride only; hire-driver surcharges are
+  // added from the server catalogue so every downstream consumer (bidding,
+  // wallet checks, the stored fare) sees the same total.
+  const safeFare = baseFareFromClient + (normalizedHireDriver?.surchargeTotal || 0);
 
   const dispatchVehicleTypeIds = normalizeVehicleTypeIds(vehicleTypeIds, vehicleTypeId);
 
@@ -1098,6 +1148,7 @@ export const createRideRecord = async ({
       pricingSnapshot,
       parcel: normalizeParcelPayload(parcel),
       intercity: normalizeIntercityPayload(intercity),
+      hireDriver: normalizedHireDriver || undefined,
       scheduledAt: normalizedScheduledAt,
       status: RIDE_STATUS.SEARCHING,
       liveStatus: RIDE_LIVE_STATUS.SEARCHING,
@@ -1153,6 +1204,7 @@ export const createRideRecord = async ({
             pricingSnapshot,
             parcel: normalizeParcelPayload(parcel),
             intercity: normalizeIntercityPayload(intercity),
+            hireDriver: normalizedHireDriver || undefined,
             scheduledAt: normalizedScheduledAt,
             status: RIDE_STATUS.SEARCHING,
             liveStatus: RIDE_LIVE_STATUS.SEARCHING,

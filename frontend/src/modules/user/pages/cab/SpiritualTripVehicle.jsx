@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Users, ChevronRight, Calendar, Clock, MapPin } from 'lucide-react';
+import { getRideFares } from '../../services/userService';
 
-const VEHICLES = [
+const FALLBACK_VEHICLES = [
   { id: 'mini',  name: 'Mini Cab', icon: '🚕', baseFare: 800,  desc: 'Swift, Alto',       maxSeats: 4 },
   { id: 'sedan', name: 'Sedan',    icon: '🚗', baseFare: 1100, desc: 'Dzire, Amaze',      maxSeats: 4 },
   { id: 'suv',   name: 'SUV',      icon: '🚙', baseFare: 1600, desc: 'Ertiga, Innova',    maxSeats: 6 },
@@ -17,15 +18,28 @@ const SpiritualTripVehicle = () => {
 
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [vehicle, setVehicle] = useState('sedan');
+  const [vehicles, setVehicles] = useState(FALLBACK_VEHICLES);
+  const [vehicle, setVehicle] = useState(FALLBACK_VEHICLES[1].id);
   const [seats, setSeats] = useState(2);
+
+  useEffect(() => {
+    let cancelled = false;
+    getRideFares({ transportType: 'taxi' }, FALLBACK_VEHICLES).then((results) => {
+      if (cancelled) return;
+      setVehicles(results);
+      // Sedan-equivalent is the sensible default; fall back to the first class.
+      setVehicle((results[1] || results[0])?.id);
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   if (!trip) {
     navigate('/cab/spiritual');
     return null;
   }
 
-  const selectedVehicle = VEHICLES.find(v => v.id === vehicle);
+  const selectedVehicle = vehicles.find(v => v.id === vehicle) || vehicles[0];
+
   
   // Calculate approximate fare based on base vehicle fare and trip multiplier
   const multiplier = trip.dist.includes('km') ? parseInt(trip.dist) / 50 : 1;
@@ -103,7 +117,7 @@ const SpiritualTripVehicle = () => {
         <div>
           <p className="text-[10px] font-black uppercase tracking-[0.26em] text-slate-400 mb-2 ml-1 mt-2">Select Vehicle</p>
           <div className="space-y-2.5">
-            {VEHICLES.map(v => (
+            {vehicles.map(v => (
               <motion.button key={v.id} whileTap={{ scale: 0.98 }} onClick={() => { setVehicle(v.id); if(seats > v.maxSeats) setSeats(v.maxSeats); }}
                 className={`w-full flex items-center gap-4 p-4 rounded-[18px] border-2 transition-all text-left overflow-hidden relative ${
                   vehicle === v.id ? 'border-purple-300 bg-purple-50/50 shadow-sm' : 'border-slate-100 bg-white/90 hover:border-purple-100'

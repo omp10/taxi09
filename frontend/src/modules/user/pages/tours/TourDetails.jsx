@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import {
   BedDouble,
@@ -20,7 +20,10 @@ import {
   Utensils,
   X,
 } from 'lucide-react';
+import { fetchPackageBySlug, recallPackage, recallPackageExtras } from '../../utils/packageHandoff';
 import AppHeader from '../../components/AppHeader';
+import api from '../../../../shared/api/axiosInstance';
+import { payForBooking } from '../../utils/bookingCheckout';
 
 const getRoutePrefix = (pathname = '') => (pathname.startsWith('/taxi/user') ? '/taxi/user' : '');
 
@@ -67,11 +70,26 @@ const buildItinerary = (tour) => {
 const TourDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { slug: slugParam } = useParams();
   const routePrefix = useMemo(() => getRoutePrefix(location.pathname), [location.pathname]);
   const state = location.state || {};
-  const { tour, travelers: travelersLabel = '2 Adults', startDate = '' } = state;
+  // Fall back to the stored handoff so a reload or a direct hit still works.
+  const recalled = useMemo(() => ({ pkg: recallPackage('tour'), ...recallPackageExtras('tour') }), []);
+  const [fetchedTour, setFetchedTour] = useState(null);
+  const tour = state.tour || recalled.pkg || fetchedTour;
+
+  // A shared link arrives with only a slug - load it.
+  useEffect(() => {
+    if (tour || !slugParam) return undefined;
+    let cancelled = false;
+    fetchPackageBySlug(slugParam).then((result) => { if (!cancelled) setFetchedTour(result); });
+    return () => { cancelled = true; };
+  }, [tour, slugParam]);
+  const travelersLabel = state.travelers || recalled.travelers || '2 Adults';
+  const startDate = state.startDate || recalled.startDate || '';
 
   const [openDay, setOpenDay] = useState(1);
+  const [paying, setPaying] = useState(false);
   const [slide, setSlide] = useState(0);
   const [showAllInclusions, setShowAllInclusions] = useState(false);
 
@@ -81,7 +99,40 @@ const TourDetails = () => {
     return list.filter(Boolean);
   }, [tour]);
 
+  const bookPackage = async () => {
+    setPaying(true);
+    try {
+      // Create the booking first so the server owns the amount, then pay it.
+      const response = await api.post('/users/package-bookings', {
+        slug: tour.slug,
+        travellers: travellerCount,
+      });
+      const created = response?.data?.data ?? response?.data;
+
+      const paid = await payForBooking({
+        kind: 'package',
+        bookingId: created._id,
+        name: tour.title,
+        description: `${travellerCount} traveller(s) · ${created.bookingReference}`,
+      });
+
+      if (!paid) {
+        toast('Payment cancelled - your booking is saved in My Bookings');
+        return;
+      }
+      toast.success(`Booking confirmed · ${paid.bookingReference}`);
+      navigate(`${routePrefix}/activity`);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message || 'Could not complete this booking');
+    } finally {
+      setPaying(false);
+    }
+  };
+
   if (!tour) {
+    // With a slug in the URL the fetch is still in flight, so hold rather than
+    // bouncing the visitor straight back to the listing.
+    if (slugParam) return null;
     navigate(`${routePrefix}/tours`, { replace: true });
     return null;
   }
@@ -309,10 +360,11 @@ const TourDetails = () => {
         </div>
         <button
           type="button"
-          onClick={() => toast.success(`${tour.title} enquiry sent - our team will call you`)}
+          onClick={bookPackage}
+          disabled={paying}
           className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[15px] font-extrabold shadow-[0_8px_20px_rgba(255,193,7,.4)] active:scale-[0.99] transition-transform"
         >
-          Book This Package <ChevronRight size={18} strokeWidth={2.8} />
+          {paying ? 'Processing…' : 'Book This Package'} <ChevronRight size={18} strokeWidth={2.8} />
         </button>
       </div>
     </div>

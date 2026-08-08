@@ -318,7 +318,7 @@ const MobileHome = () => {
   const moreServices = [
     { iconImage: '/taxi09_service_hotel.png', label: 'Hotel\nBooking', path: '/taxi/user/hotel' },
     { iconImage: '/taxi09_service_subscription.png', label: 'Monthly\nSubscription', path: '/taxi/user/profile/subscriptions' },
-    { iconImage: '/taxi09_service_travel.png', label: 'Travel\nPackages', path: '/taxi/user/cab/spiritual' },
+    { iconImage: '/taxi09_service_travel.png', label: 'Travel\nPackages', path: '/taxi/user/tours' },
     { iconImage: '/taxi09_service_bookings.png', label: 'My\nBookings', path: '/taxi/user/activity' },
     { iconImage: '/taxi09_service_travel.png', label: 'International\nTrips', path: '/taxi/user/international' },
     { iconImage: '/taxi09_service_driver.png', label: 'Driver\nRegistration', path: '/taxi/driver/login' },

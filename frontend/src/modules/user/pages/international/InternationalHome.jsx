@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import {
@@ -25,7 +25,9 @@ import {
   Utensils,
   Waves,
 } from 'lucide-react';
+import { rememberPackage } from '../../utils/packageHandoff';
 import AppHeader from '../../components/AppHeader';
+import contentService from '../../services/contentService';
 
 const getRoutePrefix = (pathname = '') => (pathname.startsWith('/taxi/user') ? '/taxi/user' : '');
 
@@ -49,7 +51,7 @@ const PERK_ICONS = {
   'Travel Insurance': ShieldCheck,
 };
 
-const INTERNATIONAL_PACKAGES = [
+const FALLBACK_TRIPS = [
   {
     id: 'thailand',
     badge: 'BESTSELLER',
@@ -178,6 +180,16 @@ const INTERNATIONAL_PACKAGES = [
   },
 ];
 
+/** API records carry durationLabel/departureDate/badge; the card expects days/departure/tag. */
+const fromApi = (item) => ({
+  ...item,
+  id: item.slug || item._id,
+  days: item.durationLabel || `${item.durationDays} Days`,
+  departure: item.departureDate || '',
+  highlights: item.highlights?.length ? item.highlights : [],
+  perks: item.perks?.length ? item.perks : [],
+});
+
 const InternationalBottomNav = ({ routePrefix }) => {
   const navigate = useNavigate();
   const items = [
@@ -220,20 +232,31 @@ const InternationalHome = () => {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('all');
   const [wishlist, setWishlist] = useState([]);
+  const [trips, setTrips] = useState(FALLBACK_TRIPS);
+
+  useEffect(() => {
+    let active = true;
+    contentService.getTravelPackages('international', FALLBACK_TRIPS).then((results) => {
+      if (active) setTrips(results.map((item) => (item.slug ? fromApi(item) : item)));
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    return INTERNATIONAL_PACKAGES.filter((trip) => {
+    return trips.filter((trip) => {
       if (filter !== 'all' && trip.category !== filter) return false;
       if (!needle) return true;
       return [trip.title, trip.country, ...trip.stops].join(' ').toLowerCase().includes(needle);
     });
-  }, [filter, query]);
+  }, [filter, query, trips]);
 
   const avgRating = useMemo(() => {
-    const total = INTERNATIONAL_PACKAGES.reduce((sum, trip) => sum + trip.rating, 0);
-    return (total / INTERNATIONAL_PACKAGES.length).toFixed(1);
-  }, []);
+    const total = trips.reduce((sum, trip) => sum + Number(trip.rating || 0), 0);
+    return trips.length ? (total / trips.length).toFixed(1) : "0.0";
+  }, [trips]);
 
   const toggleWishlist = (id) =>
     setWishlist((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
@@ -405,7 +428,10 @@ const InternationalHome = () => {
                   </span>
                   <button
                     type="button"
-                    onClick={() => navigate(`${routePrefix}/international/details`, { state: { trip } })}
+                    onClick={() => {
+                      rememberPackage('international', trip);
+                      navigate(`${routePrefix}/international/details/${trip.slug}`, { state: { trip } });
+                    }}
                     className="flex shrink-0 items-center gap-1 rounded-[9px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] px-3 py-1.5 text-[10.5px] font-extrabold shadow-[0_6px_14px_rgba(245,183,0,0.3)]"
                   >
                     View Details <ChevronRight size={12} strokeWidth={3} />

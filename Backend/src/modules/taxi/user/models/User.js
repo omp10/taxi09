@@ -68,6 +68,20 @@ const userAddressSchema = new mongoose.Schema(
 
 const userSchema = new mongoose.Schema(
   {
+    // Emergency contacts alerted when the user triggers SOS. Capped in the
+    // service layer; phone is stored as 10 digits, no country code.
+    emergencyContacts: {
+      type: [
+        new mongoose.Schema(
+          {
+            name: { type: String, required: true, trim: true },
+            phone: { type: String, required: true, trim: true },
+          },
+          { _id: true, timestamps: false },
+        ),
+      ],
+      default: [],
+    },
     phone: {
       type: String,
       required: true,

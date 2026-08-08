@@ -1,0 +1,360 @@
+import { ApiError } from '../../../../../utils/ApiError.js';
+import { TravelPackage } from '../models/TravelPackage.js';
+import { Hotel } from '../models/Hotel.js';
+import { ContentBlock } from '../models/ContentBlock.js';
+import { HireDriver } from '../models/HireDriver.js';
+
+const PROPERTY_TYPES = ['Hotel', 'Resort', 'Apartment', 'Guest House', 'Villa', 'Homestay', 'Hostel'];
+
+const clean = (value) => String(value ?? '').trim();
+
+const slugify = (value) =>
+  clean(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 60);
+
+const toArray = (value) => {
+  if (Array.isArray(value)) return value.map((item) => clean(item)).filter(Boolean);
+  if (typeof value === 'string' && value.trim()) {
+    return value.split(',').map((item) => item.trim()).filter(Boolean);
+  }
+  return [];
+};
+
+const toNumber = (value, fallback = 0) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
+
+/** Ensures a unique slug, appending -2, -3 … when a title collides. */
+const ensureUniqueSlug = async (Model, base, currentId) => {
+  const root = slugify(base) || 'item';
+  let candidate = root;
+  let suffix = 1;
+
+  // eslint-disable-next-line no-await-in-loop
+  while (await Model.exists({ slug: candidate, ...(currentId ? { _id: { $ne: currentId } } : {}) })) {
+    suffix += 1;
+    candidate = `${root}-${suffix}`;
+  }
+  return candidate;
+};
+
+/* ------------------------------------------------------------------ */
+/* Travel packages                                                     */
+/* ------------------------------------------------------------------ */
+
+const normalizePackagePayload = (payload = {}) => {
+  const price = toNumber(payload.price, NaN);
+  if (!clean(payload.title)) throw new ApiError(400, 'Package title is required');
+  if (!Number.isFinite(price) || price < 0) throw new ApiError(400, 'A valid price is required');
+
+  const scope = payload.scope === 'international' ? 'international' : 'domestic';
+
+  return {
+    scope,
+    title: clean(payload.title),
+    state: clean(payload.state),
+    country: clean(payload.country),
+    category: clean(payload.category),
+    badge: clean(payload.badge),
+    badgeTone: clean(payload.badgeTone) || 'bg-[#FFC107] text-[#111827]',
+    stops: toArray(payload.stops),
+    includes: toArray(payload.includes),
+    perks: toArray(payload.perks),
+    highlights: toArray(payload.highlights),
+    image: clean(payload.image),
+    gallery: toArray(payload.gallery),
+    photos: toNumber(payload.photos, 0),
+    durationDays: Math.max(1, toNumber(payload.durationDays, 1)),
+    durationLabel: clean(payload.durationLabel),
+    departureDate: clean(payload.departureDate),
+    rating: Math.min(5, Math.max(0, toNumber(payload.rating, 0))),
+    reviews: clean(payload.reviews) || '0',
+    price,
+    oldPrice: toNumber(payload.oldPrice, 0),
+    sortOrder: toNumber(payload.sortOrder, 0),
+    active: payload.active !== false && payload.active !== 'false',
+  };
+};
+
+export const listTravelPackages = async ({ scope, active } = {}) => {
+  const filter = {};
+  if (scope) filter.scope = scope;
+  if (active !== undefined) filter.active = active === true || active === 'true';
+
+  const results = await TravelPackage.find(filter).sort({ sortOrder: 1, createdAt: -1 }).lean();
+  return { results, total: results.length };
+};
+
+export const createTravelPackage = async (payload) => {
+  const normalized = normalizePackagePayload(payload);
+  const slug = await ensureUniqueSlug(TravelPackage, payload.slug || normalized.title);
+  return TravelPackage.create({ ...normalized, slug });
+};
+
+export const updateTravelPackage = async (id, payload) => {
+  const existing = await TravelPackage.findById(id);
+  if (!existing) throw new ApiError(404, 'Package not found');
+
+  const normalized = normalizePackagePayload({ ...existing.toObject(), ...payload });
+  if (payload.slug || payload.title) {
+    normalized.slug = await ensureUniqueSlug(TravelPackage, payload.slug || normalized.title, id);
+  }
+
+  Object.assign(existing, normalized);
+  await existing.save();
+  return existing;
+};
+
+export const toggleTravelPackage = async (id) => {
+  const existing = await TravelPackage.findById(id);
+  if (!existing) throw new ApiError(404, 'Package not found');
+  existing.active = !existing.active;
+  await existing.save();
+  return existing;
+};
+
+export const deleteTravelPackage = async (id) => {
+  const deleted = await TravelPackage.findByIdAndDelete(id);
+  if (!deleted) throw new ApiError(404, 'Package not found');
+  return { id };
+};
+
+/* ------------------------------------------------------------------ */
+/* Hotels                                                              */
+/* ------------------------------------------------------------------ */
+
+const normalizeRoom = (room = {}, index = 0) => ({
+  key: slugify(room.key || room.name || `room-${index + 1}`),
+  name: clean(room.name) || `Room ${index + 1}`,
+  category: clean(room.category) || 'Deluxe',
+  sqft: toNumber(room.sqft, 0),
+  adults: Math.max(1, toNumber(room.adults, 2)),
+  children: Math.max(0, toNumber(room.children, 0)),
+  bed: clean(room.bed) || '1 King Bed',
+  priceMultiplier: Math.max(0, toNumber(room.priceMultiplier, 1)),
+  perks: toArray(room.perks),
+  image: clean(room.image),
+  roomsLeft: Math.max(0, toNumber(room.roomsLeft, 0)),
+  active: room.active !== false,
+});
+
+const normalizeHotelPayload = (payload = {}) => {
+  const price = toNumber(payload.price, NaN);
+  if (!clean(payload.name)) throw new ApiError(400, 'Hotel name is required');
+  if (!clean(payload.city)) throw new ApiError(400, 'City is required');
+  if (!Number.isFinite(price) || price < 0) throw new ApiError(400, 'A valid nightly price is required');
+
+  return {
+    name: clean(payload.name),
+    city: clean(payload.city),
+    area: clean(payload.area),
+    distance: clean(payload.distance),
+    badge: clean(payload.badge),
+    image: clean(payload.image),
+    gallery: toArray(payload.gallery),
+    amenities: toArray(payload.amenities),
+    facilities: toArray(payload.facilities),
+    // Star class is a whole number; anything outside 1-5 means unclassified.
+    starRating: Math.min(5, Math.max(0, Math.round(toNumber(payload.starRating, 0)))),
+    propertyType: PROPERTY_TYPES.includes(clean(payload.propertyType)) ? clean(payload.propertyType) : '',
+    rating: Math.min(5, Math.max(0, toNumber(payload.rating, 0))),
+    reviews: clean(payload.reviews) || '0',
+    price,
+    oldPrice: toNumber(payload.oldPrice, 0),
+    checkInTime: clean(payload.checkInTime) || '2:00 PM',
+    checkOutTime: clean(payload.checkOutTime) || '11:00 AM',
+    rooms: Array.isArray(payload.rooms) ? payload.rooms.map(normalizeRoom) : [],
+    sortOrder: toNumber(payload.sortOrder, 0),
+    active: payload.active !== false && payload.active !== 'false',
+  };
+};
+
+export const listHotels = async ({ city, active } = {}) => {
+  const filter = {};
+  if (city) filter.city = city;
+  if (active !== undefined) filter.active = active === true || active === 'true';
+
+  const results = await Hotel.find(filter).sort({ sortOrder: 1, createdAt: -1 }).lean();
+  return { results, total: results.length };
+};
+
+export const getTravelPackageBySlug = async (slug) => {
+  const pkg = await TravelPackage.findOne({ slug: clean(slug).toLowerCase() }).lean();
+  if (!pkg) throw new ApiError(404, 'Package not found');
+  return pkg;
+};
+
+export const getHotelBySlug = async (slug) => {
+  const hotel = await Hotel.findOne({ slug: clean(slug).toLowerCase() }).lean();
+  if (!hotel) throw new ApiError(404, 'Hotel not found');
+  return hotel;
+};
+
+export const createHotel = async (payload) => {
+  const normalized = normalizeHotelPayload(payload);
+  const slug = await ensureUniqueSlug(Hotel, payload.slug || normalized.name);
+  return Hotel.create({ ...normalized, slug });
+};
+
+export const updateHotel = async (id, payload) => {
+  const existing = await Hotel.findById(id);
+  if (!existing) throw new ApiError(404, 'Hotel not found');
+
+  const normalized = normalizeHotelPayload({ ...existing.toObject(), ...payload });
+  if (payload.slug || payload.name) {
+    normalized.slug = await ensureUniqueSlug(Hotel, payload.slug || normalized.name, id);
+  }
+
+  Object.assign(existing, normalized);
+  await existing.save();
+  return existing;
+};
+
+export const toggleHotel = async (id) => {
+  const existing = await Hotel.findById(id);
+  if (!existing) throw new ApiError(404, 'Hotel not found');
+  existing.active = !existing.active;
+  await existing.save();
+  return existing;
+};
+
+export const deleteHotel = async (id) => {
+  const deleted = await Hotel.findByIdAndDelete(id);
+  if (!deleted) throw new ApiError(404, 'Hotel not found');
+  return { id };
+};
+
+/* ------------------------------------------------------------------ */
+/* Content blocks                                                      */
+/* ------------------------------------------------------------------ */
+
+export const listContentBlocks = async ({ keys } = {}) => {
+  const filter = {};
+  if (keys) {
+    const list = Array.isArray(keys) ? keys : String(keys).split(',');
+    filter.key = { $in: list.map((item) => clean(item)).filter(Boolean) };
+  }
+  const results = await ContentBlock.find(filter).sort({ key: 1 }).lean();
+  return { results, total: results.length };
+};
+
+/** Public shape: `{ "tours.hero": [...], "tours.categories": [...] }` */
+export const getContentBlockMap = async (keys) => {
+  const { results } = await listContentBlocks({ keys });
+  return results.reduce((map, block) => {
+    if (block.active) map[block.key] = block.items;
+    return map;
+  }, {});
+};
+
+export const upsertContentBlock = async (payload = {}) => {
+  const key = clean(payload.key);
+  if (!key) throw new ApiError(400, 'Block key is required');
+
+  const update = {
+    label: clean(payload.label),
+    description: clean(payload.description),
+    items: Array.isArray(payload.items) ? payload.items : [],
+    active: payload.active !== false && payload.active !== 'false',
+  };
+
+  return ContentBlock.findOneAndUpdate({ key }, { $set: update }, { upsert: true, new: true });
+};
+
+export const deleteContentBlock = async (id) => {
+  const deleted = await ContentBlock.findByIdAndDelete(id);
+  if (!deleted) throw new ApiError(404, 'Content block not found');
+  return { id };
+};
+
+
+/* ------------------------------------------------------------------ */
+/* Hire drivers                                                        */
+/* ------------------------------------------------------------------ */
+
+const HIRE_TYPES = ['permanent', 'monthly', 'outstation', 'hourly'];
+
+const normalizeHireDriverPayload = (payload = {}) => {
+  if (!clean(payload.name)) throw new ApiError(400, 'Driver name is required');
+
+  const hireTypes = toArray(payload.hireTypes)
+    .map((item) => item.toLowerCase())
+    .filter((item) => HIRE_TYPES.includes(item));
+
+  return {
+    name: clean(payload.name),
+    photo: clean(payload.photo),
+    badge: clean(payload.badge),
+    rating: Math.min(5, Math.max(0, toNumber(payload.rating, 0))),
+    trips: clean(payload.trips) || '0',
+    experience: clean(payload.experience),
+    languages: toArray(payload.languages),
+    vehicleName: clean(payload.vehicleName),
+    vehiclePlate: clean(payload.vehiclePlate).toUpperCase(),
+    vehicleColor: clean(payload.vehicleColor),
+    vehicleClass: clean(payload.vehicleClass),
+    vehicleImage: clean(payload.vehicleImage),
+    seats: toNumber(payload.seats, 0),
+    amenities: toArray(payload.amenities),
+    city: clean(payload.city),
+    etaMinutes: Math.max(0, toNumber(payload.etaMinutes, 0)),
+    distanceKm: Math.max(0, toNumber(payload.distanceKm, 0)),
+    hireTypes: hireTypes.length ? hireTypes : ['permanent'],
+    monthlySalary: Math.max(0, toNumber(payload.monthlySalary, 0)),
+    dailyRate: Math.max(0, toNumber(payload.dailyRate, 0)),
+    hourlyRate: Math.max(0, toNumber(payload.hourlyRate, 0)),
+    verified: payload.verified === true || payload.verified === 'true',
+    available: payload.available !== false && payload.available !== 'false',
+    sortOrder: toNumber(payload.sortOrder, 0),
+    active: payload.active !== false && payload.active !== 'false',
+  };
+};
+
+export const listHireDrivers = async ({ hireType, city, active, available } = {}) => {
+  const filter = {};
+  if (hireType) filter.hireTypes = hireType;
+  if (city) filter.city = city;
+  if (active !== undefined) filter.active = active === true || active === 'true';
+  if (available !== undefined) filter.available = available === true || available === 'true';
+
+  const results = await HireDriver.find(filter).sort({ sortOrder: 1, rating: -1 }).lean();
+  return { results, total: results.length };
+};
+
+export const createHireDriver = async (payload) => {
+  const normalized = normalizeHireDriverPayload(payload);
+  const slug = await ensureUniqueSlug(HireDriver, payload.slug || normalized.name);
+  return HireDriver.create({ ...normalized, slug });
+};
+
+export const updateHireDriver = async (id, payload) => {
+  const existing = await HireDriver.findById(id);
+  if (!existing) throw new ApiError(404, 'Driver not found');
+
+  const normalized = normalizeHireDriverPayload({ ...existing.toObject(), ...payload });
+  if (payload.slug || payload.name) {
+    normalized.slug = await ensureUniqueSlug(HireDriver, payload.slug || normalized.name, id);
+  }
+
+  Object.assign(existing, normalized);
+  await existing.save();
+  return existing;
+};
+
+export const toggleHireDriver = async (id) => {
+  const existing = await HireDriver.findById(id);
+  if (!existing) throw new ApiError(404, 'Driver not found');
+  existing.active = !existing.active;
+  await existing.save();
+  return existing;
+};
+
+export const deleteHireDriver = async (id) => {
+  const deleted = await HireDriver.findByIdAndDelete(id);
+  if (!deleted) throw new ApiError(404, 'Driver not found');
+  return { id };
+};

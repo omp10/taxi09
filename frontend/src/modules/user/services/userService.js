@@ -1,5 +1,39 @@
 import api from '../../../shared/api/axiosInstance';
 
+// Vehicle classes are drawn as emoji on the cab screens; the API only knows the
+// icon family, so map it here rather than in each page.
+const VEHICLE_EMOJI = { car: '\u{1F697}', suv: '\u{1F699}', van: '\u{1F690}', bike: '\u{1F3CD}️', auto: '\u{1F6FA}', taxi: '\u{1F695}' };
+
+/**
+ * Vehicle classes with admin-configured fares, shaped for the cab booking
+ * screens. Falls back to the caller's bundled list so a booking screen never
+ * renders an empty vehicle picker.
+ */
+export const getRideFares = async ({ transportType = 'taxi', serviceLocationId = '' } = {}, fallback = []) => {
+  try {
+    const response = await api.get('/users/ride-fares', { params: { transportType, serviceLocationId } });
+    const results = response?.data?.data?.results ?? response?.data?.results;
+    if (!Array.isArray(results) || results.length === 0) return fallback;
+
+    return results.map((item) => ({
+      id: item.id,
+      name: item.name,
+      desc: item.description,
+      seats: item.capacity,
+      maxSeats: item.capacity,
+      image: item.image,
+      icon: VEHICLE_EMOJI[item.iconType] || VEHICLE_EMOJI.taxi,
+      fare: item.basePrice + item.airportSurge,
+      baseFare: item.outstationBasePrice || item.basePrice,
+      basePrice: item.basePrice,
+      pricePerDistance: item.pricePerDistance,
+      airportSurge: item.airportSurge,
+    }));
+  } catch {
+    return fallback;
+  }
+};
+
 export const userService = {
   getAppModules: async () => {
     const response = await api.get('/users/app-modules');
@@ -44,6 +78,12 @@ export const userService = {
   verifyPhonePeRentalAdvancePayment: async (merchantTransactionId) => {
     const response = await api.get(`/users/rental-advance/phonepe/status/${merchantTransactionId}`);
     return response;
+  },
+  // The server owns every rental amount. Screens send ids and dates, and render
+  // the returned breakdown as-is rather than doing their own arithmetic.
+  quoteRentalBooking: async (payload) => {
+    const response = await api.post('/users/rental-bookings/quote', payload);
+    return response?.data?.data ?? response?.data ?? null;
   },
   createRentalBookingRequest: async (payload) => {
     const response = await api.post('/users/rental-bookings', payload);

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ChevronRight, MapPin } from 'lucide-react';
+import contentService from '../../services/contentService';
 
-const DESTINATIONS = [
+const FALLBACK_DESTINATIONS = [
   { id: 'ujjain',      name: 'Ujjain',       subtitle: 'Mahakaleshwar Jyotirlinga', dist: '55 km',  fare: '₹800–₹1,200',  emoji: '🛕', accent: 'bg-[linear-gradient(135deg,#FDF4FF_0%,#F3E8FF_100%)]' },
   { id: 'omkareshwar', name: 'Omkareshwar',  subtitle: 'Jyotirlinga on Narmada',   dist: '77 km',  fare: '₹1,000–₹1,500', emoji: '🙏', accent: 'bg-[linear-gradient(135deg,#FFF7ED_0%,#FFE5C2_100%)]' },
   { id: 'maheshwar',   name: 'Maheshwar',    subtitle: 'Ahilya Fort & Ghats',      dist: '91 km',  fare: '₹1,200–₹1,800', emoji: '⛵', accent: 'bg-[linear-gradient(135deg,#EFF6FF_0%,#DBEAFE_100%)]' },
@@ -14,6 +15,18 @@ const DESTINATIONS = [
 
 const SpiritualTrip = () => {
   const navigate = useNavigate();
+  const [destinations, setDestinations] = useState(FALLBACK_DESTINATIONS);
+
+  useEffect(() => {
+    let cancelled = false;
+    contentService
+      .getContentBlocks('spiritual.destinations', {})
+      .then((blocks) => {
+        const items = blocks['spiritual.destinations'];
+        if (!cancelled && Array.isArray(items) && items.length) setDestinations(items);
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   const handleSelect = (dest) => {
     navigate('/cab/spiritual-vehicle', {
@@ -56,7 +69,7 @@ const SpiritualTrip = () => {
 
         {/* Destination grid */}
         <div className="grid grid-cols-2 gap-3">
-          {DESTINATIONS.map((dest, i) => (
+          {destinations.map((dest, i) => (
             <motion.button key={dest.id} type="button"
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06 }}

@@ -1,0 +1,152 @@
+import { ApiError } from '../../../../utils/ApiError.js';
+import { RentalCoupon } from '../../admin/models/RentalCoupon.js';
+
+/**
+ * Pricing for domestic tours and international packages.
+ *
+ * The client sends a package slug, traveller count and an optional coupon code
+ * - never an amount. Indian levies on tour packages:
+ *   - GST 5% on the package fare (both domestic and overseas).
+ *   - TCS 5% under s.206C(1G), collected at source on overseas packages only.
+ *
+ * TCS is charged on the pre-discount fare because it is collected on the amount
+ * remitted, not on what the operator discounts.
+ *
+ * Coupons live in the Coupons admin (the RentalCoupon store, which now carries
+ * an `applies_to` scope) so codes can be added or retired without a deploy.
+ */
+
+const round0 = (value) => Math.round(Number(value || 0));
+
+export const GST_RATE = 0.05;
+export const TCS_RATE = 0.05;
+
+/**
+ * Looks a code up and rejects it unless it is active, unexpired, in scope for
+ * this package and above any minimum. Returns the discount in rupees.
+ */
+export const resolvePackageCoupon = async ({ code, scope, packageId, baseFare }) => {
+  const normalized = String(code || '').trim().toUpperCase();
+  if (!normalized) return { code: '', percent: 0, discount: 0 };
+
+  const coupon = await RentalCoupon.findOne({ code: normalized }).lean();
+
+  if (!coupon) throw new ApiError(400, 'This coupon code is not valid');
+  if (!coupon.active) throw new ApiError(400, 'This coupon is no longer active');
+  if (coupon.expiry_date && new Date(coupon.expiry_date) < new Date()) {
+    throw new ApiError(400, 'This coupon has expired');
+  }
+
+  const appliesTo = Array.isArray(coupon.applies_to) && coupon.applies_to.length ? coupon.applies_to : ['rental'];
+  if (!appliesTo.includes(scope)) {
+    throw new ApiError(400, 'This coupon does not apply to this package');
+  }
+
+  if (Array.isArray(coupon.package_ids) && coupon.package_ids.length > 0) {
+    const allowed = coupon.package_ids.some((id) => String(id) === String(packageId));
+    if (!allowed) throw new ApiError(400, 'This coupon is not valid for this package');
+  }
+
+  const minimum = Math.max(0, Number(coupon.min_booking_amount || 0));
+  if (baseFare < minimum) {
+    throw new ApiError(400, `This coupon needs a booking of at least ₹${minimum.toLocaleString('en-IN')}`);
+  }
+
+  const amount = Math.max(0, Number(coupon.amount || 0));
+  const cap = Math.max(0, Number(coupon.cap || 0));
+
+  let discount = coupon.type === 'percent' ? round0((baseFare * amount) / 100) : round0(amount);
+  if (cap > 0) discount = Math.min(discount, cap);
+  // Never discount more than the fare itself.
+  discount = Math.min(discount, baseFare);
+
+  return {
+    code: normalized,
+    percent: coupon.type === 'percent' ? amount : 0,
+    discount,
+    type: coupon.type,
+  };
+};
+
+/** Resolves the code then prices the package - what the endpoint calls. */
+export const quotePackage = async ({ pkg, travellers = 1, couponCode = '', addOns = [] }) => {
+  if (!pkg) throw new ApiError(404, 'Package not found');
+
+  const scope = pkg.scope === 'international' ? 'international' : 'tour';
+  const perPerson = Math.max(0, round0(pkg.price));
+  const baseFare = perPerson * Math.max(1, Math.floor(Number(travellers) || 1));
+
+  const coupon = await resolvePackageCoupon({ code: couponCode, scope, packageId: pkg._id, baseFare });
+  return priceTravelPackage({ pkg, travellers, coupon, addOns });
+};
+
+/**
+ * Pure arithmetic. `coupon` is already resolved (see resolvePackageCoupon), so
+ * this stays synchronous and unit-testable without a database.
+ */
+/** Extras priced from the package's own catalogue; the client sends ids only. */
+const resolveAddOns = (pkg, requested, travellers) => {
+  const ids = Array.isArray(requested)
+    ? requested.map((item) => String(item?.id ?? item ?? '').trim()).filter(Boolean)
+    : [];
+  const catalog = Array.isArray(pkg.addOns) ? pkg.addOns : [];
+
+  return [...new Set(ids)]
+    .map((id) => catalog.find((item) => String(item.id) === id && item.active !== false))
+    .filter(Boolean)
+    .map((item) => {
+      const unit = Math.max(0, round0(item.price));
+      return {
+        id: item.id,
+        label: item.label,
+        perPerson: item.perPerson !== false,
+        price: item.perPerson !== false ? unit * travellers : unit,
+      };
+    });
+};
+
+export const priceTravelPackage = ({ pkg, travellers = 1, coupon = { code: '', percent: 0, discount: 0 }, addOns = [] }) => {
+  if (!pkg) {
+    throw new ApiError(404, 'Package not found');
+  }
+
+  const scope = pkg.scope === 'international' ? 'international' : 'tour';
+  const perPerson = Math.max(0, round0(pkg.price));
+  const count = Math.max(1, Math.floor(Number(travellers) || 1));
+  const baseFare = perPerson * count;
+
+  const selectedAddOns = resolveAddOns(pkg, addOns, count);
+  const addOnsTotal = round0(selectedAddOns.reduce((sum, item) => sum + item.price, 0));
+
+  // Extras are taxed with the fare but, like the fare, sit outside the TCS base
+  // only insofar as TCS follows the pre-discount package fare.
+  const taxable = Math.max(0, baseFare - coupon.discount) + addOnsTotal;
+
+  const gst = round0(taxable * GST_RATE);
+  // Overseas packages only, and on the fare before any discount.
+  const tcs = scope === 'international' ? round0(baseFare * TCS_RATE) : 0;
+
+  return {
+    slug: pkg.slug,
+    title: pkg.title || pkg.name || '',
+    scope,
+    perPerson,
+    travellers: count,
+    baseFare,
+    addOns: selectedAddOns,
+    addOnsTotal,
+    couponCode: coupon.code,
+    couponPercent: coupon.percent,
+    discount: coupon.discount,
+    taxable,
+    gstRate: GST_RATE,
+    gst,
+    tcsRate: scope === 'international' ? TCS_RATE : 0,
+    tcs,
+    totalAmount: taxable + gst + tcs,
+    // Only a genuinely higher figure is a saving.
+    savings: Number(pkg.oldPrice) > perPerson ? round0((Number(pkg.oldPrice) - perPerson) * count) : 0,
+  };
+};
+
+export default priceTravelPackage;

@@ -21,6 +21,8 @@ import './App.css';
 // Lazy loading pages for performance
 const UserHome = lazy(() => import('./modules/user/pages/Home'));
 const WithDriverHome = lazy(() => import('./modules/user/pages/WithDriverHome'));
+const WithDriverRoute = lazy(() => import('./modules/user/pages/withdriver/WithDriverRoute'));
+const DesktopWithDriverReview = lazy(() => import('./modules/user/pages/withdriver/DesktopWithDriverReview'));
 const WithDriverBooking = lazy(() => import('./modules/user/pages/WithDriverBooking'));
 const PermanentDriverSearch = lazy(() => import('./modules/user/pages/PermanentDriverSearch'));
 const PermanentDriverConfirm = lazy(() => import('./modules/user/pages/PermanentDriverConfirm'));
@@ -60,8 +62,12 @@ const ServicesPage = lazy(() => import('./modules/shared/pages/ServicesPage'));
 const BlogPage = lazy(() => import('./modules/shared/pages/BlogPage'));
 const LinksPage = lazy(() => import('./modules/shared/pages/LinksPage'));
 const ToursHome = lazy(() => import('./modules/user/pages/tours/ToursHome'));
+const ToursHomeRoute = lazy(() => import('./modules/user/pages/tours/ToursHomeRoute'));
+const TourDetailsRoute = lazy(() => import('./modules/user/pages/tours/TourDetailsRoute'));
+const InternationalDetailsRoute = lazy(() => import('./modules/user/pages/international/InternationalDetailsRoute'));
 const TourDetails = lazy(() => import('./modules/user/pages/tours/TourDetails'));
 const InternationalHome = lazy(() => import('./modules/user/pages/international/InternationalHome'));
+const InternationalHomeRoute = lazy(() => import('./modules/user/pages/international/InternationalHomeRoute'));
 const InternationalDetails = lazy(() => import('./modules/user/pages/international/InternationalDetails'));
 const PhonePeStatusPage = lazy(() => import('./modules/shared/pages/PhonePeStatusPage'));
 const RazorpayStatusPage = lazy(() => import('./modules/shared/pages/RazorpayStatusPage'));
@@ -98,12 +104,17 @@ const IntercityDetails = lazy(() => import('./modules/user/pages/intercity/Inter
 const IntercityConfirm = lazy(() => import('./modules/user/pages/intercity/IntercityConfirm'));
 
 const BusHome = lazy(() => import('./modules/user/pages/bus/BusHome'));
+const BusHomeRoute = lazy(() => import('./modules/user/pages/bus/BusHomeRoute'));
+const BusListRoute = lazy(() => import('./modules/user/pages/bus/BusListRoute'));
+const BusSeatsRoute = lazy(() => import('./modules/user/pages/bus/BusSeatsRoute'));
 const BusList = lazy(() => import('./modules/user/pages/bus/BusList'));
 const BusSeats = lazy(() => import('./modules/user/pages/bus/BusSeats'));
 const BusPreview = lazy(() => import('./modules/user/pages/bus/BusPreview'));
 const BusDetails = lazy(() => import('./modules/user/pages/bus/BusDetails'));
 const BusConfirm = lazy(() => import('./modules/user/pages/bus/BusConfirm'));
 const HotelHome = lazy(() => import('./modules/user/pages/hotel/HotelHome'));
+const HotelHomeRoute = lazy(() => import('./modules/user/pages/hotel/HotelHomeRoute'));
+const DesktopHotelDetail = lazy(() => import('./modules/user/pages/hotel/DesktopHotelDetail'));
 const HotelRooms = lazy(() => import('./modules/user/pages/hotel/HotelRooms'));
 const HotelCheckout = lazy(() => import('./modules/user/pages/hotel/HotelCheckout'));
 
@@ -112,6 +123,9 @@ const Onboarding = lazy(() => import('./modules/user/pages/auth/Onboarding'));
 
 // New Feature Pages
 const BikeRentalHome = lazy(() => import('./modules/user/pages/rental/BikeRentalHome'));
+const RentalHome = lazy(() => import('./modules/user/pages/rental/RentalHome'));
+const VehicleDetailRoute = lazy(() => import('./modules/user/pages/rental/VehicleDetailRoute'));
+const RentalScheduleRoute = lazy(() => import('./modules/user/pages/rental/RentalScheduleRoute'));
 const RentalTypeSelection = lazy(() => import('./modules/user/pages/rental/RentalTypeSelection'));
 const BikeCategoriesSelection = lazy(() => import('./modules/user/pages/rental/BikeCategoriesSelection'));
 const BikeCategoryList = lazy(() => import('./modules/user/pages/rental/BikeCategoryList'));
@@ -121,7 +135,6 @@ const RentalKYC = lazy(() => import('./modules/user/pages/rental/RentalKYC'));
 const RentalDeposit = lazy(() => import('./modules/user/pages/rental/RentalDeposit'));
 const RentalConfirmed = lazy(() => import('./modules/user/pages/rental/RentalConfirmed'));
 const IntercityHome = lazy(() => import('./modules/user/pages/intercity/IntercityHome'));
-const CabSharing = lazy(() => import('./modules/user/pages/cabsharing/CabSharing'));
 
 // Car Pooling flow
 const UserPoolingHome = lazy(() => import('./modules/user/pages/pooling/PoolingHome'));
@@ -239,6 +252,13 @@ const AdminPromoCodes = lazy(() => import('./modules/admin/pages/promotions/Prom
 const AdminSendNotification = lazy(() => import('./modules/admin/pages/promotions/SendNotification'));
 const AdminBannerImage = lazy(() => import('./modules/admin/pages/promotions/BannerImage'));
 const AdminHomepageBanners = lazy(() => import('./modules/admin/pages/promotions/HomepageBanners'));
+const AdminTravelPackages = lazy(() => import('./modules/admin/pages/content/TravelPackagesAdmin'));
+const AdminAllBookings = lazy(() => import('./modules/admin/pages/bookings/AllBookings'));
+const AdminHotelBookings = lazy(() => import('./modules/admin/pages/bookings/HotelBookings'));
+const AdminPackageBookings = lazy(() => import('./modules/admin/pages/bookings/PackageBookings'));
+const AdminHotels = lazy(() => import('./modules/admin/pages/content/HotelsAdmin'));
+const AdminContentBlocks = lazy(() => import('./modules/admin/pages/content/ContentBlocksAdmin'));
+const AdminHireDrivers = lazy(() => import('./modules/admin/pages/content/HireDriversAdmin'));
 const AdminRentalCoupons = lazy(() => import('./modules/admin/pages/promotions/RentalCoupons'));
 
 // Price Management
@@ -758,9 +778,9 @@ function App() {
 
               {/* New Service Routes — Real pages replacing ComingSoon */}
               <Route path="/rental/type" element={<RentalTypeSelection />} />
-              <Route path="/rental" element={<BikeRentalHome />} />
-              <Route path="/rental/vehicle" element={<RentalVehicleDetail />} />
-              <Route path="/rental/schedule" element={<RentalSchedule />} />
+              <Route path="/rental" element={<RentalHome />} />
+              <Route path="/rental/vehicle" element={<VehicleDetailRoute />} />
+              <Route path="/rental/schedule" element={<RentalScheduleRoute />} />
               <Route path="/rental/kyc" element={<RentalKYC />} />
               <Route path="/rental/deposit" element={<RentalDeposit />} />
               <Route path="/rental/confirmed" element={<RentalConfirmed />} />
@@ -768,7 +788,7 @@ function App() {
               <Route path="/intercity/vehicle" element={<IntercityVehicle />} />
               <Route path="/intercity/details" element={<IntercityDetails />} />
               <Route path="/intercity/confirm" element={<IntercityConfirm />} />
-              <Route path="/cab-sharing" element={<CabSharing />} />
+              <Route path="/cab-sharing" element={<Navigate to="/taxi/user/pooling" replace />} />
               <Route path="/cab" element={<CabHome />} />
               <Route path="/cab/shared" element={<SharedTaxi />} />
               <Route path="/cab/shared/seats" element={<SharedTaxiSeats />} />
@@ -841,7 +861,8 @@ function App() {
               <Route path="/user" element={<UserHomeRoute />} />
 
               <Route element={<UserProtectedRoute />}>
-              <Route path="/taxi/user/with-driver" element={<WithDriverHome />} />
+              <Route path="/taxi/user/with-driver" element={<WithDriverRoute />} />
+              <Route path="/taxi/user/with-driver/review" element={<DesktopWithDriverReview />} />
               <Route path="/taxi/user/with-driver/details" element={<WithDriverBooking />} />
               <Route path="/taxi/user/with-driver/permanent" element={<PermanentDriverSearch />} />
               <Route path="/taxi/user/with-driver/permanent/confirm" element={<PermanentDriverConfirm />} />
@@ -905,15 +926,15 @@ function App() {
               <Route path="/taxi/user/rental/type" element={<RentalTypeSelection />} />
               <Route path="/taxi/user/rental/bike-categories" element={<BikeCategoriesSelection />} />
               <Route path="/taxi/user/rental/bikes-list" element={<BikeCategoryList />} />
-              <Route path="/taxi/user/rental" element={<BikeRentalHome />} />
+              <Route path="/taxi/user/rental" element={<RentalHome />} />
               <Route path="/taxi/user/rental/subscriptions" element={<BikeRentalHome />} />
               <Route
                 path="/taxi/user/rental/vehicle"
-                element={<RentalVehicleDetail />}
+                element={<VehicleDetailRoute />}
               />
               <Route
                 path="/taxi/user/rental/schedule"
-                element={<RentalSchedule />}
+                element={<RentalScheduleRoute />}
               />
               <Route path="/taxi/user/rental/kyc" element={<RentalKYC />} />
               <Route
@@ -937,7 +958,7 @@ function App() {
                 path="/taxi/user/intercity/confirm"
                 element={<IntercityConfirm />}
               />
-              <Route path="/taxi/user/cab-sharing" element={<CabSharing />} />
+              <Route path="/taxi/user/cab-sharing" element={<Navigate to="/taxi/user/pooling" replace />} />
               <Route path="/taxi/user/cab" element={<CabHome />} />
               <Route path="/taxi/user/cab/shared" element={<SharedTaxi />} />
               <Route
@@ -965,19 +986,24 @@ function App() {
                 path="/taxi/user/cab/spiritual-confirm"
                 element={<SpiritualTripConfirm />}
               />
-              <Route path="/taxi/user/bus" element={<BusHome />} />
-              <Route path="/taxi/user/bus/list" element={<BusList />} />
-              <Route path="/taxi/user/bus/seats" element={<BusSeats />} />
+              <Route path="/taxi/user/bus" element={<BusHomeRoute />} />
+              <Route path="/taxi/user/bus/list" element={<BusListRoute />} />
+              <Route path="/taxi/user/bus/seats" element={<BusSeatsRoute />} />
               <Route path="/taxi/user/bus/details" element={<BusPreview />} />
               <Route path="/taxi/user/bus/checkout" element={<BusDetails />} />
               <Route path="/taxi/user/bus/confirm" element={<BusConfirm />} />
-              <Route path="/taxi/user/hotel" element={<HotelHome />} />
+              <Route path="/taxi/user/hotel" element={<HotelHomeRoute />} />
               <Route path="/taxi/user/hotel/rooms" element={<HotelRooms />} />
               <Route path="/taxi/user/hotel/checkout" element={<HotelCheckout />} />
-              <Route path="/taxi/user/tours" element={<ToursHome />} />
-              <Route path="/taxi/user/tours/details" element={<TourDetails />} />
-              <Route path="/taxi/user/international" element={<InternationalHome />} />
-              <Route path="/taxi/user/international/details" element={<InternationalDetails />} />
+              {/* Dynamic slug last so it cannot shadow the static steps above. */}
+              <Route path="/taxi/user/hotel/:slug" element={<DesktopHotelDetail />} />
+              <Route path="/taxi/user/tours" element={<ToursHomeRoute />} />
+              <Route path="/taxi/user/tours/details" element={<TourDetailsRoute />} />
+              {/* Slug form makes a package link shareable. */}
+              <Route path="/taxi/user/tours/details/:slug" element={<TourDetailsRoute />} />
+              <Route path="/taxi/user/international" element={<InternationalHomeRoute />} />
+              <Route path="/taxi/user/international/details" element={<InternationalDetailsRoute />} />
+              <Route path="/taxi/user/international/details/:slug" element={<InternationalDetailsRoute />} />
 
               <Route path="/taxi/user/activity" element={<Activity />} />
               <Route path="/taxi/user/profile" element={<Profile />} />
@@ -1343,6 +1369,13 @@ function App() {
                   path="promotions/banner-image/create"
                   element={<AdminBannerImage />}
                 />
+                <Route path="content/travel-packages" element={<AdminTravelPackages />} />
+                <Route path="bookings/all" element={<AdminAllBookings />} />
+                <Route path="bookings/hotels" element={<AdminHotelBookings />} />
+                <Route path="bookings/packages" element={<AdminPackageBookings />} />
+                <Route path="content/hotels" element={<AdminHotels />} />
+                <Route path="content/blocks" element={<AdminContentBlocks />} />
+                <Route path="content/hire-drivers" element={<AdminHireDrivers />} />
                 <Route
                   path="homepage-banners/top"
                   element={<AdminHomepageBanners type="top" mode="list" />}

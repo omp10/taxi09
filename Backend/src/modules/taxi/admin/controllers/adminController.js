@@ -654,6 +654,14 @@ export const getVehicleTypeById = asyncHandler(async (req, res) =>
 export const getPublicVehicleTypeCatalog = asyncHandler(async (_req, res) =>
   ok(res, await adminService.listPublicVehicleCatalog()),
 );
+export const getPublicRideFares = asyncHandler(async (req, res) =>
+  ok(res, {
+    results: await adminService.listPublicRideFares({
+      transportType: req.query.transportType || req.query.transport_type || 'taxi',
+      serviceLocationId: req.query.serviceLocationId || req.query.service_location_id || '',
+    }),
+  }),
+);
 export const getPublicRentalVehicleCatalog = asyncHandler(async (_req, res) =>
   ok(res, { results: await adminService.listPublicRentalVehicleCatalog() }),
 );

@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Plus, Trash2, Phone, User, AlertTriangle, ShieldAlert, X, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { triggerUserSosAlert } from '../../../../shared/services/safetyAlertService';
+import api from '../../../../shared/api/axiosInstance';
 
 const MAX_CONTACTS = 5;
 const PHONE_REGEX = /^[6-9]\d{9}$/;
 
-const MOCK_CONTACTS = [
-  { id: '1', name: 'Rahul Verma',  phone: '9876543210' },
-  { id: '2', name: 'Priya Sharma', phone: '9123456789' },
-];
+// Every contact endpoint returns the full, post-mutation list so the client
+// never has to guess at server-side ids or ordering.
+const unwrapContacts = (payload) => {
+  const results = payload?.data?.results ?? payload?.results;
+  return Array.isArray(results) ? results : [];
+};
 
 const EMERGENCY_SERVICES = [
   { id: 'police', label: 'Police', phone: '100', accent: 'bg-blue-50 border-blue-100 text-blue-600' },
@@ -21,7 +24,8 @@ const EMERGENCY_SERVICES = [
 
 const SOSContacts = () => {
   const navigate = useNavigate();
-  const [contacts, setContacts]         = useState(MOCK_CONTACTS);
+  const [contacts, setContacts]         = useState([]);
+  const [loading, setLoading]           = useState(true);
   const [showAddSheet, setShowAddSheet] = useState(false);
   const [name, setName]                 = useState('');
   const [phone, setPhone]               = useState('');
@@ -31,6 +35,15 @@ const SOSContacts = () => {
   const [countdown, setCountdown]       = useState(3);
   const [saving, setSaving]             = useState(false);
   const [isTriggeringSos, setIsTriggeringSos] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    api.get('/users/me/emergency-contacts')
+      .then(({ data }) => { if (!cancelled) setContacts(unwrapContacts(data)); })
+      .catch(() => { if (!cancelled) toast.error('Could not load your emergency contacts'); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
 
   const validate = () => {
     const e = {};
@@ -44,17 +57,27 @@ const SOSContacts = () => {
   const handleAdd = async () => {
     if (!validate()) return;
     setSaving(true);
-    await new Promise(r => setTimeout(r, 500)); // POST /api/v1/common/sos/store
-    setContacts(prev => [...prev, { id: Date.now().toString(), name: name.trim(), phone }]);
-    setName(''); setPhone(''); setErrors({});
-    setShowAddSheet(false);
-    setSaving(false);
+    try {
+      const { data } = await api.post('/users/me/emergency-contacts', { name: name.trim(), phone });
+      setContacts(unwrapContacts(data));
+      setName(''); setPhone(''); setErrors({});
+      setShowAddSheet(false);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Could not save this contact');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDelete = async (id) => {
-    await new Promise(r => setTimeout(r, 300)); // POST /api/v1/common/sos/delete/:id
-    setContacts(prev => prev.filter(c => c.id !== id));
-    setDeleteTarget(null);
+    try {
+      const { data } = await api.delete(`/users/me/emergency-contacts/${id}`);
+      setContacts(unwrapContacts(data));
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Could not remove this contact');
+    } finally {
+      setDeleteTarget(null);
+    }
   };
 
   const triggerSOS = () => {
@@ -171,7 +194,13 @@ const SOSContacts = () => {
             <span className="text-[10px] font-bold text-slate-400">{contacts.length}/{MAX_CONTACTS}</span>
           </div>
 
-          {contacts.length === 0 && (
+          {loading && (
+            <div className="space-y-2">
+              {[0, 1].map(i => <div key={i} className="skeleton h-[68px] rounded-[20px]" />)}
+            </div>
+          )}
+
+          {!loading && contacts.length === 0 && (
             <div className="rounded-[20px] border border-white/80 bg-white/90 p-8 flex flex-col items-center gap-3 text-center shadow-[0_4px_14px_rgba(15,23,42,0.05)]">
               <ShieldAlert size={32} className="text-slate-300" strokeWidth={1.5} />
               <p className="text-[13px] font-black text-slate-500">Add emergency contacts to stay safe</p>

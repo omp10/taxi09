@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import contentService from '../services/contentService';
 import {
   ArrowLeft,
   Bell,
@@ -17,7 +18,7 @@ import {
 } from 'lucide-react';
 import BottomNavbar from '../components/BottomNavbar';
 
-const drivers = [
+const FALLBACK_DRIVERS = [
   {
     name: 'Rohit Sharma',
     rating: '4.9',
@@ -56,14 +57,41 @@ const drivers = [
   },
 ];
 
+// Real drivers in working attire - uniform/formal shirt, face to camera.
+// Studio fashion headshots and driving-POV shots both read wrong here.
 const driverImages = [
-  '/taxi09_driver_permanent.png',
-  '/taxi09_driver_outstation.png',
-  '/taxi09_driver_local_hourly.png',
+  '/taxi09_driver_d3.jpg',
+  '/taxi09_driver_d2.jpg',
+  '/taxi09_driver_p3.jpg',
+  '/taxi09_driver_d1.jpg',
+  '/taxi09_driver_p2.jpg',
 ];
+
+/** API records use languages[]/vehicleName/etaMinutes; the card expects flat strings. */
+const fromApi = (item) => ({
+  ...item,
+  language: (item.languages || []).join(', '),
+  car: item.vehicleName,
+  plate: item.vehiclePlate,
+  eta: item.etaMinutes ? `${item.etaMinutes} min` : '',
+  distance: item.distanceKm ? `${item.distanceKm} km away` : '',
+  trips: item.trips ? `${item.trips} Trips` : '',
+  rating: String(item.rating ?? ''),
+});
 
 const PermanentDriverSearch = () => {
   const navigate = useNavigate();
+  const [drivers, setDrivers] = useState(FALLBACK_DRIVERS);
+
+  useEffect(() => {
+    let active = true;
+    contentService.getHireDrivers('permanent', FALLBACK_DRIVERS).then((results) => {
+      if (active) setDrivers(results.map((item) => (item.slug ? fromApi(item) : item)));
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
   const [sortBy, setSortBy] = useState('Best Match');
   const [showSort, setShowSort] = useState(false);
 
@@ -187,7 +215,7 @@ const PermanentDriverSearch = () => {
             <article key={driver.name} className="overflow-hidden rounded-[16px] border border-slate-100 bg-white p-2 shadow-[0_7px_20px_rgba(15,23,42,0.06)]">
               <div className="grid grid-cols-[78px_1fr_72px] gap-2">
                 <div className="overflow-hidden rounded-[13px] bg-slate-100">
-                  <img src={driverImages[index]} alt={driver.name} className="h-full min-h-[104px] w-full object-cover object-top" />
+                  <img src={driver.photo || driverImages[index % driverImages.length]} alt={driver.name} className="h-full min-h-[104px] w-full object-cover object-top" />
                 </div>
                 <div className="min-w-0 py-1">
                   <div className="flex flex-wrap items-center gap-1.5">
@@ -217,7 +245,7 @@ const PermanentDriverSearch = () => {
                     onClick={() => navigate('/taxi/user/with-driver/permanent/confirm', {
                       state: {
                         driver,
-                        driverImage: driverImages[index],
+                        driverImage: driver.photo || driverImages[index % driverImages.length],
                       },
                     })}
                     className="mt-2 h-8 w-full rounded-lg bg-[#f5b700] text-[10px] font-bold text-black"

@@ -487,3 +487,51 @@ body {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
 }
 
+
+/* ------------------------------------------------------------------------ */
+/* Desktop home theme tokens                                                  */
+/*                                                                            */
+/* Scoped to .desktop-home so the mobile home is untouched. The nav's          */
+/* sun/moon control swaps .theme-dark on this same element.                    */
+/* ------------------------------------------------------------------------ */
+.desktop-home {
+  --dh-bg: #fffdf8;
+  --dh-surface: #ffffff;
+  --dh-chip: #f4f5f7;
+  --dh-border: #eceef1;
+  --dh-text: #0f172a;
+  --dh-muted: #64748b;
+}
+
+.desktop-home.theme-dark {
+  --dh-bg: #0d1117;
+  --dh-surface: #161b22;
+  --dh-chip: #21262d;
+  --dh-border: #2b3138;
+  --dh-text: #f0f3f6;
+  --dh-muted: #93a1b0;
+}
+
+/* The stats strip and hero badge stay on their light yellow in dark mode, so
+   pin their text dark rather than inheriting the light-on-dark body colour. */
+.desktop-home.theme-dark .bg-\[\#FFF9E6\] {
+  background-color: #1f2413;
+}
+
+.desktop-home.theme-dark .bg-\[\#FFF9E6\] p {
+  color: #f0f3f6;
+}
+
+.desktop-home input[type='date']::-webkit-calendar-picker-indicator,
+.desktop-home input[type='time']::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.desktop-home.theme-dark input[type='date'],
+.desktop-home.theme-dark input[type='time'] {
+  color-scheme: dark;
+}

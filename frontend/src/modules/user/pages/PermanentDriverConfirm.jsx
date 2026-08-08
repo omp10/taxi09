@@ -56,7 +56,7 @@ const PermanentDriverConfirm = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const driver = state?.driver || fallbackDriver;
-  const driverImage = state?.driverImage || '/taxi09_driver_permanent.png';
+  const driverImage = state?.driverImage || '/taxi09_driver_d3.jpg';
   const [instructions, setInstructions] = useState('');
 
   return (

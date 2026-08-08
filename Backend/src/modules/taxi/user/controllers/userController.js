@@ -24,6 +24,8 @@ import { assignPushTokenToEntity } from '../../services/pushTokenService.js';
 import { BusSeatHold } from '../models/BusSeatHold.js';
 import { BusBooking } from '../models/BusBooking.js';
 import { RentalBookingRequest } from '../../admin/models/RentalBookingRequest.js';
+import { priceRentalBooking } from '../services/rentalPricingService.js';
+import { priceHireDriverTrip } from '../services/hireDriverPricingService.js';
 import { RentalQuoteRequest } from '../../admin/models/RentalQuoteRequest.js';
 import { RentalVehicleType } from '../../admin/models/RentalVehicleType.js';
 import { ServiceStore } from '../../admin/models/ServiceStore.js';
@@ -33,7 +35,7 @@ import { emitToDriver, emitToAdmins } from '../../services/dispatchService.js';
 import { sendPushNotificationToEntities } from '../../services/pushNotificationService.js';
 import { buildRentalTrackingSnapshot, updateUserRentalTracking } from '../../services/rentalTrackingService.js';
 import { listDriverServiceLocations } from '../../driver/services/serviceLocationService.js';
-import { listServiceStores, listSetPrices, listZones } from '../../admin/services/adminService.js';
+import { listPublicRideFares, listServiceStores, listSetPrices, listZones } from '../../admin/services/adminService.js';
 import {
   getUserSubscriptionSummary,
   listCustomerSubscriptionPlans,
@@ -1127,6 +1129,14 @@ const serializeRentalBookingRequest = (item = {}) => ({
   vehicleName: item.vehicleName || '',
   vehicleCategory: item.vehicleCategory || '',
   vehicleImage: item.vehicleImage || '',
+  addOns: Array.isArray(item.addOns)
+    ? item.addOns.map((addOn) => ({
+        id: addOn?.id || '',
+        label: addOn?.label || '',
+        price: Number(addOn?.price || 0),
+      }))
+    : [],
+  addOnsTotal: Number(item.addOnsTotal || 0),
   selectedPackage: {
     packageId: item.selectedPackage?.packageId || '',
     label: item.selectedPackage?.label || '',
@@ -3934,6 +3944,93 @@ export const createRentalQuoteRequest = async (req, res) => {
   });
 };
 
+/**
+ * Prices a rental booking without creating one. The booking screens render
+ * this response verbatim rather than doing their own arithmetic, so the
+ * totals on screen always match what the server will charge.
+ */
+/**
+ * Fare breakdown for a "with driver" trip, computed server-side from the
+ * admin's Set Prices rates. The booking screens render this verbatim.
+ */
+export const quoteHireDriverTrip = async (req, res) => {
+  const payload = req.body || {};
+  const distanceKm = Number(payload.distanceKm || 0);
+  const durationMinutes = Number(payload.durationMinutes || 0);
+
+  if (!Number.isFinite(distanceKm) || distanceKm < 0) {
+    throw new ApiError(400, 'distanceKm must be a positive number');
+  }
+
+  const fares = await listPublicRideFares({
+    transportType: payload.transportType || 'taxi',
+    serviceLocationId: payload.serviceLocationId || '',
+  });
+
+  const wanted = String(payload.vehicleClassId || '').trim();
+  const fare = wanted ? fares.find((item) => String(item.id) === wanted) : fares[0];
+
+  if (!fare) {
+    throw new ApiError(404, 'No priced vehicle class is available');
+  }
+
+  res.json({
+    success: true,
+    data: {
+      ...priceHireDriverTrip({ fare, distanceKm, durationMinutes }),
+      availableClasses: fares.map((item) => ({
+        id: item.id,
+        name: item.name,
+        capacity: item.capacity,
+        image: item.image,
+      })),
+    },
+  });
+};
+
+export const quoteRentalBooking = async (req, res) => {
+  const payload = req.body || {};
+  const vehicleTypeId = String(payload.vehicleTypeId || payload.vehicleId || '').trim();
+
+  if (!mongoose.Types.ObjectId.isValid(vehicleTypeId)) {
+    throw new ApiError(400, 'Valid rental vehicle is required');
+  }
+
+  const vehicle = await RentalVehicleType.findById(vehicleTypeId).lean();
+
+  if (!vehicle || vehicle.active === false || vehicle.status !== 'active') {
+    throw new ApiError(404, 'Rental vehicle not found');
+  }
+
+  // Extra hours are derived here too - the client sends dates, never a duration.
+  let extraHours = 0;
+  const pickupDateTime = payload.pickupDateTime ? new Date(payload.pickupDateTime) : null;
+  const returnDateTime = payload.returnDateTime ? new Date(payload.returnDateTime) : null;
+
+  if (
+    pickupDateTime && returnDateTime &&
+    !Number.isNaN(pickupDateTime.getTime()) && !Number.isNaN(returnDateTime.getTime()) &&
+    returnDateTime > pickupDateTime
+  ) {
+    const requestedHours = (returnDateTime.getTime() - pickupDateTime.getTime()) / 3600000;
+    const matched = (Array.isArray(vehicle.pricing) ? vehicle.pricing : []).find(
+      (item) => String(item?.id || item?.packageId || '').trim() === String(payload.packageId || '').trim(),
+    );
+    extraHours = Math.max(0, Math.ceil(requestedHours - Number(matched?.durationHours || 0)));
+  }
+
+  const quote = priceRentalBooking({
+    vehicle,
+    packageId: payload.packageId || payload.selectedPackage?.id,
+    addOns: payload.addOns,
+    extraHours,
+  });
+
+  const { matchedPackage, ...rest } = quote;
+
+  res.json({ success: true, data: rest });
+};
+
 export const createRentalBookingRequest = async (req, res) => {
   const payload = req.body || {};
   const vehicleTypeId = String(payload.vehicleTypeId || payload.vehicleId || '').trim();
@@ -3988,35 +4085,17 @@ export const createRentalBookingRequest = async (req, res) => {
   const serviceLocation = payload.serviceLocation || {};
   const paymentPayload = payload.payment || {};
   const kycDocumentsPayload = payload.kycDocuments || {};
-  const matchedPackage = Array.isArray(vehicle.pricing)
-    ? vehicle.pricing.find(
-        (item) => String(item?.id || item?.packageId || '').trim() ===
-          String(selectedPackage.id || selectedPackage.packageId || '').trim(),
-      ) || null
-    : null;
+  // Every amount below comes from the shared pricing service - the same code
+  // the quote endpoint runs - so what the customer was quoted is what is stored.
+  const quote = priceRentalBooking({
+    vehicle,
+    packageId: selectedPackage.id || selectedPackage.packageId,
+    addOns: payload.addOns,
+    extraHours: payload.extraHours,
+  });
 
-  if (!matchedPackage) {
-    throw new ApiError(400, 'Selected rental package is invalid');
-  }
-
-  const totalCost = Math.max(0, Number(matchedPackage.price || 0));
-  const advancePaymentConfig = vehicle.advancePayment || {};
-  const advancePaymentMode = String(advancePaymentConfig.paymentMode || '').trim().toLowerCase();
-  const advancePaymentLabel =
-    toCleanString(advancePaymentConfig.label) ||
-    toCleanString(payload.advancePaymentLabel) ||
-    'Advance booking payment';
-  const advanceAmountRaw = advancePaymentConfig.enabled
-    ? advancePaymentMode === 'full'
-      ? totalCost
-      : advancePaymentMode === 'percentage'
-        ? (totalCost * Math.max(0, Number(advancePaymentConfig.amount || 0))) / 100
-        : Math.max(0, Number(advancePaymentConfig.amount || 0))
-    : 0;
-  const payableNow = Math.min(
-    totalCost,
-    Math.round((Math.max(0, advanceAmountRaw) + Number.EPSILON) * 100) / 100,
-  );
+  const { matchedPackage, addOns: selectedAddOns, addOnsTotal, totalCost, payableNow } = quote;
+  const advancePaymentLabel = quote.advancePayment.label;
   const normalizedPaymentStatus = payableNow > 0
     ? paymentStatus === 'paid'
       ? 'paid'
@@ -4095,11 +4174,14 @@ export const createRentalBookingRequest = async (req, res) => {
         Number(primaryServiceCenter?.rentalCommission?.serviceTaxPercentage || 0),
       ),
     },
+    addOns: selectedAddOns,
+    addOnsTotal,
     selectedPackage: {
       packageId: toCleanString(selectedPackage.id || selectedPackage.packageId || ''),
       label: toCleanString(matchedPackage.label || selectedPackage.label),
       durationHours: Math.max(0, Number(matchedPackage.durationHours || selectedPackage.durationHours || 0)),
-      price: totalCost,
+      // Package price alone; add-ons are itemised above and both roll up into totalCost.
+      price: Math.max(0, Number(matchedPackage.price || 0)),
       extraHourPrice: Math.max(0, Number(matchedPackage.extraHourPrice || selectedPackage.extraHourPrice || 0)),
     },
     serviceLocation: {
@@ -4414,3 +4496,63 @@ export const getZones = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, results });
 });
 
+
+
+/* ------------------------------------------------------------------ */
+/* Emergency (SOS) contacts                                            */
+/* ------------------------------------------------------------------ */
+
+const MAX_EMERGENCY_CONTACTS = 5;
+
+const serializeContact = (contact) => ({
+  id: String(contact._id),
+  name: contact.name,
+  phone: contact.phone,
+});
+
+export const listEmergencyContacts = async (req, res) => {
+  const user = await User.findById(req.auth?.sub).select('emergencyContacts').lean();
+  if (!user) throw new ApiError(404, 'User not found');
+  res.json({ success: true, data: { results: (user.emergencyContacts || []).map(serializeContact) } });
+};
+
+export const addEmergencyContact = async (req, res) => {
+  const name = toCleanString(req.body?.name);
+  const phone = normalizePhone(req.body?.phone);
+
+  validateName(name);
+  validatePhone(phone);
+
+  const user = await User.findById(req.auth?.sub);
+  if (!user) throw new ApiError(404, 'User not found');
+
+  const contacts = user.emergencyContacts || [];
+  if (contacts.length >= MAX_EMERGENCY_CONTACTS) {
+    throw new ApiError(400, `You can save up to ${MAX_EMERGENCY_CONTACTS} emergency contacts`);
+  }
+  if (contacts.some((item) => item.phone === phone)) {
+    throw new ApiError(409, 'This number is already saved');
+  }
+
+  user.emergencyContacts.push({ name, phone });
+  await user.save();
+
+  res.status(201).json({ success: true, data: { results: user.emergencyContacts.map(serializeContact) } });
+};
+
+export const deleteEmergencyContact = async (req, res) => {
+  const user = await User.findById(req.auth?.sub);
+  if (!user) throw new ApiError(404, 'User not found');
+
+  const before = user.emergencyContacts.length;
+  user.emergencyContacts = user.emergencyContacts.filter(
+    (item) => String(item._id) !== String(req.params.id),
+  );
+
+  if (user.emergencyContacts.length === before) {
+    throw new ApiError(404, 'Contact not found');
+  }
+
+  await user.save();
+  res.json({ success: true, data: { results: user.emergencyContacts.map(serializeContact) } });
+};

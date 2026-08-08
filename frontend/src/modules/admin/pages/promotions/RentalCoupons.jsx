@@ -14,6 +14,7 @@ import {
   Pencil,
   IndianRupee,
   Car,
+  Tag,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -36,11 +37,19 @@ const createInitialFormData = () => ({
   min_booking_amount: '0',
   expiry_date: '',
   active: true,
+  applies_to: ['rental'],
   vehicle_ids: [],
 });
 
+// Which products a code can be redeemed against.
+const APPLIES_TO_OPTIONS = [
+  { value: 'rental', label: 'Self Drive Rentals' },
+  { value: 'tour', label: 'Tour Packages' },
+  { value: 'international', label: 'International Packages' },
+];
+
 const HeaderBlock = ({ isCreateRoute, isEditRoute, onBack }) => {
-  const title = isEditRoute ? 'Edit Rental Coupon' : isCreateRoute ? 'Create Rental Coupon' : 'Rental Coupons';
+  const title = isEditRoute ? 'Edit Coupon' : isCreateRoute ? 'Create Coupon' : 'Coupons';
   return (
     <div className="mb-6">
       <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-2">
@@ -182,6 +191,9 @@ const RentalCoupons = () => {
           min_booking_amount: coupon.min_booking_amount !== undefined ? coupon.min_booking_amount : '0',
           expiry_date: coupon.expiry_date ? new Date(coupon.expiry_date).toISOString().split('T')[0] : '',
           active: coupon.active !== false,
+          applies_to: Array.isArray(coupon.applies_to) && coupon.applies_to.length
+            ? coupon.applies_to
+            : ['rental'],
           vehicle_ids: Array.isArray(coupon.vehicle_ids)
             ? coupon.vehicle_ids.map(v => typeof v === 'object' && v !== null ? v._id || v.id : v)
             : [],
@@ -536,6 +548,45 @@ const RentalCoupons = () => {
                       onChange={(e) => handleFieldChange('expiry_date', e.target.value)}
                       className={inputClass}
                     />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <FieldLabel icon={Tag} required>
+                      Applies To
+                    </FieldLabel>
+                    <div className="flex flex-wrap gap-2">
+                      {APPLIES_TO_OPTIONS.map((option) => {
+                        const checked = formData.applies_to.includes(option.value);
+                        return (
+                          <label
+                            key={option.value}
+                            className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${
+                              checked
+                                ? 'border-amber-400 bg-amber-50 text-gray-900'
+                                : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={() =>
+                                handleFieldChange(
+                                  'applies_to',
+                                  checked
+                                    ? formData.applies_to.filter((item) => item !== option.value)
+                                    : [...formData.applies_to, option.value],
+                                )
+                              }
+                              className="h-3.5 w-3.5 accent-amber-500"
+                            />
+                            {option.label}
+                          </label>
+                        );
+                      })}
+                    </div>
+                    <p className="mt-1.5 text-[11px] text-gray-400">
+                      A code is rejected on any product it is not ticked for. Vehicle restrictions below apply to rentals only.
+                    </p>
                   </div>
 
                   <div className="md:col-span-2">

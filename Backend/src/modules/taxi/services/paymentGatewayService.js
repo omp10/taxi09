@@ -1,5 +1,6 @@
 import { ApiError } from '../../../utils/ApiError.js';
 import { ensureThirdPartySettings } from '../admin/services/adminService.js';
+import { decryptSecret } from '../../../utils/secretCrypto.js';
 
 const PAYMENT_GATEWAY_SPECS = {
   razor_pay: {
@@ -201,7 +202,10 @@ export const resolveConfiguredGatewayCredentials = async (gatewayKey) => {
 
   if (gatewayKey === 'razor_pay') {
     const keyId = normalizeString(isLive ? validatedGateway.live_api_key : validatedGateway.test_api_key);
-    const keySecret = normalizeString(isLive ? validatedGateway.live_secret_key : validatedGateway.test_secret_key);
+    // Stored encrypted; decrypted only here, server-side, at point of use.
+    const keySecret = decryptSecret(
+      normalizeString(isLive ? validatedGateway.live_secret_key : validatedGateway.test_secret_key),
+    );
 
     if (keyId.toLowerCase().includes('demo') || keySecret.toLowerCase().includes('demo')) {
       throw new ApiError(500, 'Razorpay keys are demo placeholders. Configure real keys in Admin > Payment Gateways');
@@ -212,7 +216,7 @@ export const resolveConfiguredGatewayCredentials = async (gatewayKey) => {
 
   if (gatewayKey === 'phone_pay') {
     const clientId = getFirstConfiguredValue(validatedGateway, PHONEPE_FIELD_ALIASES.merchant_id);
-    const clientSecret = getFirstConfiguredValue(validatedGateway, PHONEPE_FIELD_ALIASES.salt_key);
+    const clientSecret = decryptSecret(getFirstConfiguredValue(validatedGateway, PHONEPE_FIELD_ALIASES.salt_key));
     const clientVersion = getFirstConfiguredValue(validatedGateway, PHONEPE_FIELD_ALIASES.salt_index) || '1';
     const merchantId = clientId;
     const saltKey = clientSecret;

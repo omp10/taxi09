@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -302,7 +302,8 @@ const RentalSchedule = () => {
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [promoError, setPromoError] = useState('');
-  const [paymentPercent, setPaymentPercent] = useState(50);
+  const [quote, setQuote] = useState(null);
+  const [quoteError, setQuoteError] = useState('');
   const [paymentSuccess, setPaymentSuccess] = useState(null);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
 
@@ -315,6 +316,36 @@ const RentalSchedule = () => {
     () => formatDateTimeValue(returnDate, returnTime),
     [returnDate, returnTime],
   );
+
+  // Re-price on the server whenever anything that affects the total changes.
+  // The client never computes money - it renders what this returns.
+  useEffect(() => {
+    const vehicleTypeId = vehicle?.id || vehicle?._id || vehicle?.vehicleTypeId;
+    const packageId = selectedPackage?.id || selectedPackage?.packageId;
+    if (!vehicleTypeId || !packageId) return undefined;
+
+    let cancelled = false;
+    userService
+      .quoteRentalBooking({
+        vehicleTypeId,
+        packageId,
+        addOns: Array.isArray(selectedPackage?.addOns) ? selectedPackage.addOns : [],
+        pickupDateTime: pickup,
+        returnDateTime: returnDateTimeValue,
+      })
+      .then((result) => {
+        if (cancelled) return;
+        setQuote(result);
+        setQuoteError('');
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        setQuote(null);
+        setQuoteError(error?.response?.data?.message || 'Could not price this booking');
+      });
+
+    return () => { cancelled = true; };
+  }, [vehicle?.id, vehicle?._id, selectedPackage?.id, selectedPackage?.addOns, pickup, returnDateTimeValue]);
 
   const { hours, totalCost, extraHours, extraHourRate, basePrice, includedHours, isValid } = useMemo(() => {
     const diff = (new Date(returnDateTimeValue) - new Date(pickup)) / 3600000;
@@ -503,27 +534,15 @@ const RentalSchedule = () => {
     const vehicleName = vehicle.name || 'Maruti Swift';
     const packageLabel = selectedPackage?.label || `${selectedPackage?.includedKm || 250} KM / day`;
     const planPrice = Number(selectedPackage?.price || totalCost || vehicle.prices?.Daily || 2199);
-    const addOnIds = Array.isArray(selectedPackage?.addOns) ? selectedPackage.addOns : [];
-    const addOnCatalog = {
-      child: { label: 'Child Seat', price: 150 },
-      driver: { label: 'Driver Needed', price: 1200 },
-      roof: { label: 'Roof Carrier', price: 250 },
-      luggage: { label: 'Extra Luggage', price: 100 },
-      wifi: { label: 'Wi-Fi Device', price: 100 },
-      gps: { label: 'GPS Navigation', price: 100 },
-      holder: { label: 'Mobile Holder', price: 50 },
-      fastag: { label: 'FASTag', price: 100 },
-      snow: { label: 'Snow Chains', price: 300 },
-      umbrella: { label: 'Umbrella', price: 50 },
-    };
-    const selectedAddOns = addOnIds
-      .map((id) => ({ id, ...(addOnCatalog[id] || { label: id, price: 0 }) }))
-      .filter((item) => item.id && item.id !== 'more');
-    const addOnsTotal = selectedAddOns.reduce((sum, item) => sum + Number(item.price || 0), 0);
+    // Every amount below comes from the server quote. The local figures are
+    // only a placeholder for the moment before the first quote lands.
+    const selectedAddOns = quote?.addOns || [];
+    const addOnsTotal = quote?.addOnsTotal ?? 0;
     const taxAmount = 0;
-    const totalPayable = Math.max(planPrice, totalCost || 0);
-    const payableNow = Math.round(totalPayable * (paymentPercent / 100));
-    const payLater = Math.max(0, totalPayable - payableNow);
+    const totalPayable = quote?.totalCost ?? Math.max(planPrice, totalCost || 0);
+    const payableNow = quote?.payableNow ?? 0;
+    const payLater = quote?.balanceDue ?? Math.max(0, totalPayable - payableNow);
+    const advanceLabel = quote?.advancePayment?.label || 'Advance booking payment';
     const pickupLabel = serviceLocation?.name || state.pickupLocation || 'Bhubaneswar';
     const dropLabel = state.dropoffLocation || pickupLabel;
     const pickupDateLabel = new Date(pickup).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -543,11 +562,8 @@ const RentalSchedule = () => {
         returnTime: returnDateTimeValue,
         totalCost: totalPayable,
         payableNowOverride: payableNow,
-        paymentVariant: paymentPercent === 100 ? 'full' : 'advance',
-        advancePaymentLabelOverride:
-          paymentPercent === 100
-            ? 'Full rental payment'
-            : `${paymentPercent}% advance booking payment`,
+        paymentVariant: payLater === 0 ? 'full' : 'advance',
+        advancePaymentLabelOverride: advanceLabel,
         rentalPaymentSummary: {
           baseFare: planPrice,
           addOnsTotal,
@@ -555,7 +571,6 @@ const RentalSchedule = () => {
           totalPayable,
           payableNow,
           payLater,
-          paymentPercent,
           selectedAddOns,
         },
       };
@@ -678,7 +693,7 @@ const RentalSchedule = () => {
               <div className="space-y-3 text-[12px] font-black">
                 <div className="flex justify-between"><span className="text-slate-700">Total Payable</span><span>{formatCurrency(totalPayable)}</span></div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-700">Paid Now ({paymentPercent}%)</span>
+                  <span className="text-slate-700">Paid Now</span>
                   <div className="flex items-center gap-2">
                     <span>{formatCurrency(paymentSuccess.paidAmount)}</span>
                     <span className="rounded-[7px] bg-green-50 px-2 py-1 text-[9px] font-black text-green-700">Paid</span>
@@ -953,26 +968,13 @@ const RentalSchedule = () => {
                   <p className="text-[10px] font-black text-slate-700">Choose how much you want to pay now</p>
                 </div>
               </div>
-              <div className="mt-2 grid grid-cols-3 gap-1.5">
-                {[25, 50, 100].map((percent) => (
-                  <button
-                    key={percent}
-                    type="button"
-                    onClick={() => setPaymentPercent(percent)}
-                    className={`h-8 rounded-[8px] border text-[11px] font-black ${
-                      paymentPercent === percent
-                        ? 'border-[#f5b700] bg-[#fff0b8]'
-                        : 'border-slate-200 bg-white'
-                    }`}
-                  >
-                    {percent}%
-                  </button>
-                ))}
-              </div>
               <div className="mt-3 space-y-1.5 text-[11px] font-black text-slate-900">
-                <div className="flex justify-between"><span>Pay now ({paymentPercent}%)</span><span>{formatCurrency(payableNow)}</span></div>
+                <div className="flex justify-between"><span>{advanceLabel}</span><span>{formatCurrency(payableNow)}</span></div>
                 <div className="flex justify-between"><span>Pay before pickup</span><span>{formatCurrency(payLater)}</span></div>
               </div>
+              {quoteError ? (
+                <p className="mt-2 rounded-[8px] bg-rose-50 px-2 py-1.5 text-[9.5px] font-black text-rose-700">{quoteError}</p>
+              ) : null}
               <p className="mt-2 rounded-[8px] bg-blue-50 px-2 py-1.5 text-[9.5px] font-black text-blue-800">
                 Remaining amount is paid before pickup.
               </p>
@@ -1028,7 +1030,7 @@ const RentalSchedule = () => {
               <p className="text-[9px] font-black text-slate-700">View Price Breakup</p>
             </div>
             <div>
-              <p className="text-[9px] font-black text-slate-700">Pay Now ({paymentPercent}%)</p>
+              <p className="text-[9px] font-black text-slate-700">Pay Now</p>
               <p className="text-[14px] font-black">{formatCurrency(payableNow)}</p>
             </div>
             <button

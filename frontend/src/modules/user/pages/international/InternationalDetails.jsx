@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import {
   BadgeCheck,
@@ -21,7 +21,10 @@ import {
   Utensils,
   X,
 } from 'lucide-react';
+import { fetchPackageBySlug, recallPackage } from '../../utils/packageHandoff';
 import AppHeader from '../../components/AppHeader';
+import api from '../../../../shared/api/axiosInstance';
+import { payForBooking } from '../../utils/bookingCheckout';
 
 const getRoutePrefix = (pathname = '') => (pathname.startsWith('/taxi/user') ? '/taxi/user' : '');
 
@@ -91,8 +94,20 @@ const buildItinerary = (trip) => {
 const InternationalDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { slug: slugParam } = useParams();
   const routePrefix = useMemo(() => getRoutePrefix(location.pathname), [location.pathname]);
-  const { trip } = location.state || {};
+  // Fall back to the stored handoff so a reload or a direct hit still works.
+  const recalledTrip = useMemo(() => recallPackage('international'), []);
+  const [fetchedTrip, setFetchedTrip] = useState(null);
+  const trip = location.state?.trip || recalledTrip || fetchedTrip;
+
+  // A shared link arrives with only a slug - load it.
+  useEffect(() => {
+    if (trip || !slugParam) return undefined;
+    let cancelled = false;
+    fetchPackageBySlug(slugParam).then((result) => { if (!cancelled) setFetchedTrip(result); });
+    return () => { cancelled = true; };
+  }, [trip, slugParam]);
 
   const [slide, setSlide] = useState(0);
   const [openDay, setOpenDay] = useState(1);
@@ -100,6 +115,8 @@ const InternationalDetails = () => {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [withVisa, setWithVisa] = useState(true);
   const [withInsurance, setWithInsurance] = useState(true);
+  const [quote, setQuote] = useState(null);
+  const [paying, setPaying] = useState(false);
   const [couponInput, setCouponInput] = useState('');
   const [coupon, setCoupon] = useState('');
 
@@ -109,20 +126,77 @@ const InternationalDetails = () => {
     return list.filter(Boolean);
   }, [trip]);
 
+  const selectedAddOns = useMemo(
+    () => [withVisa ? 'visa' : null, withInsurance ? 'insurance' : null].filter(Boolean),
+    [withVisa, withInsurance],
+  );
+
+  // Same quote endpoint the desktop page uses.
+  useEffect(() => {
+    if (!trip?.slug) return undefined;
+    let cancelled = false;
+    api
+      .post('/users/travel-packages/quote', {
+        slug: trip.slug,
+        travellers,
+        couponCode: coupon,
+        addOns: selectedAddOns,
+      })
+      .then((response) => { if (!cancelled) setQuote(response?.data?.data ?? response?.data ?? null); })
+      .catch(() => { if (!cancelled) setQuote(null); });
+    return () => { cancelled = true; };
+  }, [trip?.slug, travellers, coupon, selectedAddOns]);
+
   if (!trip) {
+    // With a slug in the URL the fetch is still in flight, so hold rather than
+    // bouncing the visitor straight back to the listing.
+    if (slugParam) return null;
     navigate(`${routePrefix}/international`, { replace: true });
     return null;
   }
 
   const off = Math.round(((trip.oldPrice - trip.price) / trip.oldPrice) * 100);
-  const baseFare = trip.price * travellers;
-  const visaTotal = withVisa ? VISA_FEE_PER_PERSON * travellers : 0;
-  const insuranceTotal = withInsurance ? INSURANCE_PER_PERSON * travellers : 0;
-  const taxable = baseFare + visaTotal + insuranceTotal;
-  const gst = Math.round(taxable * GST_RATE);
-  const tcs = Math.round(baseFare * TCS_RATE);
-  const discount = coupon ? Math.round(baseFare * COUPONS[coupon]) : 0;
-  const grandTotal = taxable + gst + tcs - discount;
+
+
+  const confirmAndPay = async () => {
+    setPaying(true);
+    try {
+      const response = await api.post('/users/package-bookings', {
+        slug: trip.slug,
+        travellers,
+        couponCode: coupon,
+        addOns: selectedAddOns,
+      });
+      const created = response?.data?.data ?? response?.data;
+
+      const paid = await payForBooking({
+        kind: 'package',
+        bookingId: created._id,
+        name: trip.title,
+        description: `${travellers} traveller(s) · ${created.bookingReference}`,
+      });
+
+      if (!paid) {
+        toast('Payment cancelled - your booking is saved in My Bookings');
+        return;
+      }
+      setSheetOpen(false);
+      toast.success(`Booking confirmed · ${paid.bookingReference}`);
+      navigate(`${routePrefix}/activity`);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message || 'Could not complete this booking');
+    } finally {
+      setPaying(false);
+    }
+  };
+  // Priced by the server, same endpoint the desktop page uses.
+  const baseFare = quote?.baseFare ?? 0;
+  const visaTotal = quote?.addOns?.find((a) => a.id === 'visa')?.price ?? 0;
+  const insuranceTotal = quote?.addOns?.find((a) => a.id === 'insurance')?.price ?? 0;
+  const gst = quote?.gst ?? 0;
+  const tcs = quote?.tcs ?? 0;
+  const discount = quote?.discount ?? 0;
+  const grandTotal = quote?.totalAmount ?? 0;
   const total = grandTotal;
 
   const applyCoupon = () => {
@@ -478,13 +552,11 @@ const InternationalDetails = () => {
 
               <button
                 type="button"
-                onClick={() => {
-                  setSheetOpen(false);
-                  toast.success(`${trip.title} booked for ${travellers} - ${rupees(grandTotal)}`);
-                }}
+                onClick={confirmAndPay}
+                disabled={paying || !quote}
                 className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[15px] font-extrabold shadow-[0_8px_20px_rgba(255,193,7,.4)]"
               >
-                Confirm &amp; Pay {rupees(grandTotal)}
+                {paying ? 'Processing…' : `Confirm & Pay ${rupees(grandTotal)}`}
               </button>
             </div>
           </div>

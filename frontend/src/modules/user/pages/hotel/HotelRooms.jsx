@@ -50,7 +50,7 @@ const GALLERY = [
  * Room catalogue. `multiplier` is applied to the hotel's nightly rate so every
  * hotel gets a consistent, sensibly-priced ladder of rooms.
  */
-const ROOM_TEMPLATES = [
+const FALLBACK_ROOM_TEMPLATES = [
   {
     id: 'deluxe',
     name: 'Deluxe Room',
@@ -173,8 +173,14 @@ const HotelRooms = () => {
   const nights = nightsBetween(checkIn, checkOut);
 
   const roomList = useMemo(
-    () =>
-      ROOM_TEMPLATES.map((template) => {
+    () => {
+      const templates = Array.isArray(hotel?.rooms) && hotel.rooms.length
+        ? hotel.rooms
+            .filter((room) => room.active !== false)
+            .map((room) => ({ ...room, id: room.key, multiplier: room.priceMultiplier, left: room.roomsLeft }))
+        : FALLBACK_ROOM_TEMPLATES;
+
+      return templates.map((template) => {
         const price = Math.round(((hotel?.price || 0) * template.multiplier) / 10) * 10;
         const oldPrice = Math.round(((hotel?.oldPrice || 0) * template.multiplier) / 10) * 10;
         return {
@@ -184,8 +190,9 @@ const HotelRooms = () => {
           off: oldPrice ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0,
           capacity: template.adults + template.children,
         };
-      }),
-    [hotel?.price, hotel?.oldPrice],
+      });
+    },
+    [hotel],
   );
 
   const visibleRooms = useMemo(

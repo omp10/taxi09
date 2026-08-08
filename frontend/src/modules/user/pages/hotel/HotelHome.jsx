@@ -29,6 +29,7 @@ import {
   Users,
 } from 'lucide-react';
 import AppHeader from '../../components/AppHeader';
+import contentService from '../../services/contentService';
 
 const getRoutePrefix = (pathname = '') => (pathname.startsWith('/taxi/user') ? '/taxi/user' : '');
 
@@ -72,7 +73,7 @@ const SORTS = [
   { id: 'rating-desc', label: 'Top Rated' },
 ];
 
-const hotels = [
+const FALLBACK_HOTELS = [
   { id: 'grand-orion', name: 'The Grand Orion', city: 'Delhi', area: 'Connaught Place, New Delhi', distance: '2.3 km from City Centre', image: '/taxi09_hotel_hero.png', badge: 'Popular', rating: 4.5, reviews: '2.5K', oldPrice: 3499, price: 2649, amenities: ['Free Wi-Fi', 'Breakfast', 'Free Cancellation', 'Pay at Hotel'] },
   { id: 'sapphire-inn', name: 'Hotel Sapphire Inn', city: 'Hyderabad', area: 'Banjara Hills, Hyderabad', distance: '1.8 km from City Centre', image: '/taxi09_hotel_hero_city_v2.png', badge: 'Best Value', rating: 4.2, reviews: '1.3K', oldPrice: 3299, price: 2739, amenities: ['Free Wi-Fi', 'Pool', 'Parking', 'Pay at Hotel'] },
   { id: 'palm-vista', name: 'Palm Vista Resort', city: 'Goa', area: 'Candolim Beach, Goa', distance: '900 m from Beach', image: '/taxi09_hotel_hero_resort_v2.png', badge: 'Beach Stay', rating: 4.7, reviews: '3.1K', oldPrice: 5199, price: 3899, amenities: ['Beachfront', 'Pool', 'Breakfast', 'Pay at Hotel'] },
@@ -231,6 +232,17 @@ const HotelHome = () => {
   const [sortOpen, setSortOpen] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [searchedFor, setSearchedFor] = useState('');
+  const [hotels, setHotels] = useState(FALLBACK_HOTELS);
+
+  useEffect(() => {
+    let active = true;
+    contentService.getHotels(FALLBACK_HOTELS).then((results) => {
+      if (active) setHotels(results.map((item) => ({ ...item, id: item.slug || item._id || item.id })));
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const activeHero = heroSlides[heroIndex];
 
@@ -252,7 +264,7 @@ const HotelHome = () => {
     else if (sortBy === 'rating-desc') sorted.sort((a, b) => b.rating - a.rating);
 
     return sorted;
-  }, [searchedFor, sortBy]);
+  }, [hotels, searchedFor, sortBy]);
 
   const listedHotels = showAll ? visibleHotels : visibleHotels.slice(0, 4);
 

@@ -46,6 +46,25 @@ const rentalCouponSchema = new mongoose.Schema(
       default: false,
       index: true,
     },
+    // Which products this code works on. Named for rentals historically, but
+    // the same store now backs tour and international package coupons.
+    applies_to: {
+      type: [String],
+      enum: ['rental', 'tour', 'international'],
+      default: ['rental'],
+      index: true,
+    },
+    // Optional restriction to specific travel packages, mirroring vehicle_ids.
+    package_ids: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'TaxiTravelPackage',
+        },
+      ],
+      default: [],
+      index: true,
+    },
     vehicle_ids: {
       type: [
         {

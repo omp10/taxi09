@@ -76,6 +76,54 @@ const rentalVehiclePricingSchema = new mongoose.Schema(
   { _id: false },
 );
 
+/**
+ * Optional extras offered with a rental. Priced per booking (not per day) and
+ * validated server-side against this list, so the client can only pick ids -
+ * never set a price.
+ */
+const rentalVehicleAddOnSchema = new mongoose.Schema(
+  {
+    id: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    label: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    description: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    price: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    // Pre-discount price. Shown struck through next to `price`; ignored unless
+    // it is actually higher than what the customer pays.
+    originalPrice: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    // Lucide icon name rendered by the booking screens.
+    icon: {
+      type: String,
+      default: 'Package',
+      trim: true,
+    },
+    active: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  { _id: false },
+);
+
 const rentalVehicleAdvancePaymentSchema = new mongoose.Schema(
   {
     enabled: {
@@ -177,6 +225,15 @@ const rentalVehicleTypeSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    // Blank until an admin sets it; the listing filters hide facets that no
+    // vehicle declares rather than showing invented counts.
+    transmission: {
+      type: String,
+      enum: ['', 'manual', 'automatic'],
+      default: '',
+      trim: true,
+      lowercase: true,
+    },
     fuel: {
       type: String,
       default: '',
@@ -266,6 +323,10 @@ const rentalVehicleTypeSchema = new mongoose.Schema(
     },
     pricing: {
       type: [rentalVehiclePricingSchema],
+      default: [],
+    },
+    addOns: {
+      type: [rentalVehicleAddOnSchema],
       default: [],
     },
     advancePayment: {

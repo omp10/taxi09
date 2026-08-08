@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import AppHeader from '../../components/AppHeader';
+import contentService from '../../services/contentService';
 import {
   Bell,
   BedDouble,
@@ -33,6 +34,7 @@ import {
   IndianRupee,
   BadgePercent,
 } from 'lucide-react';
+import { rememberPackage } from '../../utils/packageHandoff';
 
 const getRoutePrefix = (pathname = '') => (pathname.startsWith('/taxi/user') ? '/taxi/user' : '');
 
@@ -73,7 +75,7 @@ const TRUST = [
   { icon: Headset, title: '24/7 Support', sub: "We're here to help" },
 ];
 
-const PACKAGES = [
+const FALLBACK_PACKAGES = [
   {
     id: 'himachal',
     gallery: ['/taxi09_pkg_himachal.jpg', '/taxi09_tours_hero_mountain.png', '/taxi09_pkg_kashmir.jpg'],
@@ -168,6 +170,16 @@ const PACKAGES = [
 
 const INCLUDE_ICONS = { Meals: Luggage, Stay: BedDouble, Sightseeing: Camera, Activities: Plane };
 
+/** API records use durationLabel/includes; the card expects days/includes. */
+const fromApi = (item) => ({
+  ...item,
+  id: item.slug || item._id,
+  days: item.durationLabel || `${item.durationDays} Days`,
+  includes: item.includes?.length ? item.includes : ['Meals', 'Stay', 'Sightseeing'],
+  tag: item.badge,
+  tagTone: item.badgeTone,
+});
+
 const ToursBottomNav = ({ routePrefix }) => {
   const navigate = useNavigate();
   const items = [
@@ -221,6 +233,17 @@ const ToursHome = () => {
   const [endDate, setEndDate] = useState('');
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [category, setCategory] = useState('All Packages');
+  const [packages, setPackages] = useState(FALLBACK_PACKAGES);
+
+  useEffect(() => {
+    let active = true;
+    contentService.getTravelPackages('domestic', FALLBACK_PACKAGES).then((results) => {
+      if (active) setPackages(results.map((item) => (item.slug ? fromApi(item) : item)));
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
   const todayKey = useMemo(() => new Date().toISOString().split('T')[0], []);
 
   const tripDays = useMemo(() => {
@@ -233,7 +256,7 @@ const ToursHome = () => {
 
   const visiblePackages = useMemo(() => {
     const range = BUDGETS.find((item) => item.id === budgetId) || BUDGETS[0];
-    return PACKAGES.filter((tour) => {
+    return packages.filter((tour) => {
       if (category !== 'All Packages' && tour.category !== category) return false;
       if (destination !== 'Any Destination' && tour.state !== destination) return false;
       if (tour.price < range.min || tour.price > range.max) return false;
@@ -241,7 +264,7 @@ const ToursHome = () => {
       if (tripDays && tour.durationDays > tripDays) return false;
       return true;
     });
-  }, [budgetId, category, destination, tripDays]);
+  }, [budgetId, category, destination, packages, tripDays]);
 
   const handleSearch = () => {
     if (visiblePackages.length === 0) {
@@ -556,11 +579,12 @@ const ToursHome = () => {
                     </p>
                     <button
                       type="button"
-                      onClick={() =>
-                        navigate(`${routePrefix}/tours/details`, {
+                      onClick={() => {
+                        rememberPackage('tour', tour, { travelers, startDate });
+                        navigate(`${routePrefix}/tours/details/${tour.slug}`, {
                           state: { tour, travelers, startDate },
-                        })
-                      }
+                        });
+                      }}
                       className="shrink-0 rounded-[10px] border-2 border-[var(--primary)] px-3 py-1.5 text-[10.5px] font-extrabold active:bg-[var(--secondary)] transition-colors"
                     >
                       View Details

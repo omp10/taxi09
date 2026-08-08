@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import {
@@ -25,6 +25,8 @@ import {
   Wifi,
 } from 'lucide-react';
 import AppHeader from '../../components/AppHeader';
+import api from '../../../../shared/api/axiosInstance';
+import { payForBooking } from '../../utils/bookingCheckout';
 
 const getRoutePrefix = (pathname = '') => (pathname.startsWith('/taxi/user') ? '/taxi/user' : '');
 
@@ -164,8 +166,43 @@ const HotelCheckout = () => {
   const [couponInput, setCouponInput] = useState('');
   const [coupon, setCoupon] = useState('');
   const [summaryOpen, setSummaryOpen] = useState(true);
+  const [quote, setQuote] = useState(null);
+  const [quoteError, setQuoteError] = useState('');
+  const [paying, setPaying] = useState(false);
 
   const nights = nightsBetween(checkIn, checkOut);
+
+  const selectedAddOns = useMemo(
+    () => [breakfastQty > 0 ? 'breakfast' : null, airportPickup ? 'pickup' : null].filter(Boolean),
+    [breakfastQty, airportPickup],
+  );
+
+  // Same quote endpoint the desktop checkout calls.
+  useEffect(() => {
+    if (!hotel?.slug) return undefined;
+    let cancelled = false;
+    api
+      .post('/users/hotels/quote', {
+        slug: hotel.slug,
+        roomKey: room?.key,
+        checkIn,
+        checkOut,
+        rooms: roomCount,
+        guests: guests,
+        addOns: selectedAddOns,
+      })
+      .then((response) => {
+        if (cancelled) return;
+        setQuote(response?.data?.data ?? response?.data ?? null);
+        setQuoteError('');
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        setQuote(null);
+        setQuoteError(error?.response?.data?.message || 'Could not price this stay');
+      });
+    return () => { cancelled = true; };
+  }, [hotel?.slug, room?.key, checkIn, checkOut, roomCount, guests, selectedAddOns]);
 
   const errors = {
     name: fieldError('name', guest.name),
@@ -183,14 +220,14 @@ const HotelCheckout = () => {
   const update = (patch) => setGuest((current) => ({ ...current, ...patch }));
   const markTouched = (field) => setTouched((current) => ({ ...current, [field]: true }));
 
-  const roomCharges = room.price * nights * roomCount;
-  const breakfastTotal = breakfastQty * 350 * nights;
-  const pickupTotal = airportPickup ? 799 : 0;
-  const addOnsTotal = breakfastTotal + pickupTotal;
-  const taxes = Math.round((roomCharges + addOnsTotal) * gstRateFor(room.price));
-  const discountRate = coupon ? COUPONS[coupon] : DISCOUNT_RATE;
-  const discount = Math.round(roomCharges * discountRate);
-  const total = roomCharges + addOnsTotal + taxes - discount;
+  // Every figure below comes from the server quote - the same endpoint the
+  // desktop checkout uses - so the two can never disagree.
+  const roomCharges = quote?.roomCharges ?? 0;
+  const taxes = quote?.taxes ?? 0;
+  const discount = 0;
+  const total = quote?.totalAmount ?? 0;
+  const breakfastTotal = quote?.addOns?.find((a) => a.id === 'breakfast')?.price ?? 0;
+  const pickupTotal = quote?.addOns?.find((a) => a.id === 'pickup')?.price ?? 0;
 
   const applyCoupon = () => {
     const code = couponInput.trim().toUpperCase();
@@ -203,14 +240,53 @@ const HotelCheckout = () => {
     toast.success(`${code} applied - ${Math.round(COUPONS[code] * 100)}% off room charges`);
   };
 
-  const handlePay = () => {
+  const handlePay = async () => {
     setTouched({ name: true, phone: true, email: true, idNumber: true });
     const firstError = Object.values(errors).find(Boolean);
     if (firstError) {
       toast.error('Check the highlighted guest details');
       return;
     }
-    toast.success('Payment step coming soon');
+    if (!quote) {
+      toast.error(quoteError || 'Still pricing this stay, try again in a moment');
+      return;
+    }
+
+    setPaying(true);
+    try {
+      // Create the booking first so the server owns the amount, then pay it.
+      const response = await api.post('/users/hotel-bookings', {
+        slug: hotel.slug,
+        roomKey: room?.key,
+        checkIn,
+        checkOut,
+        rooms: roomCount,
+        guests: guests,
+        addOns: selectedAddOns,
+        guestName: guest.name,
+        guestPhone: guest.phone,
+      });
+      const created = response?.data?.data ?? response?.data;
+
+      const paid = await payForBooking({
+        kind: 'hotel',
+        bookingId: created._id,
+        name: hotel.name,
+        description: `${created.roomName} · ${created.nights} night(s)`,
+        prefill: { name: guest.name, contact: guest.phone, email: guest.email },
+      });
+
+      if (!paid) {
+        toast('Payment cancelled - your booking is saved in My Bookings');
+        return;
+      }
+      toast.success(`Booking confirmed · ${paid.bookingReference}`);
+      navigate(`${routePrefix}/activity`);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message || 'Could not complete this booking');
+    } finally {
+      setPaying(false);
+    }
   };
 
   return (
@@ -592,6 +668,7 @@ const HotelCheckout = () => {
         <button
           type="button"
           onClick={handlePay}
+          disabled={paying || !quote}
           className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[15px] font-extrabold shadow-[0_8px_20px_rgba(255,193,7,.4)] active:scale-[0.99] transition-transform"
         >
           Proceed to Payment

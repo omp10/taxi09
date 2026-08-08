@@ -837,6 +837,24 @@ const AdminLayout = () => {
           },
           {
             icon: ImageIcon,
+            label: 'Bookings',
+            subItems: [
+              { label: 'All Bookings', path: '/admin/bookings/all', permission: 'promotions.view' },
+              { label: 'Hotel Bookings', path: '/admin/bookings/hotels', permission: 'promotions.view' },
+              { label: 'Package Bookings', path: '/admin/bookings/packages', permission: 'promotions.view' },
+            ],
+          },
+          {
+            label: 'App Content',
+            subItems: [
+              { label: 'Travel Packages', path: '/admin/content/travel-packages', permission: 'promotions.view' },
+              { label: 'Hotels', path: '/admin/content/hotels', permission: 'promotions.view' },
+              { label: 'Drivers for Hire', path: '/admin/content/hire-drivers', permission: 'promotions.view' },
+              { label: 'Page Content', path: '/admin/content/blocks', permission: 'promotions.view' },
+            ],
+          },
+          {
+            icon: ImageIcon,
             label: 'Homepage Banners',
             subItems: [
               { label: 'Top Banners', path: '/admin/homepage-banners/top', permission: 'promotions.view' },

@@ -1301,32 +1301,40 @@ const RentalVehicleDetail = () => {
     const displayBrand = vehicleNameParts[0] || 'Maruti';
     const displayModel = vehicleNameParts.slice(1).join(' ') || 'Swift';
     const displayName = `${displayBrand} ${displayModel}`.trim();
-    const basePrice = Number(selectedPackage?.price || vehicle.prices?.Daily || vehicle.prices?.Hourly || 2199);
-    const kmPlans = [
-      { id: '250', title: '250 KM', subtitle: 'Included', extra: '+ ₹9 / km', price: basePrice, tag: 'Recommended' },
-      { id: '400', title: '400 KM', subtitle: 'Included', extra: '+ ₹7 / km', price: basePrice + 300 },
-      { id: 'unlimited', title: 'Unlimited KM', subtitle: 'Unlimited', extra: '+ ₹0 / km', price: basePrice + 900 },
-    ];
-    const selectedPlan = kmPlans.find((plan) => plan.id === selectedKmPlan) || kmPlans[0];
-    const addOns = [
-      { id: 'child', label: 'Child Seat', price: 150, icon: Armchair },
-      { id: 'driver', label: 'Driver Needed', price: 1200, icon: Users },
-      { id: 'roof', label: 'Roof Carrier', price: 250, icon: Car },
-      { id: 'luggage', label: 'Extra Luggage', price: 100, icon: Luggage },
-      { id: 'more', label: 'More Options', price: 0, icon: CircleEllipsis },
-    ];
-    const allAddOns = [
-      { id: 'child', label: 'Child Seat', description: 'Safe & comfortable seating for kids', price: 150, icon: Armchair },
-      { id: 'driver', label: 'Driver Needed', description: 'Professional driver for your trip', price: 1200, icon: Users },
-      { id: 'roof', label: 'Roof Carrier', description: 'Extra luggage space for your journey', price: 250, icon: Car },
-      { id: 'luggage', label: 'Extra Luggage', description: 'Extra luggage space per bag', price: 100, icon: Luggage },
-      { id: 'wifi', label: 'Wi-Fi Device', description: 'Stay connected on the go', price: 100, icon: Navigation },
-      { id: 'gps', label: 'GPS Navigation', description: 'Navigate easily anywhere', price: 100, icon: MapPin },
-      { id: 'holder', label: 'Mobile Holder', description: 'Secure your phone while driving', price: 50, icon: Car },
-      { id: 'fastag', label: 'FASTag', description: 'Seamless toll payments', price: 100, icon: Tag },
-      { id: 'snow', label: 'Snow Chains', description: 'Better grip on snowy roads', price: 300, icon: Shield },
-      { id: 'umbrella', label: 'Umbrella', description: 'Be prepared for unexpected rain', price: 50, icon: Shield },
-    ];
+    // Packages come from the vehicle's admin-managed pricing table. The old
+    // hardcoded "+300 / +900" tiers were invented client-side.
+    const kmPlans = (Array.isArray(vehicle?.pricing) ? vehicle.pricing : [])
+      .filter((item) => item?.active !== false)
+      .map((item, index) => ({
+        id: String(item.id || item.packageId || index),
+        title: item.includedKm ? `${item.includedKm} KM` : item.label || 'Package',
+        subtitle: item.includedKm ? 'Included' : 'Unlimited',
+        extra: `+ ₹${Number(item.extraKmPrice || 0)} / km`,
+        price: Number(item.price || 0),
+        durationHours: Number(item.durationHours || 0),
+        includedKm: Number(item.includedKm || 0),
+        extraHourPrice: Number(item.extraHourPrice || 0),
+        tag: index === 0 ? 'Recommended' : undefined,
+      }));
+    const selectedPlan =
+      kmPlans.find((plan) => plan.id === selectedKmPlan) ||
+      kmPlans[0] ||
+      { id: '', title: 'Package', subtitle: '', extra: '', price: 0 };
+    // Add-ons come from the vehicle itself and are re-priced by the server at
+    // booking time; the icon name is mapped to a component for rendering.
+    const ADD_ON_ICONS = { Armchair, Users, Car, Luggage, Navigation, MapPin, Tag, Shield, Package: CircleEllipsis };
+    const allAddOns = (Array.isArray(vehicle?.addOns) ? vehicle.addOns : [])
+      .filter((item) => item?.active !== false)
+      .map((item) => ({
+        id: item.id,
+        label: item.label,
+        description: item.description || '',
+        price: Number(item.price || 0),
+        icon: ADD_ON_ICONS[item.icon] || CircleEllipsis,
+      }));
+    const addOns = allAddOns.length > 4
+      ? [...allAddOns.slice(0, 4), { id: 'more', label: 'More Options', price: 0, icon: CircleEllipsis }]
+      : allAddOns;
     const addOnTotal = allAddOns
       .filter((item) => selectedAddOns.includes(item.id))
       .reduce((sum, item) => sum + item.price, 0);
@@ -1352,9 +1360,15 @@ const RentalVehicleDetail = () => {
         duration,
         selectedPackage: {
           ...selectedPackage,
-          price: totalPayable,
-          includedKm: Number(selectedPlan.id === 'unlimited' ? 9999 : selectedPlan.id),
-          label: `${selectedPlan.title} / day`,
+          // The id is what the server matches against vehicle.pricing, so it
+          // must be the package's own id - not a number parsed from the label.
+          id: selectedPlan.id,
+          packageId: selectedPlan.id,
+          price: selectedPlan.price,
+          durationHours: selectedPlan.durationHours,
+          includedKm: selectedPlan.includedKm,
+          extraHourPrice: selectedPlan.extraHourPrice,
+          label: selectedPlan.title,
           addOns: selectedAddOns,
         },
         serviceLocation: selectedServiceLocation,

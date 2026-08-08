@@ -226,6 +226,7 @@ import {
   uploadImage,
 } from '../controllers/poolingController.js';
 import { promotionsRouter } from '../promotions/routes/index.js';
+import { contentRouter } from '../content/routes/contentRoutes.js';
 import { listSafetyAlerts, resolveSafetyAlert } from '../../safety/controllers/safetyController.js';
 import {
   getRentalCoupons,
@@ -503,3 +504,4 @@ adminRouter.get('/admin/reports/finance/download', downloadFinanceReport);
 adminRouter.get('/admin/reports/fleet-finance/download', downloadFleetFinanceReport);
 
 adminRouter.use('/', promotionsRouter);
+adminRouter.use('/', contentRouter);

@@ -8,6 +8,8 @@ import {
   createPhonePeRentalAdvancePaymentOrder,
   payRentalAdvanceWithWallet,
   createRentalBookingRequest,
+  quoteRentalBooking,
+  quoteHireDriverTrip,
   createRentalQuoteRequest,
   createRazorpayWalletTopupOrder,
   createPhonePeWalletTopupOrder,
@@ -62,7 +64,30 @@ import {
   createPoolingBooking,
   getMyPoolingBookings
 } from '../controllers/poolingController.js';
-import { getAppBootstrap, getAppModules, getGeneralSettingsCategory, getGoodsTypes, getPublicBanners, getPublicRentalVehicleCatalog, getPublicRentalVehicleSubcategories, getPublicVehicleTypeCatalog } from '../../admin/controllers/adminController.js';
+import {
+  postHotelBooking,
+  getMyHotelBookings,
+  postPackageBooking,
+  getMyPackageBookings,
+  postBookingPaymentOrder,
+  postBookingPaymentVerify,
+} from '../../admin/content/controllers/bookingController.js';
+import {
+  addEmergencyContact,
+  deleteEmergencyContact,
+  listEmergencyContacts,
+} from '../controllers/userController.js';
+import {
+  getPublicContentBlocks,
+  getPublicHotelBySlug,
+  quoteHotelStay,
+  quoteTravelPackage,
+  getPublicTravelPackageBySlug,
+  getPublicHotels,
+  getPublicTravelPackages,
+  getPublicHireDrivers,
+} from '../../admin/content/controllers/contentController.js';
+import { getAppBootstrap, getAppModules, getGeneralSettingsCategory, getGoodsTypes, getPublicBanners, getPublicRideFares, getPublicRentalVehicleCatalog, getPublicRentalVehicleSubcategories, getPublicVehicleTypeCatalog } from '../../admin/controllers/adminController.js';
 import { triggerUserSosAlert } from '../../safety/controllers/safetyController.js';
 
 export const userRouter = Router();
@@ -73,14 +98,39 @@ userRouter.get('/settings/:category', asyncHandler(getGeneralSettingsCategory));
 userRouter.get('/intercity-packages', asyncHandler(getIntercityPackageCatalog));
 userRouter.get('/goods-types', asyncHandler(getGoodsTypes));
 userRouter.get('/vehicle-types', asyncHandler(getPublicVehicleTypeCatalog));
+userRouter.get('/ride-fares', asyncHandler(getPublicRideFares));
 userRouter.get('/set-prices', asyncHandler(getSetPrices));
 userRouter.get('/zones', asyncHandler(getZones));
 userRouter.get('/rental-vehicles', asyncHandler(getPublicRentalVehicleCatalog));
 userRouter.get('/rental-vehicle-subcategories', asyncHandler(getPublicRentalVehicleSubcategories));
 userRouter.get('/banners', asyncHandler(getPublicBanners));
+userRouter.get('/travel-packages', getPublicTravelPackages);
+userRouter.post('/travel-packages/quote', authenticate(['user']), asyncHandler(quoteTravelPackage));
+// Declared after /quote so the dynamic segment cannot shadow it.
+userRouter.get('/travel-packages/:slug', getPublicTravelPackageBySlug);
+
+userRouter.post('/hotel-bookings', authenticate(['user']), postHotelBooking);
+userRouter.get('/hotel-bookings', authenticate(['user']), getMyHotelBookings);
+userRouter.post('/package-bookings', authenticate(['user']), postPackageBooking);
+userRouter.get('/package-bookings', authenticate(['user']), getMyPackageBookings);
+
+// kind is 'hotel' or 'package'; the amount always comes from the stored booking.
+userRouter.post('/bookings/:kind/:id/pay/order', authenticate(['user']), postBookingPaymentOrder);
+userRouter.post('/bookings/:kind/:id/pay/verify', authenticate(['user']), postBookingPaymentVerify);
+userRouter.get('/hotels', getPublicHotels);
+userRouter.post('/hotels/quote', authenticate(['user']), asyncHandler(quoteHotelStay));
+userRouter.get('/hotels/:slug', getPublicHotelBySlug);
+userRouter.get('/content-blocks', getPublicContentBlocks);
+userRouter.get('/hire-drivers', getPublicHireDrivers);
+
+userRouter.get('/me/emergency-contacts', authenticate(['user']), asyncHandler(listEmergencyContacts));
+userRouter.post('/me/emergency-contacts', authenticate(['user']), asyncHandler(addEmergencyContact));
+userRouter.delete('/me/emergency-contacts/:id', authenticate(['user']), asyncHandler(deleteEmergencyContact));
 userRouter.get('/service-locations', asyncHandler(listPublicServiceLocations));
 userRouter.get('/service-stores', asyncHandler(listPublicServiceStores));
 userRouter.post('/rental-quote-requests', asyncHandler(createRentalQuoteRequest));
+userRouter.post('/rental-bookings/quote', authenticate(['user']), asyncHandler(quoteRentalBooking));
+userRouter.post('/hire-driver/quote', authenticate(['user']), asyncHandler(quoteHireDriverTrip));
 userRouter.post('/rental-bookings', authenticate(['user']), asyncHandler(createRentalBookingRequest));
 userRouter.get('/rental-bookings', authenticate(['user']), asyncHandler(listMyRentalBookings));
 userRouter.get('/rental-bookings/active', authenticate(['user']), asyncHandler(getMyActiveRentalBooking));

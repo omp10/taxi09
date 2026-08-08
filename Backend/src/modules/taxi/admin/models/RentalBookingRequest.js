@@ -188,6 +188,21 @@ const rentalBookingRequestSchema = new mongoose.Schema(
       default: '',
       trim: true,
     },
+    // Resolved from the vehicle's add-on catalogue at booking time, so the
+    // stored booking keeps the price that was actually charged.
+    addOns: [
+      {
+        _id: false,
+        id: { type: String, default: '', trim: true },
+        label: { type: String, default: '', trim: true },
+        price: { type: Number, default: 0, min: 0 },
+      },
+    ],
+    addOnsTotal: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     selectedPackage: {
       packageId: {
         type: String,
