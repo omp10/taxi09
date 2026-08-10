@@ -48,7 +48,7 @@ const WhatsAppFloat = () => {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with us on WhatsApp"
-      className="fixed bottom-5 left-5 z-[9999] flex items-center gap-2 rounded-full bg-[#25D366] py-1.5 pl-1.5 pr-4 text-white shadow-[0_8px_24px_rgba(0,0,0,0.25)] transition-transform hover:-translate-y-0.5 print:hidden"
+      className="fixed bottom-5 left-5 z-[9999] flex items-center gap-0 rounded-full bg-[#25D366] p-1.5 text-white shadow-[0_8px_24px_rgba(0,0,0,0.25)] transition-transform hover:-translate-y-0.5 print:hidden sm:gap-2 sm:py-1.5 sm:pl-1.5 sm:pr-4"
     >
       <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white">
         <svg viewBox="0 0 24 24" className="h-6 w-6 fill-[#25D366]" aria-hidden="true">
@@ -56,7 +56,9 @@ const WhatsAppFloat = () => {
           <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.13h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.16 8.16 0 0 1-1.25-4.36c0-4.54 3.7-8.24 8.25-8.24a8.19 8.19 0 0 1 5.82 2.42 8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.21-8.24 8.21z" />
         </svg>
       </span>
-      <span className="whitespace-nowrap text-[15px] font-semibold">
+      {/* On a phone the number would eat a third of the screen, so the label
+          collapses to just the icon. The wa.me link still carries the number. */}
+      <span className="hidden whitespace-nowrap text-[15px] font-semibold sm:inline">
         WhatsApp - {formatForDisplay(waNumber)}
       </span>
     </a>
