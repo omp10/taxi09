@@ -571,29 +571,6 @@ const estimateDurationMinutes = (distanceMeters = 0) => {
   return Math.max(1, Math.round(Number(distanceMeters) / metersPerMinute));
 };
 
-const getFallbackVehicleEstimate = (type) => {
-  const value = getIconValue(type);
-  const label = getTypeLabel(type).toLowerCase();
-
-  if (value.includes('bike') || label.includes('bike')) {
-    return 22;
-  }
-
-  if (value.includes('auto') || label.includes('auto')) {
-    return 40;
-  }
-
-  if (value.includes('premium') || value.includes('lux') || label.includes('premium') || label.includes('lux')) {
-    return 130;
-  }
-
-  if (value.includes('suv') || label.includes('suv')) {
-    return 150;
-  }
-
-  return 106;
-};
-
 const getSetPriceRows = (response) => {
   const data = unwrap(response);
   return (data?.paginator?.data || data?.results || []).filter((row) => {
@@ -791,11 +768,13 @@ const findBestPricingRule = ({ rules, vehicleTypeId, zoneId, serviceLocationId, 
   return candidates[0] || null;
 };
 
-const calculateEstimatedFare = ({ vehicle, pricingRule, distanceMeters, durationMinutes }) => {
-  const fallbackFare = getFallbackVehicleEstimate(vehicle?.raw || vehicle);
-
+// Returns null when the class has no usable fare configured. Callers must not
+// substitute a number of their own: the backend drops unpriced vehicle classes
+// from /users/ride-fares for the same reason, and quoting an invented fare
+// means booking at a price no Set Prices row backs.
+const calculateEstimatedFare = ({ pricingRule, distanceMeters, durationMinutes }) => {
   if (!pricingRule) {
-    return fallbackFare;
+    return null;
   }
 
   const distanceKm = Math.max(0, Number(distanceMeters || 0) / 1000);
@@ -811,7 +790,7 @@ const calculateEstimatedFare = ({ vehicle, pricingRule, distanceMeters, duration
     : basePrice + (extraDistanceKm * pricePerDistance) + (Math.max(0, Number(durationMinutes || 0)) * timePrice);
 
   if (subtotal <= 0) {
-    return fallbackFare;
+    return null;
   }
 
   const total = subtotal + (subtotal * serviceTax) / 100;
@@ -1024,7 +1003,7 @@ const normalizeVehicleType = (type, index) => {
     badge: null,
     badgeColor: 'bg-orange-50 text-orange-500 border-orange-100',
     sublabel: type?.short_description || type?.description || 'Available ride',
-    price: getFallbackVehicleEstimate(type),
+    price: null,
     dispatchType,
     supportsBidding: dispatchType === 'bidding' || dispatchType === 'both',
     bidStepAmount: 10,
@@ -1430,7 +1409,6 @@ const SelectVehicle = () => {
         });
 
         const calculatedPrice = calculateEstimatedFare({
-          vehicle,
           pricingRule,
           distanceMeters: tripMetrics.distanceMeters,
           durationMinutes: tripMetrics.durationMinutes,
@@ -1438,7 +1416,9 @@ const SelectVehicle = () => {
 
         // Dynamically scale max bidding steps to a realistic 15% of the actual calculated price
         const stepAmount = Number(vehicle.bidStepAmount || 10);
-        const dynamicMaxBidSteps = Math.max(2, Math.round((calculatedPrice * 0.15) / stepAmount));
+        const dynamicMaxBidSteps = Number.isFinite(calculatedPrice)
+          ? Math.max(2, Math.round((calculatedPrice * 0.15) / stepAmount))
+          : vehicle.maxBidSteps;
 
         return {
           ...vehicle,
@@ -1446,7 +1426,9 @@ const SelectVehicle = () => {
           price: calculatedPrice,
           maxBidSteps: dynamicMaxBidSteps,
         };
-      }),
+      })
+        // A class with no Set Prices row cannot be quoted, so it is not offered.
+        .filter((vehicle) => Number.isFinite(vehicle.price)),
     [pricingRules, serviceLocationId, tripMetrics.distanceMeters, tripMetrics.durationMinutes, vehicles, zoneId],
   );
 
@@ -1897,6 +1879,10 @@ const SelectVehicle = () => {
   const isInitialVehicleResultsLoading =
     isLoadingVehicles ||
     isResolvingServiceLocation ||
+    // Fares resolve after the classes do, and an unpriced class is filtered
+    // out, so keep the skeleton up until pricing lands rather than flashing
+    // an empty "no cabs" state.
+    (vehicles.length > 0 && isFarePending) ||
     (vehicles.length > 0 && !hasLoadedAvailability && !driverLoadError);
 
   const openPicker = (inputRef) => {

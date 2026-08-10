@@ -88,8 +88,12 @@ const SelectCategory = () => {
         setActiveCategories(available);
       } catch (err) {
         console.error('Failed to load category availability:', err);
-        // Default fallback to true for all to be safe if API fails
-        setActiveCategories({ car: true, bike: true, auto: true });
+        // Leave every category offline. Marking them available would send the
+        // rider into a booking flow for a category that may have no vehicles.
+        if (active) {
+          setActiveCategories({ car: false, bike: false, auto: false });
+          setError('We could not check which rides are available right now.');
+        }
       } finally {
         if (active) setLoading(false);
       }
@@ -150,6 +154,17 @@ const SelectCategory = () => {
           </div>
         ) : (
           <div className="flex flex-col gap-6">
+            {error && (
+              <div className="flex items-start gap-2.5 rounded-[18px] border border-amber-200 bg-amber-50 px-4 py-3">
+                <AlertCircle size={16} className="mt-0.5 shrink-0 text-amber-500" strokeWidth={2.5} />
+                <div>
+                  <p className="text-[12px] font-bold text-slate-900">{error}</p>
+                  <p className="mt-0.5 text-[11px] font-medium text-slate-500">
+                    Check your connection and try again.
+                  </p>
+                </div>
+              </div>
+            )}
             {Object.values(CATEGORY_DETAILS).map((cat) => {
               const isAvailable = activeCategories[cat.id];
               
