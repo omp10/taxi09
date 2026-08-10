@@ -8,6 +8,7 @@ import { adminService } from '../services/adminService';
 import { hasAdminPermission } from '../constants/adminAccess';
 import toast from 'react-hot-toast';
 import {
+  GraduationCap,
   BarChart3,
   Bell,
   Briefcase,
@@ -869,8 +870,17 @@ const AdminLayout = () => {
               { label: 'Membership', path: '/admin/content/membership', permission: 'promotions.view' },
               { label: 'Attached Vehicles', path: '/admin/content/attached-vehicles', permission: 'promotions.view' },
               { label: 'Travel Stories', path: '/admin/content/travel-stories', permission: 'promotions.view' },
-              { label: 'Internship & Courses', path: '/admin/content/internship', permission: 'promotions.view' },
               { label: 'Page Content', path: '/admin/content/blocks', permission: 'promotions.view' },
+            ],
+          },
+          {
+            icon: GraduationCap,
+            label: 'Internship',
+            subItems: [
+              { label: 'Internship Tracks', path: '/admin/content/internship?tab=tracks', permission: 'promotions.view' },
+              { label: 'Courses', path: '/admin/content/internship?tab=courses', permission: 'promotions.view' },
+              { label: 'Applications', path: '/admin/content/internship?tab=applications', permission: 'promotions.view' },
+              { label: 'Certificates', path: '/admin/content/internship?tab=certificates', permission: 'promotions.view' },
             ],
           },
           {

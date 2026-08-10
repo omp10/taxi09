@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Award, GraduationCap, Loader2, Pencil, Plus, Save, Trash2, X } from 'lucide-react';
 import contentApi from '../../services/contentApi';
@@ -62,7 +63,18 @@ const emptyCourse = {
 };
 
 const InternshipAdmin = () => {
-  const [tab, setTab] = useState('tracks');
+  const [searchParams] = useSearchParams();
+  const requestedTab = searchParams.get('tab');
+  const [tab, setTab] = useState(
+    TABS.some((item) => item.key === requestedTab) ? requestedTab : 'tracks',
+  );
+
+  // Keep the sidebar deep links working when one is clicked while already here.
+  useEffect(() => {
+    if (requestedTab && TABS.some((item) => item.key === requestedTab) && requestedTab !== tab) {
+      setTab(requestedTab);
+    }
+  }, [requestedTab]);
   const [tracks, setTracks] = useState([]);
   const [courses, setCourses] = useState([]);
   const [applications, setApplications] = useState([]);

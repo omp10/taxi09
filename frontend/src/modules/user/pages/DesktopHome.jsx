@@ -294,13 +294,6 @@ const DesktopHome = () => {
             <p className="mt-4 text-[15px] font-medium leading-[1.6] text-[var(--dh-muted)]">
               From self-drive cars to hotel bookings, we provide everything you need for a comfortable and memorable journey.
             </p>
-            <button
-              onClick={() => navigate('/taxi/user/rental/type')}
-              className="mt-6 flex h-[52px] items-center gap-3 rounded-[14px] border-2 border-[#F5B700] px-6 text-[15px] font-bold text-[var(--dh-text)] transition-colors hover:bg-[#FFF7DC]"
-            >
-              Explore All Services
-              <ArrowRight size={17} strokeWidth={2.8} className="text-[#F5B700]" />
-            </button>
           </div>
 
           {/* Rows stretch again so every card is the same height. The void this
