@@ -83,6 +83,7 @@ const buildRentalBookingPayload = ({
 
 const RentalDeposit = () => {
   const navigate = useNavigate();
+  const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
   const location = useLocation();
   const { settings } = useSettings();
   const routeState = location.state && Object.keys(location.state).length > 0 ? location.state : null;
@@ -271,7 +272,7 @@ const RentalDeposit = () => {
             bookingReference: payment.bookingReference || bookingReference,
           });
 
-          navigate('/rental/confirmed', {
+          navigate(`${routePrefix}/rental/confirmed`, {
             replace: true,
             state: {
               ...state,
@@ -349,7 +350,7 @@ const RentalDeposit = () => {
           bookingReference,
         });
 
-        navigate('/rental/confirmed', {
+        navigate(`${routePrefix}/rental/confirmed`, {
           state: {
             ...state,
             vehicle,
@@ -399,7 +400,7 @@ const RentalDeposit = () => {
           bookingReference,
         });
         setWalletBalance(Number(payment.balance || 0));
-        navigate('/rental/confirmed', {
+        navigate(`${routePrefix}/rental/confirmed`, {
           replace: true,
           state: {
             ...state,
@@ -502,7 +503,7 @@ const RentalDeposit = () => {
               payment,
               bookingReference: order.bookingReference || '',
             });
-            navigate('/rental/confirmed', {
+            navigate(`${routePrefix}/rental/confirmed`, {
               replace: true,
               state: {
                 ...state,

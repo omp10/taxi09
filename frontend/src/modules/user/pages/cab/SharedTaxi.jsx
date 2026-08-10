@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, MapPin, Clock, Users, ChevronRight, Star, Zap, Shield } from 'lucide-react';
 
@@ -37,6 +37,8 @@ const fmtKey = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0
 
 const SharedTaxi = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
   const dates = getDates();
   const [selectedDate, setSelectedDate] = useState(dates[1]); // default tomorrow
 
@@ -120,7 +122,7 @@ const SharedTaxi = () => {
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.06 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => navigate('/cab/shared/seats', { state: { route: r, date: fmtKey(selectedDate) } })}
+                  onClick={() => navigate(`${routePrefix}/cab/shared/seats`, { state: { route: r, date: fmtKey(selectedDate) } })}
                   className="w-full rounded-[20px] border border-white/80 bg-white/90 shadow-[0_4px_14px_rgba(15,23,42,0.06)] overflow-hidden text-left">
 
                   {/* Route header */}

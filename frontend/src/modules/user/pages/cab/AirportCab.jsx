@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, MapPin, Calendar, Clock, ChevronRight, AlertCircle, Plane } from 'lucide-react';
 import { getRideFares } from '../../services/userService';
@@ -8,6 +8,8 @@ const TERMINALS = ['T1', 'T2', 'T3'];
 
 const AirportCab = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
   const [pickup,   setPickup]   = useState('');
   const [terminal, setTerminal] = useState('');
   const [date,     setDate]     = useState('');
@@ -40,7 +42,7 @@ const AirportCab = () => {
 
   const handleBook = () => {
     if (!validate()) return;
-    navigate('/cab/airport-confirm', {
+    navigate(`${routePrefix}/cab/airport-confirm`, {
       state: { isAirport: true, pickup, terminal, date, time, vehicle: selectedVehicle, fare: selectedVehicle?.fare },
     });
   };

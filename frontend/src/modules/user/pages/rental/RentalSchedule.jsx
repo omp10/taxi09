@@ -242,6 +242,7 @@ const DateTimePickerCard = ({
 
 const RentalSchedule = () => {
   const navigate = useNavigate();
+  const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
   const location = useLocation();
   const routeState = location.state && Object.keys(location.state).length > 0 ? location.state : null;
   const restoredState = useMemo(() => {
@@ -524,7 +525,7 @@ const RentalSchedule = () => {
       // Ignore storage failures and continue navigation.
     }
 
-    navigate('/rental/kyc');
+    navigate(`${routePrefix}/rental/kyc`);
   };
 
   if (!isSubscriptionMode) {
@@ -1139,7 +1140,7 @@ const RentalSchedule = () => {
                 // Ignore storage failures and continue navigation.
               }
 
-              navigate('/rental/kyc');
+              navigate(`${routePrefix}/rental/kyc`);
             }}
             className={`pointer-events-auto w-full py-4 rounded-[18px] text-[15px] font-bold text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 transition-all ${
               isValid ? 'bg-slate-950' : 'bg-slate-300'

@@ -785,8 +785,10 @@ function App() {
               <Route path="/hotel/checkout" element={<HotelCheckout />} />
               <Route path="/tours" element={<ToursHome />} />
               <Route path="/tours/details" element={<TourDetails />} />
+              <Route path="/tours/details/:slug" element={<TourDetails />} />
               <Route path="/international" element={<InternationalHome />} />
               <Route path="/international/details" element={<InternationalDetails />} />
+              <Route path="/international/details/:slug" element={<InternationalDetails />} />
 
               <Route path="/activity" element={<Activity />} />
               <Route path="/profile" element={<Profile />} />
@@ -795,6 +797,8 @@ function App() {
               <Route path="/promo" element={<PromoCodes />} />
               <Route path="/referral" element={<UserReferral />} />
 
+              <Route path="/profile/bus-bookings" element={<BusBookings />} />
+              <Route path="/profile/bus-bookings/:id" element={<BusBookingDetail />} />
               <Route path="/profile/settings" element={<ProfileSettings />} />
               <Route path="/profile/payments" element={<PaymentSettings />} />
               <Route path="/profile/addresses" element={<AddressSettings />} />

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ChevronRight, MapPin } from 'lucide-react';
 import contentService from '../../services/contentService';
 
 const SpiritualTrip = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
   const [destinations, setDestinations] = useState([]);
 
   useEffect(() => {
@@ -20,7 +22,7 @@ const SpiritualTrip = () => {
   }, []);
 
   const handleSelect = (dest) => {
-    navigate('/cab/spiritual-vehicle', {
+    navigate(`${routePrefix}/cab/spiritual-vehicle`, {
       state: { isSpiritualTrip: true, trip: dest },
     });
   };

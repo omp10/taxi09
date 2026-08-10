@@ -7,6 +7,7 @@ import { getRideFares } from '../../services/userService';
 const SpiritualTripVehicle = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
   const { isSpiritualTrip, trip } = location.state || {};
 
   const [date, setDate] = useState('');
@@ -27,7 +28,7 @@ const SpiritualTripVehicle = () => {
   }, []);
 
   if (!trip) {
-    navigate('/cab/spiritual');
+    navigate(`${routePrefix}/cab/spiritual`);
     return null;
   }
 
@@ -53,7 +54,7 @@ const SpiritualTripVehicle = () => {
   const handleContinue = () => {
     if (!date || !time) return alert("Please select date and time");
     
-    navigate('/cab/spiritual-confirm', {
+    navigate(`${routePrefix}/cab/spiritual-confirm`, {
       state: { 
         isSpiritualTrip: true, 
         trip: { ...trip, fare: `₹${estimatedFare.toLocaleString()}` },

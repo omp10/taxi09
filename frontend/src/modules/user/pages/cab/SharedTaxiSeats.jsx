@@ -17,8 +17,9 @@ const INIT_SEATS = [
 const SharedTaxiSeats = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
   const { route, date } = location.state || {};
-  if (!route) { navigate('/cab/shared'); return null; }
+  if (!route) { navigate(`${routePrefix}/cab/shared`); return null; }
 
   const [seats, setSeats] = useState(
     Array.isArray(route.seats) ? route.seats.map(s => ({ ...s })) : INIT_SEATS.map(s => ({ ...s }))
@@ -180,7 +181,7 @@ const SharedTaxiSeats = () => {
           )}
         </AnimatePresence>
         <motion.button whileTap={{ scale: 0.98 }} disabled={selected.length === 0}
-          onClick={() => navigate('/cab/shared/confirm', { state: { route, date, seats: selected, total } })}
+          onClick={() => navigate(`${routePrefix}/cab/shared/confirm`, { state: { route, date, seats: selected, total } })}
           className={`pointer-events-auto w-full py-4 rounded-[18px] text-[15px] font-black text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 transition-all ${
             selected.length > 0 ? 'bg-slate-900' : 'bg-slate-300'
           }`}>

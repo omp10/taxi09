@@ -447,7 +447,7 @@ const RentalConfirmed = () => {
           {isCompletedRentalRide || isEndRequestPending ? (
             <motion.button
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate('/user')}
+              onClick={() => navigate('/taxi/user')}
               className="pointer-events-auto w-full bg-slate-900 py-4 rounded-[18px] text-[15px] font-black text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2"
             >
               <Home size={16} strokeWidth={2.5} /> {isCompletedRentalRide ? 'Back to Home' : 'Track from Home'}

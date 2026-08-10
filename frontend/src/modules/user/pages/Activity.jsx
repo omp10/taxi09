@@ -309,7 +309,7 @@ const Activity = ({ embedded = false }) => {
     if (item.type === 'bus') {
       navigate(`${routePrefix}/profile/bus-bookings/${item.id}`);
     } else if (item.type === 'rental') {
-      navigate('/rental/confirmed', { state: buildRentalActivityState(item.booking) });
+      navigate(`${routePrefix}/rental/confirmed`, { state: buildRentalActivityState(item.booking) });
     } else if (item.type === 'parcel') {
       navigate(`${routePrefix}/parcel/detail/${item.id}`);
     } else {
@@ -362,7 +362,7 @@ const Activity = ({ embedded = false }) => {
 
         <div className="flex-1">
         {activeTab === 'Support' ? (
-          <ActivitySupportState onContact={() => navigate('/support')} />
+          <ActivitySupportState onContact={() => navigate(`${routePrefix}/support`)} />
         ) : loading ? (
           <ActivityLoadingState />
         ) : error ? (
