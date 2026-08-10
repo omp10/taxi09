@@ -12,7 +12,7 @@ import {
   Eye
 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { adminService } from '../../services/adminService';
+import { adminService } from '../../../admin/services/adminService';
 import toast from 'react-hot-toast';
 
 const VEHICLE_TYPES = [

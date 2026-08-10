@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PoolingVehicleForm from '../../../admin/pages/pooling/PoolingVehicleForm';
+import PoolingVehicleForm from './PoolingVehicleForm';
 import {
   clearDriverRegistrationSession,
   completePoolingDriverOnboarding,
