@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import api from '../../../shared/api/axiosInstance';
 import {
-  AiChatBubble, DesktopNav, ServiceCard,
+  DesktopNav, ServiceCard,
 } from '../components/desktop/DesktopChrome';
 import {
   SERVICES, resolveBannerImage, unwrapResults, useDesktopTheme,
@@ -331,8 +331,6 @@ const DesktopHome = () => {
           ))}
         </div>
       </section>
-
-      <AiChatBubble />
     </div>
   );
 };

@@ -5,7 +5,7 @@ import {
   Headphones, Lock, LogIn, LogOut, MapPin, Maximize, Sparkles, Star, Ticket, Users,
 } from 'lucide-react';
 import api from '../../../../shared/api/axiosInstance';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { useDesktopTheme } from '../../components/desktop/desktopShared';
 import { payForBooking } from '../../utils/bookingCheckout';
 
@@ -524,8 +524,6 @@ const DesktopHotelDetail = () => {
           </div>
         </aside>
       </section>
-
-      <AiChatBubble />
     </div>
   );
 };

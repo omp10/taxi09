@@ -44,6 +44,9 @@ const hotelBookingSchema = new mongoose.Schema(
     // What a membership took off this booking, so a lower total is explainable.
     memberDiscountPercent: { type: Number, default: 0, min: 0, max: 100 },
     memberDiscount: { type: Number, default: 0, min: 0 },
+    // Recorded so a booking can be reconciled against the code that was used.
+    couponCode: { type: String, default: '', trim: true, uppercase: true },
+    couponDiscount: { type: Number, default: 0, min: 0 },
     taxes: { type: Number, default: 0, min: 0 },
     totalAmount: { type: Number, default: 0, min: 0 },
 

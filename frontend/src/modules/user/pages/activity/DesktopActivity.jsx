@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BusFront, Car, Package, Route as RouteIcon } from 'lucide-react';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { useDesktopTheme } from '../../components/desktop/desktopShared';
 import Activity from '../Activity';
 
@@ -73,8 +73,6 @@ const DesktopActivity = () => {
           </aside>
         </div>
       </div>
-
-      <AiChatBubble />
     </div>
   );
 };

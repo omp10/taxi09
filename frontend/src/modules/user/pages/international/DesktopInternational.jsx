@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { rememberPackage } from '../../utils/packageHandoff';
 import api from '../../../../shared/api/axiosInstance';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { unwrapResults, useDesktopTheme } from '../../components/desktop/desktopShared';
 
 /**
@@ -504,8 +504,6 @@ const DesktopInternational = () => {
           )}
         </aside>
       </section>
-
-      <AiChatBubble />
     </div>
   );
 };

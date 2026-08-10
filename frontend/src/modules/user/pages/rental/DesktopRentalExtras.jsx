@@ -6,7 +6,7 @@ import {
   Ticket, Users,
 } from 'lucide-react';
 import { userService } from '../../services/userService';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import {
   RENTAL_SELECTED_VEHICLE_STORAGE_KEY, useDesktopTheme,
 } from '../../components/desktop/desktopShared';
@@ -557,8 +557,6 @@ const DesktopRentalExtras = () => {
           </button>
         </aside>
       </section>
-
-      <AiChatBubble />
     </div>
   );
 };

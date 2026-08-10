@@ -5,7 +5,7 @@ import {
   Gauge, Headphones, IndianRupee, MapPin, Play, ShieldCheck, Sparkles, Truck, UserCheck, Users, Zap,
 } from 'lucide-react';
 import {
-  AiChatBubble, DesktopNav, ServiceCard,
+  DesktopNav, ServiceCard,
 } from '../../components/desktop/DesktopChrome';
 import BannerHero from '../../components/BannerHero';
 import {
@@ -301,8 +301,6 @@ const DesktopSelfDrive = () => {
           ))}
         </div>
       </section>
-
-      <AiChatBubble />
     </div>
   );
 };

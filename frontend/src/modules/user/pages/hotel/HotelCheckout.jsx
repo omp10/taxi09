@@ -165,6 +165,9 @@ const HotelCheckout = () => {
   const [airportPickup, setAirportPickup] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(true);
   const [quote, setQuote] = useState(null);
+  const [couponInput, setCouponInput] = useState('');
+  const [coupon, setCoupon] = useState('');
+  const [couponError, setCouponError] = useState('');
   const [quoteError, setQuoteError] = useState('');
   const [paying, setPaying] = useState(false);
 
@@ -188,19 +191,29 @@ const HotelCheckout = () => {
         rooms: roomCount,
         guests: guests,
         addOns: selectedAddOns,
+        couponCode: coupon,
       })
       .then((response) => {
         if (cancelled) return;
         setQuote(response?.data?.data ?? response?.data ?? null);
         setQuoteError('');
+        setCouponError('');
       })
       .catch((error) => {
         if (cancelled) return;
+        const message = error?.response?.data?.message || '';
+        // A rejected code must not blank the price, so it is reported on the
+        // coupon row and the stay is re-priced without it.
+        if (coupon && /coupon/i.test(message)) {
+          setCouponError(message);
+          setCoupon('');
+          return;
+        }
         setQuote(null);
-        setQuoteError(error?.response?.data?.message || 'Could not price this stay');
+        setQuoteError(message || 'Could not price this stay');
       });
     return () => { cancelled = true; };
-  }, [hotel?.slug, room?.key, checkIn, checkOut, roomCount, guests, selectedAddOns]);
+  }, [hotel?.slug, room?.key, checkIn, checkOut, roomCount, guests, selectedAddOns, coupon]);
 
   const errors = {
     name: fieldError('name', guest.name),
@@ -223,6 +236,7 @@ const HotelCheckout = () => {
   const roomCharges = quote?.roomCharges ?? 0;
   const taxes = quote?.taxes ?? 0;
   const memberDiscount = quote?.memberDiscount ?? 0;
+  const couponDiscount = quote?.couponDiscount ?? 0;
   const total = quote?.totalAmount ?? 0;
   const breakfastTotal = quote?.addOns?.find((a) => a.id === 'breakfast')?.price ?? 0;
   const pickupTotal = quote?.addOns?.find((a) => a.id === 'pickup')?.price ?? 0;
@@ -252,6 +266,7 @@ const HotelCheckout = () => {
         addOns: selectedAddOns,
         guestName: guest.name,
         guestPhone: guest.phone,
+        couponCode: coupon,
       });
       const created = response?.data?.data ?? response?.data;
 
@@ -555,6 +570,43 @@ const HotelCheckout = () => {
         </section>
 
 
+        {/* Coupon: the server validates the code and re-prices, so nothing here
+            claims a discount the quote has not already applied. */}
+        <section className="rounded-[16px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
+          <h3 className="text-[13.5px] font-extrabold">Have a coupon?</h3>
+          <div className="mt-2.5 flex gap-2">
+            <input
+              type="text"
+              value={couponInput}
+              onChange={(event) => { setCouponInput(event.target.value.toUpperCase()); setCouponError(''); }}
+              placeholder="Coupon code"
+              className="min-w-0 flex-1 rounded-[10px] border border-[var(--border)] px-3 py-2.5 text-[12.5px] font-semibold uppercase outline-none placeholder:font-medium placeholder:normal-case placeholder:text-slate-300 focus:border-[var(--primary)]"
+            />
+            <button
+              type="button"
+              onClick={() => { setCouponError(''); setCoupon(couponInput.trim().toUpperCase()); }}
+              className="shrink-0 rounded-[10px] border-2 border-[var(--primary)] px-4 text-[12px] font-extrabold"
+            >
+              Apply
+            </button>
+          </div>
+          {couponDiscount > 0 ? (
+            <p className="mt-2 flex items-center gap-1.5 text-[10.5px] font-bold text-[var(--success)]">
+              <CircleCheck size={12} /> {quote?.couponCode} applied
+              <button
+                type="button"
+                onClick={() => { setCoupon(''); setCouponInput(''); }}
+                className="ml-auto text-[10px] font-bold text-[var(--text-light)] underline"
+              >
+                Remove
+              </button>
+            </p>
+          ) : null}
+          {couponError ? (
+            <p className="mt-2 text-[10.5px] font-bold text-[#e11d48]">{couponError}</p>
+          ) : null}
+        </section>
+
         {/* Price summary */}
         <section className="rounded-[16px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
           <button
@@ -596,6 +648,12 @@ const HotelCheckout = () => {
                     Member discount ({quote?.memberDiscountPercent}%)
                   </span>
                   <span className="text-[var(--success)]">-{rupees(memberDiscount)}</span>
+                </div>
+              ) : null}
+              {couponDiscount > 0 ? (
+                <div className="flex justify-between">
+                  <span className="text-[var(--text-light)]">Coupon ({quote?.couponCode})</span>
+                  <span className="text-[var(--success)]">-{rupees(couponDiscount)}</span>
                 </div>
               ) : null}
               <div className="flex justify-between">

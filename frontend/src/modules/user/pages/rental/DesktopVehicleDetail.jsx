@@ -5,7 +5,7 @@ import {
   Heart, Info, MessageCircle, Phone, Share2, ShieldCheck, Sparkles, Truck, Users, Zap,
 } from 'lucide-react';
 import { userService } from '../../services/userService';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import {
   RENTAL_SELECTED_VEHICLE_STORAGE_KEY, useDesktopTheme,
 } from '../../components/desktop/desktopShared';
@@ -497,8 +497,6 @@ const DesktopVehicleDetail = () => {
           </p>
         </aside>
       </section>
-
-      <AiChatBubble />
     </div>
   );
 };

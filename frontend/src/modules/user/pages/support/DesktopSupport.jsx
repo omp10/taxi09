@@ -13,7 +13,7 @@ import {
   Ticket,
   XCircle,
 } from 'lucide-react';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { useDesktopTheme } from '../../components/desktop/desktopShared';
 import { SUPPORT_INFO } from '../../../shared/content/supportInfo';
 
@@ -173,8 +173,6 @@ const DesktopSupport = () => {
           </aside>
         </div>
       </div>
-
-      <AiChatBubble />
     </div>
   );
 };

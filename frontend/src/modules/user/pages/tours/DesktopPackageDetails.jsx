@@ -7,7 +7,7 @@ import {
 import { fetchPackageBySlug, recallPackage } from '../../utils/packageHandoff';
 import { payForBooking } from '../../utils/bookingCheckout';
 import api from '../../../../shared/api/axiosInstance';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { useDesktopTheme } from '../../components/desktop/desktopShared';
 
 /**
@@ -524,8 +524,6 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
           </div>
         </aside>
       </section>
-
-      <AiChatBubble />
     </div>
   );
 };

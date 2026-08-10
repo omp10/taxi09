@@ -17,7 +17,7 @@ import {
   Sparkles,
   TrendingUp,
 } from 'lucide-react';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { useDesktopTheme } from '../../components/desktop/desktopShared';
 import { userService } from '../../services/userService';
 import api from '../../../../shared/api/axiosInstance';
@@ -387,8 +387,6 @@ const DesktopTravelStories = () => {
           onLike={like}
         />
       ) : null}
-
-      <AiChatBubble />
     </div>
   );
 };

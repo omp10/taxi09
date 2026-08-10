@@ -18,7 +18,7 @@ import {
   Star,
   Wallet,
 } from 'lucide-react';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { openRentalVehicle, useDesktopTheme } from '../../components/desktop/desktopShared';
 import { userService } from '../../services/userService';
 import api from '../../../../shared/api/axiosInstance';
@@ -432,8 +432,6 @@ const DesktopBikeRental = () => {
           </aside>
         </div>
       </div>
-
-      <AiChatBubble />
     </div>
   );
 };

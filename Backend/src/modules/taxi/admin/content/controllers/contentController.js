@@ -1,7 +1,7 @@
 import { asyncHandler } from '../../../../../utils/asyncHandler.js';
 import { ApiError } from '../../../../../utils/ApiError.js';
 import * as contentService from '../services/contentService.js';
-import { priceHotelStay } from '../../../user/services/hotelPricingService.js';
+import { quoteHotelStay as priceHotelStayWithCoupon } from '../../../user/services/hotelPricingService.js';
 import { quotePackage } from '../../../user/services/travelPackagePricingService.js';
 
 const ok = (res, data, status = 200) => res.status(status).json({ success: true, data });
@@ -134,7 +134,7 @@ export const quoteHotelStay = asyncHandler(async (req, res) => {
   const hotel = await contentService.getHotelBySlug(payload.slug || payload.hotelSlug);
   const { getMemberDiscountPercent } = await import('../../../user/services/membershipService.js');
 
-  ok(res, priceHotelStay({
+  ok(res, await priceHotelStayWithCoupon({
     hotel,
     memberDiscountPercent: await getMemberDiscountPercent(req.auth?.sub),
     roomKey: payload.roomKey,
@@ -143,6 +143,7 @@ export const quoteHotelStay = asyncHandler(async (req, res) => {
     rooms: payload.rooms,
     guests: payload.guests,
     addOns: payload.addOns,
+    couponCode: payload.couponCode,
   }));
 });
 

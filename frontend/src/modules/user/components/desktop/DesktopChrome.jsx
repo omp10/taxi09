@@ -164,23 +164,3 @@ export const ServiceCard = ({ title, copy, image, path, badge, highlighted }) =>
     </button>
   );
 };
-
-export const AiChatBubble = () => {
-  const navigate = useNavigate();
-
-  return (
-    <button
-      onClick={() => navigate('/taxi/user/support')}
-      className="fixed bottom-7 right-7 z-40 flex items-center gap-3 rounded-[18px] bg-[var(--dh-surface)] py-3 pl-3 pr-6 shadow-[0_18px_44px_rgba(15,23,42,0.18)]"
-    >
-      <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[#FFF0B8] text-[22px]">
-        🤖
-        <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-[var(--dh-surface)] bg-emerald-500" />
-      </span>
-      <span className="text-left">
-        <span className="block text-[14px] font-black text-[var(--dh-text)]">Hi, I&apos;m Taxi09 AI 👋</span>
-        <span className="block text-[12.5px] font-medium text-[var(--dh-muted)]">How can I help you today?</span>
-      </span>
-    </button>
-  );
-};

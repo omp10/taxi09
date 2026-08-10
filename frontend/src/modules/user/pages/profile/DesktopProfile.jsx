@@ -4,7 +4,7 @@ import {
   Bell, BusFront, ChevronRight, Crown, FileText, Gift, HelpCircle, History,
   Loader2, LogOut, MapPin, Package, Shield, User, Wallet,
 } from 'lucide-react';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { useDesktopTheme } from '../../components/desktop/desktopShared';
 
 /**
@@ -153,8 +153,6 @@ const DesktopProfile = () => {
           </section>
         </div>
       </div>
-
-      <AiChatBubble />
     </div>
   );
 };

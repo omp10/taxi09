@@ -4,7 +4,7 @@ import {
   ArrowLeft, ArrowRight, BadgeCheck, Calendar, Car, CheckCircle2, Clock, CreditCard,
   Headphones, Languages, MapPin, Palette, Route, ShieldCheck, Sparkles, Star, Ticket, Users, Wallet,
 } from 'lucide-react';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { useDesktopTheme } from '../../components/desktop/desktopShared';
 
 /**
@@ -381,8 +381,6 @@ const DesktopWithDriverReview = () => {
           </button>
         </aside>
       </section>
-
-      <AiChatBubble />
     </div>
   );
 };

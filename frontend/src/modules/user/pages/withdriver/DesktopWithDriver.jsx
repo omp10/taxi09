@@ -6,7 +6,7 @@ import {
   CreditCard, Headphones, Languages, MapPin, Palette, ShieldCheck, Star, Ticket, Users,
 } from 'lucide-react';
 import api from '../../../../shared/api/axiosInstance';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { unwrapResults, useDesktopTheme } from '../../components/desktop/desktopShared';
 
 /**
@@ -453,8 +453,6 @@ const DesktopWithDriver = () => {
           </button>
         </aside>
       </section>
-
-      <AiChatBubble />
     </div>
   );
 };

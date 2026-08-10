@@ -6,7 +6,7 @@ import {
   RefreshCcw, Search, Ticket,
 } from 'lucide-react';
 import userBusService from '../../services/busService';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { useDesktopTheme } from '../../components/desktop/desktopShared';
 
 /**
@@ -202,8 +202,6 @@ const DesktopBus = () => {
           )}
         </div>
       </section>
-
-      <AiChatBubble />
     </div>
   );
 };

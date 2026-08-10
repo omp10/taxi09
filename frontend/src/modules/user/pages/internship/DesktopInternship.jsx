@@ -16,7 +16,7 @@ import {
   TrendingUp,
   Users,
 } from 'lucide-react';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { useDesktopTheme } from '../../components/desktop/desktopShared';
 import api from '../../../../shared/api/axiosInstance';
 import ApplyDialog from './ApplyDialog';
@@ -325,8 +325,6 @@ const DesktopInternship = () => {
           }}
         />
       ) : null}
-
-      <AiChatBubble />
     </div>
   );
 };

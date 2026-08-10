@@ -1,5 +1,5 @@
 import { ApiError } from '../../../../utils/ApiError.js';
-import { RentalCoupon } from '../../admin/models/RentalCoupon.js';
+import { resolveCoupon } from './couponService.js';
 
 /**
  * Pricing for domestic tours and international packages.
@@ -28,48 +28,8 @@ export const TCS_RATE = 0.05;
  * Looks a code up and rejects it unless it is active, unexpired, in scope for
  * this package and above any minimum. Returns the discount in rupees.
  */
-export const resolvePackageCoupon = async ({ code, scope, packageId, baseFare }) => {
-  const normalized = String(code || '').trim().toUpperCase();
-  if (!normalized) return { code: '', percent: 0, discount: 0 };
-
-  const coupon = await RentalCoupon.findOne({ code: normalized }).lean();
-
-  if (!coupon) throw new ApiError(400, 'This coupon code is not valid');
-  if (!coupon.active) throw new ApiError(400, 'This coupon is no longer active');
-  if (coupon.expiry_date && new Date(coupon.expiry_date) < new Date()) {
-    throw new ApiError(400, 'This coupon has expired');
-  }
-
-  const appliesTo = Array.isArray(coupon.applies_to) && coupon.applies_to.length ? coupon.applies_to : ['rental'];
-  if (!appliesTo.includes(scope)) {
-    throw new ApiError(400, 'This coupon does not apply to this package');
-  }
-
-  if (Array.isArray(coupon.package_ids) && coupon.package_ids.length > 0) {
-    const allowed = coupon.package_ids.some((id) => String(id) === String(packageId));
-    if (!allowed) throw new ApiError(400, 'This coupon is not valid for this package');
-  }
-
-  const minimum = Math.max(0, Number(coupon.min_booking_amount || 0));
-  if (baseFare < minimum) {
-    throw new ApiError(400, `This coupon needs a booking of at least ₹${minimum.toLocaleString('en-IN')}`);
-  }
-
-  const amount = Math.max(0, Number(coupon.amount || 0));
-  const cap = Math.max(0, Number(coupon.cap || 0));
-
-  let discount = coupon.type === 'percent' ? round0((baseFare * amount) / 100) : round0(amount);
-  if (cap > 0) discount = Math.min(discount, cap);
-  // Never discount more than the fare itself.
-  discount = Math.min(discount, baseFare);
-
-  return {
-    code: normalized,
-    percent: coupon.type === 'percent' ? amount : 0,
-    discount,
-    type: coupon.type,
-  };
-};
+export const resolvePackageCoupon = ({ code, scope, packageId, baseFare }) =>
+  resolveCoupon({ code, scope, itemId: packageId, restrictionField: 'package_ids', baseFare });
 
 /** Resolves the code then prices the package - what the endpoint calls. */
 export const quotePackage = async ({ pkg, travellers = 1, couponCode = '', addOns = [], memberDiscountPercent = 0 }) => {

@@ -6,7 +6,7 @@ import {
   Search, ShieldCheck, Sparkles, Star, Ticket, Users, X,
 } from 'lucide-react';
 import api from '../../../../shared/api/axiosInstance';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { unwrapResults, useDesktopTheme } from '../../components/desktop/desktopShared';
 
 /**
@@ -486,8 +486,6 @@ const DesktopHotelList = () => {
           ))}
         </div>
       </section>
-
-      <AiChatBubble />
     </div>
   );
 };

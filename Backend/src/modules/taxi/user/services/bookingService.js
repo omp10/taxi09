@@ -2,7 +2,7 @@ import { ApiError } from '../../../../utils/ApiError.js';
 import { HotelBooking } from '../../admin/content/models/HotelBooking.js';
 import { PackageBooking } from '../../admin/content/models/PackageBooking.js';
 import * as contentService from '../../admin/content/services/contentService.js';
-import { priceHotelStay } from './hotelPricingService.js';
+import { quoteHotelStay } from './hotelPricingService.js';
 import { quotePackage } from './travelPackagePricingService.js';
 import { getMemberDiscountPercent } from './membershipService.js';
 
@@ -29,7 +29,7 @@ export const createHotelBooking = async ({ userId, payload }) => {
 
   // Re-priced here; the request's own totals are ignored, and the membership
   // discount is read from the database rather than taken from the request.
-  const quote = priceHotelStay({
+  const quote = await quoteHotelStay({
     hotel,
     memberDiscountPercent: await getMemberDiscountPercent(userId),
     roomKey: payload.roomKey,
@@ -38,6 +38,9 @@ export const createHotelBooking = async ({ userId, payload }) => {
     rooms: payload.rooms,
     guests: payload.guests,
     addOns: payload.addOns,
+    // Re-resolved here rather than trusted from the request, so the code is
+    // re-validated at the moment of booking.
+    couponCode: payload.couponCode,
   });
 
   if (!quote.totalAmount) {
@@ -68,6 +71,8 @@ export const createHotelBooking = async ({ userId, payload }) => {
     taxes: quote.taxes,
     memberDiscountPercent: quote.memberDiscountPercent,
     memberDiscount: quote.memberDiscount,
+    couponCode: quote.couponCode,
+    couponDiscount: quote.couponDiscount,
     totalAmount: quote.totalAmount,
     paymentStatus: 'pending',
     paymentMethod: clean(payload.paymentMethod),

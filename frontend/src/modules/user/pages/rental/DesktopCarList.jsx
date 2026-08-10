@@ -6,7 +6,7 @@ import {
   Star, Sun, Usb, Users, X, Zap,
 } from 'lucide-react';
 import api from '../../../../shared/api/axiosInstance';
-import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { openRentalVehicle, unwrapResults, useDesktopTheme } from '../../components/desktop/desktopShared';
 
 /**
@@ -488,8 +488,6 @@ const DesktopCarList = () => {
           <ArrowUp size={20} strokeWidth={2.8} />
         </button>
       )}
-
-      <AiChatBubble />
     </div>
   );
 };

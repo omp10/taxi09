@@ -1,4 +1,5 @@
 import { ApiError } from '../../../../utils/ApiError.js';
+import { resolveHotelCoupon } from './couponService.js';
 
 /**
  * Room charges and tax for a hotel stay.
@@ -71,6 +72,7 @@ export const priceHotelStay = ({
   guests = 1,
   addOns = [],
   memberDiscountPercent = 0,
+  coupon = null,
 }) => {
   if (!hotel) {
     throw new ApiError(404, 'Hotel not found');
@@ -100,7 +102,12 @@ export const priceHotelStay = ({
   // what the guest actually pays rather than on the undiscounted price.
   const memberPercent = clampPercent(memberDiscountPercent);
   const memberDiscount = round2(((roomCharges + addOnsTotal) * memberPercent) / 100);
-  const taxable = Math.max(0, round2(roomCharges + addOnsTotal - memberDiscount));
+
+  // A coupon comes off the same pre-tax subtotal as the membership, and can
+  // never take the bill below zero however the two stack.
+  const afterMember = Math.max(0, round2(roomCharges + addOnsTotal - memberDiscount));
+  const couponDiscount = Math.min(Math.max(0, round2(coupon?.discount || 0)), afterMember);
+  const taxable = Math.max(0, round2(afterMember - couponDiscount));
 
   // The slab is decided by the per-night tariff, not the booking total, and
   // extras are taxed at the same rate as the room they accompany. The tariff
@@ -124,6 +131,9 @@ export const priceHotelStay = ({
     addOnsTotal,
     memberDiscountPercent: memberPercent,
     memberDiscount,
+    couponCode: coupon?.code || '',
+    couponPercent: coupon?.percent || 0,
+    couponDiscount,
     taxPercent,
     taxes,
     totalAmount: round2(taxable + taxes),
@@ -141,3 +151,21 @@ export const priceHotelStay = ({
 };
 
 export default priceHotelStay;
+
+/**
+ * Resolves the coupon then prices the stay - what both the quote endpoint and
+ * booking creation call, so the guest is charged exactly what they were shown.
+ */
+export const quoteHotelStay = async ({ hotel, couponCode = '', ...rest }) => {
+  if (!hotel) {
+    throw new ApiError(404, 'Hotel not found');
+  }
+
+  // Priced once without the code to get the subtotal a percentage applies to,
+  // then again with the resolved discount.
+  const undiscounted = priceHotelStay({ hotel, ...rest });
+  const baseFare = Math.max(0, Number(undiscounted.roomCharges || 0) + Number(undiscounted.addOnsTotal || 0));
+  const coupon = await resolveHotelCoupon({ code: couponCode, hotelId: hotel._id, baseFare });
+
+  return priceHotelStay({ hotel, ...rest, coupon });
+};
