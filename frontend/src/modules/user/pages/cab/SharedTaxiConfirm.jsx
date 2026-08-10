@@ -11,9 +11,10 @@ const PAYMENT_METHODS = [
 
 const SharedTaxiConfirm = () => {
   const navigate = useNavigate();
+  const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
   const location = useLocation();
   const { route, date, seats, total } = location.state || {};
-  if (!route) { navigate('/cab/shared'); return null; }
+  if (!route) { navigate(`${routePrefix}/cab/shared`); return null; }
 
   const [method, setMethod] = useState('upi');
   const [paying, setPaying] = useState(false);

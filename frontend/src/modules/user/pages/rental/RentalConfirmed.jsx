@@ -120,6 +120,7 @@ const computeRentalLiveCharge = (ride = {}, pricingSummary = {}, elapsedSeconds 
 
 const RentalConfirmed = () => {
   const navigate = useNavigate();
+  const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
   const location = useLocation();
   const { settings } = useSettings();
   const appName = settings.general?.app_name || 'App';
@@ -313,7 +314,7 @@ const RentalConfirmed = () => {
         finalElapsedMinutes: payload?.finalElapsedMinutes || payload?.rideMetrics?.elapsedMinutes || liveElapsedMinutes,
       };
       saveCurrentRide(nextRideState);
-      navigate('/rental/confirmed', {
+      navigate(`${routePrefix}/rental/confirmed`, {
         replace: true,
         state: nextRideState,
       });

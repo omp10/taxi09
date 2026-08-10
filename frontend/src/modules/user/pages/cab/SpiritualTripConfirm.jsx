@@ -13,7 +13,7 @@ const SpiritualTripConfirm = () => {
   useEffect(() => {
     setMounted(true);
     if (!state.trip) {
-      navigate('/cab/spiritual');
+      navigate(`${routePrefix}/cab/spiritual`);
     }
   }, [navigate, state.trip]);
 
