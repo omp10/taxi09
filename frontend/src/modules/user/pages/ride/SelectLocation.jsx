@@ -7,7 +7,7 @@ import { useAppGoogleMapsLoader, INDIA_CENTER, HAS_VALID_GOOGLE_MAPS_KEY } from 
 import api from '../../../../shared/api/axiosInstance';
 import { getSavedLocation, getSavedLocationCoords, saveLocation } from '../../services/locationStore';
 
-const LOCATION_COORDS = {
+export const LOCATION_COORDS = {
   'Pipaliyahana, Indore': [75.9048, 22.7039],
   'Vijay Nagar': [75.8937, 22.7533],
   'Vijay Nagar Square': [75.8947, 22.7518],

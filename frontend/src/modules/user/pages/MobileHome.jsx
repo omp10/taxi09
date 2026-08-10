@@ -304,6 +304,13 @@ const MobileHome = () => {
   const rentalOptions = [
     {
       icon: Car,
+      title: 'Taxi',
+      subtitle: 'Book a ride now or later',
+      image: RENTAL_WITH_DRIVER_IMAGE,
+      path: '/taxi/user/ride/book',
+    },
+    {
+      icon: Car,
       title: 'Self Drive',
       subtitle: 'Drive on your terms',
       image: RENTAL_SELF_DRIVE_IMAGE,

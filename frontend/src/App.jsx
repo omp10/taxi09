@@ -44,6 +44,7 @@ const SelectLocation = lazy(() => import('./modules/user/pages/ride/SelectLocati
 const SelectVehicle = lazy(() => import('./modules/user/pages/ride/SelectVehicle'));
 const SelectCategory = lazy(() => import('./modules/user/pages/ride/SelectCategory'));
 const SearchingDriver = lazy(() => import('./modules/user/pages/ride/SearchingDriver'));
+const TaxiBookNow = lazy(() => import('./modules/user/pages/ride/TaxiBookNow'));
 const RideTracking = lazy(() => import('./modules/user/pages/ride/RideTracking'));
 const RideComplete = lazy(() => import('./modules/user/pages/ride/RideComplete'));
 const Chat = lazy(() => import('./modules/user/pages/ride/Chat'));
@@ -763,6 +764,7 @@ function App() {
               <Route path="/user" element={<UserHomeRoute />} />
 
               <Route element={<UserProtectedRoute />}>
+              <Route path="/ride/book" element={<TaxiBookNow />} />
               <Route
                 path="/ride/select-category"
                 element={<SelectCategory />}
@@ -882,6 +884,7 @@ function App() {
               <Route path="/taxi/user/with-driver/details" element={<WithDriverBooking />} />
               <Route path="/taxi/user/with-driver/permanent" element={<PermanentDriverSearch />} />
               <Route path="/taxi/user/with-driver/permanent/confirm" element={<PermanentDriverConfirm />} />
+              <Route path="/taxi/user/ride/book" element={<TaxiBookNow />} />
               <Route
                 path="/taxi/user/ride/select-category"
                 element={<SelectCategory />}

@@ -463,6 +463,28 @@ export const updateDriverVehicle = (payload) =>
 export const deleteDriverVehicle = (vehicleId) =>
   api.delete(`/drivers/vehicle/${vehicleId}`, withDriverAuth());
 
+// Which catalog transport_types a driver can register under, per selected service.
+const TRANSPORTS_BY_SERVICE = {
+  taxi: ['taxi', 'both'],
+  outstation: ['taxi', 'both'],
+  delivery: ['delivery', 'both'],
+  pooling: ['pooling', 'both'],
+};
+
+export const filterVehicleTypesForServices = (types = [], serviceCategories = []) => {
+  const services = Array.isArray(serviceCategories) && serviceCategories.length ? serviceCategories : ['taxi'];
+  const allowed = new Set(
+    services.flatMap((service) => TRANSPORTS_BY_SERVICE[String(service || '').toLowerCase()] || ['taxi', 'both']),
+  );
+
+  return (Array.isArray(types) ? types : []).filter(
+    (type) =>
+      type?.active !== false &&
+      Number(type?.status ?? 1) !== 0 &&
+      allowed.has(String(type?.transport_type || 'taxi').toLowerCase()),
+  );
+};
+
 export const getDriverVehicleTypes = async () => {
   const authConfig = withDriverAuth();
   const hasDriverAuthorization = Boolean(

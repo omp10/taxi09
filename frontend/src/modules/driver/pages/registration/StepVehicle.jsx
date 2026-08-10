@@ -16,6 +16,7 @@ import {
     saveDriverVehicle,
     getDriverVehicleTypes,
     getDriverVehicleFieldTemplates,
+    filterVehicleTypesForServices,
 } from '../../services/registrationService';
 
 const VEHICLE_NUMBER_PATTERNS = [
@@ -268,6 +269,8 @@ const StepVehicle = () => {
             active = false;
         };
     }, []);
+
+    const visibleVehicleTypes = filterVehicleTypesForServices(vehicleTypes, formData.serviceCategories);
 
     const activeVehicleFields = vehicleFieldConfigs
         .filter((item) => item?.active !== false)
@@ -753,7 +756,7 @@ const StepVehicle = () => {
                                                      <div key={i} className="h-32 bg-slate-50/50 rounded-2xl animate-pulse" />
                                                  ))
                                              ) : (
-                                                 vehicleTypes.map((type) => (
+                                                 visibleVehicleTypes.map((type) => (
                                                      <button
                                                          key={type._id || type.id}
                                                          type="button"

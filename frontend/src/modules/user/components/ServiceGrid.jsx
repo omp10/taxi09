@@ -93,10 +93,10 @@ const ServiceGrid = () => {
       moduleName.includes('taxi') ||
       moduleName.includes('cab')
     ) {
-      return '/taxi/user/ride/select-category';
+      return '/taxi/user/ride/book';
     }
 
-    return '/taxi/user/ride/select-category';
+    return '/taxi/user/ride/book';
   };
 
   const getAccent = (index) => {
