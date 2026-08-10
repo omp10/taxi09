@@ -446,9 +446,9 @@ const TaxiBookNow = () => {
           {rideMode === 'schedule' && (
             <div className="mt-3 grid grid-cols-2 gap-3">
               {[
-                { icon: Calendar, label: 'Pick-up Date', value: scheduleDate, type: 'date', onChange: setScheduleDate },
+                { icon: Calendar, label: 'Pick-up Date', value: scheduleDate, type: 'date', min: toDateInputValue(new Date(now)), onChange: setScheduleDate },
                 { icon: Clock, label: 'Pick-up Time', value: formatDisplayTime(scheduleTime), inputValue: scheduleTime, type: 'time', onChange: setScheduleTime },
-              ].map(({ icon: Icon, label, value, inputValue, type, onChange }) => (
+              ].map(({ icon: Icon, label, value, inputValue, type, min, onChange }) => (
                 <label
                   key={label}
                   className="relative flex min-h-[64px] items-center gap-2.5 rounded-[12px] border border-slate-200 bg-white px-3 text-left shadow-[0_4px_14px_rgba(15,23,42,0.04)]"
@@ -461,6 +461,7 @@ const TaxiBookNow = () => {
                   <ChevronDown size={18} className="text-slate-500" />
                   <input
                     type={type}
+                    min={min}
                     value={inputValue || value}
                     onChange={(event) => onChange(event.target.value)}
                     className="absolute inset-0 cursor-pointer opacity-0"

@@ -61,6 +61,8 @@ const DesktopSelfDrive = () => {
   const [search, setSearch] = useState({ pickup: '', drop: '', date: '', time: '' });
   const [serviceLocations, setServiceLocations] = useState([]);
   const [cars, setCars] = useState([]);
+  // Computed once so it is not recalculated during render.
+  const [todayISO] = useState(() => new Date().toISOString().slice(0, 10));
 
   // Suggestions come from the places the fleet actually operates from, and the
   // strip below shows the real catalogue rather than a fixed service list.
@@ -171,6 +173,7 @@ const DesktopSelfDrive = () => {
                 <CalendarDays size={16} className="shrink-0 text-[var(--dh-muted)]" strokeWidth={2.4} />
                 <input
                   type="date"
+                  min={todayISO}
                   value={search.date}
                   onChange={(event) => setSearch((current) => ({ ...current, date: event.target.value }))}
                   className={field}
