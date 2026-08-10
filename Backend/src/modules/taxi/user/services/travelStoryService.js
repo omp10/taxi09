@@ -36,8 +36,13 @@ const SORTS = {
   foryou: { featured: -1, publishedAt: -1 },
 };
 
-export const listTravelStories = async ({ category, tab, q, limit = 24 } = {}) => {
+export const listTravelStories = async ({ category, tab, q, limit = 24, mediaType } = {}) => {
   const query = { status: 'published' };
+
+  // A reel is any story carrying a video; `photo` is the rest. Asking for
+  // neither returns both, which is what the main feed wants.
+  if (mediaType === 'reel') query.videoUrl = { $nin: ['', null] };
+  if (mediaType === 'photo') query.videoUrl = { $in: ['', null] };
 
   if (category && category !== 'All') query.category = category;
 
@@ -153,6 +158,8 @@ export const createTravelStory = async ({ userId, author = {}, payload = {} }) =
     category: clean(payload.category) || 'Road Trip',
     coverImage: clean(payload.coverImage),
     gallery: Array.isArray(payload.gallery) ? payload.gallery.filter(Boolean) : [],
+    videoUrl: clean(payload.videoUrl),
+    durationSeconds: Math.max(0, Math.round(Number(payload.durationSeconds) || 0)),
     userId,
     authorName: clean(author.name) || 'Traveller',
     authorAvatar: clean(author.profileImage),

@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Clock, Eye, Heart, Loader2, MessageCircle, Route, Search } from 'lucide-react';
+import { Clock, Eye, Heart, Loader2, MessageCircle, Play, Route, Search } from 'lucide-react';
 import AppHeader from '../../components/AppHeader';
 import BottomNavbar from '../../components/BottomNavbar';
 import { userService } from '../../services/userService';
 import api from '../../../../shared/api/axiosInstance';
+import ReelPlayer from './ReelPlayer';
 
 /** Travel stories on a phone: the same feed, one column. */
 const compact = (value) => {
@@ -21,6 +22,8 @@ const MobileTravelStories = () => {
   const [category, setCategory] = useState('All');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [reelsOnly, setReelsOnly] = useState(false);
+  const [playing, setPlaying] = useState(null);
 
   useEffect(() => {
     api.get('/users/travel-stories/facets')
@@ -30,6 +33,7 @@ const MobileTravelStories = () => {
 
   const load = useCallback(() => {
     const params = new URLSearchParams({ tab: 'foryou' });
+    if (reelsOnly) params.set('mediaType', 'reel');
     if (category !== 'All') params.set('category', category);
     if (search.trim()) params.set('q', search.trim());
 
@@ -38,7 +42,7 @@ const MobileTravelStories = () => {
       .then((response) => setStories(response?.data?.results || []))
       .catch((error) => toast.error(error.message || 'Could not load stories'))
       .finally(() => setLoading(false));
-  }, [category, search]);
+  }, [category, search, reelsOnly]);
 
   useEffect(() => {
     const handle = setTimeout(load, 250);
@@ -79,6 +83,14 @@ const MobileTravelStories = () => {
         </div>
 
         <div className="mt-3 flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+          <button
+            onClick={() => setReelsOnly((current) => !current)}
+            className={`flex shrink-0 items-center gap-1 rounded-xl border px-3 py-2 text-[12px] font-bold ${
+              reelsOnly ? 'border-[#F5B700] bg-[#FFF9E6] text-slate-900' : 'border-slate-200 text-slate-600'
+            }`}
+          >
+            <Play size={11} fill="currentColor" /> Reels
+          </button>
           {['All', ...categories].map((chip) => (
             <button
               key={chip}
@@ -101,7 +113,7 @@ const MobileTravelStories = () => {
             {stories.map((story) => (
               <article
                 key={story._id}
-                onClick={() => navigate(`/taxi/user/stories/${story.slug}`)}
+                onClick={() => (story.videoUrl ? setPlaying(story) : navigate(`/taxi/user/stories/${story.slug}`))}
                 className="overflow-hidden rounded-2xl border border-slate-100 bg-white"
               >
                 <div className="relative aspect-[16/10] bg-slate-100">
@@ -111,6 +123,18 @@ const MobileTravelStories = () => {
                   <span className="absolute left-3 top-3 rounded-lg bg-white/95 px-2 py-1 text-[10px] font-black text-slate-900">
                     {story.category}
                   </span>
+                  {story.videoUrl ? (
+                    <>
+                      <span className="absolute inset-0 flex items-center justify-center">
+                        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-black/45">
+                          <Play size={18} className="ml-0.5 text-white" fill="currentColor" />
+                        </span>
+                      </span>
+                      <span className="absolute right-3 top-3 rounded-lg bg-[#F5B700] px-2 py-1 text-[10px] font-black text-slate-900">
+                        REEL
+                      </span>
+                    </>
+                  ) : null}
                 </div>
 
                 <div className="p-3.5">
@@ -140,6 +164,14 @@ const MobileTravelStories = () => {
           </div>
         )}
       </div>
+
+      {playing ? (
+        <ReelPlayer
+          reel={stories.find((s) => s._id === playing._id) || playing}
+          onClose={() => setPlaying(null)}
+          onLike={like}
+        />
+      ) : null}
 
       <BottomNavbar />
     </div>

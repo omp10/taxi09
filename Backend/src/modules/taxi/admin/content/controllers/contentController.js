@@ -318,6 +318,7 @@ export const getPublicTravelStories = asyncHandler(async (req, res) => {
     tab: req.query.tab,
     q: req.query.q,
     limit: req.query.limit,
+    mediaType: req.query.mediaType,
   }));
 });
 

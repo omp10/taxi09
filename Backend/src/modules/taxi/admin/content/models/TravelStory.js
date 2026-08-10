@@ -24,6 +24,14 @@ const travelStorySchema = new mongoose.Schema(
     coverImage: { type: String, default: '', trim: true },
     gallery: { type: [String], default: [] },
 
+    /**
+     * A reel is a story told as a short video. `videoUrl` is what makes it one;
+     * `coverImage` stays the poster frame, so a reel still has something to show
+     * in the grid before anyone presses play, and the feed can mix the two.
+     */
+    videoUrl: { type: String, default: '', trim: true },
+    durationSeconds: { type: Number, default: 0, min: 0 },
+
     // Author. `userId` is absent on admin-curated stories.
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'TaxiUser', default: null, index: true },
     authorName: { type: String, default: '', trim: true },

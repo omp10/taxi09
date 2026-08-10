@@ -11,6 +11,7 @@ import {
   MapPin,
   MessageCircle,
   Route,
+  Play,
   Search,
   Sparkles,
   TrendingUp,
@@ -19,6 +20,7 @@ import { AiChatBubble, DesktopNav } from '../../components/desktop/DesktopChrome
 import { useDesktopTheme } from '../../components/desktop/desktopShared';
 import { userService } from '../../services/userService';
 import api from '../../../../shared/api/axiosInstance';
+import ReelPlayer from './ReelPlayer';
 
 /**
  * Travel Stories - the desktop feed.
@@ -30,9 +32,16 @@ import api from '../../../../shared/api/axiosInstance';
 
 const TABS = [
   { key: 'foryou', label: 'For You' },
+  { key: 'reels', label: 'Reels', mediaType: 'reel' },
   { key: 'trending', label: 'Trending' },
   { key: 'latest', label: 'Latest' },
 ];
+
+/** mm:ss, so a 95 second reel does not read as "95s". */
+const runtime = (seconds) => {
+  const total = Math.max(0, Math.round(Number(seconds) || 0));
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
+};
 
 const compact = (value) => {
   const n = Number(value || 0);
@@ -61,7 +70,28 @@ const StoryCard = ({ story, onOpen, onLike }) => (
       <span className="absolute left-3 top-3 rounded-lg bg-white/95 px-2 py-1 text-[10.5px] font-black text-slate-900">
         {story.category}
       </span>
-      {story.readMinutes > 0 ? (
+
+      {/* A reel is only obvious once it says so; the poster frame alone looks
+          like any other photo. */}
+      {story.videoUrl ? (
+        <>
+          <span className="absolute inset-0 flex items-center justify-center">
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-black/45 backdrop-blur-sm transition-transform group-hover:scale-110">
+              <Play size={20} className="ml-0.5 text-white" fill="currentColor" />
+            </span>
+          </span>
+          {story.durationSeconds > 0 ? (
+            <span className="absolute bottom-14 right-3 rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white">
+              {runtime(story.durationSeconds)}
+            </span>
+          ) : null}
+        </>
+      ) : null}
+      {story.videoUrl ? (
+        <span className="absolute right-3 top-3 rounded-lg bg-[#F5B700] px-2 py-1 text-[10.5px] font-black text-slate-900">
+          REEL
+        </span>
+      ) : story.readMinutes > 0 ? (
         <span className="absolute right-3 top-3 rounded-lg bg-black/55 px-2 py-1 text-[10.5px] font-bold text-white">
           {story.readMinutes} min read
         </span>
@@ -132,6 +162,7 @@ const DesktopTravelStories = () => {
   const [category, setCategory] = useState('All');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [playing, setPlaying] = useState(null);
 
   useEffect(() => {
     api.get('/users/travel-stories/facets')
@@ -140,7 +171,11 @@ const DesktopTravelStories = () => {
   }, []);
 
   const load = useCallback(() => {
-    const params = new URLSearchParams({ tab });
+    // Reels is a filter rather than a sort, so it falls back to the default
+    // ordering and asks the server for video-only.
+    const active = TABS.find((item) => item.key === tab);
+    const params = new URLSearchParams({ tab: active?.mediaType ? 'foryou' : tab });
+    if (active?.mediaType) params.set('mediaType', active.mediaType);
     if (category !== 'All') params.set('category', category);
     if (search.trim()) params.set('q', search.trim());
 
@@ -253,7 +288,7 @@ const DesktopTravelStories = () => {
                   <StoryCard
                     key={story._id}
                     story={story}
-                    onOpen={(s) => navigate(`/taxi/user/stories/${s.slug}`)}
+                    onOpen={(s) => (s.videoUrl ? setPlaying(s) : navigate(`/taxi/user/stories/${s.slug}`))}
                     onLike={like}
                   />
                 ))}
@@ -345,6 +380,14 @@ const DesktopTravelStories = () => {
           </aside>
         </div>
       </div>
+
+      {playing ? (
+        <ReelPlayer
+          reel={stories.find((s) => s._id === playing._id) || playing}
+          onClose={() => setPlaying(null)}
+          onLike={like}
+        />
+      ) : null}
 
       <AiChatBubble />
     </div>
