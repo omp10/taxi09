@@ -93,7 +93,7 @@ export const MobileSearchCard = () => {
   return (
     <form onSubmit={submit} className="rounded-[20px] border border-slate-100 bg-white p-3 shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
       <h2 className="text-[19px] font-black leading-tight tracking-[-0.04em] text-slate-950">Where are you going?</h2>
-      <p className="mt-0.5 text-[12.5px] font-bold text-slate-600">Book Self Drive, Taxi or Bike in few taps</p>
+      <p className="mt-0.5 text-[12.5px] font-bold text-slate-700">Book Self Drive, Taxi or Bike in few taps</p>
 
       <div className="mt-3 grid grid-cols-3 gap-2">
         {MODES.map(({ key, label, icon: Icon }) => (
@@ -105,7 +105,7 @@ export const MobileSearchCard = () => {
             className={`flex flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2.5 text-[12.5px] font-bold transition-colors ${
               mode === key
                 ? 'border-transparent bg-[#F5B700] text-slate-950'
-                : 'border-slate-200 bg-white text-slate-700'
+                : 'border-slate-200 bg-white text-slate-800'
             }`}
           >
             <Icon size={17} strokeWidth={2.3} />
@@ -121,13 +121,13 @@ export const MobileSearchCard = () => {
       <label className="mt-2.5 flex items-center gap-2.5 rounded-xl border border-slate-200 px-3 py-2">
         <MapPin size={17} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
         <span className="min-w-0 flex-1">
-          <span className="block text-[11.5px] font-bold text-slate-700">Pickup Location</span>
+          <span className="block text-[11.5px] font-black text-slate-800">Pickup Location</span>
           <input
             value={form.pickup}
             onChange={update('pickup')}
             list="mobile-service-stores"
             placeholder="Enter city or location"
-            className="w-full bg-transparent text-[14.5px] font-bold text-slate-900 outline-none placeholder:font-bold placeholder:text-slate-600"
+            className="w-full bg-transparent text-[14.5px] font-bold text-slate-900 outline-none placeholder:font-bold placeholder:text-slate-700"
           />
         </span>
       </label>
@@ -138,7 +138,7 @@ export const MobileSearchCard = () => {
           { label: 'Return', dateKey: 'returnDate', timeKey: 'returnTime' },
         ].map(({ label, dateKey, timeKey }) => (
           <div key={dateKey} className="rounded-xl border border-slate-200 px-2.5 py-1.5">
-            <span className="flex items-center gap-1 text-[11.5px] font-bold text-slate-700">
+            <span className="flex items-center gap-1 text-[11.5px] font-black text-slate-800">
               <Calendar size={13} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               {label}
             </span>
@@ -149,7 +149,7 @@ export const MobileSearchCard = () => {
                 tap opens the real picker instead of the dd/mm/yyyy skeleton. */}
             <span className="mt-0.5 flex items-baseline gap-1 text-[12.5px] font-bold">
               <span className="relative">
-                <span className={form[dateKey] ? 'text-slate-900' : 'text-slate-600'}>
+                <span className={form[dateKey] ? 'text-slate-900' : 'text-slate-700'}>
                   {formatDateLabel(form[dateKey])}
                 </span>
                 <input
@@ -166,7 +166,7 @@ export const MobileSearchCard = () => {
               <span className="text-slate-400">&middot;</span>
 
               <span className="relative">
-                <span className={form[timeKey] ? 'text-slate-900' : 'text-slate-600'}>
+                <span className={form[timeKey] ? 'text-slate-900' : 'text-slate-700'}>
                   {formatTimeLabel(form[timeKey])}
                 </span>
                 <input
