@@ -34,7 +34,6 @@ const GST_RATE = 0.05;
 const TCS_RATE = 0.05;
 const VISA_FEE_PER_PERSON = 2500;
 const INSURANCE_PER_PERSON = 1200;
-const COUPONS = { GLOBAL10: 0.1, FLYFREE: 0.15 };
 
 const Row = ({ label, value, tone = '', hint = '' }) => (
   <div className="flex items-start justify-between gap-3">
@@ -199,15 +198,12 @@ const InternationalDetails = () => {
   const grandTotal = quote?.totalAmount ?? 0;
   const total = grandTotal;
 
+  // The server resolves coupons against the real promo records, so the code is
+  // sent as typed and the quote that comes back decides whether it applied.
   const applyCoupon = () => {
     const code = couponInput.trim().toUpperCase();
     if (!code) return;
-    if (!COUPONS[code]) {
-      toast.error(`${code} is not a valid coupon`);
-      return;
-    }
     setCoupon(code);
-    toast.success(`${code} applied - ${Math.round(COUPONS[code] * 100)}% off the package fare`);
   };
 
   return (
@@ -533,7 +529,7 @@ const InternationalDetails = () => {
                     Apply
                   </button>
                 </div>
-                {coupon ? (
+                {coupon && discount > 0 ? (
                   <p className="mt-2 flex items-center gap-1.5 text-[10.5px] font-bold text-[var(--success)]">
                     <CircleCheck size={12} /> {coupon} applied
                     <button
@@ -544,11 +540,18 @@ const InternationalDetails = () => {
                       Remove
                     </button>
                   </p>
-                ) : (
-                  <p className="mt-1.5 text-[9.5px] font-medium text-[var(--text-light)]">
-                    Try GLOBAL10 or FLYFREE for a discount.
+                ) : coupon ? (
+                  <p className="mt-2 flex items-center gap-1.5 text-[10.5px] font-bold text-[var(--danger,#e11d48)]">
+                    {coupon} is not valid for this package
+                    <button
+                      type="button"
+                      onClick={() => setCoupon('')}
+                      className="ml-auto text-[10px] font-bold text-[var(--text-light)] underline"
+                    >
+                      Remove
+                    </button>
                   </p>
-                )}
+                ) : null}
               </section>
 
               <p className="flex items-start gap-1.5 px-1 text-[9.5px] font-medium text-[var(--text-light)]">

@@ -19,7 +19,6 @@ import {
   Plus,
   Sparkles,
   Star,
-  Tag,
   Users,
   Waves,
   Wifi,
@@ -50,9 +49,6 @@ const ID_PROOFS = ['Aadhaar Card', 'PAN Card', 'Passport', 'Driving Licence', 'V
 
 // Indian hotel GST is 12% on tariffs up to Rs7,500 a night and 18% above it.
 const gstRateFor = (nightlyTariff) => (nightlyTariff > 7500 ? 0.18 : 0.12);
-const DISCOUNT_RATE = 0.1;
-
-const COUPONS = { STAY10: 0.1, FIRST40: 0.4, CITY25: 0.25 };
 
 const NAME_PATTERN = /^[A-Za-z][A-Za-z .'-]*$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -167,8 +163,6 @@ const HotelCheckout = () => {
   const [touched, setTouched] = useState({});
   const [breakfastQty, setBreakfastQty] = useState(0);
   const [airportPickup, setAirportPickup] = useState(false);
-  const [couponInput, setCouponInput] = useState('');
-  const [coupon, setCoupon] = useState('');
   const [summaryOpen, setSummaryOpen] = useState(true);
   const [quote, setQuote] = useState(null);
   const [quoteError, setQuoteError] = useState('');
@@ -229,21 +223,9 @@ const HotelCheckout = () => {
   const roomCharges = quote?.roomCharges ?? 0;
   const taxes = quote?.taxes ?? 0;
   const memberDiscount = quote?.memberDiscount ?? 0;
-  const discount = 0;
   const total = quote?.totalAmount ?? 0;
   const breakfastTotal = quote?.addOns?.find((a) => a.id === 'breakfast')?.price ?? 0;
   const pickupTotal = quote?.addOns?.find((a) => a.id === 'pickup')?.price ?? 0;
-
-  const applyCoupon = () => {
-    const code = couponInput.trim().toUpperCase();
-    if (!code) return;
-    if (!COUPONS[code]) {
-      toast.error(`${code} is not a valid coupon`);
-      return;
-    }
-    setCoupon(code);
-    toast.success(`${code} applied - ${Math.round(COUPONS[code] * 100)}% off room charges`);
-  };
 
   const handlePay = async () => {
     setTouched({ name: true, phone: true, email: true, idNumber: true });
@@ -572,40 +554,6 @@ const HotelCheckout = () => {
           </div>
         </section>
 
-        {/* Coupon */}
-        <section className="rounded-[16px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
-          <h3 className="flex items-center gap-1.5 text-[13.5px] font-extrabold">
-            <Tag size={14} className="text-[var(--primary-dark)]" /> Apply Coupon
-          </h3>
-          <div className="mt-2.5 flex gap-2">
-            <input
-              type="text"
-              value={couponInput}
-              onChange={(event) => setCouponInput(event.target.value.toUpperCase())}
-              placeholder="Enter coupon code"
-              className="min-w-0 flex-1 rounded-[10px] border border-[var(--border)] px-3 py-2.5 text-[12.5px] font-semibold uppercase outline-none placeholder:font-medium placeholder:normal-case placeholder:text-slate-300 focus:border-[var(--primary)]"
-            />
-            <button
-              type="button"
-              onClick={applyCoupon}
-              className="shrink-0 rounded-[10px] border-2 border-[var(--primary)] px-4 text-[12px] font-extrabold"
-            >
-              Apply
-            </button>
-          </div>
-          {coupon ? (
-            <p className="mt-2 flex items-center gap-1.5 text-[10.5px] font-bold text-[var(--success)]">
-              <CircleCheck size={12} /> {coupon} applied · {Math.round(COUPONS[coupon] * 100)}% off room charges
-              <button
-                type="button"
-                onClick={() => setCoupon('')}
-                className="ml-auto text-[10px] font-bold text-[var(--text-light)] underline"
-              >
-                Remove
-              </button>
-            </p>
-          ) : null}
-        </section>
 
         {/* Price summary */}
         <section className="rounded-[16px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
@@ -655,10 +603,6 @@ const HotelCheckout = () => {
                   Taxes &amp; Fees ({Math.round(gstRateFor(room.price) * 100)}% GST)
                 </span>
                 <span>{rupees(taxes)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[var(--text-light)]">Discount{coupon ? ` (${coupon})` : ''}</span>
-                <span className="text-[var(--success)]">-{rupees(discount)}</span>
               </div>
               <div className="flex items-center justify-between border-t border-[var(--border)] pt-2">
                 <span className="text-[13px] font-extrabold">Total Amount</span>
