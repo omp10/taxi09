@@ -890,7 +890,7 @@ const AdminLayout = () => {
               { label: 'Top Banners', path: '/admin/homepage-banners/top', permission: 'promotions.view' },
               { label: 'Bottom Banners', path: '/admin/homepage-banners/bottom', permission: 'promotions.view' },
               { label: 'Self Drive Banner', path: '/admin/homepage-banners/self_drive', permission: 'promotions.view' },
-              { label: 'With Driver Banner', path: '/admin/homepage-banners/with_driver', permission: 'promotions.view' },
+              { label: 'Hire Driver Banner', path: '/admin/homepage-banners/with_driver', permission: 'promotions.view' },
               { label: 'Bike Rental Banner', path: '/admin/homepage-banners/bike_rental', permission: 'promotions.view' },
               { label: 'Bus Banner', path: '/admin/homepage-banners/bus', permission: 'promotions.view' },
               { label: 'Hotel Banner', path: '/admin/homepage-banners/hotel', permission: 'promotions.view' },

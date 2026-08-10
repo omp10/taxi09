@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight, ArrowUpDown, BadgeCheck, CalendarDays, CalendarRange, Car, Clock, CreditCard,
-  Gauge, Headphones, IndianRupee, MapPin, Play, ShieldCheck, Sparkles, Truck, UserCheck, Users, Zap,
+  Gauge, Headphones, IndianRupee, MapPin, Play, ShieldCheck, Sparkles, Users, Zap,
 } from 'lucide-react';
 import {
   DesktopNav, ServiceCard,
@@ -24,12 +24,6 @@ const HERO_CHIPS = [
   { icon: IndianRupee, title: 'Best Prices', copy: 'Guaranteed' },
   { icon: Zap, title: 'Easy Booking', copy: 'Instant Confirm' },
   { icon: Headphones, title: '24/7 Support', copy: "We're here" },
-];
-
-const BOOKING_TABS = [
-  { id: 'self-drive', icon: Gauge, title: 'Self Drive', copy: 'Drive on your own', path: '/taxi/user/rental' },
-  { id: 'with-driver', icon: UserCheck, title: 'With Driver', copy: 'Professional Driver', path: '/taxi/user/with-driver' },
-  { id: 'outstation', icon: Truck, title: 'Outstation', copy: 'One way / Round trip', path: '/taxi/user/cab/outstation' },
 ];
 
 const TRUST_CHIPS = [
@@ -65,19 +59,10 @@ const DesktopSelfDrive = () => {
   const navigate = useNavigate();
   const [theme, toggleTheme] = useDesktopTheme();
 
-  const [activeTab, setActiveTab] = useState('self-drive');
   const [search, setSearch] = useState({ pickup: '', drop: '', date: '', time: '' });
 
   const submitSearch = (event) => {
     event.preventDefault();
-    const tab = BOOKING_TABS.find((item) => item.id === activeTab);
-
-    // Only the self-drive tab searches the rental catalogue; the others are
-    // separate flows with their own booking screens.
-    if (tab && tab.id !== 'self-drive') {
-      navigate(tab.path);
-      return;
-    }
 
     const params = new URLSearchParams({ search: 'true' });
     if (search.pickup) params.set('location', search.pickup);
@@ -113,31 +98,7 @@ const DesktopSelfDrive = () => {
 
         {/* ------------------------------------------------------- Booking card */}
         <div className="relative z-20 mt-6 rounded-[22px] bg-[var(--dh-surface)] p-6 shadow-[0_16px_44px_rgba(15,23,42,0.12)] ring-1 ring-[var(--dh-border)]">
-          <div className="grid grid-cols-3 gap-3">
-            {BOOKING_TABS.map(({ id, icon: Icon, title, copy }) => {
-              const isActive = id === activeTab;
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setActiveTab(id)}
-                  className={`flex items-center gap-3 rounded-[13px] border px-4 py-3 text-left transition-colors ${
-                    isActive
-                      ? 'border-[#F5B700] bg-[#F5B700]'
-                      : 'border-[var(--dh-border)] bg-[var(--dh-surface)] hover:bg-[var(--dh-chip)]'
-                  }`}
-                >
-                  <Icon size={22} className={isActive ? 'text-slate-950' : 'text-[var(--dh-muted)]'} strokeWidth={2.2} />
-                  <span>
-                    <span className={`block text-[14.5px] font-black ${isActive ? 'text-slate-950' : 'text-[var(--dh-text)]'}`}>{title}</span>
-                    <span className={`block text-[11.5px] font-semibold ${isActive ? 'text-slate-800' : 'text-[var(--dh-muted)]'}`}>{copy}</span>
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          <form onSubmit={submitSearch} className="mt-5 grid grid-cols-[1.15fr_auto_1.15fr_1fr_1fr_auto] items-end gap-3 border-t border-[var(--dh-border)] pt-5">
+          <form onSubmit={submitSearch} className="grid grid-cols-[1.15fr_auto_1.15fr_1fr_1fr_auto] items-end gap-3">
             <label>
               <span className="block text-[12.5px] font-bold text-[var(--dh-text)]">Pickup Location</span>
               <span className={fieldBox}>

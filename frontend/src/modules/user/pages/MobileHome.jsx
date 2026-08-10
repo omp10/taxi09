@@ -326,7 +326,7 @@ const MobileHome = () => {
   ];
 
   const moreServices = [
-    { iconImage: '/taxi09_service_driver.png', label: 'With\nDriver', path: '/taxi/user/with-driver' },
+    { iconImage: '/taxi09_service_driver.png', label: 'Hire\nDriver', path: '/taxi/user/with-driver' },
     { iconImage: '/taxi09_service_hotel.png', label: 'Hotel\nBooking', path: '/taxi/user/hotel' },
     { iconImage: '/taxi09_service_subscription.png', label: 'Monthly\nSubscription', path: '/taxi/user/profile/subscriptions' },
     { iconImage: '/taxi09_service_travel.png', label: 'Travel\nPackages', path: '/taxi/user/tours' },

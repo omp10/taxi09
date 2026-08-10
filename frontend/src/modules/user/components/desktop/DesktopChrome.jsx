@@ -25,7 +25,7 @@ export const DesktopNav = ({ activePath, theme, onToggleTheme }) => {
             Taxi<span className="text-[#F5B700]">09</span>
           </span>
           <span className="mt-0.5 text-[9px] font-semibold tracking-[0.08em] text-[var(--dh-muted)]">
-            Self Drive | With Driver
+            Self Drive | Hire Driver
           </span>
         </button>
 

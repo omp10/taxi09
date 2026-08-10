@@ -11,7 +11,7 @@ import { Bike, Building2, Bus, Car, UserCheck } from 'lucide-react';
 export const NAV_LINKS = [
   { label: 'Home', path: '/taxi/user' },
   { label: 'Self Drive', path: '/taxi/user/rental', badge: 'NEW' },
-  { label: 'With Driver', path: '/taxi/user/with-driver' },
+  { label: 'Hire Driver', path: '/taxi/user/with-driver' },
   { label: 'Bike Rental', path: '/taxi/user/rental/bike-categories' },
   { label: 'Bus Booking', path: '/taxi/user/bus' },
   { label: 'Hotel Booking', path: '/taxi/user/hotel' },
@@ -23,7 +23,7 @@ export const NAV_LINKS = [
 
 export const QUICK_RAIL = [
   { icon: Car, label: 'Self Drive', path: '/taxi/user/rental' },
-  { icon: UserCheck, label: 'With Driver', path: '/taxi/user/with-driver' },
+  { icon: UserCheck, label: 'Hire Driver', path: '/taxi/user/with-driver' },
   { icon: Bike, label: 'Bike Rental', path: '/taxi/user/rental/bike-categories' },
   { icon: Bus, label: 'Bus Booking', path: '/taxi/user/bus' },
   { icon: Building2, label: 'Hotel Booking', path: '/taxi/user/hotel' },
@@ -31,7 +31,7 @@ export const QUICK_RAIL = [
 
 export const SERVICES = [
   { title: 'Self Drive Cars', copy: 'Drive your car on your own terms.', image: '/taxi09_rental_self_drive.png', path: '/taxi/user/rental' },
-  { title: 'With Driver', copy: 'Relax! Our professional drivers are at your service.', image: '/taxi09_rental_with_driver.png', path: '/taxi/user/with-driver' },
+  { title: 'Hire Driver', copy: 'Relax! Our professional drivers are at your service.', image: '/taxi09_rental_with_driver.png', path: '/taxi/user/with-driver' },
   { title: 'Bike Rental', copy: 'Affordable bikes & scooters for city ride.', image: '/taxi09_rental_bike.png', path: '/taxi/user/rental/bike-categories' },
   { title: 'Bus Booking', copy: 'Book buses for outstation trips & group travel.', image: '/bus.png', path: '/taxi/user/bus' },
   { title: 'Hotel Booking', copy: 'Best hotels at best prices across India.', image: '/taxi09_service_hotel.png', path: '/taxi/user/hotel' },

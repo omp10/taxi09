@@ -10,7 +10,7 @@ import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { unwrapResults, useDesktopTheme } from '../../components/desktop/desktopShared';
 
 /**
- * Desktop "With Driver" search + driver list.
+ * Desktop "Hire Driver" search + driver list.
  *
  * Drivers come from the admin-managed hire catalogue and the fare breakdown
  * from the server quote endpoint. Anything the catalogue does not carry (a
@@ -133,7 +133,7 @@ const DesktopWithDriver = () => {
 
       <section className="mx-auto grid max-w-[1440px] grid-cols-[minmax(0,1fr)_368px] gap-6 px-8 pb-20 pt-5 xl:px-12">
         <div className="rounded-[20px] bg-[var(--dh-surface)] ring-1 ring-[var(--dh-border)]">
-          {/* Hero is admin artwork - Homepage Banners > With Driver. */}
+          {/* Hero is admin artwork - Homepage Banners > Hire Driver. */}
           <div className="p-4 pb-0">
             <BannerHero type="with_driver" rounded="rounded-[16px]" />
           </div>
