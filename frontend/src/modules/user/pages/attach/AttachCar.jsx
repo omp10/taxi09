@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import {
@@ -16,6 +16,7 @@ import {
   MapPin,
   Send,
   ShieldCheck,
+  Trash2,
   Upload,
   Wallet,
 } from 'lucide-react';
@@ -165,6 +166,15 @@ const AttachCar = () => {
   const [documents, setDocuments] = useState({});
   const [photos, setPhotos] = useState({});
   const [record, setRecord] = useState(null);
+  const [clearing, setClearing] = useState(false);
+
+  /** Something is worth clearing once any field, document or photo is set. */
+  const hasDraftContent = useMemo(
+    () => Object.values(form).some((value) => String(value ?? '').trim())
+      || Object.keys(documents).length > 0
+      || Object.keys(photos).length > 0,
+    [form, documents, photos],
+  );
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -220,6 +230,43 @@ const AttachCar = () => {
     },
     [form, documents, photos, record],
   );
+
+  /**
+   * Empties the in-progress application. The saved draft is overwritten too,
+   * not just the on-screen fields - clearing the form and then having the old
+   * answers reappear on the next visit would be worse than not clearing at all.
+   */
+  const clearDraft = async () => {
+    if (!window.confirm('Clear this application? Everything you have filled in will be removed.')) {
+      return;
+    }
+
+    setClearing(true);
+
+    try {
+      if (record?._id) {
+        await userService.updateAttachedVehicle(record._id, {
+          ...emptyForm,
+          year: undefined,
+          dailyFare: undefined,
+          securityDeposit: undefined,
+          documents: {},
+          photos: {},
+          step: 1,
+        });
+      }
+
+      setForm(emptyForm);
+      setDocuments({});
+      setPhotos({});
+      setStep(0);
+      window.scrollTo({ top: 0 });
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message || 'Could not clear the application.');
+    } finally {
+      setClearing(false);
+    }
+  };
 
   const missingOnStep = () => {
     if (step === 0) {
@@ -651,9 +698,22 @@ const AttachCar = () => {
             </button>
           ) : null}
 
+          {/* Only offered once there is something to lose. */}
+          {hasDraftContent ? (
+            <button
+              onClick={clearDraft}
+              disabled={saving || clearing}
+              aria-label="Clear this application"
+              className="flex items-center justify-center gap-1.5 rounded-2xl border border-rose-200 px-4 py-3 text-[15px] font-black text-rose-600 disabled:opacity-60"
+            >
+              {clearing ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
+              Clear
+            </button>
+          ) : null}
+
           <button
             onClick={step === 3 ? submit : next}
-            disabled={saving}
+            disabled={saving || clearing}
             className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#F5B700] py-3 text-[15.5px] font-black text-slate-900 disabled:opacity-60"
           >
             {saving ? <Loader2 size={16} className="animate-spin" /> : null}
