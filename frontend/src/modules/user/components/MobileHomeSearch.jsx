@@ -52,8 +52,6 @@ export const MobileSearchCard = () => {
             .filter(Boolean),
         )];
         setStores(names);
-        // Open on somewhere the fleet can actually serve rather than an empty box.
-        if (names.length) setForm((current) => (current.pickup ? current : { ...current, pickup: names[0] }));
       })
       .catch(() => {});
     return () => { cancelled = true; };
@@ -76,24 +74,24 @@ export const MobileSearchCard = () => {
   const openPicker = (event) => event.currentTarget.querySelector('input')?.showPicker?.();
 
   return (
-    <form onSubmit={submit} className="rounded-[24px] border border-slate-100 bg-white p-4 shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
-      <h2 className="text-[22px] font-black leading-tight tracking-[-0.04em] text-slate-950">Where are you going?</h2>
-      <p className="mt-1 text-[14px] font-medium text-slate-500">Book Self Drive, Taxi or Bike in few taps</p>
+    <form onSubmit={submit} className="rounded-[22px] border border-slate-100 bg-white p-3.5 shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
+      <h2 className="text-[19px] font-black leading-tight tracking-[-0.04em] text-slate-950">Where are you going?</h2>
+      <p className="mt-0.5 text-[13px] font-medium text-slate-500">Book Self Drive, Taxi or Bike in few taps</p>
 
-      <div className="mt-4 grid grid-cols-3 gap-2">
+      <div className="mt-3 grid grid-cols-3 gap-2">
         {MODES.map(({ key, label, icon: Icon }) => (
           <button
             key={key}
             type="button"
             onClick={() => setMode(key)}
             aria-pressed={mode === key}
-            className={`flex flex-col items-center justify-center gap-1.5 rounded-2xl border px-2 py-3 text-[13px] font-bold transition-colors ${
+            className={`flex flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2.5 text-[12.5px] font-bold transition-colors ${
               mode === key
                 ? 'border-transparent bg-[#F5B700] text-slate-950'
                 : 'border-slate-200 bg-white text-slate-700'
             }`}
           >
-            <Icon size={19} strokeWidth={2.3} />
+            <Icon size={17} strokeWidth={2.3} />
             {label}
           </button>
         ))}
@@ -103,28 +101,28 @@ export const MobileSearchCard = () => {
         {stores.map((name) => <option key={name} value={name} />)}
       </datalist>
 
-      <label className="mt-3 flex items-center gap-3 rounded-2xl border border-slate-200 px-3 py-3">
-        <MapPin size={19} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
+      <label className="mt-2.5 flex items-center gap-2.5 rounded-xl border border-slate-200 px-3 py-2.5">
+        <MapPin size={17} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
         <span className="min-w-0 flex-1">
-          <span className="block text-[12.5px] font-semibold text-slate-500">Pickup Location</span>
+          <span className="block text-[11.5px] font-semibold text-slate-500">Pickup Location</span>
           <input
             value={form.pickup}
             onChange={update('pickup')}
             list="mobile-service-stores"
             placeholder="Enter city or location"
-            className="w-full bg-transparent text-[15.5px] font-bold text-slate-900 outline-none placeholder:font-medium placeholder:text-slate-400"
+            className="w-full bg-transparent text-[14.5px] font-bold text-slate-900 outline-none placeholder:font-medium placeholder:text-slate-400"
           />
         </span>
       </label>
 
-      <div className="mt-3 grid grid-cols-2 gap-2">
+      <div className="mt-2.5 grid grid-cols-2 gap-2">
         {[
           { label: 'Pickup Date & Time', dateKey: 'pickupDate', timeKey: 'pickupTime' },
           { label: 'Return Date & Time', dateKey: 'returnDate', timeKey: 'returnTime' },
         ].map(({ label, dateKey, timeKey }) => (
-          <div key={dateKey} className="rounded-2xl border border-slate-200 px-3 py-2.5">
-            <span className="flex items-center gap-1.5 text-[12.5px] font-semibold text-slate-500">
-              <Calendar size={14} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
+          <div key={dateKey} className="rounded-xl border border-slate-200 px-2.5 py-2">
+            <span className="flex items-center gap-1 text-[11.5px] font-semibold text-slate-500">
+              <Calendar size={13} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               {label}
             </span>
             <span className="mt-1 block cursor-pointer" onClick={openPicker}>
@@ -134,7 +132,7 @@ export const MobileSearchCard = () => {
                 min={dateKey === 'returnDate' ? (form.pickupDate || todayISO) : todayISO}
                 value={form[dateKey]}
                 onChange={update(dateKey)}
-                className="w-full bg-transparent text-[14.5px] font-bold text-slate-900 outline-none"
+                className="w-full bg-transparent text-[13.5px] font-bold text-slate-900 outline-none"
               />
             </span>
             <span className="mt-0.5 block cursor-pointer" onClick={openPicker}>
@@ -142,7 +140,7 @@ export const MobileSearchCard = () => {
                 type="time"
                 value={form[timeKey]}
                 onChange={update(timeKey)}
-                className="w-full bg-transparent text-[14.5px] font-bold text-slate-900 outline-none"
+                className="w-full bg-transparent text-[13.5px] font-bold text-slate-900 outline-none"
               />
             </span>
           </div>
@@ -151,10 +149,10 @@ export const MobileSearchCard = () => {
 
       <button
         type="submit"
-        className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#F5B700] py-3.5 text-[16px] font-black text-slate-950 active:scale-[0.99] transition-transform"
+        className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-[#F5B700] py-3 text-[15px] font-black text-slate-950 active:scale-[0.99] transition-transform"
       >
         {active.cta}
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-950 text-white">
+        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-950 text-white">
           <ArrowRight size={16} strokeWidth={2.6} />
         </span>
       </button>

@@ -2340,6 +2340,20 @@ export const getDriverEmergencyContacts = async (req, res) => {
   });
 };
 
+/**
+ * Mirrors the rider-side shape so both apps read one structure. Its absence
+ * made every call to the driver notifications endpoint throw a ReferenceError,
+ * which the driver app retried on a loop.
+ */
+const serializeDriverNotification = (item = {}) => ({
+  id: String(item._id || ''),
+  title: String(item.push_title || '').trim(),
+  body: String(item.message || '').trim(),
+  image: item.image || '',
+  sentAt: item.sent_at || item.createdAt || null,
+  serviceLocationId: item.service_location_id || null,
+});
+
 export const getDriverNotifications = async (req, res) => {
   const driver = await Driver.findById(req.auth.sub).lean();
 
