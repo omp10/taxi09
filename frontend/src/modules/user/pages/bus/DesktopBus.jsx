@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BannerHero from '../../components/BannerHero';
 import {
   ArrowRight, ArrowUpDown, BadgeCheck, Bus, CalendarDays, Headphones, Lock, MapPin,
   RefreshCcw, Search, Ticket,
@@ -78,19 +79,8 @@ const DesktopBus = () => {
       <DesktopNav activePath="/taxi/user/bus" theme={theme} onToggleTheme={toggleTheme} />
 
       <section className="mx-auto max-w-[1440px] px-8 pb-20 pt-5 xl:px-12">
-        {/* -------------------------------------------------------------- Hero */}
-        <div className="relative overflow-hidden rounded-[20px] bg-[linear-gradient(100deg,#FFF6DE_0%,#FFFBEF_50%,#EAF6FF_100%)] px-9 py-10">
-          <div className="relative z-10 max-w-[520px]">
-            <p className="text-[12.5px] font-black uppercase tracking-[0.12em] text-[#F5B700]">Bus Booking</p>
-            <h1 className="mt-2.5 text-[38px] font-black leading-[1.1] tracking-[-0.035em] text-slate-950">
-              Book Bus Tickets
-            </h1>
-            <p className="mt-3 text-[15px] font-medium leading-[1.55] text-slate-700">
-              Comfortable seaters and sleepers on every major route, with live tracking and instant confirmation.
-            </p>
-          </div>
-          <Bus size={220} className="pointer-events-none absolute -bottom-8 right-10 text-[#F5B700]/25" strokeWidth={1.1} />
-        </div>
+        {/* Hero is admin artwork - Homepage Banners > Bus. */}
+        <BannerHero type="bus" rounded="rounded-[20px]" />
 
         {/* ------------------------------------------------------------ Search */}
         <form

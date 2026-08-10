@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BannerHero from '../../components/BannerHero';
 import toast from 'react-hot-toast';
 import {
   Bookmark,
@@ -226,12 +227,10 @@ const DesktopTravelStories = () => {
           {/* Feed */}
           <div>
             <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white">
-              <div className="relative bg-gradient-to-r from-[#FFF9E6] to-white px-6 py-7">
-                <h1 className="text-[30px] font-black leading-none text-slate-900">Travel Stories</h1>
-                <p className="mt-2 text-[13.5px] text-slate-600">
-                  Real journeys. Real experiences. Real <span className="font-bold text-[#C79100]">inspiration</span>.
-                </p>
+              <BannerHero type="stories" rounded="rounded-none" />
 
+              {/* Tabs stay in the DOM; only the artwork above them is admin managed. */}
+              <div className="px-6 pb-1 pt-5">
                 <div className="mt-5 flex gap-5 border-b border-slate-200">
                   {TABS.map((item) => (
                     <button

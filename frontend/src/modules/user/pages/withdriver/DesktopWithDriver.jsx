@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BannerHero from '../../components/BannerHero';
 import {
   ArrowRight, ArrowUpDown, BadgeCheck, Calendar, Car, CheckCircle2, ChevronDown, Clock,
   CreditCard, Headphones, Languages, MapPin, Palette, ShieldCheck, Star, Ticket, Users,
@@ -132,33 +133,9 @@ const DesktopWithDriver = () => {
 
       <section className="mx-auto grid max-w-[1440px] grid-cols-[minmax(0,1fr)_368px] gap-6 px-8 pb-20 pt-5 xl:px-12">
         <div className="rounded-[20px] bg-[var(--dh-surface)] ring-1 ring-[var(--dh-border)]">
-          {/* ------------------------------------------------------------- Hero */}
-          <div className="relative overflow-hidden rounded-t-[20px] bg-[linear-gradient(100deg,var(--dh-surface)_0%,var(--dh-surface)_45%,#FFF7DC_100%)] px-8 pb-6 pt-7">
-            <p className="flex items-center gap-2 text-[13.5px] font-black text-[#F5B700]">
-              <Users size={16} strokeWidth={2.6} /> Sit Back &amp; Relax
-            </p>
-            <h1 className="mt-2 text-[42px] font-black leading-[1.08] tracking-[-0.04em] text-[var(--dh-text)]">
-              We Drive,
-              <br />
-              You <span className="text-[#F5B700]">Relax.</span>
-            </h1>
-            <p className="mt-3 text-[15px] font-medium leading-[1.55] text-[var(--dh-muted)]">
-              Professional drivers. Clean cars.
-              <br />
-              On-time pickups. Only with Taxi09.
-            </p>
-
-            <div className="mt-5 inline-grid grid-cols-4 divide-x divide-[var(--dh-border)] rounded-[14px] bg-[var(--dh-surface)] px-1 py-3 shadow-[0_6px_20px_rgba(15,23,42,0.08)]">
-              {HERO_BADGES.map(({ icon: Icon, title, copy }) => (
-                <span key={title} className="flex items-center gap-2.5 px-4">
-                  <Icon size={20} className="shrink-0 text-[#F5B700]" strokeWidth={2.1} />
-                  <span>
-                    <span className="block text-[12.5px] font-black text-[var(--dh-text)]">{title}</span>
-                    <span className="block text-[10.5px] font-semibold text-[var(--dh-muted)]">{copy}</span>
-                  </span>
-                </span>
-              ))}
-            </div>
+          {/* Hero is admin artwork - Homepage Banners > With Driver. */}
+          <div className="p-4 pb-0">
+            <BannerHero type="with_driver" rounded="rounded-[16px]" />
           </div>
 
           {/* ----------------------------------------------------------- Search */}

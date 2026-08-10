@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BannerHero from '../../components/BannerHero';
 import {
   BadgeCheck, Building2, Calendar, ChevronDown, Headphones, Heart, Images, Lock, MapPin,
   Search, ShieldCheck, Sparkles, Star, Ticket, Users, X,
@@ -185,6 +186,9 @@ const DesktopHotelList = () => {
       <DesktopNav activePath="/taxi/user/hotel" theme={theme} onToggleTheme={toggleTheme} />
 
       <section className="mx-auto max-w-[1440px] px-8 pb-20 pt-5 xl:px-12">
+        {/* Hero is admin artwork - Homepage Banners > Hotel. */}
+        <BannerHero type="hotel" rounded="rounded-[20px]" className="mb-5" />
+
         {/* ---------------------------------------------------------- Search bar */}
         <div className="grid grid-cols-[1.3fr_1fr_1fr_1.1fr_auto] items-center gap-6 rounded-[18px] bg-[var(--dh-surface)] px-7 py-5 shadow-[0_10px_30px_rgba(15,23,42,0.08)] ring-1 ring-[var(--dh-border)]">
           <label className="min-w-0">

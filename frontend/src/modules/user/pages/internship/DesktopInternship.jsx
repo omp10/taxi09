@@ -88,19 +88,10 @@ const DesktopInternship = () => {
       <div className="mx-auto max-w-[1440px] px-8 pb-16 pt-5 xl:px-12">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
           <div>
-            {/* Hero */}
-            <section className="overflow-hidden rounded-2xl border border-slate-100 bg-gradient-to-r from-[#FFF9E6] to-white p-8">
-              <span className="inline-flex items-center gap-1.5 rounded-lg bg-[#FFF0B8] px-2.5 py-1 text-[10.5px] font-black uppercase tracking-wider text-[#9A6B00]">
-                <Sparkles size={12} /> Travel career programme
-              </span>
-              <h1 className="mt-3 text-[38px] font-black leading-[1.05] text-slate-900">
-                Learn. Explore. Inspire.<br />
-                Build Your Future in <span className="text-[#C79100]">Tourism.</span>
-              </h1>
-              <p className="mt-3 max-w-2xl text-[14px] text-slate-600">
-                Real-world experience, expert mentorship and industry-recognised certificates.
-              </p>
+            {/* Hero is admin artwork - Homepage Banners > Internship. */}
+            <BannerHero type="internship" rounded="rounded-2xl" className="mb-4" />
 
+            <section className="overflow-hidden rounded-2xl border border-slate-100 bg-white p-8">
               {/* Counts, taken from the programme rather than typed in */}
               {!loading ? (
                 <div className="mt-6 flex flex-wrap gap-8 rounded-2xl bg-slate-900 px-6 py-4">

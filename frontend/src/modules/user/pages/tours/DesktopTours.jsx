@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BannerHero from '../../components/BannerHero';
 import {
   BadgeCheck, BadgePercent, CalendarCheck, CalendarDays, ChevronDown, Crown, Grid2X2, Headset,
   Heart, Landmark, MapPin, Mountain, Palmtree, ShieldCheck, Sparkles, Star, Users, UtensilsCrossed,
@@ -211,29 +212,8 @@ const DesktopTours = () => {
 
       <section className="mx-auto grid max-w-[1440px] grid-cols-[minmax(0,1fr)_324px] gap-6 px-8 pb-20 pt-5 xl:px-12">
         <div>
-        {/* -------------------------------------------------------------- Hero */}
-        <div className="relative overflow-hidden rounded-[20px] bg-[linear-gradient(100deg,#FFF6DE_0%,#FFFBEF_45%,#EAF6FF_100%)] px-9 py-11">
-          <div className="relative z-10 max-w-[500px]">
-            {hero.eyebrow && (
-              <p className="text-[12.5px] font-black uppercase tracking-[0.12em] text-[#F5B700]">{hero.eyebrow}</p>
-            )}
-            <h1 className="mt-2.5 text-[40px] font-black leading-[1.08] tracking-[-0.035em] text-slate-950">
-              {hero.title}
-            </h1>
-            {hero.subtitle && (
-              <p className="mt-3 text-[15px] font-medium leading-[1.55] text-slate-700">{hero.subtitle}</p>
-            )}
-            {hero.offerTitle && (
-              <p className="mt-5 inline-flex items-center gap-2 rounded-[11px] bg-[#F5B700] px-4 py-2.5 text-[13.5px] font-black text-slate-950">
-                {hero.offerTitle}
-                {hero.offerSubtitle && <span className="font-semibold">{hero.offerSubtitle}</span>}
-              </p>
-            )}
-          </div>
-          {hero.image && (
-            <img src={hero.image} alt="" className="pointer-events-none absolute -right-4 top-0 h-full w-[46%] object-cover" />
-          )}
-        </div>
+        {/* Hero is admin artwork - Homepage Banners > Tours. */}
+        <BannerHero type="tours" rounded="rounded-[20px]" />
 
         {trust.length > 0 && (
           <div className="mt-3 grid grid-cols-4 gap-4 rounded-[16px] bg-[var(--dh-surface)] px-7 py-4 ring-1 ring-[var(--dh-border)]">

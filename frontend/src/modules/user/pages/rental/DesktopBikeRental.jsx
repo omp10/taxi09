@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BannerHero from '../../components/BannerHero';
 import toast from 'react-hot-toast';
 import {
   ArrowRight,
@@ -212,22 +213,10 @@ const DesktopBikeRental = () => {
       <div className="mx-auto max-w-[1440px] px-8 pb-16 pt-5 xl:px-12">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
           <div>
-            {/* Hero */}
-            <section className="overflow-hidden rounded-2xl border border-slate-100 bg-gradient-to-r from-[#FFF9E6] to-white p-8">
-              <h1 className="text-[38px] font-black leading-none text-slate-900">Bike Rental</h1>
-              <p className="mt-2 text-[14px] text-slate-600">Ride your way. Explore more. Pay less.</p>
+            {/* Hero is admin artwork - Homepage Banners > Bike Rental. */}
+            <BannerHero type="bike_rental" rounded="rounded-2xl" />
 
-              <div className="mt-5 flex flex-wrap gap-2.5">
-                {HERO_POINTS.map((point) => (
-                  <span
-                    key={point.label}
-                    className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12px] font-bold text-slate-700"
-                  >
-                    <point.icon size={15} className="text-[#C79100]" /> {point.label}
-                  </span>
-                ))}
-              </div>
-
+            <section className="mt-4 overflow-hidden rounded-2xl border border-slate-100 bg-white p-6">
               {/* Search */}
               <div className="mt-6 grid gap-3 rounded-2xl bg-white p-4 shadow-sm md:grid-cols-[1.3fr_1fr_1fr_auto]">
                 <label className="block">
