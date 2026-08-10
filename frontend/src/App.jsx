@@ -299,12 +299,14 @@ const AdminRentalQuoteRequests = lazy(() => import('./modules/admin/pages/price-
 const AdminRentalQuoteDetail = lazy(() => import('./modules/admin/pages/price-management/RentalQuoteDetail'));
 const AdminRentalPackageTypes = lazy(() => import('./modules/admin/pages/price-management/RentalPackageTypes'));
 const AdminGoodsTypes = lazy(() => import('./modules/admin/pages/price-management/GoodsTypes'));
-const AdminPoolingManager = lazy(() => import('./modules/admin/pages/pooling/PoolingManager'));
-const AdminPoolingVehicles = lazy(() => import('./modules/admin/pages/pooling/PoolingVehicles'));
-const AdminPendingPoolingDrivers = lazy(() => import('./modules/admin/pages/pooling/PendingPoolingDrivers'));
-const AdminPoolingVehicleForm = lazy(() => import('./modules/admin/pages/pooling/PoolingVehicleForm'));
-const AdminPoolingBookings = lazy(() => import('./modules/admin/pages/pooling/PoolingBookings'));
-const AdminPoolingCommissionManager = lazy(() => import('./modules/admin/pages/pooling/PoolingCommissionManager'));
+// Car Pooling admin screens are retired - see the commented routes below and
+// the nav group in AdminLayout. Rider and driver pooling are unaffected.
+// const AdminPoolingManager = lazy(() => import('./modules/admin/pages/pooling/PoolingManager'));
+// const AdminPoolingVehicles = lazy(() => import('./modules/admin/pages/pooling/PoolingVehicles'));
+// const AdminPendingPoolingDrivers = lazy(() => import('./modules/admin/pages/pooling/PendingPoolingDrivers'));
+// const AdminPoolingVehicleForm = lazy(() => import('./modules/admin/pages/pooling/PoolingVehicleForm'));
+// const AdminPoolingBookings = lazy(() => import('./modules/admin/pages/pooling/PoolingBookings'));
+// const AdminPoolingCommissionManager = lazy(() => import('./modules/admin/pages/pooling/PoolingCommissionManager'));
 const AdminBusServiceManager = lazy(() => import('./modules/admin/pages/bus-service/BusServiceManager'));
 const AdminBusServiceDetails = lazy(() => import('./modules/admin/pages/bus-service/BusServiceDetails'));
 const AdminBusBookingManager = lazy(() => import('./modules/admin/pages/bus-service/BusBookingManager'));
@@ -1236,32 +1238,20 @@ function App() {
                 <Route path="bus-service/commission" element={<AdminBusCommissionManager />} />
                 <Route path="bus-service/bookings" element={<AdminBusBookingManager />} />
                 <Route path="bus-service/:id" element={<AdminBusServiceDetails />} />
-                <Route path="pooling" element={<Navigate to="/admin/pooling/routes" replace />} />
-                <Route path="pooling/routes" element={<AdminPoolingManager />} />
-                <Route path="pooling/pending-drivers" element={<AdminPendingPoolingDrivers />} />
-                <Route
-                  path="pooling/create"
-                  element={<AdminPoolingManager mode="create" />}
-                />
-                <Route
-                  path="pooling/edit/:id"
-                  element={<AdminPoolingManager mode="edit" />}
-                />
-                <Route path="pooling/vehicles" element={<AdminPoolingVehicles />} />
-                <Route path="pooling/commission" element={<AdminPoolingCommissionManager />} />
-                <Route
-                  path="pooling/vehicles/create"
-                  element={<AdminPoolingVehicleForm />}
-                />
-                <Route
-                  path="pooling/vehicles/edit/:id"
-                  element={<AdminPoolingVehicleForm />}
-                />
-                <Route
-                  path="pooling/vehicles/view/:id"
-                  element={<AdminPoolingVehicleForm mode="view" />}
-                />
-                <Route path="pooling/bookings" element={<AdminPoolingBookings />} />
+                {/* Car Pooling admin screens are retired - the pages still exist
+                    under modules/admin/pages/pooling if these need to come back.
+                    <Route path="pooling" element={<Navigate to="/admin/pooling/routes" replace />} />
+                    <Route path="pooling/routes" element={<AdminPoolingManager />} />
+                    <Route path="pooling/pending-drivers" element={<AdminPendingPoolingDrivers />} />
+                    <Route path="pooling/create" element={<AdminPoolingManager mode="create" />} />
+                    <Route path="pooling/edit/:id" element={<AdminPoolingManager mode="edit" />} />
+                    <Route path="pooling/vehicles" element={<AdminPoolingVehicles />} />
+                    <Route path="pooling/commission" element={<AdminPoolingCommissionManager />} />
+                    <Route path="pooling/vehicles/create" element={<AdminPoolingVehicleForm />} />
+                    <Route path="pooling/vehicles/edit/:id" element={<AdminPoolingVehicleForm />} />
+                    <Route path="pooling/vehicles/view/:id" element={<AdminPoolingVehicleForm mode="view" />} />
+                    <Route path="pooling/bookings" element={<AdminPoolingBookings />} />
+                */}
                 <Route path="wallet/payment" element={<AdminWalletPayment />} />
                 <Route path="users" element={<AdminUserList />} />
                 <Route path="users/create" element={<AdminUserCreate />} />
