@@ -34,6 +34,24 @@ const dailyRateOf = (vehicle) => {
 
 const money = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`;
 
+/** "2026-08-20" -> "20 Aug, 2026". Empty reads as a prompt, not a skeleton. */
+const formatDateLabel = (value) => {
+  if (!value) return 'Date';
+  const parsed = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return 'Date';
+  return parsed.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' });
+};
+
+/** "10:00" -> "10:00 AM". */
+const formatTimeLabel = (value) => {
+  if (!value) return 'Time';
+  const [hours, minutes] = String(value).split(':');
+  const parsed = new Date();
+  parsed.setHours(Number(hours), Number(minutes), 0, 0);
+  if (Number.isNaN(parsed.getTime())) return 'Time';
+  return parsed.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+};
+
 export const MobileSearchCard = () => {
   const navigate = useNavigate();
   const [mode, setMode] = useState('self-drive');
@@ -71,12 +89,11 @@ export const MobileSearchCard = () => {
     navigate(`${active.path}?${params.toString()}`);
   };
 
-  const openPicker = (event) => event.currentTarget.querySelector('input')?.showPicker?.();
 
   return (
-    <form onSubmit={submit} className="rounded-[22px] border border-slate-100 bg-white p-3.5 shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
+    <form onSubmit={submit} className="rounded-[20px] border border-slate-100 bg-white p-3 shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
       <h2 className="text-[19px] font-black leading-tight tracking-[-0.04em] text-slate-950">Where are you going?</h2>
-      <p className="mt-0.5 text-[13px] font-medium text-slate-500">Book Self Drive, Taxi or Bike in few taps</p>
+      <p className="mt-0.5 text-[12.5px] font-medium text-slate-500">Book Self Drive, Taxi or Bike in few taps</p>
 
       <div className="mt-3 grid grid-cols-3 gap-2">
         {MODES.map(({ key, label, icon: Icon }) => (
@@ -101,7 +118,7 @@ export const MobileSearchCard = () => {
         {stores.map((name) => <option key={name} value={name} />)}
       </datalist>
 
-      <label className="mt-2.5 flex items-center gap-2.5 rounded-xl border border-slate-200 px-3 py-2.5">
+      <label className="mt-2.5 flex items-center gap-2.5 rounded-xl border border-slate-200 px-3 py-2">
         <MapPin size={17} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
         <span className="min-w-0 flex-1">
           <span className="block text-[11.5px] font-semibold text-slate-500">Pickup Location</span>
@@ -117,31 +134,49 @@ export const MobileSearchCard = () => {
 
       <div className="mt-2.5 grid grid-cols-2 gap-2">
         {[
-          { label: 'Pickup Date & Time', dateKey: 'pickupDate', timeKey: 'pickupTime' },
-          { label: 'Return Date & Time', dateKey: 'returnDate', timeKey: 'returnTime' },
+          { label: 'Pickup', dateKey: 'pickupDate', timeKey: 'pickupTime' },
+          { label: 'Return', dateKey: 'returnDate', timeKey: 'returnTime' },
         ].map(({ label, dateKey, timeKey }) => (
-          <div key={dateKey} className="rounded-xl border border-slate-200 px-2.5 py-2">
+          <div key={dateKey} className="rounded-xl border border-slate-200 px-2.5 py-1.5">
             <span className="flex items-center gap-1 text-[11.5px] font-semibold text-slate-500">
               <Calendar size={13} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               {label}
             </span>
-            <span className="mt-1 block cursor-pointer" onClick={openPicker}>
-              <input
-                type="date"
-                // Return cannot precede pickup, and neither can be in the past.
-                min={dateKey === 'returnDate' ? (form.pickupDate || todayISO) : todayISO}
-                value={form[dateKey]}
-                onChange={update(dateKey)}
-                className="w-full bg-transparent text-[13.5px] font-bold text-slate-900 outline-none"
-              />
-            </span>
-            <span className="mt-0.5 block cursor-pointer" onClick={openPicker}>
-              <input
-                type="time"
-                value={form[timeKey]}
-                onChange={update(timeKey)}
-                className="w-full bg-transparent text-[13.5px] font-bold text-slate-900 outline-none"
-              />
+
+            {/* Date and time share one line - the field label already says
+                "Date & Time", so stacking two more captions repeated it. Each
+                native control is laid transparently over its own value, so a
+                tap opens the real picker instead of the dd/mm/yyyy skeleton. */}
+            <span className="mt-0.5 flex items-baseline gap-1 text-[12.5px] font-bold">
+              <span className="relative">
+                <span className={form[dateKey] ? 'text-slate-900' : 'text-slate-400'}>
+                  {formatDateLabel(form[dateKey])}
+                </span>
+                <input
+                  type="date"
+                  aria-label={`${label} - date`}
+                  // Return cannot precede pickup, and neither can be in the past.
+                  min={dateKey === 'returnDate' ? (form.pickupDate || todayISO) : todayISO}
+                  value={form[dateKey]}
+                  onChange={update(dateKey)}
+                  className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                />
+              </span>
+
+              <span className="text-slate-300">&middot;</span>
+
+              <span className="relative">
+                <span className={form[timeKey] ? 'text-slate-900' : 'text-slate-400'}>
+                  {formatTimeLabel(form[timeKey])}
+                </span>
+                <input
+                  type="time"
+                  aria-label={`${label} - time`}
+                  value={form[timeKey]}
+                  onChange={update(timeKey)}
+                  className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                />
+              </span>
             </span>
           </div>
         ))}
