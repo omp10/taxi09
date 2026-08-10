@@ -512,6 +512,30 @@ body {
   --dh-muted: #93a1b0;
 }
 
+/* Shared loading shimmer for the desktop home. Uses the themed chip/border
+   colours so it works in both light and dark without a second rule. */
+.desktop-home .dh-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--dh-chip) 25%,
+    var(--dh-border) 37%,
+    var(--dh-chip) 63%
+  );
+  background-size: 400% 100%;
+  animation: dh-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes dh-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desktop-home .dh-skeleton {
+    animation: none;
+  }
+}
+
 /* The stats strip and hero badge stay on their light yellow in dark mode, so
    pin their text dark rather than inheriting the light-on-dark body colour. */
 .desktop-home.theme-dark .bg-\[\#FFF9E6\] {

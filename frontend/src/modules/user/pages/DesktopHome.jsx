@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ArrowRight, ArrowUpDown, CalendarDays, Car, Clock, Headphones, MapPin, Users,
+  ArrowRight, ArrowUpDown, CalendarDays, Car, Clock, Headphones, Image as ImageIcon, MapPin, Users,
 } from 'lucide-react';
 import api from '../../../shared/api/axiosInstance';
 import {
@@ -38,7 +38,9 @@ const DesktopHome = () => {
   const navigate = useNavigate();
   const [theme, toggleTheme] = useDesktopTheme();
   const [banners, setBanners] = useState([]);
+  const [bannersLoading, setBannersLoading] = useState(true);
   const [search, setSearch] = useState({ pickup: '', drop: '', date: '', time: '' });
+  const [serviceStores, setServiceStores] = useState([]);
   const [platformStats, setPlatformStats] = useState(null);
 
   // Hero artwork is admin-managed through the same banner feed the mobile
@@ -58,27 +60,56 @@ const DesktopHome = () => {
       })
       .catch(() => {
         if (!cancelled) setBanners([]);
+      })
+      .finally(() => {
+        if (!cancelled) setBannersLoading(false);
       });
+    return () => { cancelled = true; };
+  }, []);
+
+  // Pickup and drop are seeded from the service stores that actually exist, so
+  // the form opens on a place the fleet can serve instead of an empty box. The
+  // same list backs the suggestions on both inputs.
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .get('/users/service-stores')
+      .then((response) => {
+        if (cancelled) return;
+        const names = [...new Set(
+          unwrapResults(response)
+            .map((store) => String(store?.name || store?.store_name || '').trim())
+            .filter(Boolean),
+        )];
+        setServiceStores(names);
+        if (names.length) {
+          setSearch((current) => (
+            current.pickup || current.drop
+              ? current
+              : { ...current, pickup: names[0], drop: names[0] }
+          ));
+        }
+      })
+      .catch(() => {});
     return () => { cancelled = true; };
   }, []);
 
   // Only artwork uploaded for wide screens is used. A portrait phone banner
   // cropped into a 2.9:1 hero loses its subject, so those are skipped rather
-  // than stretched; with none uploaded the packaged artwork stands in.
-  const heroSlides = useMemo(() => {
-    const wide = banners
-      .filter((banner) => banner?.desktopImage)
-      .map((banner, index) => ({
-        id: banner._id || banner.id || `banner-${index}`,
-        src: resolveBannerImage(banner.desktopImage),
-        title: banner.title || 'Taxi09',
-        href: banner.deep_link || banner.redirect_url || '',
-      }));
-
-    return wide.length
-      ? wide
-      : [{ id: 'default', src: '/taxi09_home_top_banner.png', title: 'Taxi09', href: '' }];
-  }, [banners]);
+  // than stretched. Nothing is substituted when the feed is empty: a packaged
+  // placeholder just looks like a real banner nobody can change.
+  const heroSlides = useMemo(
+    () =>
+      banners
+        .filter((banner) => banner?.desktopImage)
+        .map((banner, index) => ({
+          id: banner._id || banner.id || `banner-${index}`,
+          src: resolveBannerImage(banner.desktopImage),
+          title: banner.title || 'Taxi09',
+          href: banner.deep_link || banner.redirect_url || '',
+        })),
+    [banners],
+  );
 
   const [slideIndex, setActiveSlide] = useState(0);
   const activeSlide = heroSlides.length ? slideIndex % heroSlides.length : 0;
@@ -118,6 +149,16 @@ const DesktopHome = () => {
             banner is what renders, and more than one turns it into a carousel. */}
         <div className="relative pt-6">
           <div className="relative aspect-[2139/735] w-full overflow-hidden rounded-[28px] bg-[var(--dh-chip)]">
+            {bannersLoading ? <div className="absolute inset-0 dh-skeleton" /> : null}
+
+            {!bannersLoading && heroSlides.length === 0 ? (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-center">
+                <ImageIcon size={26} className="text-[var(--dh-muted)]" strokeWidth={2} />
+                <p className="text-[15px] font-semibold text-[var(--dh-text)]">No banner uploaded yet</p>
+                <p className="text-[13px] text-[var(--dh-muted)]">Add one under Homepage Banners in the admin panel.</p>
+              </div>
+            ) : null}
+
             {heroSlides.map((slide, index) => (
               <img
                 key={slide.id}
@@ -154,6 +195,13 @@ const DesktopHome = () => {
           onSubmit={submitSearch}
           className="relative z-20 -mt-4 grid grid-cols-[1.2fr_auto_1.2fr_1fr_1fr_auto] items-center gap-0 rounded-[20px] bg-[var(--dh-surface)] p-3 shadow-[0_16px_44px_rgba(15,23,42,0.12)] ring-1 ring-[var(--dh-border)]"
         >
+          {/* Native suggestions, so both inputs offer the stores that exist. */}
+          <datalist id="dh-service-stores">
+            {serviceStores.map((name) => (
+              <option key={name} value={name} />
+            ))}
+          </datalist>
+
           <label className="px-5 py-1">
             <span className="block text-[13px] font-bold text-[var(--dh-text)]">Pickup Location</span>
             <span className="mt-1.5 flex items-center gap-2">
@@ -162,6 +210,7 @@ const DesktopHome = () => {
                 value={search.pickup}
                 onChange={(event) => setSearch((current) => ({ ...current, pickup: event.target.value }))}
                 placeholder="Enter city or location"
+                list="dh-service-stores"
                 className={field}
               />
             </span>
@@ -184,6 +233,7 @@ const DesktopHome = () => {
                 value={search.drop}
                 onChange={(event) => setSearch((current) => ({ ...current, drop: event.target.value }))}
                 placeholder="Enter city or location"
+                list="dh-service-stores"
                 className={field}
               />
             </span>
@@ -270,7 +320,11 @@ const DesktopHome = () => {
             <div key={label} className="flex items-center gap-4">
               <Icon size={34} className="shrink-0 text-[#F5B700]" strokeWidth={2} />
               <div>
-                <p className="text-[25px] font-black leading-none tracking-[-0.03em] text-slate-950">{value}</p>
+                {platformStats ? (
+                  <p className="text-[25px] font-black leading-none tracking-[-0.03em] text-slate-950">{value}</p>
+                ) : (
+                  <span className="block h-[25px] w-20 rounded-md dh-skeleton" />
+                )}
                 <p className="mt-1.5 text-[13.5px] font-semibold text-slate-600">{label}</p>
               </div>
             </div>
