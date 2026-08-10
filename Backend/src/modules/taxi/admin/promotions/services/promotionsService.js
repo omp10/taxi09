@@ -139,6 +139,7 @@ const serializeBanner = (item) => ({
   _id: item._id,
   title: item.title || '',
   image: item.image || '',
+  desktopImage: item.desktopImage || '',
   link_type: item.link_type || 'external_link',
   external_link: item.external_link || '',
   deep_link: item.deep_link || '',
@@ -393,8 +394,10 @@ const normalizeBannerPayload = async (payload, existing = null) => {
   );
   const active = normalizeBoolean(payload.active ?? payload.status, existing?.active ?? true);
   const type = normalizeText(payload.type ?? existing?.type ?? 'rental');
-  if (!image) {
-    throw new ApiError(400, 'Banner image is required');
+  // Either artwork is enough. Whichever is missing is filled in from the other
+  // below, so a banner uploaded for one surface still renders on both.
+  if (!image && !desktopImage) {
+    throw new ApiError(400, 'Upload a banner image for phone or desktop');
   }
 
   if (type && !['rental', 'subscription', 'top', 'bottom'].includes(type)) {
@@ -432,10 +435,15 @@ const normalizeBannerPayload = async (payload, existing = null) => {
     throw new ApiError(400, 'Link type must be external_link or deep_link');
   }
 
+  // Mirror a single upload across both fields so no consumer has to special
+  // case a missing one.
+  const resolvedImage = image || desktopImage;
+  const resolvedDesktopImage = desktopImage || image;
+
   return {
     title,
-    image,
-    desktopImage,
+    image: resolvedImage,
+    desktopImage: resolvedDesktopImage,
     link_type: linkType,
     external_link: linkType === 'external_link' ? redirectUrl : '',
     deep_link: linkType === 'deep_link' ? redirectUrl : '',

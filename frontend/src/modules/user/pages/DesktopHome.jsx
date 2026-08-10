@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ArrowRight, ArrowUpDown, CalendarDays, Car, Clock, Headphones, MapPin, Play, UserRound, Users,
+  ArrowRight, ArrowUpDown, CalendarDays, Car, Clock, Headphones, MapPin, Users,
 } from 'lucide-react';
 import api from '../../../shared/api/axiosInstance';
 import {
-  AiChatBubble, DesktopNav, LiveFleetPanel, QuickRail, ServiceCard,
+  AiChatBubble, DesktopNav, ServiceCard,
 } from '../components/desktop/DesktopChrome';
 import {
   SERVICES, resolveBannerImage, unwrapResults, useDesktopTheme,
@@ -39,7 +39,6 @@ const DesktopHome = () => {
   const [theme, toggleTheme] = useDesktopTheme();
   const [banners, setBanners] = useState([]);
   const [search, setSearch] = useState({ pickup: '', drop: '', date: '', time: '' });
-  const [fleet, setFleet] = useState([]);
   const [platformStats, setPlatformStats] = useState(null);
 
   // Hero artwork is admin-managed through the same banner feed the mobile
@@ -63,31 +62,39 @@ const DesktopHome = () => {
     return () => { cancelled = true; };
   }, []);
 
-  // The hero side panel lists real vehicles from the rental catalogue rather
-  // than invented "recently booked" rows.
-  useEffect(() => {
-    let cancelled = false;
-    api
-      .get('/users/rental-vehicles')
-      .then((response) => {
-        if (!cancelled) setFleet(unwrapResults(response).slice(0, 3));
-      })
-      .catch(() => {
-        if (!cancelled) setFleet([]);
-      });
-    return () => { cancelled = true; };
-  }, []);
+  // Only artwork uploaded for wide screens is used. A portrait phone banner
+  // cropped into a 2.9:1 hero loses its subject, so those are skipped rather
+  // than stretched; with none uploaded the packaged artwork stands in.
+  const heroSlides = useMemo(() => {
+    const wide = banners
+      .filter((banner) => banner?.desktopImage)
+      .map((banner, index) => ({
+        id: banner._id || banner.id || `banner-${index}`,
+        src: resolveBannerImage(banner.desktopImage),
+        title: banner.title || 'Taxi09',
+        href: banner.deep_link || banner.redirect_url || '',
+      }));
 
-  // Prefer artwork uploaded for wide screens. A phone banner cropped to a
-  // desktop hero loses its subject, which is why the two are separate; a banner
-  // with only the phone image still works, it just crops the same as before.
-  const heroImage = useMemo(() => {
-    const wide = banners.find((banner) => banner?.desktopImage);
-    if (wide) return resolveBannerImage(wide.desktopImage);
-
-    const first = banners.find((banner) => banner?.image);
-    return first ? resolveBannerImage(first.image) : '/taxi09_home_top_banner.png';
+    return wide.length
+      ? wide
+      : [{ id: 'default', src: '/taxi09_home_top_banner.png', title: 'Taxi09', href: '' }];
   }, [banners]);
+
+  const [slideIndex, setActiveSlide] = useState(0);
+  const activeSlide = heroSlides.length ? slideIndex % heroSlides.length : 0;
+
+  // Rotate only when there is more than one banner to rotate through.
+  useEffect(() => {
+    if (heroSlides.length <= 1) {
+      return undefined;
+    }
+
+    const timer = setInterval(() => {
+      setActiveSlide((current) => (current + 1) % heroSlides.length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [heroSlides.length]);
 
   const submitSearch = (event) => {
     event.preventDefault();
@@ -107,81 +114,38 @@ const DesktopHome = () => {
 
       {/* -------------------------------------------------------------- Hero */}
       <section className="relative mx-auto max-w-[1440px] px-8 xl:px-12">
-        <div className="relative grid grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] items-center gap-6 pt-6">
-          <div className="relative z-10 pb-10">
-            <div className="flex items-center gap-3">
-              <span className="rounded-[10px] bg-[#FFF0B8] px-3 py-1.5 text-[15px] font-black text-slate-950">#1</span>
-              <span className="text-[15px] font-semibold text-[var(--dh-text)]">Trusted Car Rental Brand in India</span>
-            </div>
+        {/* Hero is entirely admin artwork: whatever is uploaded as a desktop
+            banner is what renders, and more than one turns it into a carousel. */}
+        <div className="relative pt-6">
+          <div className="relative aspect-[2139/735] w-full overflow-hidden rounded-[28px] bg-[var(--dh-chip)]">
+            {heroSlides.map((slide, index) => (
+              <img
+                key={slide.id}
+                src={slide.src}
+                alt={slide.title}
+                onClick={() => slide.href && navigate(slide.href)}
+                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+                  index === activeSlide ? 'opacity-100' : 'opacity-0'
+                } ${slide.href ? 'cursor-pointer' : ''}`}
+              />
+            ))}
 
-            <h1 className="mt-5 text-[52px] font-black leading-[1.08] tracking-[-0.035em] text-[var(--dh-text)]">
-              Drive Your <span className="text-[#F5B700]">Journey.</span>
-              <br />
-              We Handle Everything.
-            </h1>
-
-            <p className="mt-5 max-w-[470px] text-[16.5px] font-medium leading-[1.6] text-[var(--dh-muted)]">
-              Self Drive Cars, With Driver, Bike Rental, Bus Booking, Hotel Booking &amp; Tour Packages &ndash; All in One Place.
-            </p>
-
-            <div className="mt-6 flex items-center gap-3">
-              <div className="flex -space-x-2.5">
-                {[0, 1, 2, 3].map((index) => (
-                  <span
-                    key={index}
-                    className="flex h-9 w-9 items-center justify-center rounded-full border-[2.5px] border-[var(--dh-surface)] bg-[var(--dh-chip)] text-[12px] font-black text-[var(--dh-muted)]"
-                  >
-                    <UserRound size={15} strokeWidth={2.4} />
-                  </span>
+            {heroSlides.length > 1 ? (
+              <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-2">
+                {heroSlides.map((slide, index) => (
+                  <button
+                    key={slide.id}
+                    type="button"
+                    aria-label={`Show banner ${index + 1}`}
+                    aria-current={index === activeSlide}
+                    onClick={() => setActiveSlide(index)}
+                    className={`h-2.5 rounded-full transition-all ${
+                      index === activeSlide ? 'w-7 bg-[#F5B700]' : 'w-2.5 bg-white/70'
+                    }`}
+                  />
                 ))}
-                <span className="flex h-9 w-9 items-center justify-center rounded-full border-[2.5px] border-[var(--dh-surface)] bg-[#F5B700] text-[12px] font-black text-slate-950">
-                  4.9
-                </span>
               </div>
-              {/* The count is the real one, so the badge is dropped until there
-                  is a figure to stand behind. */}
-              <span className="text-[15px] font-semibold text-[var(--dh-text)]">
-                {platformStats?.customers > 0
-                  ? `Trusted by ${Number(platformStats.customers).toLocaleString('en-IN')} customers`
-                  : 'Trusted by travellers across India'}
-              </span>
-            </div>
-
-            <div className="mt-8 flex items-center gap-6">
-              <button
-                onClick={() => navigate('/taxi/user/rental')}
-                className="flex h-[58px] items-center gap-4 rounded-[16px] bg-[#F5B700] pl-7 pr-2.5 text-[17px] font-bold text-slate-950 shadow-[0_12px_28px_rgba(245,183,0,0.35)] transition-transform hover:-translate-y-0.5"
-              >
-                Book Now
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-950 text-[#F5B700]">
-                  <ArrowRight size={19} strokeWidth={2.8} />
-                </span>
-              </button>
-
-              <button
-                onClick={() => navigate('/taxi/user/tours')}
-                className="flex items-center gap-3.5 text-[16.5px] font-bold text-[var(--dh-text)]"
-              >
-                <span className="flex h-[52px] w-[52px] items-center justify-center rounded-full border-2 border-[var(--dh-border)] bg-[var(--dh-surface)]">
-                  <Play size={17} className="ml-0.5 fill-current text-[var(--dh-text)]" />
-                </span>
-                Watch Video
-              </button>
-            </div>
-          </div>
-
-          {/* Hero banner - admin managed */}
-          <div className="relative">
-            <img
-              src={heroImage}
-              alt="Taxi09"
-              className="h-[460px] w-full rounded-[28px] object-cover"
-            />
-
-            {/* Live fleet panel */}
-            <LiveFleetPanel fleet={fleet} className="absolute right-[74px] top-8" />
-
-            <QuickRail />
+            ) : null}
           </div>
         </div>
 

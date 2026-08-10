@@ -111,13 +111,15 @@ const HomepageBanners = ({ type = 'top', mode = 'list' }) => {
   const handleSave = async (event) => {
     event.preventDefault();
 
-    if (!formData.use_url && !formData.image) {
-      alert('Please upload a banner image');
+    // Either slot alone is a complete banner; the server copies whichever is
+    // missing across so both surfaces have artwork.
+    if (formData.use_url && !formData.image_url.trim()) {
+      alert('Please enter an image URL');
       return;
     }
 
-    if (formData.use_url && !formData.image_url.trim()) {
-      alert('Please enter an image URL');
+    if (!formData.use_url && !formData.image && !formData.desktopImage) {
+      alert('Upload a phone or desktop banner image');
       return;
     }
 
@@ -350,80 +352,74 @@ const HomepageBanners = ({ type = 'top', mode = 'list' }) => {
             className="bg-white rounded-[22px] border border-gray-200 shadow-sm p-8"
           >
             <div className="space-y-6 max-w-3xl">
+              {/* Two equal slots. Either one on its own is a valid banner - the
+                  backend copies whichever is missing across - so neither is
+                  marked required and the copy says so plainly. */}
               <div>
-                <label className="block text-[14px] font-semibold text-gray-900 mb-3">
-                  Upload Banner Graphic<span className="text-rose-500">*</span>
+                <label className="block text-[14px] font-semibold text-gray-900">
+                  Banner artwork
                 </label>
-
-                <div className="rounded-xl border-2 border-dashed border-gray-300 bg-white p-4">
-                  {imagePreview ? (
-                    <div className="space-y-4">
-                      <img
-                        src={imagePreview}
-                        alt="Banner preview"
-                        className="h-28 w-full rounded-lg border border-gray-200 object-contain bg-gray-50"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setImagePreview(null);
-                          setFormData((current) => ({ ...current, image: null }));
-                        }}
-                        className="inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                      >
-                        Remove Image
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="flex cursor-pointer flex-col items-center justify-center gap-3 py-6 text-center">
-                      <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
-                      <span className="text-[22px] text-gray-500">
-                        <Upload size={28} />
-                      </span>
-                      <div>
-                        <p className="text-[15px] font-medium text-gray-900">Upload Image</p>
-                      </div>
-                    </label>
-                  )}
-                </div>
-
-              {/* Optional wide-screen artwork. The desktop hero is a much wider
-                  crop than the phone banner, so a portrait image loses its
-                  subject there; leaving this empty keeps the old behaviour. */}
-              <div className="mt-5">
-                <p className="text-[15px] font-medium text-gray-900">Desktop banner</p>
-                <p className="mt-0.5 text-[13px] text-gray-500">
-                  Optional. Wider artwork for large screens — the phone image is used if this is left empty.
+                <p className="mt-1 text-[13px] text-gray-500">
+                  Upload one or both. If you add only one, it is used on phone and desktop.
                 </p>
 
-                <div className="mt-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50">
-                  {desktopPreview ? (
-                    <div className="flex flex-col items-center gap-3 p-4">
-                      <img src={desktopPreview} alt="" className="max-h-40 w-full rounded-lg object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setDesktopPreview(null);
-                          setFormData((current) => ({ ...current, desktopImage: null }));
-                        }}
-                        className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50"
-                      >
-                        Remove desktop image
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="flex cursor-pointer flex-col items-center justify-center gap-3 py-6 text-center">
-                      <input type="file" className="hidden" accept="image/*" onChange={handleDesktopImageChange} />
-                      <span className="text-[22px] text-gray-500">
-                        <Upload size={28} />
-                      </span>
-                      <div>
-                        <p className="text-[15px] font-medium text-gray-900">Upload desktop image</p>
+                <div className="mt-4 grid gap-4 md:grid-cols-2">
+                  {[
+                    {
+                      key: 'image',
+                      heading: 'Phone',
+                      hint: 'Tall artwork, shown in the app',
+                      preview: imagePreview,
+                      onChange: handleImageChange,
+                      onRemove: () => {
+                        setImagePreview(null);
+                        setFormData((current) => ({ ...current, image: null }));
+                      },
+                    },
+                    {
+                      key: 'desktopImage',
+                      heading: 'Desktop',
+                      hint: 'Wide artwork, shown on the website',
+                      preview: desktopPreview,
+                      onChange: handleDesktopImageChange,
+                      onRemove: () => {
+                        setDesktopPreview(null);
+                        setFormData((current) => ({ ...current, desktopImage: null }));
+                      },
+                    },
+                  ].map((slot) => (
+                    <div key={slot.key} className="rounded-xl border-2 border-dashed border-gray-300 bg-white p-4">
+                      <div className="mb-3 flex items-baseline justify-between gap-2">
+                        <p className="text-[14px] font-semibold text-gray-900">{slot.heading}</p>
+                        <span className="text-[12px] font-medium text-gray-400">Optional</span>
                       </div>
-                    </label>
-                  )}
+
+                      {slot.preview ? (
+                        <div className="space-y-3">
+                          <img
+                            src={slot.preview}
+                            alt={`${slot.heading} banner preview`}
+                            className="h-32 w-full rounded-lg border border-gray-200 bg-gray-50 object-contain"
+                          />
+                          <button
+                            type="button"
+                            onClick={slot.onRemove}
+                            className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ) : (
+                        <label className="flex h-32 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg bg-gray-50 text-center transition-colors hover:bg-gray-100">
+                          <input type="file" className="hidden" accept="image/*" onChange={slot.onChange} />
+                          <Upload size={24} className="text-gray-500" />
+                          <p className="text-[14px] font-medium text-gray-900">Upload {slot.heading.toLowerCase()} image</p>
+                          <p className="text-[12px] text-gray-500">{slot.hint}</p>
+                        </label>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              </div>
               </div>
 
               <div className="space-y-3">
