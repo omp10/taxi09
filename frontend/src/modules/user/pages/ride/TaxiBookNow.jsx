@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowDownUp, Calendar, Car, ChevronDown, Clock, Headset, IndianRupee, MapPin, Shield, User } from 'lucide-react';
 import api from '../../../../shared/api/axiosInstance';
 import BottomNavbar from '../../components/BottomNavbar';
+import { useAppGoogleMapsLoader } from '../../../admin/utils/googleMaps';
 import { LOCATION_COORDS } from './SelectLocation';
 
 const DEFAULT_COORDS = [75.8577, 22.7196];
@@ -49,9 +50,104 @@ const TaxiBookNow = () => {
   const [fareCategories, setFareCategories] = useState([]);
   const [places, setPlaces] = useState(FALLBACK_PLACES);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
-  const [pickup, setPickup] = useState('');
-  const [drop, setDrop] = useState('');
+  const [pickup, setPickup] = useState({ label: '', coords: null });
+  const [drop, setDrop] = useState({ label: '', coords: null });
   const [openField, setOpenField] = useState(null); // 'pickup' | 'drop' | null
+  const [query, setQuery] = useState('');
+  const [predictions, setPredictions] = useState([]);
+  const [searching, setSearching] = useState(false);
+
+  // Google Places drives the suggestions; the service-store list is what shows
+  // before anything is typed and if Maps is unavailable.
+  const { isLoaded: mapsReady } = useAppGoogleMapsLoader();
+  const autocompleteRef = useRef(null);
+  const placesRef = useRef(null);
+  const sessionTokenRef = useRef(null);
+  const searchSeqRef = useRef(0);
+
+  useEffect(() => {
+    if (!mapsReady || !window.google?.maps?.places?.AutocompleteService) return;
+    autocompleteRef.current = autocompleteRef.current || new window.google.maps.places.AutocompleteService();
+    placesRef.current = placesRef.current || new window.google.maps.places.PlacesService(document.createElement('div'));
+    sessionTokenRef.current = sessionTokenRef.current || new window.google.maps.places.AutocompleteSessionToken();
+  }, [mapsReady]);
+
+  // Debounced so typing does not fire a request per keystroke.
+  useEffect(() => {
+    const text = query.trim();
+    // Nothing is set synchronously here: the render gates on the query length,
+    // so a short query simply shows the stores instead of stale predictions.
+    if (!openField || text.length < 3 || !autocompleteRef.current) {
+      return undefined;
+    }
+
+    const seq = searchSeqRef.current + 1;
+    searchSeqRef.current = seq;
+
+    const handle = setTimeout(() => {
+      setSearching(true);
+      autocompleteRef.current.getPlacePredictions(
+        {
+          input: text,
+          componentRestrictions: { country: 'in' },
+          sessionToken: sessionTokenRef.current,
+        },
+        (results = [], status) => {
+          if (searchSeqRef.current !== seq) return;
+          setPredictions(
+            status === 'OK'
+              ? results.slice(0, 6).map((item) => ({
+                placeId: item.place_id,
+                title: item.structured_formatting?.main_text || item.description,
+                address: item.description,
+              }))
+              : [],
+          );
+          setSearching(false);
+        },
+      );
+    }, 300);
+
+    return () => clearTimeout(handle);
+  }, [query, openField]);
+
+  // A prediction only carries an id, so the coordinates are fetched on pick.
+  const choosePrediction = (prediction) => {
+    const setField = openField === 'drop' ? setDrop : setPickup;
+
+    if (!placesRef.current) return;
+    placesRef.current.getDetails(
+      {
+        placeId: prediction.placeId,
+        sessionToken: sessionTokenRef.current,
+        fields: ['formatted_address', 'geometry.location', 'name'],
+      },
+      (place, status) => {
+        const point = place?.geometry?.location;
+        if (status !== 'OK' || !point) {
+          setError('Could not locate that place, please pick another.');
+          return;
+        }
+        setField({
+          label: prediction.title || place.name || place.formatted_address,
+          coords: [point.lng(), point.lat()],
+        });
+        // A fresh token per completed lookup, per the Places billing rules.
+        sessionTokenRef.current = window.google?.maps?.places?.AutocompleteSessionToken
+          ? new window.google.maps.places.AutocompleteSessionToken()
+          : null;
+        setOpenField(null);
+        setQuery('');
+        setError('');
+      },
+    );
+  };
+
+  const chooseStore = (place) => {
+    (openField === 'drop' ? setDrop : setPickup)({ label: place.name, coords: place.coords });
+    setOpenField(null);
+    setQuery('');
+  };
   const [rideMode, setRideMode] = useState('now');
   const [scheduleDate, setScheduleDate] = useState(() => toDateInputValue(new Date()));
   const [scheduleTime, setScheduleTime] = useState(() => {
@@ -108,9 +204,8 @@ const TaxiBookNow = () => {
     [fareCategories, selectedCategoryId],
   );
 
-  const coordsFor = (name) => places.find((place) => place.name === name)?.coords || null;
-  const pickupCoords = coordsFor(pickup);
-  const dropCoords = coordsFor(drop);
+  const pickupCoords = pickup.coords;
+  const dropCoords = drop.coords;
 
   const estimate = useMemo(() => {
     if (!selectedCategory || !pickupCoords || !dropCoords) {
@@ -134,7 +229,7 @@ const TaxiBookNow = () => {
   const scheduledAtDate = rideMode === 'schedule' ? new Date(`${scheduleDate}T${scheduleTime}`) : null;
 
   const canBook =
-    Boolean(selectedCategory && pickup.trim() && drop.trim() && estimate) &&
+    Boolean(selectedCategory && pickup.coords && drop.coords && estimate) &&
     (rideMode === 'now' || (scheduledAtDate && scheduledAtDate.getTime() > now));
 
   const handleBook = () => {
@@ -150,8 +245,8 @@ const TaxiBookNow = () => {
     setError('');
     navigate('/taxi/user/ride/searching', {
       state: {
-        pickup,
-        drop,
+        pickup: pickup.label,
+        drop: drop.label,
         pickupCoords: pickupCoords || DEFAULT_COORDS,
         dropCoords: dropCoords || DEFAULT_COORDS,
         transport_type: 'taxi',
@@ -180,24 +275,55 @@ const TaxiBookNow = () => {
     });
   };
 
-  const renderLocationSuggestions = (field, onPick) => (
-    <div className="absolute left-0 right-0 top-[72px] z-30 max-h-60 overflow-y-auto rounded-[14px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.16)]">
-      {places.filter(({ name }) => name !== (field === 'pickup' ? drop : pickup)).map(({ name }) => (
-        <button
-          key={name}
-          type="button"
-          onClick={() => {
-            onPick(name);
-            setOpenField(null);
-          }}
-          className="flex w-full items-center gap-2 border-b border-slate-50 px-4 py-2.5 text-left text-[13px] font-semibold text-slate-700 last:border-b-0"
-        >
-          <MapPin size={15} className="text-[#f5b700]" />
-          <span className="truncate">{name}</span>
-        </button>
-      ))}
-    </div>
-  );
+  // One list for both fields: Places results once there is a query, the live
+  // service stores before that.
+  const suggestionList = () => {
+    const typed = query.trim().length >= 3;
+    const otherLabel = openField === 'drop' ? pickup.label : drop.label;
+
+    return (
+      <div className="absolute left-0 right-0 z-30 mt-1 max-h-64 overflow-y-auto rounded-[14px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.16)]">
+        {typed && searching ? (
+          <p className="px-4 py-3 text-[12px] font-semibold text-slate-400">Searching...</p>
+        ) : null}
+
+        {typed && !searching && predictions.length === 0 ? (
+          <p className="px-4 py-3 text-[12px] font-semibold text-slate-400">
+            {mapsReady ? 'No places found' : 'Place search is unavailable right now'}
+          </p>
+        ) : null}
+
+        {typed
+          ? predictions.map((prediction) => (
+            <button
+              key={prediction.placeId}
+              type="button"
+              onClick={() => choosePrediction(prediction)}
+              className="flex w-full items-start gap-2 border-b border-slate-50 px-4 py-2.5 text-left last:border-b-0"
+            >
+              <MapPin size={15} className="mt-0.5 shrink-0 text-[#f5b700]" />
+              <span className="min-w-0">
+                <span className="block truncate text-[13px] font-semibold text-slate-800">{prediction.title}</span>
+                <span className="block truncate text-[11px] text-slate-500">{prediction.address}</span>
+              </span>
+            </button>
+          ))
+          : places
+            .filter((place) => place.name !== otherLabel)
+            .map((place) => (
+              <button
+                key={place.name}
+                type="button"
+                onClick={() => chooseStore(place)}
+                className="flex w-full items-center gap-2 border-b border-slate-50 px-4 py-2.5 text-left text-[13px] font-semibold text-slate-700 last:border-b-0"
+              >
+                <MapPin size={15} className="text-[#f5b700]" />
+                <span className="truncate">{place.name}</span>
+              </button>
+            ))}
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen max-w-lg md:max-w-none md:mx-0 mx-auto bg-white text-black font-sans relative overflow-x-hidden pb-28 shadow-2xl md:shadow-none border-x border-slate-100 md:border-x-0">
@@ -246,56 +372,42 @@ const TaxiBookNow = () => {
           </div>
 
           <div className="relative mt-4 space-y-3">
-            <button
-              type="button"
-              onClick={() => setOpenField(openField === 'pickup' ? null : 'pickup')}
-              className="flex min-h-[68px] w-full items-center gap-3 rounded-[14px] border border-slate-200 bg-white px-4 text-left shadow-[0_4px_14px_rgba(15,23,42,0.04)]"
-            >
-              <span className="h-6 w-6 shrink-0 rounded-full bg-[#22c55e]" />
-              <span className="min-w-0 flex-1">
-                <span className="block text-[12px] font-medium text-slate-500">Pick-up Location</span>
-                <span className={`block truncate text-[16px] font-semibold ${pickup ? 'text-black' : 'text-slate-400'}`}>
-                  {pickup || 'Where from?'}
+            {/* Typing queries Google Places; the stores show before that. */}
+            <div className="relative">
+              <div className="flex min-h-[68px] w-full items-center gap-3 rounded-[14px] border border-slate-200 bg-white px-4 shadow-[0_4px_14px_rgba(15,23,42,0.04)]">
+                <span className="h-6 w-6 shrink-0 rounded-full bg-[#22c55e]" />
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[12px] font-medium text-slate-500">Pick-up Location</span>
+                  <input
+                    value={openField === 'pickup' ? query : pickup.label}
+                    onFocus={() => { setOpenField('pickup'); setQuery(''); }}
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder="Where from?"
+                    className="block w-full truncate bg-transparent text-[16px] font-semibold text-black outline-none placeholder:font-medium placeholder:text-slate-400"
+                  />
                 </span>
-              </span>
-              <ChevronDown size={21} className="text-slate-500" />
-            </button>
-
-            {openField === 'pickup' && renderLocationSuggestions('pickup', setPickup)}
-
-            <button
-              type="button"
-              onClick={() => setOpenField(openField === 'drop' ? null : 'drop')}
-              className="flex min-h-[68px] w-full items-center gap-3 rounded-[14px] border border-slate-200 bg-white px-4 text-left shadow-[0_4px_14px_rgba(15,23,42,0.04)]"
-            >
-              <MapPin size={28} className="shrink-0 text-[#ff3b4f]" strokeWidth={2.4} />
-              <span className="min-w-0 flex-1">
-                <span className="block text-[12px] font-medium text-slate-500">Drop-off Location</span>
-                <span className={`block truncate text-[16px] font-semibold ${drop ? 'text-black' : 'text-slate-400'}`}>
-                  {drop || 'Where to?'}
-                </span>
-              </span>
-              <ChevronDown size={21} className="text-slate-500" />
-            </button>
-
-            {openField === 'drop' && (
-              <div className="absolute left-0 right-0 top-[152px] z-30 max-h-60 overflow-y-auto rounded-[14px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.16)]">
-                {places.filter(({ name }) => name !== pickup).map(({ name }) => (
-                  <button
-                    key={name}
-                    type="button"
-                    onClick={() => {
-                      setDrop(name);
-                      setOpenField(null);
-                    }}
-                    className="flex w-full items-center gap-2 border-b border-slate-50 px-4 py-2.5 text-left text-[13px] font-semibold text-slate-700 last:border-b-0"
-                  >
-                    <MapPin size={15} className="text-[#f5b700]" />
-                    <span className="truncate">{name}</span>
-                  </button>
-                ))}
+                <ChevronDown size={21} className="shrink-0 text-slate-500" />
               </div>
-            )}
+              {openField === 'pickup' ? suggestionList() : null}
+            </div>
+
+            <div className="relative">
+              <div className="flex min-h-[68px] w-full items-center gap-3 rounded-[14px] border border-slate-200 bg-white px-4 shadow-[0_4px_14px_rgba(15,23,42,0.04)]">
+                <MapPin size={28} className="shrink-0 text-[#ff3b4f]" strokeWidth={2.4} />
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[12px] font-medium text-slate-500">Drop-off Location</span>
+                  <input
+                    value={openField === 'drop' ? query : drop.label}
+                    onFocus={() => { setOpenField('drop'); setQuery(''); }}
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder="Where to?"
+                    className="block w-full truncate bg-transparent text-[16px] font-semibold text-black outline-none placeholder:font-medium placeholder:text-slate-400"
+                  />
+                </span>
+                <ChevronDown size={21} className="shrink-0 text-slate-500" />
+              </div>
+              {openField === 'drop' ? suggestionList() : null}
+            </div>
 
             <button
               type="button"
