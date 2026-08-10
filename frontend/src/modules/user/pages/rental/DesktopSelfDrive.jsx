@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight, ArrowUpDown, BadgeCheck, CalendarDays, CalendarRange, Car, Clock, CreditCard,
   Gauge, Headphones, IndianRupee, MapPin, Play, ShieldCheck, Sparkles, Users, Zap,
 } from 'lucide-react';
-import {
-  DesktopNav, ServiceCard,
-} from '../../components/desktop/DesktopChrome';
+import { DesktopNav } from '../../components/desktop/DesktopChrome';
+import api from '../../../../shared/api/axiosInstance';
 import BannerHero from '../../components/BannerHero';
 import {
-  SERVICES, useDesktopTheme,
+  openRentalVehicle, unwrapResults, useDesktopTheme,
 } from '../../components/desktop/desktopShared';
 
 /**
@@ -60,6 +59,30 @@ const DesktopSelfDrive = () => {
   const [theme, toggleTheme] = useDesktopTheme();
 
   const [search, setSearch] = useState({ pickup: '', drop: '', date: '', time: '' });
+  const [serviceLocations, setServiceLocations] = useState([]);
+  const [cars, setCars] = useState([]);
+
+  // Suggestions come from the places the fleet actually operates from, and the
+  // strip below shows the real catalogue rather than a fixed service list.
+  useEffect(() => {
+    let cancelled = false;
+
+    Promise.all([
+      api.get('/users/service-stores').catch(() => null),
+      api.get('/users/rental-vehicles').catch(() => null),
+    ]).then(([storeRes, carRes]) => {
+      if (cancelled) return;
+
+      const stores = unwrapResults(storeRes)
+        .map((store) => String(store?.name || store?.store_name || '').trim())
+        .filter(Boolean);
+      setServiceLocations([...new Set(stores)]);
+
+      setCars(unwrapResults(carRes).filter((car) => car?.active !== false));
+    });
+
+    return () => { cancelled = true; };
+  }, []);
 
   const submitSearch = (event) => {
     event.preventDefault();
@@ -98,6 +121,12 @@ const DesktopSelfDrive = () => {
 
         {/* ------------------------------------------------------- Booking card */}
         <div className="relative z-20 mt-6 rounded-[22px] bg-[var(--dh-surface)] p-6 shadow-[0_16px_44px_rgba(15,23,42,0.12)] ring-1 ring-[var(--dh-border)]">
+          <datalist id="rental-service-locations">
+            {serviceLocations.map((name) => (
+              <option key={name} value={name} />
+            ))}
+          </datalist>
+
           <form onSubmit={submitSearch} className="grid grid-cols-[1.15fr_auto_1.15fr_1fr_1fr_auto] items-end gap-3">
             <label>
               <span className="block text-[12.5px] font-bold text-[var(--dh-text)]">Pickup Location</span>
@@ -107,6 +136,7 @@ const DesktopSelfDrive = () => {
                   value={search.pickup}
                   onChange={(event) => setSearch((current) => ({ ...current, pickup: event.target.value }))}
                   placeholder="Enter city or location"
+                  list="rental-service-locations"
                   className={field}
                 />
               </span>
@@ -129,6 +159,7 @@ const DesktopSelfDrive = () => {
                   value={search.drop}
                   onChange={(event) => setSearch((current) => ({ ...current, drop: event.target.value }))}
                   placeholder="Enter city or location"
+                  list="rental-service-locations"
                   className={field}
                 />
               </span>
@@ -199,11 +230,54 @@ const DesktopSelfDrive = () => {
           </button>
         </div>
 
-        <div className="mt-6 grid grid-cols-6 gap-3.5">
-          {SERVICES.map((service, index) => (
-            <ServiceCard key={service.title} {...service} highlighted={index === 0} />
-          ))}
-        </div>
+        {/* The real catalogue, marqueed. Duplicated once so the loop has no
+            visible seam; the copy is aria-hidden so it is not read twice. */}
+        {cars.length > 0 ? (
+          <div className="dh-marquee mt-6 overflow-hidden">
+            <div className="dh-marquee-track flex gap-3.5">
+              {[cars, cars].flat().map((car, index) => (
+                <button
+                  key={`${car._id || car.id}-${index}`}
+                  type="button"
+                  aria-hidden={index >= cars.length}
+                  tabIndex={index >= cars.length ? -1 : 0}
+                  onClick={() => openRentalVehicle(navigate, car)}
+                  className="group w-[232px] shrink-0 overflow-hidden rounded-[16px] bg-[var(--dh-surface)] text-left ring-1 ring-[var(--dh-border)] transition-shadow hover:shadow-[0_14px_32px_rgba(15,23,42,0.12)]"
+                >
+                  <div className="flex h-[132px] items-center justify-center bg-[var(--dh-chip)] p-3">
+                    {car.image ? (
+                      <img
+                        src={car.image}
+                        alt={car.name}
+                        className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <Car size={40} className="text-[var(--dh-muted)]" />
+                    )}
+                  </div>
+                  <div className="p-3.5">
+                    <p className="truncate text-[14px] font-black text-[var(--dh-text)]">{car.name}</p>
+                    <p className="mt-0.5 truncate text-[11.5px] font-semibold text-[var(--dh-muted)]">
+                      {[car.transmission, car.fuel, car.capacity ? `${car.capacity} seats` : ''].filter(Boolean).join(' · ')}
+                    </p>
+                    {car.pricing?.[0]?.price ? (
+                      <p className="mt-2 text-[13.5px] font-black text-[var(--dh-text)]">
+                        ₹{Number(car.pricing[0].price).toLocaleString('en-IN')}
+                        <span className="text-[11px] font-semibold text-[var(--dh-muted)]"> / {car.pricing[0].label}</span>
+                      </p>
+                    ) : null}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="mt-6 grid grid-cols-6 gap-3.5">
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="h-[232px] rounded-[16px] dh-skeleton" />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* -------------------------------------------------------- Why choose */}

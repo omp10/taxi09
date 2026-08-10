@@ -512,6 +512,31 @@ body {
   --dh-muted: #93a1b0;
 }
 
+/* Continuous marquee for the rental car strip. The track holds two copies of
+   the list, so translating by half its width loops seamlessly. */
+.desktop-home .dh-marquee-track {
+  width: max-content;
+  animation: dh-marquee 42s linear infinite;
+}
+
+.desktop-home .dh-marquee:hover .dh-marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes dh-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desktop-home .dh-marquee-track {
+    animation: none;
+  }
+  .desktop-home .dh-marquee {
+    overflow-x: auto;
+  }
+}
+
 /* Shared loading shimmer for the desktop home. Uses the themed chip/border
    colours so it works in both light and dark without a second rule. */
 .desktop-home .dh-skeleton {
