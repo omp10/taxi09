@@ -2217,6 +2217,36 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
 
         <div className="grid grid-cols-1 gap-4 border-t border-slate-100 bg-slate-50/50 p-6 lg:grid-cols-[1fr_auto] lg:items-center">
           </div>
+
+          {/* Walking forward is the common path; the numbered tabs above are
+              for jumping back to a section. Shown on every step, unlike the
+              save button, which belongs to Publish. */}
+          <div className="flex items-center justify-between gap-3 lg:col-span-2">
+            <button
+              type="button"
+              onClick={() => setStep((current) => Math.max(0, current - 1))}
+              disabled={step === 0}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <ArrowLeft size={15} />
+              Back
+            </button>
+
+            <span className="text-xs font-semibold text-slate-400">
+              Step {step + 1} of {EDITOR_STEPS.length} &middot; {EDITOR_STEPS[step]}
+            </span>
+
+            <button
+              type="button"
+              onClick={() => setStep((current) => Math.min(EDITOR_STEPS.length - 1, current + 1))}
+              disabled={step === EDITOR_STEPS.length - 1}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-[#2e3c78] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#24305f] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Next
+              <ChevronRight size={15} />
+            </button>
+          </div>
+
           <div className={stepClass(5)}>
           <div className="space-y-3">
             <div>
