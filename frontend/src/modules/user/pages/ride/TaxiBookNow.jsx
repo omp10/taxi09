@@ -6,7 +6,22 @@ import BottomNavbar from '../../components/BottomNavbar';
 import { LOCATION_COORDS } from './SelectLocation';
 
 const DEFAULT_COORDS = [75.8577, 22.7196];
-const LOCATION_NAMES = Object.keys(LOCATION_COORDS);
+
+// Pickup/drop options come from the live service-store catalogue. The static
+// landmark map is only a fallback for when that call returns nothing, so the
+// screen still works offline or before any store is configured.
+const FALLBACK_PLACES = Object.entries(LOCATION_COORDS).map(([name, coords]) => ({ name, coords }));
+
+const getStoreCoords = (store) => {
+  const coords = store?.location?.coordinates;
+  if (Array.isArray(coords) && coords.length === 2 && coords.every(Number.isFinite)) {
+    return coords;
+  }
+
+  const lng = Number(store?.longitude);
+  const lat = Number(store?.latitude);
+  return Number.isFinite(lng) && Number.isFinite(lat) ? [lng, lat] : null;
+};
 
 const haversineMeters = ([lng1, lat1], [lng2, lat2]) => {
   const toRad = (deg) => (deg * Math.PI) / 180;
@@ -32,6 +47,7 @@ const TaxiBookNow = () => {
   const navigate = useNavigate();
 
   const [fareCategories, setFareCategories] = useState([]);
+  const [places, setPlaces] = useState(FALLBACK_PLACES);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [pickup, setPickup] = useState('');
   const [drop, setDrop] = useState('');
@@ -43,6 +59,13 @@ const TaxiBookNow = () => {
     return `${String(soon.getHours()).padStart(2, '0')}:${String(soon.getMinutes()).padStart(2, '0')}`;
   });
   const [error, setError] = useState('');
+  // Ticks so a schedule time that slips into the past disables the button on its own.
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 30000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -60,6 +83,21 @@ const TaxiBookNow = () => {
         if (active) setError('Could not load taxi categories. Please try again.');
       });
 
+    api.get('/users/service-stores')
+      .then((response) => {
+        const payload = response?.data?.data || response?.data || {};
+        const live = (Array.isArray(payload.results) ? payload.results : [])
+          .map((store) => ({ name: String(store.name || store.store_name || '').trim(), coords: getStoreCoords(store) }))
+          .filter((place) => place.name && place.coords);
+
+        if (active && live.length) {
+          setPlaces(live);
+        }
+      })
+      .catch(() => {
+        /* keep the fallback landmark list */
+      });
+
     return () => {
       active = false;
     };
@@ -70,8 +108,9 @@ const TaxiBookNow = () => {
     [fareCategories, selectedCategoryId],
   );
 
-  const pickupCoords = LOCATION_COORDS[pickup] || null;
-  const dropCoords = LOCATION_COORDS[drop] || null;
+  const coordsFor = (name) => places.find((place) => place.name === name)?.coords || null;
+  const pickupCoords = coordsFor(pickup);
+  const dropCoords = coordsFor(drop);
 
   const estimate = useMemo(() => {
     if (!selectedCategory || !pickupCoords || !dropCoords) {
@@ -96,7 +135,7 @@ const TaxiBookNow = () => {
 
   const canBook =
     Boolean(selectedCategory && pickup.trim() && drop.trim() && estimate) &&
-    (rideMode === 'now' || (scheduledAtDate && scheduledAtDate.getTime() > Date.now()));
+    (rideMode === 'now' || (scheduledAtDate && scheduledAtDate.getTime() > now));
 
   const handleBook = () => {
     if (!canBook) {
@@ -143,7 +182,7 @@ const TaxiBookNow = () => {
 
   const renderLocationSuggestions = (field, onPick) => (
     <div className="absolute left-0 right-0 top-[72px] z-30 max-h-60 overflow-y-auto rounded-[14px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.16)]">
-      {LOCATION_NAMES.filter((name) => name !== (field === 'pickup' ? drop : pickup)).map((name) => (
+      {places.filter(({ name }) => name !== (field === 'pickup' ? drop : pickup)).map(({ name }) => (
         <button
           key={name}
           type="button"
@@ -241,7 +280,7 @@ const TaxiBookNow = () => {
 
             {openField === 'drop' && (
               <div className="absolute left-0 right-0 top-[152px] z-30 max-h-60 overflow-y-auto rounded-[14px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.16)]">
-                {LOCATION_NAMES.filter((name) => name !== pickup).map((name) => (
+                {places.filter(({ name }) => name !== pickup).map(({ name }) => (
                   <button
                     key={name}
                     type="button"
