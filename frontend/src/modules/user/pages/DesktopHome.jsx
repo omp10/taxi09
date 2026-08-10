@@ -143,7 +143,7 @@ const DesktopHome = () => {
 
   return (
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
-      <DesktopNav activePath="/taxi/user" theme={theme} onToggleTheme={toggleTheme} />
+      <DesktopNav activePath="/taxi/user" theme={theme} onToggleTheme={toggleTheme} loading={bannersLoading || !platformStats} />
 
       {/* -------------------------------------------------------------- Hero */}
       <section className="relative mx-auto max-w-[1440px] px-8 xl:px-12">

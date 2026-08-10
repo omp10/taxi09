@@ -110,7 +110,7 @@ const DesktopSelfDrive = () => {
 
   return (
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
-      <DesktopNav activePath="/taxi/user/rental" theme={theme} onToggleTheme={toggleTheme} />
+      <DesktopNav activePath="/taxi/user/rental" theme={theme} onToggleTheme={toggleTheme} loading={cars.length === 0} />
 
       {/* -------------------------------------------------------------- Hero */}
       <section className="relative mx-auto max-w-[1440px] px-8 xl:px-12">
@@ -165,7 +165,7 @@ const DesktopSelfDrive = () => {
               </span>
             </label>
 
-            <label>
+            <label className="cursor-pointer" onClick={(event) => event.currentTarget.querySelector('input')?.showPicker?.()}>
               <span className="block text-[12.5px] font-bold text-[var(--dh-text)]">Pickup Date</span>
               <span className={fieldBox}>
                 <CalendarDays size={16} className="shrink-0 text-[var(--dh-muted)]" strokeWidth={2.4} />
@@ -178,7 +178,7 @@ const DesktopSelfDrive = () => {
               </span>
             </label>
 
-            <label>
+            <label className="cursor-pointer" onClick={(event) => event.currentTarget.querySelector('input')?.showPicker?.()}>
               <span className="block text-[12.5px] font-bold text-[var(--dh-text)]">Pickup Time</span>
               <span className={fieldBox}>
                 <Clock size={16} className="shrink-0 text-[var(--dh-muted)]" strokeWidth={2.4} />

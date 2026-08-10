@@ -10,12 +10,12 @@ import { NAV_LINKS, QUICK_RAIL, openRentalVehicle, readUserToken } from './deskt
  * than being copied per page - the nav in particular has to stay consistent.
  */
 
-export const DesktopNav = ({ activePath, theme, onToggleTheme }) => {
+export const DesktopNav = ({ activePath, theme, onToggleTheme, loading = false }) => {
   const navigate = useNavigate();
   const isAuthenticated = Boolean(readUserToken());
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--dh-surface)]/95 backdrop-blur-md">
+    <header className="sticky top-0 z-50 bg-[var(--dh-surface)]/95 backdrop-blur-md relative">
       <div className="mx-auto flex h-[84px] max-w-[1440px] items-center gap-8 px-8 xl:px-12">
         <button onClick={() => navigate('/taxi/user')} className="flex shrink-0 flex-col leading-none">
           <svg viewBox="0 0 120 22" className="mb-0.5 h-[13px] w-[86px]" aria-hidden="true">
@@ -74,6 +74,13 @@ export const DesktopNav = ({ activePath, theme, onToggleTheme }) => {
           </button>
         </div>
       </div>
+      {/* Indeterminate bar: the page cannot know how much is left, so it
+          sweeps rather than pretending to measure progress. */}
+      {loading ? (
+        <div className="dh-navbar-progress absolute inset-x-0 bottom-0 h-[3px] overflow-hidden">
+          <span className="dh-navbar-progress-fill block h-full w-1/3 rounded-full bg-[#F5B700]" />
+        </div>
+      ) : null}
     </header>
   );
 };
