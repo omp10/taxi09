@@ -207,7 +207,7 @@ const DesktopInternational = () => {
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
       <DesktopNav activePath="/taxi/user/tours" theme={theme} onToggleTheme={toggleTheme} />
 
-      <section className="mx-auto grid max-w-[1440px] grid-cols-[minmax(0,1fr)_324px] gap-6 px-8 pb-20 pt-5 xl:px-12">
+      <section className="mx-auto grid max-w-[1728px] grid-cols-[minmax(0,1fr)_324px] gap-6 px-4 pb-20 pt-5 xl:px-6">
         <div>
           {/* ------------------------------------------------------------- Hero */}
           <div className="relative overflow-hidden rounded-[20px] bg-[linear-gradient(100deg,#EAF6FF_0%,#F5FBFF_45%,#FFF6DE_100%)] px-9 py-10">

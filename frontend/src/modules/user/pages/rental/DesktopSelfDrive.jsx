@@ -115,7 +115,7 @@ const DesktopSelfDrive = () => {
       <DesktopNav activePath="/taxi/user/rental" theme={theme} onToggleTheme={toggleTheme} loading={cars.length === 0} />
 
       {/* -------------------------------------------------------------- Hero */}
-      <section className="relative mx-auto max-w-[1440px] px-8 xl:px-12">
+      <section className="relative mx-auto max-w-[1728px] px-4 xl:px-6">
         {/* Hero is admin artwork only - see Homepage Banners > Self Drive. */}
         <div className="pt-8">
           <BannerHero type="self_drive" rounded="rounded-[26px]" />
@@ -215,7 +215,7 @@ const DesktopSelfDrive = () => {
       </section>
 
       {/* ---------------------------------------------------------- Services */}
-      <section className="mx-auto mt-12 max-w-[1440px] px-8 xl:px-12">
+      <section className="mx-auto mt-12 max-w-[1728px] px-4 xl:px-6">
         <div className="flex items-end justify-between">
           <div>
             <p className="text-[14px] font-black uppercase tracking-[0.12em] text-[#F5B700]">Explore Our Services</p>
@@ -284,7 +284,7 @@ const DesktopSelfDrive = () => {
       </section>
 
       {/* -------------------------------------------------------- Why choose */}
-      <section className="mx-auto mt-10 max-w-[1440px] px-8 xl:px-12">
+      <section className="mx-auto mt-10 max-w-[1728px] px-4 xl:px-6">
         <div className="rounded-[20px] bg-[#FFFBEC] p-6">
           <p className="text-[14px] font-black uppercase tracking-[0.1em] text-slate-800">Why Choose Taxi09 Self Drive?</p>
 
@@ -311,7 +311,7 @@ const DesktopSelfDrive = () => {
       </section>
 
       {/* ------------------------------------------------------------- Stats */}
-      <section className="mx-auto mt-8 max-w-[1440px] px-8 xl:px-12">
+      <section className="mx-auto mt-8 max-w-[1728px] px-4 xl:px-6">
         <div className="grid grid-cols-4 divide-x divide-white/15 rounded-[20px] bg-slate-950 px-8 py-6">
           {STATS.map(({ icon: Icon, value, label }) => (
             <div key={label} className="flex items-center gap-3.5 px-4 first:pl-0">
@@ -326,7 +326,7 @@ const DesktopSelfDrive = () => {
       </section>
 
       {/* -------------------------------------------------------- Assurances */}
-      <section className="mx-auto mt-4 max-w-[1440px] px-8 pb-20 xl:px-12">
+      <section className="mx-auto mt-4 max-w-[1728px] px-4 pb-20 xl:px-6">
         <div className="grid grid-cols-4 gap-4 rounded-[18px] bg-[var(--dh-surface)] px-8 py-5 ring-1 ring-[var(--dh-border)]">
           {ASSURANCES.map(({ icon: Icon, title, copy }) => (
             <div key={title} className="flex items-center gap-3">

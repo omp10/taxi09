@@ -86,7 +86,7 @@ const DesktopInternship = () => {
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
       <DesktopNav activePath="/taxi/user/internship" theme={theme} onToggleTheme={toggleTheme} />
 
-      <div className="mx-auto max-w-[1440px] px-8 pb-16 pt-5 xl:px-12">
+      <div className="mx-auto max-w-[1728px] px-4 pb-16 pt-5 xl:px-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
           <div>
             {/* Hero is admin artwork - Homepage Banners > Internship. */}

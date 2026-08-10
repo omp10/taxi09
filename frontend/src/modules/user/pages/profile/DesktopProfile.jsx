@@ -82,7 +82,7 @@ const DesktopProfile = () => {
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
       <DesktopNav activePath="/taxi/user/profile" theme={theme} onToggleTheme={toggleTheme} />
 
-      <div className="mx-auto max-w-[1440px] px-8 pb-16 pt-5 xl:px-12">
+      <div className="mx-auto max-w-[1728px] px-4 pb-16 pt-5 xl:px-6">
         <h1 className="text-[24px] font-black text-slate-900">My Account</h1>
 
         <div className="mt-4 grid gap-6 lg:grid-cols-[290px_minmax(0,1fr)] lg:items-start">

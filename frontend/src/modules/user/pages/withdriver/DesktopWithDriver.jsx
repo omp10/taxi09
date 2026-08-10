@@ -131,7 +131,7 @@ const DesktopWithDriver = () => {
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
       <DesktopNav activePath="/taxi/user/with-driver" theme={theme} onToggleTheme={toggleTheme} />
 
-      <section className="mx-auto grid max-w-[1440px] grid-cols-[minmax(0,1fr)_368px] gap-6 px-8 pb-20 pt-5 xl:px-12">
+      <section className="mx-auto grid max-w-[1728px] grid-cols-[minmax(0,1fr)_368px] gap-6 px-4 pb-20 pt-5 xl:px-6">
         <div className="rounded-[20px] bg-[var(--dh-surface)] ring-1 ring-[var(--dh-border)]">
           {/* Hero is admin artwork - Homepage Banners > Hire Driver. */}
           <div className="p-4 pb-0">

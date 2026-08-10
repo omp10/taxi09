@@ -222,7 +222,7 @@ const DesktopTravelStories = () => {
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
       <DesktopNav activePath="/taxi/user/stories" theme={theme} onToggleTheme={toggleTheme} />
 
-      <div className="mx-auto max-w-[1440px] px-8 py-6 xl:px-12">
+      <div className="mx-auto max-w-[1728px] px-4 py-6 xl:px-6">
         <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
           {/* Feed */}
           <div>

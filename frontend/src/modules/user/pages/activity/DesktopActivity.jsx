@@ -30,7 +30,7 @@ const DesktopActivity = () => {
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
       <DesktopNav activePath="/taxi/user/activity" theme={theme} onToggleTheme={toggleTheme} />
 
-      <div className="mx-auto max-w-[1440px] px-8 pb-16 pt-5 xl:px-12">
+      <div className="mx-auto max-w-[1728px] px-4 pb-16 pt-5 xl:px-6">
         <h1 className="text-[24px] font-black text-slate-900">My Bookings</h1>
         <p className="text-[14px] text-slate-500">Rides, rentals, buses and parcels in one place.</p>
 

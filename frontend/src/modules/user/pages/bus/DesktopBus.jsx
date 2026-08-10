@@ -78,7 +78,7 @@ const DesktopBus = () => {
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
       <DesktopNav activePath="/taxi/user/bus" theme={theme} onToggleTheme={toggleTheme} />
 
-      <section className="mx-auto max-w-[1440px] px-8 pb-20 pt-5 xl:px-12">
+      <section className="mx-auto max-w-[1728px] px-4 pb-20 pt-5 xl:px-6">
         {/* Hero is admin artwork - Homepage Banners > Bus. */}
         <BannerHero type="bus" rounded="rounded-[20px]" />
 

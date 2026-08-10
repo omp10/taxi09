@@ -1,4 +1,5 @@
 import React from 'react';
+import { Phone } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext';
 
 /**
@@ -43,13 +44,29 @@ const WhatsAppFloat = () => {
   const waNumber = toWaNumber(toDigits(configured)) || DEFAULT_NUMBER;
 
   return (
-    <a
-      href={`https://wa.me/${waNumber}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Chat with us on WhatsApp"
-      className="fixed bottom-5 left-5 z-[9999] flex items-center gap-0 rounded-full bg-[#25D366] p-1.5 text-white shadow-[0_8px_24px_rgba(0,0,0,0.25)] transition-transform hover:-translate-y-0.5 print:hidden sm:gap-2 sm:py-1.5 sm:pl-1.5 sm:pr-4"
+    <div
+      className={
+        // On a phone the bottom tab bar owns the bottom edge, so the stack is
+        // lifted clear of it (and of the home indicator on notched devices).
+        'fixed left-4 z-[110] flex flex-col items-start gap-2.5 print:hidden '
+        + 'bottom-[calc(env(safe-area-inset-bottom,0px)+92px)] sm:bottom-5 sm:left-5'
+      }
     >
+      <a
+        href={`tel:+${waNumber}`}
+        aria-label="Call us"
+        className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F5B700] text-slate-950 shadow-[0_8px_24px_rgba(0,0,0,0.25)] transition-transform hover:-translate-y-0.5"
+      >
+        <Phone size={22} strokeWidth={2.6} />
+      </a>
+
+      <a
+        href={`https://wa.me/${waNumber}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Chat with us on WhatsApp"
+        className="flex items-center gap-0 rounded-full bg-[#25D366] p-1.5 text-white shadow-[0_8px_24px_rgba(0,0,0,0.25)] transition-transform hover:-translate-y-0.5 sm:gap-2 sm:py-1.5 sm:pl-1.5 sm:pr-4"
+      >
       <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white">
         <svg viewBox="0 0 24 24" className="h-6 w-6 fill-[#25D366]" aria-hidden="true">
           <path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z" />
@@ -58,10 +75,11 @@ const WhatsAppFloat = () => {
       </span>
       {/* On a phone the number would eat a third of the screen, so the label
           collapses to just the icon. The wa.me link still carries the number. */}
-      <span className="hidden whitespace-nowrap text-[15px] font-semibold sm:inline">
-        WhatsApp - {formatForDisplay(waNumber)}
-      </span>
-    </a>
+        <span className="hidden whitespace-nowrap text-[15px] font-semibold sm:inline">
+          WhatsApp - {formatForDisplay(waNumber)}
+        </span>
+      </a>
+    </div>
   );
 };
 

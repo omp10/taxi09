@@ -112,7 +112,7 @@ const DesktopVehicleDetail = () => {
     return (
       <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
         <DesktopNav activePath="/taxi/user/rental" theme={theme} onToggleTheme={toggleTheme} />
-        <div className="mx-auto max-w-[1440px] px-8 py-24 text-center xl:px-12">
+        <div className="mx-auto max-w-[1728px] px-4 py-24 text-center xl:px-6">
           <p className="text-[19px] font-black text-[var(--dh-text)]">This vehicle is no longer loaded</p>
           <button
             onClick={() => navigate('/taxi/user/rental?search=true')}
@@ -170,7 +170,7 @@ const DesktopVehicleDetail = () => {
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
       <DesktopNav activePath="/taxi/user/rental" theme={theme} onToggleTheme={toggleTheme} />
 
-      <section className="mx-auto grid max-w-[1440px] grid-cols-[minmax(0,1fr)_402px] gap-6 px-8 pb-20 pt-5 xl:px-12">
+      <section className="mx-auto grid max-w-[1728px] grid-cols-[minmax(0,1fr)_402px] gap-6 px-4 pb-20 pt-5 xl:px-6">
         <div>
           {/* --------------------------------------------------------- Breadcrumb */}
           <div className="flex items-center gap-3 text-[15px] font-semibold text-[var(--dh-muted)]">

@@ -145,7 +145,7 @@ const DesktopBusSeats = () => {
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
       <DesktopNav activePath="/taxi/user/bus" theme={theme} onToggleTheme={toggleTheme} />
 
-      <section className="mx-auto grid max-w-[1440px] grid-cols-[minmax(0,1fr)_390px] gap-6 px-8 pb-20 pt-5 xl:px-12">
+      <section className="mx-auto grid max-w-[1728px] grid-cols-[minmax(0,1fr)_390px] gap-6 px-4 pb-20 pt-5 xl:px-6">
         <div className="rounded-[20px] bg-[var(--dh-surface)] p-6 ring-1 ring-[var(--dh-border)]">
           <button
             onClick={() => navigate(-1)}

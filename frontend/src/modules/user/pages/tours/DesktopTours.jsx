@@ -210,7 +210,7 @@ const DesktopTours = () => {
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
       <DesktopNav activePath="/taxi/user/tours" theme={theme} onToggleTheme={toggleTheme} />
 
-      <section className="mx-auto grid max-w-[1440px] grid-cols-[minmax(0,1fr)_324px] gap-6 px-8 pb-20 pt-5 xl:px-12">
+      <section className="mx-auto grid max-w-[1728px] grid-cols-[minmax(0,1fr)_324px] gap-6 px-4 pb-20 pt-5 xl:px-6">
         <div>
         {/* Hero is admin artwork - Homepage Banners > Tours. */}
         <BannerHero type="tours" rounded="rounded-[20px]" />

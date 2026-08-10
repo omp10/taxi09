@@ -208,7 +208,7 @@ const DesktopCarList = () => {
       <DesktopNav activePath="/taxi/user/rental" theme={theme} onToggleTheme={toggleTheme} />
 
       {/* ------------------------------------------------------ Search summary */}
-      <section className="mx-auto max-w-[1440px] px-8 pt-5 xl:px-12">
+      <section className="mx-auto max-w-[1728px] px-4 pt-5 xl:px-6">
         <div className="grid grid-cols-[1.2fr_1.2fr_1fr_1fr_auto] items-center gap-6 rounded-[18px] bg-[var(--dh-surface)] px-7 py-5 shadow-[0_10px_30px_rgba(15,23,42,0.08)] ring-1 ring-[var(--dh-border)]">
           {[
             { label: 'Pickup Location', value: pickupLocation, icon: MapPin },
@@ -235,7 +235,7 @@ const DesktopCarList = () => {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-[1440px] grid-cols-[266px_minmax(0,1fr)] gap-6 px-8 pb-20 pt-6 xl:px-12">
+      <section className="mx-auto grid max-w-[1728px] grid-cols-[266px_minmax(0,1fr)] gap-6 px-4 pb-20 pt-6 xl:px-6">
         {/* -------------------------------------------------------- Filter rail */}
         <aside className="h-fit rounded-[18px] bg-[var(--dh-surface)] py-1 shadow-[0_10px_30px_rgba(15,23,42,0.07)] ring-1 ring-[var(--dh-border)]">
           <FacetGroup title="Vehicle Type" facets={typeFacets} selected={types} onToggle={(v) => toggle(setTypes, v)} />
