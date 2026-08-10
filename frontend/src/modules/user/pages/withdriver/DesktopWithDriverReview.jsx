@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { useDesktopTheme } from '../../components/desktop/desktopShared';
+import { useAppGoogleMapsLoader } from '../../../admin/utils/googleMaps';
 
 /**
  * Desktop "Review & Confirm" step for a with-driver booking.
@@ -62,6 +63,79 @@ const DesktopWithDriverReview = () => {
 
   const state = location.state || stored || {};
   const { driver, trip = {}, quote } = state;
+
+  const { isLoaded: mapsReady } = useAppGoogleMapsLoader();
+  const [confirming, setConfirming] = useState(false);
+
+  // The previous step captures pickup and drop as text, so the coordinates the
+  // dispatcher needs are resolved here. Only if that fails does the booking
+  // fall back to the location picker, rather than sending every guest back
+  // through a step they have already completed.
+  const geocode = (address) =>
+    new Promise((resolve) => {
+      if (!address || !mapsReady || !window.google?.maps?.Geocoder) {
+        resolve(null);
+        return;
+      }
+
+      new window.google.maps.Geocoder().geocode(
+        { address, componentRestrictions: { country: 'IN' } },
+        (results, status) => {
+          const point = status === 'OK' ? results?.[0]?.geometry?.location : null;
+          resolve(point ? [point.lng(), point.lat()] : null);
+        },
+      );
+    });
+
+  const confirmAndPay = async () => {
+    setConfirming(true);
+    const [pickupCoords, dropCoords] = await Promise.all([geocode(trip.pickup), geocode(trip.drop)]);
+    setConfirming(false);
+
+    if (!pickupCoords || !dropCoords) {
+      // Could not place one of the addresses: collect them properly instead of
+      // dispatching a ride to the wrong point.
+      navigate('/taxi/user/ride/select-location', { state });
+      return;
+    }
+
+    const distanceKm = Number(quote?.distanceKm || 0);
+
+    navigate('/taxi/user/ride/searching', {
+      state: {
+        pickup: trip.pickup,
+        drop: trip.drop,
+        pickupCoords,
+        dropCoords,
+        // Base fare only: the server re-prices the journey options from its own
+        // catalogue, so sending the quoted total would double-charge.
+        fare: quote?.baseFare ?? quote?.totalFare ?? 0,
+        baseFare: quote?.baseFare ?? quote?.totalFare ?? 0,
+        paymentMethod: method === 'wallet' ? 'Wallet' : 'Cash',
+        serviceType: 'hire_driver',
+        hireDriver: {
+          hireType: trip.hireType || '',
+          tripType: trip.tripType || '',
+          driverPreference: driver?._id || driver?.id || '',
+          travelDate: trip.date || '',
+          travelTime: trip.time || '',
+        },
+        estimatedDistanceMeters: Math.round(distanceKm * 1000),
+        estimatedDurationMinutes: Number(quote?.durationMinutes || Math.round(distanceKm * 1.6)),
+        vehicleTypeId: quote?.vehicleClassId || '',
+        vehicleIconType: 'car',
+        transport_type: 'taxi',
+        vehicle: {
+          vehicleTypeId: quote?.vehicleClassId || '',
+          name: quote?.vehicleClassName || 'Driver Service',
+          iconType: 'car',
+          price: quote?.totalFare ?? 0,
+          transportType: 'taxi',
+        },
+        searchNonce: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      },
+    });
+  };
 
   if (!driver) {
     return (
@@ -366,8 +440,8 @@ const DesktopWithDriverReview = () => {
           )}
 
           <button
-            onClick={() => navigate('/taxi/user/ride/select-location', { state })}
-            disabled={!quote}
+            onClick={confirmAndPay}
+            disabled={!quote || confirming}
             className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-[13px] bg-[#F5B700] py-3.5 text-[15.5px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             Confirm &amp; Pay <ArrowRight size={18} strokeWidth={2.8} />

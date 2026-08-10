@@ -41,6 +41,8 @@ const DesktopHome = () => {
   const [bannersLoading, setBannersLoading] = useState(true);
   const [search, setSearch] = useState({ pickup: '', drop: '', date: '', time: '' });
   const [serviceStores, setServiceStores] = useState([]);
+  // Computed once so it is not recalculated during render.
+  const [todayISO] = useState(() => new Date().toISOString().slice(0, 10));
   const [platformStats, setPlatformStats] = useState(null);
 
   // Hero artwork is admin-managed through the same banner feed the mobile
@@ -239,20 +241,24 @@ const DesktopHome = () => {
             </span>
           </label>
 
-          <label className="border-l border-[var(--dh-border)] px-5 py-1">
+          <label
+            className="cursor-pointer border-l border-[var(--dh-border)] px-5 py-1"
+            onClick={(event) => event.currentTarget.querySelector('input')?.showPicker?.()}
+          >
             <span className="block text-[13px] font-bold text-[var(--dh-text)]">Pickup Date</span>
             <span className="mt-1.5 flex items-center gap-2">
               <CalendarDays size={17} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               <input
                 type="date"
+                min={todayISO}
                 value={search.date}
                 onChange={(event) => setSearch((current) => ({ ...current, date: event.target.value }))}
-                className={field}
+                className={`${field} cursor-pointer`}
               />
             </span>
           </label>
 
-          <label className="border-l border-[var(--dh-border)] px-5 py-1">
+          <label className="cursor-pointer border-l border-[var(--dh-border)] px-5 py-1" onClick={(event) => event.currentTarget.querySelector('input')?.showPicker?.()}>
             <span className="block text-[13px] font-bold text-[var(--dh-text)]">Pickup Time</span>
             <span className="mt-1.5 flex items-center gap-2">
               <Clock size={17} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
@@ -260,7 +266,7 @@ const DesktopHome = () => {
                 type="time"
                 value={search.time}
                 onChange={(event) => setSearch((current) => ({ ...current, time: event.target.value }))}
-                className={field}
+                className={`${field} cursor-pointer`}
               />
             </span>
           </label>
