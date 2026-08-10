@@ -377,6 +377,8 @@ const GeneralSettings = () => {
               <InputField label="Currency Symbol" name="currency_symbol" value={settings.customization.currency_symbol} onChange={(n, v) => handleChange('customization', n, v)} placeholder="₹" />
               <InputField label="Contact Us Mobile 1" name="contact_phone_1" value={settings.general.contact_phone_1} onChange={(n, v) => handleChange('general', n, v)} placeholder="0000000000" />
               <InputField label="Contact Us Mobile 2" name="contact_phone_2" value={settings.general.contact_phone_2} onChange={(n, v) => handleChange('general', n, v)} placeholder="0000000000" />
+              {/* Drives the floating WhatsApp button on the customer site. Clearing this hides it. */}
+              <InputField label="WhatsApp Number" name="whatsapp_number" value={settings.general.whatsapp_number} onChange={(n, v) => handleChange('general', n, v)} placeholder="9753000064" />
               <InputField label="Default Latitude" name="default_lat" value={settings.general.default_lat} onChange={(n, v) => handleChange('general', n, v)} placeholder="11.21215" />
               <InputField label="Default Longitude" name="default_lng" value={settings.general.default_lng} onChange={(n, v) => handleChange('general', n, v)} placeholder="78.54545" />
            </div>

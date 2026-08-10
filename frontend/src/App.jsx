@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import api from './shared/api/axiosInstance';
 import { socketService } from './shared/api/socket';
 import { SettingsProvider, useSettings } from './shared/context/SettingsContext';
+import WhatsAppFloat from './shared/components/WhatsAppFloat';
 import AppAutoUpdater from './modules/shared/components/AppAutoUpdater';
 import { addRealtimeNotification } from './modules/user/utils/realtimeNotificationStore';
 import { clearLocalUserSession, getLocalUserToken } from './modules/user/services/authService';
@@ -665,6 +666,19 @@ const DriverEntryRedirect = () => {
   );
 };
 
+/**
+ * The WhatsApp float belongs on the customer-facing site only. The admin,
+ * owner and driver portals are internal tools - a "chat with us" button there
+ * would be pointing staff at their own support line.
+ */
+const WhatsAppFloatGate = () => {
+  const location = useLocation();
+  const isInternalPortal = ['/admin', '/owner', '/taxi/driver', '/user-import', '/driver-import']
+    .some((prefix) => location.pathname.startsWith(prefix));
+
+  return isInternalPortal ? null : <WhatsAppFloat />;
+};
+
 function App() {
   return (
     <Router>
@@ -674,6 +688,7 @@ function App() {
         <ScrollToTop />
         <UserAccountInvalidationListener />
         <UserUpcomingRideReminderBootstrap />
+        <WhatsAppFloatGate />
         <MainLayout>
           <Suspense
             fallback={

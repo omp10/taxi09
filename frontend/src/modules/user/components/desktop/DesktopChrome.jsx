@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ChevronDown, MapPin, Moon, Phone, Sun, UserRound } from 'lucide-react';
 import { NAV_LINKS, QUICK_RAIL, SERVICES, openRentalVehicle, readUserToken } from './desktopShared';
 import { useSettings } from '../../../../shared/context/SettingsContext';
+import BrandLogo from '../../../../shared/components/BrandLogo';
 
 /**
  * Chrome shared by the desktop landing pages (home, self drive).
@@ -21,17 +22,9 @@ export const DesktopNav = ({ activePath, theme, onToggleTheme, loading = false }
         {/* The mark sits on its own panel, set apart from the links. */}
         <button
           onClick={() => navigate('/taxi/user')}
-          className="flex h-[76px] shrink-0 flex-col items-center justify-center rounded-[20px] bg-[var(--dh-surface)] px-5 leading-none ring-1 ring-[var(--dh-border)]"
+          className="flex h-[76px] shrink-0 items-center justify-center rounded-[20px] bg-[var(--dh-surface)] px-4 text-[var(--dh-text)] ring-1 ring-[var(--dh-border)]"
         >
-          <svg viewBox="0 0 120 22" className="mb-0.5 h-[12px] w-[80px]" aria-hidden="true">
-            <path d="M4 20C22 4 74 -2 116 8" fill="none" stroke="#F5B700" strokeWidth="5" strokeLinecap="round" />
-          </svg>
-          <span className="text-[27px] font-black italic tracking-[-0.05em] text-[var(--dh-text)]">
-            Taxi<span className="text-[#F5B700]">09</span>
-          </span>
-          <span className="mt-1 text-[8.5px] font-semibold tracking-[0.06em] text-[var(--dh-muted)]">
-            Self Drive | Hire Driver
-          </span>
+          <BrandLogo height={52} withTagline />
         </button>
 
         <div className="flex h-[76px] min-w-0 flex-1 items-center gap-1 rounded-[20px] bg-[var(--dh-surface)] px-3 ring-1 ring-[var(--dh-border)]">
@@ -47,8 +40,8 @@ export const DesktopNav = ({ activePath, theme, onToggleTheme, loading = false }
                   onClick={() => navigate(path)}
                   className={`group flex shrink-0 items-center whitespace-nowrap rounded-[14px] px-1.5 py-2.5 text-[13px] transition-colors ${
                     isActive
-                      ? 'font-bold text-[#F5B700]'
-                      : 'font-semibold text-[var(--dh-text)] hover:bg-[#F5B700] hover:text-slate-950'
+                      ? 'bg-[#F5B700] font-bold text-slate-950'
+                      : 'font-semibold text-[var(--dh-text)] hover:bg-[var(--dh-chip)] hover:text-[#F5B700]'
                   }`}
                 >
                   {/* Ten permanent icons would not fit, so the slot opens for
@@ -64,7 +57,11 @@ export const DesktopNav = ({ activePath, theme, onToggleTheme, loading = false }
                   ) : null}
                   {label}
                   {badge ? (
-                    <span className="ml-1.5 rounded-md bg-[#F5B700] px-1.5 py-[2px] text-[8px] font-black text-slate-950 group-hover:bg-slate-950 group-hover:text-[#F5B700]">
+                    <span
+                      className={`ml-1.5 rounded-md px-1.5 py-[2px] text-[8px] font-black ${
+                        isActive ? 'bg-slate-950 text-[#F5B700]' : 'bg-[#F5B700] text-slate-950'
+                      }`}
+                    >
                       {badge}
                     </span>
                   ) : null}
@@ -226,13 +223,8 @@ export const DesktopFooter = ({ locations = [] }) => {
       <div className="mx-auto max-w-[1440px] px-8 py-12 xl:px-12">
         <div className="grid grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-10">
           <div>
-            <div className="flex flex-col leading-none">
-              <svg viewBox="0 0 120 22" className="mb-0.5 h-[13px] w-[86px]" aria-hidden="true">
-                <path d="M4 20C22 4 74 -2 116 8" fill="none" stroke="#F5B700" strokeWidth="5" strokeLinecap="round" />
-              </svg>
-              <span className="text-[28px] font-black italic tracking-[-0.05em] text-[var(--dh-text)]">
-                Taxi<span className="text-[#F5B700]">09</span>
-              </span>
+            <div className="flex text-[var(--dh-text)]">
+              <BrandLogo height={48} />
             </div>
             <p className="mt-4 max-w-[300px] text-[13.5px] font-medium leading-[1.65] text-[var(--dh-muted)]">
               Self drive cars, bikes, buses, hotels and tour packages - booked in one place,

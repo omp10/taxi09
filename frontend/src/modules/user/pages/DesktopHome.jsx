@@ -139,14 +139,14 @@ const DesktopHome = () => {
     navigate(`/taxi/user/rental?${params.toString()}`);
   };
 
-  const field = 'w-full bg-transparent text-[14px] font-semibold text-[var(--dh-text)] placeholder:text-[var(--dh-muted)] outline-none';
+  const field = 'w-full bg-transparent text-[16px] font-semibold text-[var(--dh-text)] placeholder:text-[var(--dh-muted)] outline-none';
 
   return (
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
       <DesktopNav activePath="/taxi/user" theme={theme} onToggleTheme={toggleTheme} loading={bannersLoading || !platformStats} />
 
       {/* -------------------------------------------------------------- Hero */}
-      <section className="relative mx-auto max-w-[1440px] px-8 xl:px-12">
+      <section className="relative mx-auto max-w-[1440px] px-4 xl:px-6">
         {/* Hero is entirely admin artwork: whatever is uploaded as a desktop
             banner is what renders, and more than one turns it into a carousel. */}
         <div className="relative pt-6">
@@ -195,7 +195,7 @@ const DesktopHome = () => {
         {/* ---------------------------------------------------------- Search */}
         <form
           onSubmit={submitSearch}
-          className="relative z-20 -mt-4 grid grid-cols-[1.2fr_auto_1.2fr_1fr_1fr_auto] items-center gap-0 rounded-[20px] bg-[var(--dh-surface)] p-3 shadow-[0_16px_44px_rgba(15,23,42,0.12)] ring-1 ring-[var(--dh-border)]"
+          className="relative z-20 -mt-4 grid grid-cols-[1.2fr_auto_1.2fr_1fr_1fr_auto] items-center gap-0 rounded-[22px] bg-[var(--dh-surface)] p-3.5 shadow-[0_16px_44px_rgba(15,23,42,0.12)] ring-1 ring-[var(--dh-border)]"
         >
           {/* Native suggestions, so both inputs offer the stores that exist. */}
           <datalist id="dh-service-stores">
@@ -204,10 +204,10 @@ const DesktopHome = () => {
             ))}
           </datalist>
 
-          <label className="px-5 py-1">
-            <span className="block text-[13px] font-bold text-[var(--dh-text)]">Pickup Location</span>
+          <label className="px-6 py-1.5">
+            <span className="block text-[14.5px] font-bold text-[var(--dh-text)]">Pickup Location</span>
             <span className="mt-1.5 flex items-center gap-2">
-              <MapPin size={17} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
+              <MapPin size={19} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               <input
                 value={search.pickup}
                 onChange={(event) => setSearch((current) => ({ ...current, pickup: event.target.value }))}
@@ -227,10 +227,10 @@ const DesktopHome = () => {
             <ArrowUpDown size={17} className="rotate-90" strokeWidth={2.4} />
           </button>
 
-          <label className="border-l border-[var(--dh-border)] px-5 py-1">
-            <span className="block text-[13px] font-bold text-[var(--dh-text)]">Drop Location</span>
+          <label className="border-l border-[var(--dh-border)] px-6 py-1.5">
+            <span className="block text-[14.5px] font-bold text-[var(--dh-text)]">Drop Location</span>
             <span className="mt-1.5 flex items-center gap-2">
-              <MapPin size={17} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
+              <MapPin size={19} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               <input
                 value={search.drop}
                 onChange={(event) => setSearch((current) => ({ ...current, drop: event.target.value }))}
@@ -242,12 +242,12 @@ const DesktopHome = () => {
           </label>
 
           <label
-            className="cursor-pointer border-l border-[var(--dh-border)] px-5 py-1"
+            className="cursor-pointer border-l border-[var(--dh-border)] px-6 py-1.5"
             onClick={(event) => event.currentTarget.querySelector('input')?.showPicker?.()}
           >
-            <span className="block text-[13px] font-bold text-[var(--dh-text)]">Pickup Date</span>
+            <span className="block text-[14.5px] font-bold text-[var(--dh-text)]">Pickup Date</span>
             <span className="mt-1.5 flex items-center gap-2">
-              <CalendarDays size={17} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
+              <CalendarDays size={19} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               <input
                 type="date"
                 min={todayISO}
@@ -258,10 +258,10 @@ const DesktopHome = () => {
             </span>
           </label>
 
-          <label className="cursor-pointer border-l border-[var(--dh-border)] px-5 py-1" onClick={(event) => event.currentTarget.querySelector('input')?.showPicker?.()}>
-            <span className="block text-[13px] font-bold text-[var(--dh-text)]">Pickup Time</span>
+          <label className="cursor-pointer border-l border-[var(--dh-border)] px-6 py-1.5" onClick={(event) => event.currentTarget.querySelector('input')?.showPicker?.()}>
+            <span className="block text-[14.5px] font-bold text-[var(--dh-text)]">Pickup Time</span>
             <span className="mt-1.5 flex items-center gap-2">
-              <Clock size={17} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
+              <Clock size={19} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               <input
                 type="time"
                 value={search.time}
@@ -273,7 +273,7 @@ const DesktopHome = () => {
 
           <button
             type="submit"
-            className="ml-3 flex h-[58px] items-center gap-3 rounded-[15px] bg-[#F5B700] px-7 text-[16px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.32)] transition-transform hover:-translate-y-0.5"
+            className="ml-3 flex h-[66px] items-center gap-3 rounded-[16px] bg-[#F5B700] px-9 text-[17.5px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.32)] transition-transform hover:-translate-y-0.5"
           >
             Search Vehicles
             <ArrowRight size={19} strokeWidth={2.8} />
