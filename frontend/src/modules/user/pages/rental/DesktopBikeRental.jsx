@@ -19,7 +19,7 @@ import {
   Wallet,
 } from 'lucide-react';
 import { DesktopNav } from '../../components/desktop/DesktopChrome';
-import { openRentalVehicle, useDesktopTheme } from '../../components/desktop/desktopShared';
+import { openRentalVehicle, unwrapResults, useDesktopTheme } from '../../components/desktop/desktopShared';
 import { userService } from '../../services/userService';
 import api from '../../../../shared/api/axiosInstance';
 
@@ -137,7 +137,7 @@ const DesktopBikeRental = () => {
     userService
       .getRentalVehicleSubcategories()
       .then((response) => {
-        const rows = response?.data?.results || [];
+        const rows = unwrapResults(response);
         setCategories(rows.filter((row) => String(row.vehicleCategory || '').toLowerCase() === 'bike'));
       })
       .catch(() => {});
@@ -154,7 +154,7 @@ const DesktopBikeRental = () => {
     api
       .get(`/users/rental-vehicles${query ? `?${query}` : ''}`)
       .then((response) => {
-        const rows = (response?.data?.results || []).filter(isBike);
+        const rows = unwrapResults(response).filter(isBike);
         setBikes(rows);
         setSelected((current) => rows.find((r) => r._id === current?._id) || rows[0] || null);
       })

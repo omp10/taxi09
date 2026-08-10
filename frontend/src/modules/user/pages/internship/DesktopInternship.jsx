@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import BannerHero from '../../components/BannerHero';
 import {
   Award,
   BadgeCheck,
@@ -124,38 +125,50 @@ const DesktopInternship = () => {
             ) : (
               <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {tracks.map((track) => (
-                  <article key={track._id} className="flex flex-col rounded-2xl border border-slate-100 bg-white p-4">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFF3CC]">
-                      <GraduationCap size={17} className="text-[#C79100]" />
-                    </span>
-                    <h3 className="mt-3 text-[14.5px] font-black leading-snug text-slate-900">{track.title}</h3>
-                    {track.durationLabel ? (
-                      <p className="mt-1 text-[11.5px] text-slate-500">
-                        <span className="font-bold text-slate-700">Duration:</span> {track.durationLabel}
-                      </p>
-                    ) : null}
-                    <p className="mt-2 flex-1 text-[12.5px] leading-relaxed text-slate-600">{track.summary}</p>
-
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {(track.skills || []).slice(0, 3).map((skill) => (
-                        <span key={skill} className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[10.5px] font-semibold text-slate-600">
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
-                      <span className="text-[11.5px] text-slate-500">
-                        {track.seats > 0 ? `${track.seats} seats` : ''}
-                        {track.stipend > 0 ? ` · ${money(track.stipend)}/mo` : ''}
+                  <article key={track._id} className="flex flex-col rounded-2xl border border-slate-100 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
+                    {track.image && (
+                      <div className="h-44 w-full overflow-hidden bg-slate-50 relative group">
+                        <img 
+                          src={track.image} 
+                          alt={track.title} 
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/20 to-transparent" />
+                      </div>
+                    )}
+                    <div className="p-5 flex flex-col flex-1">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFF3CC] shadow-sm">
+                        <GraduationCap size={17} className="text-[#C79100]" />
                       </span>
-                      <button
-                        onClick={() => setApplying({ kind: 'track', id: track._id, title: track.title })}
-                        disabled={appliedFor(track._id)}
-                        className="rounded-lg bg-[#F5B700] px-3 py-1.5 text-[12px] font-black text-slate-900 disabled:bg-slate-100 disabled:text-slate-500"
-                      >
-                        {appliedFor(track._id) ? 'Applied' : 'Apply'}
-                      </button>
+                      <h3 className="mt-3 text-[14.5px] font-black leading-snug text-slate-900">{track.title}</h3>
+                      {track.durationLabel ? (
+                        <p className="mt-1 text-[11.5px] text-slate-500">
+                          <span className="font-bold text-slate-700">Duration:</span> {track.durationLabel}
+                        </p>
+                      ) : null}
+                      <p className="mt-2 flex-1 text-[12.5px] leading-relaxed text-slate-600">{track.summary}</p>
+
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {(track.skills || []).slice(0, 3).map((skill) => (
+                          <span key={skill} className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[10.5px] font-semibold text-slate-600">
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
+                        <span className="text-[11.5px] text-slate-500">
+                          {track.seats > 0 ? `${track.seats} seats` : ''}
+                          {track.stipend > 0 ? ` · ${money(track.stipend)}/mo` : ''}
+                        </span>
+                        <button
+                          onClick={() => setApplying({ kind: 'track', id: track._id, title: track.title })}
+                          disabled={appliedFor(track._id)}
+                          className="rounded-lg bg-[#F5B700] px-3 py-1.5 text-[12px] font-black text-slate-900 disabled:bg-slate-100 disabled:text-slate-500 transition-colors hover:bg-[#E0A600]"
+                        >
+                          {appliedFor(track._id) ? 'Applied' : 'Apply'}
+                        </button>
+                      </div>
                     </div>
                   </article>
                 ))}

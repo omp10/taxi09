@@ -178,7 +178,7 @@ const AttachCar = () => {
       .listAttachedVehicles()
       .then((response) => {
         if (cancelled) return;
-        const rows = response?.data?.results || [];
+        const rows = response?.data?.data?.results ?? response?.data?.results ?? [];
         const draft = rows.find((row) => ['draft', 'rejected'].includes(row.status));
         if (!draft) return;
 

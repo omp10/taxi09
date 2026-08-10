@@ -317,13 +317,6 @@ const MobileHome = () => {
       path: '/taxi/user/rental',
     },
     {
-      icon: UserCheck,
-      title: 'With Driver',
-      subtitle: "Relax, we'll drive",
-      image: RENTAL_WITH_DRIVER_IMAGE,
-      path: '/taxi/user/with-driver',
-    },
-    {
       icon: Bike,
       title: 'Bike Rental',
       subtitle: 'Quick & affordable',
@@ -333,6 +326,7 @@ const MobileHome = () => {
   ];
 
   const moreServices = [
+    { iconImage: '/taxi09_service_driver.png', label: 'With\nDriver', path: '/taxi/user/with-driver' },
     { iconImage: '/taxi09_service_hotel.png', label: 'Hotel\nBooking', path: '/taxi/user/hotel' },
     { iconImage: '/taxi09_service_subscription.png', label: 'Monthly\nSubscription', path: '/taxi/user/profile/subscriptions' },
     { iconImage: '/taxi09_service_travel.png', label: 'Travel\nPackages', path: '/taxi/user/tours' },
@@ -351,7 +345,7 @@ const MobileHome = () => {
       .listAttachedVehicles()
       .then((response) => {
         if (cancelled) return;
-        const rows = response?.data?.results || [];
+        const rows = response?.data?.data?.results ?? response?.data?.results ?? [];
         setAttachedVehicle(rows[0] || null);
       })
       .catch(() => {});

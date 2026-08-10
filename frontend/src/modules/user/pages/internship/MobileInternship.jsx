@@ -160,43 +160,55 @@ const MobileInternship = () => {
           ) : (
             <div className="space-y-3">
               {tracks.map((track) => (
-                <article key={track._id} className="rounded-2xl border border-slate-100 bg-white p-4">
-                  <div className="flex items-start gap-3">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#FFF3CC]">
-                      <GraduationCap size={16} className="text-[#C79100]" />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="text-[14px] font-black leading-snug text-slate-900">{track.title}</h3>
-                      {track.durationLabel ? (
-                        <p className="text-[11px] text-slate-500">{track.durationLabel}</p>
-                      ) : null}
+                <article key={track._id} className="rounded-2xl border border-slate-100 bg-white overflow-hidden shadow-sm">
+                  {track.image && (
+                    <div className="h-32 w-full overflow-hidden bg-slate-50 relative">
+                      <img 
+                        src={track.image} 
+                        alt={track.title} 
+                        className="h-full w-full object-cover" 
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/20 to-transparent" />
                     </div>
-                  </div>
-
-                  <p className="mt-2.5 text-[12.5px] leading-relaxed text-slate-600">{track.summary}</p>
-
-                  {(track.skills || []).length > 0 ? (
-                    <div className="mt-2.5 flex flex-wrap gap-1.5">
-                      {track.skills.slice(0, 3).map((skill) => (
-                        <span key={skill} className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[10.5px] font-semibold text-slate-600">
-                          {skill}
-                        </span>
-                      ))}
+                  )}
+                  <div className="p-4">
+                    <div className="flex items-start gap-3">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#FFF3CC] shadow-sm">
+                        <GraduationCap size={16} className="text-[#C79100]" />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-[14px] font-black leading-snug text-slate-900">{track.title}</h3>
+                        {track.durationLabel ? (
+                          <p className="text-[11px] text-slate-500">{track.durationLabel}</p>
+                        ) : null}
+                      </div>
                     </div>
-                  ) : null}
 
-                  <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
-                    <span className="text-[11.5px] text-slate-500">
-                      {track.seats > 0 ? `${track.seats} seats` : ''}
-                      {track.stipend > 0 ? ` · ${money(track.stipend)}/mo` : ''}
-                    </span>
-                    <button
-                      onClick={() => setApplying({ kind: 'track', id: track._id, title: track.title })}
-                      disabled={appliedFor(track._id)}
-                      className="rounded-lg bg-[#F5B700] px-3.5 py-1.5 text-[12px] font-black text-slate-900 disabled:bg-slate-100 disabled:text-slate-500"
-                    >
-                      {appliedFor(track._id) ? 'Applied' : 'Apply'}
-                    </button>
+                    <p className="mt-2.5 text-[12.5px] leading-relaxed text-slate-600">{track.summary}</p>
+
+                    {(track.skills || []).length > 0 ? (
+                      <div className="mt-2.5 flex flex-wrap gap-1.5">
+                        {track.skills.slice(0, 3).map((skill) => (
+                          <span key={skill} className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[10.5px] font-semibold text-slate-600">
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+
+                    <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
+                      <span className="text-[11.5px] text-slate-500">
+                        {track.seats > 0 ? `${track.seats} seats` : ''}
+                        {track.stipend > 0 ? ` · ${money(track.stipend)}/mo` : ''}
+                      </span>
+                      <button
+                        onClick={() => setApplying({ kind: 'track', id: track._id, title: track.title })}
+                        disabled={appliedFor(track._id)}
+                        className="rounded-lg bg-[#F5B700] px-3.5 py-1.5 text-[12px] font-black text-slate-900 disabled:bg-slate-100 disabled:text-slate-500"
+                      >
+                        {appliedFor(track._id) ? 'Applied' : 'Apply'}
+                      </button>
+                    </div>
                   </div>
                 </article>
               ))}

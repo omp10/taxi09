@@ -182,7 +182,7 @@ const DesktopTravelStories = () => {
 
     setLoading(true);
     api.get(`/users/travel-stories?${params.toString()}`)
-      .then((response) => setStories(response?.data?.results || []))
+      .then((response) => setStories(response?.data?.data?.results ?? response?.data?.results ?? []))
       .catch((error) => toast.error(error.message || 'Could not load stories'))
       .finally(() => setLoading(false));
   }, [tab, category, search]);
