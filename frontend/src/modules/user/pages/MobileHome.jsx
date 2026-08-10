@@ -11,6 +11,7 @@ import rentalBikeImg from '../../../assets/images/yellow_sports_bike_transparent
 import driverWithCabImg from '../../../assets/images/driver_beside_cab_white.png';
 import api from '../../../shared/api/axiosInstance';
 import BottomNavbar from '../components/BottomNavbar';
+import { MobilePopularCars, MobileSearchCard } from '../components/MobileHomeSearch';
 import AppHeader from '../components/AppHeader';
 import { userAuthService } from '../services/authService';
 import { userService } from '../services/userService';
@@ -466,7 +467,11 @@ const MobileHome = () => {
           </div>
         ) : null}
 
-        <section className="-mx-4 mt-1">
+        <section className="mt-1">
+          <MobileSearchCard />
+        </section>
+
+        <section className="-mx-4 mt-5">
           {!bannersFetched || !topImageReady ? <BannerSkeleton ratio="16 / 9" full /> : null}
           <div
             onTouchStart={handleTouchStart}
@@ -505,6 +510,8 @@ const MobileHome = () => {
             )}
           </div>
         </section>
+
+        <MobilePopularCars />
 
         {/* Rental Options */}
         <section className="mt-6">
