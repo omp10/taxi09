@@ -1037,7 +1037,7 @@ const ParcelSearchingDriver = () => {
                     </motion.button>
                     <motion.button
                       whileTap={{ scale: 0.96 }}
-                      onClick={() => navigate(`${routePrefix}/parcel/chat`, { state: { driver } })}
+                      onClick={() => navigate(`${routePrefix}/ride/chat`, { state: { rideId: activeRideIdRef.current, peer: driver } })}
                       className="flex items-center justify-center gap-3 rounded-[22px] bg-slate-950 py-4.5 shadow-[0_12px_24px_rgba(15,23,42,0.15)] active:shadow-none"
                     >
                       <MessageCircle size={18} className="text-white" strokeWidth={2.5} />

@@ -115,7 +115,7 @@ const DesktopSupport = () => {
 
             {/* Emergency */}
             <button
-              onClick={() => navigate('/taxi/user/sos')}
+              onClick={() => navigate('/taxi/user/safety/sos')}
               className="mt-6 flex w-full items-center gap-3 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-left"
             >
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-100">

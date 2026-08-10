@@ -774,7 +774,11 @@ function App() {
               <Route path="/bus" element={<BusHome />} />
               <Route path="/bus/list" element={<BusList />} />
               <Route path="/bus/seats" element={<BusSeats />} />
-              <Route path="/bus/details" element={<BusDetails />} />
+              {/* Aligned with the /taxi/user namespace: details is the preview
+                  step and checkout is the passenger form, so a ${routePrefix}
+                  link means the same page in both. */}
+              <Route path="/bus/details" element={<BusPreview />} />
+              <Route path="/bus/checkout" element={<BusDetails />} />
               <Route path="/bus/confirm" element={<BusConfirm />} />
               <Route path="/hotel" element={<HotelHome />} />
               <Route path="/hotel/rooms" element={<HotelRooms />} />
