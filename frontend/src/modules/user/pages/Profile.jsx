@@ -261,7 +261,7 @@ const Profile = () => {
                 <h2 className="font-outfit text-[22px] font-extrabold text-slate-900 truncate capitalize leading-tight">
                   {profile.name}
                 </h2>
-                <p className="text-[15.5px] font-bold text-slate-600 mt-1 flex items-center gap-1.5">
+                <p className="text-[15.5px] font-bold text-slate-500 mt-1 flex items-center gap-1.5">
                    <Phone size={14} className="text-slate-500" />
                    {profile.phone ? `+91 ${profile.phone}` : 'Account Active'}
                 </p>
@@ -298,7 +298,7 @@ const Profile = () => {
         >
           {menuSections.map((section, sIdx) => (
             <motion.div key={sIdx} variants={itemVariants} className="space-y-4">
-              <h3 className="font-outfit text-[13.5px] font-black text-slate-600 uppercase tracking-[0.25em] ml-1">
+              <h3 className="font-outfit text-[13.5px] font-black text-slate-500 uppercase tracking-[0.25em] ml-1">
                 {section.title}
               </h3>
               
@@ -315,7 +315,7 @@ const Profile = () => {
                     </div>
                     <div className="flex-1">
                       <p className="text-[16.5px] font-bold text-slate-900 leading-tight tracking-tight">{item.title}</p>
-                      <p className="text-[13.5px] font-semibold text-slate-600 mt-1">{item.sub}</p>
+                      <p className="text-[13.5px] font-semibold text-slate-500 mt-1">{item.sub}</p>
                     </div>
                     <div className="h-8 w-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-200">
                       <ChevronRight size={18} strokeWidth={3} />

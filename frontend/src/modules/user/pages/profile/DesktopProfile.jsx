@@ -90,7 +90,7 @@ const DesktopProfile = () => {
           <aside className="space-y-4">
             {SECTIONS.map((section) => (
               <section key={section.title} className="overflow-hidden rounded-2xl border border-slate-100 bg-white">
-                <p className="border-b border-slate-100 px-4 py-2.5 text-[12.5px] font-black uppercase tracking-wider text-slate-600">
+                <p className="border-b border-slate-100 px-4 py-2.5 text-[12.5px] font-black uppercase tracking-wider text-slate-500">
                   {section.title}
                 </p>
                 {section.items.map((item) => {
@@ -112,7 +112,7 @@ const DesktopProfile = () => {
                         <span className={`block truncate text-[14.5px] ${selected ? 'font-black text-slate-900' : 'font-bold text-slate-800'}`}>
                           {item.title}
                         </span>
-                        <span className="block truncate text-[13px] text-slate-600">{item.sub}</span>
+                        <span className="block truncate text-[13px] text-slate-500">{item.sub}</span>
                       </span>
                       <ChevronRight size={14} className="shrink-0 text-slate-500" />
                     </button>
@@ -134,13 +134,13 @@ const DesktopProfile = () => {
           <section className="min-h-[560px] overflow-hidden rounded-2xl border border-slate-100 bg-white">
             <div className="border-b border-slate-100 px-6 py-4">
               <h2 className="text-[17px] font-black text-slate-900">{current.title}</h2>
-              <p className="text-[13.5px] text-slate-600">{current.sub}</p>
+              <p className="text-[13.5px] text-slate-500">{current.sub}</p>
             </div>
 
             <Suspense
               fallback={
                 <div className="flex justify-center py-20">
-                  <Loader2 className="animate-spin text-slate-600" />
+                  <Loader2 className="animate-spin text-slate-500" />
                 </div>
               }
             >

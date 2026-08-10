@@ -92,8 +92,8 @@ export const MobileSearchCard = () => {
 
   return (
     <form onSubmit={submit} className="rounded-[20px] border border-slate-100 bg-white p-3 shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
-      <h2 className="text-[19px] font-black leading-tight tracking-[-0.04em] text-slate-950">Where are you going?</h2>
-      <p className="mt-0.5 text-[12.5px] font-bold text-slate-800">Book Self Drive, Taxi or Bike in few taps</p>
+      <h2 className="text-[19px] font-extrabold leading-tight tracking-[-0.04em] text-slate-900">Where are you going?</h2>
+      <p className="mt-0.5 text-[13px] font-semibold text-slate-700">Book Self Drive, Taxi or Bike in few taps</p>
 
       <div className="mt-3 grid grid-cols-3 gap-2">
         {MODES.map(({ key, label, icon: Icon }) => (
@@ -102,10 +102,10 @@ export const MobileSearchCard = () => {
             type="button"
             onClick={() => setMode(key)}
             aria-pressed={mode === key}
-            className={`flex flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2.5 text-[12.5px] font-bold transition-colors ${
+            className={`flex flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2.5 text-[13px] font-semibold transition-colors ${
               mode === key
                 ? 'border-transparent bg-[#F5B700] text-slate-950'
-                : 'border-slate-200 bg-white text-slate-900'
+                : 'border-slate-200 bg-white text-slate-800'
             }`}
           >
             <Icon size={17} strokeWidth={2.3} />
@@ -121,13 +121,13 @@ export const MobileSearchCard = () => {
       <label className="mt-2.5 flex items-center gap-2.5 rounded-xl border border-slate-200 px-3 py-2">
         <MapPin size={17} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
         <span className="min-w-0 flex-1">
-          <span className="block text-[11.5px] font-black text-slate-900">Pickup Location</span>
+          <span className="block text-[12px] font-semibold text-slate-700">Pickup Location</span>
           <input
             value={form.pickup}
             onChange={update('pickup')}
             list="mobile-service-stores"
             placeholder="Enter city or location"
-            className="w-full bg-transparent text-[14.5px] font-bold text-slate-900 outline-none placeholder:font-black placeholder:text-slate-800"
+            className="w-full bg-transparent text-[15px] font-semibold text-slate-800 outline-none placeholder:font-semibold placeholder:text-slate-600"
           />
         </span>
       </label>
@@ -138,7 +138,7 @@ export const MobileSearchCard = () => {
           { label: 'Return', dateKey: 'returnDate', timeKey: 'returnTime' },
         ].map(({ label, dateKey, timeKey }) => (
           <div key={dateKey} className="rounded-xl border border-slate-200 px-2.5 py-1.5">
-            <span className="flex items-center gap-1 text-[11.5px] font-black text-slate-900">
+            <span className="flex items-center gap-1 text-[12px] font-semibold text-slate-700">
               <Calendar size={13} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               {label}
             </span>
@@ -147,9 +147,9 @@ export const MobileSearchCard = () => {
                 "Date & Time", so stacking two more captions repeated it. Each
                 native control is laid transparently over its own value, so a
                 tap opens the real picker instead of the dd/mm/yyyy skeleton. */}
-            <span className="mt-0.5 flex items-baseline gap-1 text-[12.5px] font-bold">
+            <span className="mt-0.5 flex items-baseline gap-1 text-[13px] font-semibold">
               <span className="relative">
-                <span className={form[dateKey] ? 'text-slate-900' : 'text-slate-800'}>
+                <span className={form[dateKey] ? 'text-slate-800' : 'text-slate-600'}>
                   {formatDateLabel(form[dateKey])}
                 </span>
                 <input
@@ -163,10 +163,10 @@ export const MobileSearchCard = () => {
                 />
               </span>
 
-              <span className="text-slate-500">&middot;</span>
+              <span className="text-slate-600">&middot;</span>
 
               <span className="relative">
-                <span className={form[timeKey] ? 'text-slate-900' : 'text-slate-800'}>
+                <span className={form[timeKey] ? 'text-slate-800' : 'text-slate-600'}>
                   {formatTimeLabel(form[timeKey])}
                 </span>
                 <input
@@ -225,11 +225,11 @@ export const MobilePopularCars = () => {
   return (
     <section className="mt-6">
       <div className="mb-3 flex items-end justify-between px-1">
-        <h2 className="text-[22px] font-black tracking-[-0.04em] text-slate-950">Popular Cars</h2>
+        <h2 className="text-[20px] font-extrabold tracking-[-0.03em] text-slate-900">Popular Cars</h2>
         <button
           type="button"
           onClick={() => navigate('/taxi/user/rental')}
-          className="flex items-center gap-1 text-[14px] font-bold text-[#4338ca]"
+          className="flex items-center gap-1 text-[13px] font-semibold text-[#4338ca]"
         >
           View All <ArrowRight size={15} strokeWidth={2.6} />
         </button>
@@ -254,17 +254,17 @@ export const MobilePopularCars = () => {
                     className="max-h-[86px] w-full object-contain"
                   />
                 </span>
-                <span className="mt-2 block min-h-[38px] text-[14.5px] font-black leading-tight text-slate-900">
+                <span className="mt-2 block min-h-[36px] text-[14px] font-semibold leading-tight text-slate-800">
                   {car.name}
                 </span>
                 <span className="mt-1 flex items-baseline gap-1">
                   {car.rate ? (
                     <>
-                      <span className="text-[15.5px] font-black text-slate-950">{money(car.rate)}</span>
-                      <span className="text-[12.5px] font-semibold text-slate-400">/day</span>
+                      <span className="text-[15px] font-bold text-slate-900">{money(car.rate)}</span>
+                      <span className="text-[12px] font-semibold text-slate-500">/day</span>
                     </>
                   ) : (
-                    <span className="text-[13px] font-bold text-slate-500">Tap for pricing</span>
+                    <span className="text-[13px] font-semibold text-slate-500">Tap for pricing</span>
                   )}
                 </span>
                 {/* Seats and gearbox are on the record; a star rating is not, so

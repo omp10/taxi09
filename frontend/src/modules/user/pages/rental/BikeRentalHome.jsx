@@ -247,6 +247,7 @@ const BikeRentalHome = () => {
   const isAddressEntered = queryParams.get('search') === 'true';
   const selectedLocation = queryParams.get('location') || 'South Tukoganj, Indore';
   const [activeFaqIndex, setActiveFaqIndex] = useState(null);
+  const [showDropSuggestions, setShowDropSuggestions] = useState(false);
   const [locationSearchText, setLocationSearchText] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     return params.get('location') || '';
@@ -656,15 +657,6 @@ const BikeRentalHome = () => {
                       : label === 'Fuel Type'
                         ? ['Any', 'Petrol', 'Diesel']
                         : ['Any', '5 Seater', '6+ Seater'];
-                const selectedValue =
-                  label === 'Price'
-                    ? resultPriceFilter
-                    : label === 'Transmission'
-                      ? resultTransmissionFilter
-                      : label === 'Fuel Type'
-                        ? resultFuelFilter
-                        : resultSeatsFilter;
-
                 return (
                   <div key={label} className="relative shrink-0">
                     <button
@@ -687,31 +679,53 @@ const BikeRentalHome = () => {
                       {label !== 'Filters' && <ChevronDown size={15} />}
                     </button>
 
-                    {resultDropdown === label && label !== 'Filters' && (
-                      <div className="absolute left-0 top-11 z-40 w-44 overflow-hidden rounded-[12px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.16)]">
-                        {options.map((option) => (
-                          <button
-                            key={option}
-                            type="button"
-                            onClick={() => {
-                              if (label === 'Price') setResultPriceFilter(option);
-                              if (label === 'Transmission') setResultTransmissionFilter(option);
-                              if (label === 'Fuel Type') setResultFuelFilter(option);
-                              if (label === 'Seats') setResultSeatsFilter(option);
-                              setResultDropdown(null);
-                            }}
-                            className="flex w-full items-center justify-between border-b border-slate-50 px-4 py-2.5 text-left text-[14.5px] font-semibold text-black last:border-b-0"
-                          >
-                            {option}
-                            {selectedValue === option && <Check size={15} className="text-[#f5b700]" />}
-                          </button>
-                        ))}
-                      </div>
-                    )}
                   </div>
                 );
               })}
               </div>
+
+              {/* The chip row scrolls horizontally, and a horizontal scroll
+                  container also clips vertically - which hid this panel
+                  entirely. It is rendered outside that row instead. */}
+              {resultDropdown && resultDropdown !== 'Filters' ? (
+                <div className="mt-2 overflow-hidden rounded-[12px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.16)]">
+                  {(resultDropdown === 'Price'
+                    ? ['Any', 'Under ₹3000', '₹3000+']
+                    : resultDropdown === 'Transmission'
+                      ? ['Any', 'Manual', 'Auto']
+                      : resultDropdown === 'Fuel Type'
+                        ? ['Any', 'Petrol', 'Diesel']
+                        : ['Any', '5 Seater', '6+ Seater']
+                  ).map((option) => {
+                    const current =
+                      resultDropdown === 'Price'
+                        ? resultPriceFilter
+                        : resultDropdown === 'Transmission'
+                          ? resultTransmissionFilter
+                          : resultDropdown === 'Fuel Type'
+                            ? resultFuelFilter
+                            : resultSeatsFilter;
+
+                    return (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() => {
+                          if (resultDropdown === 'Price') setResultPriceFilter(option);
+                          if (resultDropdown === 'Transmission') setResultTransmissionFilter(option);
+                          if (resultDropdown === 'Fuel Type') setResultFuelFilter(option);
+                          if (resultDropdown === 'Seats') setResultSeatsFilter(option);
+                          setResultDropdown(null);
+                        }}
+                        className="flex w-full items-center justify-between border-b border-slate-50 px-4 py-3 text-left text-[14.5px] font-semibold text-black last:border-b-0"
+                      >
+                        {option}
+                        {current === option && <Check size={15} className="text-[#f5b700]" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : null}
             </section>
 
             <section className="mt-3 flex min-h-[78px] items-center overflow-hidden rounded-[13px] border border-amber-200 bg-gradient-to-r from-[#fff7dc] to-[#fff1b7] px-4 shadow-sm">
@@ -1105,8 +1119,8 @@ const BikeRentalHome = () => {
       );
     }
 
-    const rentalCategories = ['Hatchback', 'Sedan', 'SUV', 'Premium', 'Luxury'];
-    const bookingLocation = locationSearchText || selectedLocation || 'Bhubaneswar';
+    const rentalCategories = ['Hatchback', 'Sedan', 'SUV', 'Premium'];
+    const bookingLocation = locationSearchText || selectedLocation || LOCATION_SUGGESTIONS[0] || '';
     const formatDisplayTime = (value) => {
       const [hourValue, minute = '00'] = String(value || '00:00').split(':');
       const hour = Number(hourValue);
@@ -1185,18 +1199,28 @@ const BikeRentalHome = () => {
             </div>
 
             <div className="relative mt-4 space-y-3">
-              <button
-                type="button"
-                onClick={() => setShowLocationSuggestions(true)}
-                className="flex min-h-[68px] w-full items-center gap-3 rounded-[14px] border border-slate-200 bg-white px-4 text-left shadow-[0_4px_14px_rgba(15,23,42,0.04)]"
-              >
-                <span className="h-6 w-6 rounded-full bg-[#22c55e]" />
+              <label className="flex min-h-[68px] w-full items-center gap-3 rounded-[14px] border border-slate-200 bg-white px-4 text-left shadow-[0_4px_14px_rgba(15,23,42,0.06)]">
+                <span className="h-6 w-6 shrink-0 rounded-full bg-[#22c55e]" />
                 <span className="min-w-0 flex-1">
                   <span className="block text-[13.5px] font-medium text-slate-500">Pick-up Location</span>
-                  <span className="block truncate text-[17px] font-semibold text-black">{bookingLocation}</span>
+                  <input
+                    value={locationSearchText}
+                    onChange={(event) => { setLocationSearchText(event.target.value); setShowLocationSuggestions(true); }}
+                    onFocus={() => setShowLocationSuggestions(true)}
+                    placeholder={selectedLocation || LOCATION_SUGGESTIONS[0] || 'Where from?'}
+                    className="block w-full bg-transparent text-[17px] font-semibold text-black outline-none placeholder:text-slate-400"
+                  />
                 </span>
-                <ChevronDown size={21} className="text-slate-500" />
-              </button>
+                <button
+                  type="button"
+                  aria-label="Show suggested pick-up locations"
+                  aria-expanded={showLocationSuggestions}
+                  onClick={(event) => { event.preventDefault(); setShowLocationSuggestions((c) => !c); }}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-500 active:bg-slate-100"
+                >
+                  <ChevronDown size={21} className={`transition-transform ${showLocationSuggestions ? 'rotate-180' : ''}`} />
+                </button>
+              </label>
 
               {showLocationSuggestions && (
                 <div className="absolute left-0 right-0 top-[72px] z-30 overflow-hidden rounded-[14px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.16)]">
@@ -1230,13 +1254,42 @@ const BikeRentalHome = () => {
                     className="block w-full bg-transparent text-[17px] font-semibold text-black outline-none placeholder:text-black"
                   />
                 </span>
-                <ChevronDown size={21} className="text-slate-500" />
+                <button
+                  type="button"
+                  aria-label="Show suggested drop-off locations"
+                  aria-expanded={showDropSuggestions}
+                  onClick={(event) => { event.preventDefault(); setShowDropSuggestions((c) => !c); }}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-500 active:bg-slate-100"
+                >
+                  <ChevronDown size={21} className={`transition-transform ${showDropSuggestions ? 'rotate-180' : ''}`} />
+                </button>
               </label>
+
+              {showDropSuggestions && (
+                <div className="overflow-hidden rounded-[14px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.14)]">
+                  {LOCATION_SUGGESTIONS.slice(0, 5).map((loc) => (
+                    <button
+                      key={loc}
+                      type="button"
+                      onClick={() => { setDropOffLocation(loc); setShowDropSuggestions(false); }}
+                      className="flex w-full items-center gap-2 border-b border-slate-50 px-4 py-2.5 text-left text-[14.5px] font-semibold text-slate-800 last:border-b-0"
+                    >
+                      <MapPin size={15} className="text-[#f5b700]" />
+                      <span className="truncate">{loc}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
 
               <button
                 type="button"
-                className="absolute right-[-8px] top-[58px] flex h-[52px] w-[52px] items-center justify-center rounded-full bg-white text-black shadow-[0_8px_24px_rgba(15,23,42,0.15)]"
-                aria-label="Swap locations"
+                onClick={() => {
+                  const from = locationSearchText || bookingLocation;
+                  setLocationSearchText(dropOffLocation);
+                  setDropOffLocation(from);
+                }}
+                className="absolute right-3 top-[58px] z-10 flex h-[46px] w-[46px] items-center justify-center rounded-full border border-slate-100 bg-white text-black shadow-[0_8px_24px_rgba(15,23,42,0.15)]"
+                aria-label="Swap pick-up and drop-off"
               >
                 <ArrowDownUp size={25} strokeWidth={2.6} />
               </button>
@@ -1523,9 +1576,19 @@ const BikeRentalHome = () => {
                   <X size={16} strokeWidth={2.5} />
                 </button>
               )}
-              <div className="w-7 h-7 flex items-center justify-center shrink-0 pr-1 text-[#d48c00]">
-                <ChevronRight size={22} strokeWidth={3} />
-              </div>
+              <button
+                type="button"
+                aria-label="Show suggested locations"
+                aria-expanded={showLocationSuggestions}
+                onClick={() => setShowLocationSuggestions((current) => !current)}
+                className="mr-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#d48c00] active:bg-amber-50"
+              >
+                <ChevronDown
+                  size={20}
+                  strokeWidth={3}
+                  className={`transition-transform ${showLocationSuggestions ? 'rotate-180' : ''}`}
+                />
+              </button>
             </div>
 
             {/* Location Suggestions Dropdown */}

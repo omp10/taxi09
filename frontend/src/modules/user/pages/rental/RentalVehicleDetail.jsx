@@ -769,6 +769,36 @@ const RentalVehicleDetail = () => {
     [defaultPackage, pricingRows, selectedPackageId],
   );
 
+  /** Every branch pickup point this vehicle can be collected from. */
+  const pickupPointOptions = useMemo(
+    () => [
+      ...new Set(
+        serviceLocations
+          .flatMap((item) => (Array.isArray(item.pickupPoints) ? item.pickupPoints : []))
+          .map((point) => String(point?.name || '').trim())
+          .filter(Boolean),
+      ),
+    ],
+    [serviceLocations],
+  );
+
+  /** Nearest pickup point to the visitor, used by the locate button. */
+  const nearestPickupPoint = useMemo(() => {
+    if (!userCoordinates) return null;
+    const points = serviceLocations.flatMap((item) => (Array.isArray(item.pickupPoints) ? item.pickupPoints : []));
+    let best = null;
+    let bestDistance = Infinity;
+    points.forEach((point) => {
+      const lat = Number(point?.position?.lat);
+      const lng = Number(point?.position?.lng);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+      // Squared degree distance is enough to rank nearby branches.
+      const d = (lat - userCoordinates.latitude) ** 2 + (lng - userCoordinates.longitude) ** 2;
+      if (d < bestDistance) { bestDistance = d; best = point; }
+    });
+    return best;
+  }, [serviceLocations, userCoordinates]);
+
   const selectedServiceLocation = useMemo(
     () =>
       serviceLocations.find(
@@ -1338,7 +1368,10 @@ const RentalVehicleDetail = () => {
     const addOnTotal = allAddOns
       .filter((item) => selectedAddOns.includes(item.id))
       .reduce((sum, item) => sum + item.price, 0);
-    const totalPayable = selectedPlan.price + addOnTotal;
+    // The deposit is configured on subscription plans only; hourly packages
+    // carry none, so it is zero there rather than a made-up figure.
+    const securityDeposit = Number(selectedSubscriptionPlan?.deposit || 0);
+    const totalPayable = selectedPlan.price + addOnTotal + securityDeposit;
     const toggleAddOn = (id) => {
       setSelectedAddOns((current) =>
         current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
@@ -1674,7 +1707,7 @@ const RentalVehicleDetail = () => {
             <h3 className="text-[14.5px] lg:text-[16.5px] font-black">Rental Information</h3>
             <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1.5 text-[12.5px] font-semibold">
               <span className="text-slate-600">Fuel Policy</span><span className="text-right">Full to Full</span>
-              <span className="text-slate-600">Security Deposit</span><span className="text-right">₹2000 Refundable</span>
+              <span className="text-slate-600">Security Deposit</span><span className="text-right">{securityDeposit > 0 ? `₹${securityDeposit.toLocaleString('en-IN')} Refundable` : 'Not required'}</span>
               <span className="text-slate-600">Minimum Driver Age</span><span className="text-right">21 Years</span>
               <span className="text-slate-600">Cancellation Policy</span><span className="text-right text-green-600">Free till 24 hrs</span>
             </div>
@@ -1689,6 +1722,12 @@ const RentalVehicleDetail = () => {
             <div className="mt-2 space-y-1.5 text-[13px] font-semibold">
               <div className="flex justify-between"><span>Base Fare (1 Day)</span><span>₹{selectedPlan.price}</span></div>
               <div className="flex justify-between"><span>Add-ons</span><span>₹{addOnTotal}</span></div>
+              {securityDeposit > 0 ? (
+                <div className="flex justify-between">
+                  <span>Security Deposit <span className="font-medium text-slate-500">(refundable)</span></span>
+                  <span>₹{securityDeposit.toLocaleString('en-IN')}</span>
+                </div>
+              ) : null}
               <div className="flex justify-between border-t border-dashed border-slate-200 pt-2 text-[14.5px] font-black"><span>Total Payable</span><span>₹{totalPayable}</span></div>
             </div>
           </section>
@@ -2488,6 +2527,52 @@ const RentalVehicleDetail = () => {
                 </p>
                 
                 <div className="space-y-4">
+                  <datalist id="rental-pickup-points">
+                    {pickupPointOptions.map((name) => <option key={name} value={name} />)}
+                  </datalist>
+
+                  <div className="space-y-2">
+                    <label className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-600">
+                      Pickup location
+                    </label>
+                    <input
+                      value={quoteForm.pickupLocation}
+                      onChange={(event) =>
+                        setQuoteForm((current) => ({ ...current, pickupLocation: event.target.value }))
+                      }
+                      list="rental-pickup-points"
+                      className={inputClass}
+                      placeholder="Where should we hand over the car?"
+                    />
+                    {nearestPickupPoint ? (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setQuoteForm((current) => ({ ...current, pickupLocation: nearestPickupPoint.name }))
+                        }
+                        className="flex items-center gap-1.5 text-[13px] font-bold text-[#f5a800]"
+                      >
+                        <Navigation size={14} strokeWidth={2.6} />
+                        Use nearest branch - {nearestPickupPoint.name}
+                      </button>
+                    ) : null}
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-600">
+                      Drop location
+                    </label>
+                    <input
+                      value={quoteForm.dropLocation}
+                      onChange={(event) =>
+                        setQuoteForm((current) => ({ ...current, dropLocation: event.target.value }))
+                      }
+                      list="rental-pickup-points"
+                      className={inputClass}
+                      placeholder="Where will you return it?"
+                    />
+                  </div>
+
                   <div className="space-y-2">
                     <label className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-600">
                       Hours needed

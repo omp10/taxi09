@@ -103,7 +103,7 @@ const ProfileSettings = () => {
             <ArrowLeft size={24} className="text-slate-900" strokeWidth={3} />
          </button>
          <div>
-            <h1 className="text-[13px] font-bold text-slate-600 uppercase tracking-widest leading-none mb-1.5 opacity-60">Account Settings</h1>
+            <h1 className="text-[13px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1.5 opacity-60">Account Settings</h1>
             <h2 className="text-[19px] font-bold text-slate-900 tracking-tight leading-none">Your Profile</h2>
          </div>
       </header>
@@ -131,7 +131,7 @@ const ProfileSettings = () => {
             <div className="mt-1 grid w-full max-w-[280px] grid-cols-2 gap-2">
               <label className={`relative flex h-11 items-center justify-center gap-2 rounded-2xl border text-[13px] font-bold uppercase tracking-wider transition-all ${
                 photoUploading
-                  ? 'cursor-not-allowed border-slate-200 bg-slate-100 text-slate-600'
+                  ? 'cursor-not-allowed border-slate-200 bg-slate-100 text-slate-500'
                   : 'cursor-pointer border-slate-200 bg-white text-slate-700 active:scale-[0.99]'
               }`}>
                 <ImagePlus size={14} />
@@ -147,7 +147,7 @@ const ProfileSettings = () => {
               </label>
               <label className={`relative flex h-11 items-center justify-center gap-2 rounded-2xl border text-[13px] font-bold uppercase tracking-wider transition-all ${
                 photoUploading
-                  ? 'cursor-not-allowed border-slate-200 bg-slate-100 text-slate-600'
+                  ? 'cursor-not-allowed border-slate-200 bg-slate-100 text-slate-500'
                   : 'cursor-pointer border-slate-900 bg-slate-950 text-white active:scale-[0.99]'
               }`}>
                 <Camera size={14} />
@@ -164,7 +164,7 @@ const ProfileSettings = () => {
               </label>
             </div>
             <div className="text-center">
-                <p className="text-[13px] font-semibold text-slate-600 uppercase tracking-widest">
+                <p className="text-[13px] font-semibold text-slate-500 uppercase tracking-widest">
                     {photoUploading ? 'Optimizing For WebP...' : 'Change Profile Photo'}
                 </p>
             </div>
@@ -173,9 +173,9 @@ const ProfileSettings = () => {
          {/* FORM FIELDS */}
          <div className="space-y-6">
             <div className="space-y-2">
-               <label className="text-[13px] font-bold text-slate-600 ml-1 uppercase tracking-widest">Full Name</label>
+               <label className="text-[13px] font-bold text-slate-500 ml-1 uppercase tracking-widest">Full Name</label>
                <div className="flex items-center gap-4 bg-slate-50/50 border border-slate-100 rounded-[28px] p-4 px-5 focus-within:bg-white focus-within:border-slate-900 transition-all shadow-sm">
-                  <User size={18} className="text-slate-600" />
+                  <User size={18} className="text-slate-500" />
                   <input 
                      type="text" 
                      value={name}
@@ -188,9 +188,9 @@ const ProfileSettings = () => {
             </div>
 
             <div className="space-y-2">
-               <label className="text-[13px] font-bold text-slate-600 ml-1 uppercase tracking-widest">Email Address</label>
+               <label className="text-[13px] font-bold text-slate-500 ml-1 uppercase tracking-widest">Email Address</label>
                <div className="flex items-center gap-4 bg-slate-50/50 border border-slate-100 rounded-[28px] p-4 px-5 focus-within:bg-white focus-within:border-slate-900 transition-all shadow-sm">
-                  <Mail size={18} className="text-slate-600" />
+                  <Mail size={18} className="text-slate-500" />
                   <input 
                      type="email" 
                      value={email}
@@ -202,10 +202,10 @@ const ProfileSettings = () => {
             </div>
 
             <div className="space-y-2">
-               <label className="text-[13px] font-bold text-slate-600 ml-1 uppercase tracking-widest">Phone Number</label>
+               <label className="text-[13px] font-bold text-slate-500 ml-1 uppercase tracking-widest">Phone Number</label>
                <div className="flex items-center gap-4 bg-slate-100/50 border border-slate-50 rounded-[28px] p-4 px-5 shadow-inner opacity-70 cursor-not-allowed">
-                  <Smartphone size={18} className="text-slate-600" />
-                  <span className="flex-1 bg-transparent border-none text-[16.5px] font-bold text-slate-600">
+                  <Smartphone size={18} className="text-slate-500" />
+                  <span className="flex-1 bg-transparent border-none text-[16.5px] font-bold text-slate-500">
                     {phone ? `+91 ${phone}` : '+91'}
                   </span>
                   <div className="bg-emerald-100 text-emerald-700 text-[12px] font-bold px-2 py-0.5 rounded-lg uppercase tracking-wider">Verified</div>

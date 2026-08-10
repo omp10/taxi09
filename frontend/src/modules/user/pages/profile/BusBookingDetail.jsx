@@ -200,13 +200,13 @@ const BusBookingDetail = () => {
           <button
             type="button"
             onClick={() => navigate(`${routePrefix}/profile/bus-bookings`)}
-            className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition-colors"
+            className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors"
           >
             <ArrowLeft size={20} />
           </button>
           <div className="flex-1">
             <h1 className="text-lg font-bold text-slate-900">Ticket Details</h1>
-            <p className="text-[12px] font-bold text-slate-600 uppercase tracking-wider">Booking ID: {booking?.bookingCode || '...'}</p>
+            <p className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">Booking ID: {booking?.bookingCode || '...'}</p>
           </div>
         </div>
       </div>
@@ -214,7 +214,7 @@ const BusBookingDetail = () => {
       <div className="px-5 pt-6 space-y-6">
         {loading ? (
           <div className="bg-white rounded-3xl p-12 text-center border border-slate-100 shadow-sm">
-            <Loader2 size={28} className="mx-auto animate-spin text-slate-600 mb-3" />
+            <Loader2 size={28} className="mx-auto animate-spin text-slate-500 mb-3" />
             <p className="text-[15.5px] leading-[21px] font-bold text-slate-900">Loading details...</p>
           </div>
         ) : null}
@@ -235,11 +235,11 @@ const BusBookingDetail = () => {
             >
               <div className="px-6 py-4 bg-slate-900 text-white flex justify-between items-center">
                 <div>
-                  <p className="text-[12px] font-bold text-slate-600 uppercase tracking-wider mb-0.5">PNR Number</p>
+                  <p className="text-[12px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">PNR Number</p>
                   <p className="text-[15.5px] leading-[21px] font-black tracking-widest">{booking.bookingCode}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[12px] font-bold text-slate-600 uppercase tracking-wider mb-0.5">Status</p>
+                  <p className="text-[12px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Status</p>
                   <div className="px-3 py-1 rounded-full bg-white/10 text-white border border-white/20 text-[12px] font-black uppercase tracking-wider">
                     {booking.status}
                   </div>
@@ -251,10 +251,10 @@ const BusBookingDetail = () => {
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex-1">
                     <p className="text-xl font-black text-slate-900 truncate">{booking.bus?.fromCity || 'From'}</p>
-                    <p className="text-[13.5px] leading-[18px] font-bold text-slate-600 uppercase mt-0.5">{booking.bus?.departure || '--:--'}</p>
+                    <p className="text-[13.5px] leading-[18px] font-bold text-slate-500 uppercase mt-0.5">{booking.bus?.departure || '--:--'}</p>
                   </div>
                   <div className="flex flex-col items-center flex-1 px-2">
-                    <span className="text-[12px] font-black text-slate-600 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-100">
+                    <span className="text-[12px] font-black text-slate-500 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-100">
                       {formatDurationCompact(booking.bus?.duration)}
                     </span>
                     <div className="w-full h-[1px] border-t border-dashed border-slate-200 my-3" />
@@ -262,20 +262,20 @@ const BusBookingDetail = () => {
                   </div>
                   <div className="flex-1 text-right">
                     <p className="text-xl font-black text-slate-900 truncate">{booking.bus?.toCity || 'To'}</p>
-                    <p className="text-[13.5px] leading-[18px] font-bold text-slate-600 uppercase mt-0.5">{booking.bus?.arrival || '--:--'}</p>
+                    <p className="text-[13.5px] leading-[18px] font-bold text-slate-500 uppercase mt-0.5">{booking.bus?.arrival || '--:--'}</p>
                   </div>
                 </div>
 
                 {/* Operator Info */}
                 <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                  <p className="text-[11px] font-bold text-slate-600 uppercase tracking-widest mb-2">Bus & Operator</p>
+                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Bus & Operator</p>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-white font-black">
                       {String(booking.bus?.operator || 'B').charAt(0)}
                     </div>
                     <div>
                       <p className="text-[15.5px] leading-[21px] font-black text-slate-900">{booking.bus?.operator || 'Bus Service'}</p>
-                      <p className="text-[13px] text-slate-600">{booking.bus?.type || 'Standard Service'}</p>
+                      <p className="text-[13px] text-slate-500">{booking.bus?.type || 'Standard Service'}</p>
                     </div>
                   </div>
                 </div>
@@ -283,14 +283,14 @@ const BusBookingDetail = () => {
                 {/* Info Grid */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                    <div className="flex items-center gap-2 text-slate-600 mb-2">
+                    <div className="flex items-center gap-2 text-slate-500 mb-2">
                       <CalendarDays size={14} />
                       <p className="text-[11px] font-bold uppercase tracking-widest">Travel Date</p>
                     </div>
                     <p className="text-[15.5px] leading-[21px] font-black text-slate-900">{booking.travelDate || 'NA'}</p>
                   </div>
                   <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                    <div className="flex items-center gap-2 text-slate-600 mb-2">
+                    <div className="flex items-center gap-2 text-slate-500 mb-2">
                       <Ticket size={14} />
                       <p className="text-[11px] font-bold uppercase tracking-widest">Seat Count</p>
                     </div>
@@ -301,14 +301,14 @@ const BusBookingDetail = () => {
                 {/* More Info */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                    <div className="flex items-center gap-2 text-slate-600 mb-2">
+                    <div className="flex items-center gap-2 text-slate-500 mb-2">
                       <BusFront size={14} />
                       <p className="text-[11px] font-bold uppercase tracking-widest">Bus Number</p>
                     </div>
                     <p className="text-[15.5px] leading-[21px] font-black text-slate-900">{booking.bus?.registrationNumber || 'Pending'}</p>
                   </div>
                   <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                    <div className="flex items-center gap-2 text-slate-600 mb-2">
+                    <div className="flex items-center gap-2 text-slate-500 mb-2">
                       <Phone size={14} />
                       <p className="text-[11px] font-bold uppercase tracking-widest">Contact</p>
                     </div>
@@ -318,7 +318,7 @@ const BusBookingDetail = () => {
 
                 {/* Locations */}
                 <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100">
-                  <div className="flex items-center gap-2 text-slate-600 mb-4">
+                  <div className="flex items-center gap-2 text-slate-500 mb-4">
                     <Route size={14} />
                     <p className="text-[11px] font-bold uppercase tracking-widest">Route Points</p>
                   </div>
@@ -358,7 +358,7 @@ const BusBookingDetail = () => {
                   >
                     <div>
                       <p className="text-[15.5px] leading-[21px] font-black">{activeSeatLabels[index] || seatId}</p>
-                      <p className={`text-[12px] font-bold ${selectedSeatIds.includes(seatId) ? 'text-slate-600' : 'text-slate-600'}`}>
+                      <p className={`text-[12px] font-bold ${selectedSeatIds.includes(seatId) ? 'text-slate-500' : 'text-slate-500'}`}>
                         Active Seat • {formatMoney(booking.perSeatAmount, booking.currency)}
                       </p>
                     </div>
@@ -381,16 +381,16 @@ const BusBookingDetail = () => {
 
                 {Array.isArray(booking.cancelledSeats) && booking.cancelledSeats.length > 0 && (
                   <div className="pt-4 space-y-3">
-                    <p className="text-[12px] font-bold text-slate-600 uppercase tracking-widest">Cancelled Seats</p>
+                    <p className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">Cancelled Seats</p>
                     {booking.cancelledSeats.map((seat) => (
                       <div key={seat.seatId} className="p-4 rounded-2xl border border-slate-50 bg-slate-50/50 flex justify-between items-center">
                         <div>
-                          <p className="text-[15.5px] leading-[21px] font-black text-slate-600">{seat.seatLabel || seat.seatId}</p>
-                          <p className="text-[12px] text-slate-600">Cancelled {formatDateTime(seat.cancelledAt)}</p>
+                          <p className="text-[15.5px] leading-[21px] font-black text-slate-500">{seat.seatLabel || seat.seatId}</p>
+                          <p className="text-[12px] text-slate-500">Cancelled {formatDateTime(seat.cancelledAt)}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-[15.5px] leading-[21px] font-black text-slate-600">{formatMoney(seat.refundAmount, booking.currency)}</p>
-                          <p className="text-[11px] font-bold uppercase text-slate-600">Refunded</p>
+                          <p className="text-[15.5px] leading-[21px] font-black text-slate-500">{formatMoney(seat.refundAmount, booking.currency)}</p>
+                          <p className="text-[11px] font-bold uppercase text-slate-500">Refunded</p>
                         </div>
                       </div>
                     ))}
@@ -411,7 +411,7 @@ const BusBookingDetail = () => {
                   </div>
                   <div className="grid grid-cols-3 gap-4 text-center">
                     <div>
-                      <p className="text-[11px] font-bold text-slate-600 uppercase mb-1">Total</p>
+                      <p className="text-[11px] font-bold text-slate-500 uppercase mb-1">Total</p>
                       <p className="text-[15.5px] leading-[21px] font-black text-slate-900">{formatMoney(selectionQuote.subtotal, booking.currency)}</p>
                     </div>
                     <div>
@@ -482,7 +482,7 @@ const BusBookingDetail = () => {
               ) : (
                 <div className="bg-slate-50 rounded-2xl p-6 text-center border border-slate-100">
                   <Info size={24} className="mx-auto text-slate-500 mb-2" />
-                  <p className="text-[15.5px] leading-[21px] font-black text-slate-600">
+                  <p className="text-[15.5px] leading-[21px] font-black text-slate-500">
                     {booking.review?.tripCompleted 
                       ? 'Review window is closed'
                       : 'You can rate this trip after completion'}
@@ -502,13 +502,13 @@ const BusBookingDetail = () => {
                   <div key={rule.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                     <p className="text-[15.5px] leading-[21px] font-black text-slate-900">{rule.label}</p>
                     <div className="flex items-center gap-2 mt-2">
-                      <Clock size={12} className="text-slate-600" />
-                      <p className="text-[12px] font-bold text-slate-600 uppercase tracking-widest">
+                      <Clock size={12} className="text-slate-500" />
+                      <p className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">
                         {rule.hoursBeforeDeparture}h Before Departure
                       </p>
                     </div>
                     <div className="flex items-center gap-2 mt-1">
-                      <ReceiptText size={12} className="text-slate-600" />
+                      <ReceiptText size={12} className="text-slate-500" />
                       <p className="text-[12px] font-bold text-emerald-600 uppercase tracking-widest">
                         {rule.refundType === 'percentage' ? `${rule.refundValue}% Refund` : `${formatMoney(rule.refundValue, booking.currency)} Refund`}
                       </p>
