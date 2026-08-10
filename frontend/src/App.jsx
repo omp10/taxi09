@@ -457,22 +457,78 @@ const clearUserSession = () => {
   clearLocalUserSession();
 };
 
+/**
+ * Anything that shows the visitor's own account, spends money, or commits a
+ * booking. Checked first, so a protected page nested under a browsable one
+ * (/stories/new under /stories) still asks for sign-in.
+ */
+const ACCOUNT_ONLY_PREFIXES = [
+  '/taxi/user/profile',
+  '/taxi/user/activity',
+  '/taxi/user/wallet',
+  '/taxi/user/promo',
+  '/taxi/user/referral',
+  '/taxi/user/safety',
+  '/taxi/user/attach-car',
+  '/taxi/user/notifications',
+  '/taxi/user/stories/new',
+  '/taxi/user/membership/checkout',
+  '/taxi/user/ride',
+  '/taxi/user/parcel',
+  '/taxi/user/rental/kyc',
+  '/taxi/user/rental/deposit',
+  '/taxi/user/rental/schedule',
+  '/taxi/user/rental/confirmed',
+  '/taxi/user/bus/checkout',
+  '/taxi/user/bus/confirm',
+  '/taxi/user/hotel/checkout',
+  '/taxi/user/with-driver/review',
+  '/taxi/user/with-driver/details',
+  '/taxi/user/with-driver/permanent',
+];
+
+/**
+ * Everything a visitor may look through before signing in. Browsing the
+ * catalogue is public; the sign-in prompt arrives when they try to book.
+ * Anything matching neither list stays protected, so a route added later is
+ * private by default rather than exposed by omission.
+ */
+const BROWSABLE_PREFIXES = [
+  '/taxi/user/rental',
+  '/taxi/user/cab',
+  '/taxi/user/bus',
+  '/taxi/user/hotel',
+  '/taxi/user/tours',
+  '/taxi/user/international',
+  '/taxi/user/intercity',
+  '/taxi/user/stories',
+  '/taxi/user/internship',
+  '/taxi/user/verify-certificate',
+  '/taxi/user/support',
+  '/taxi/user/membership',
+  '/taxi/user/with-driver',
+];
+
+const matchesPrefix = (pathname, prefixes) =>
+  prefixes.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+
+export const isBrowsableWithoutLogin = (pathname) =>
+  !matchesPrefix(pathname, ACCOUNT_ONLY_PREFIXES) && matchesPrefix(pathname, BROWSABLE_PREFIXES);
+
 const UserProtectedRoute = () => {
   const location = useLocation();
 
-  if (!getLocalUserToken()) {
-    const loginPath = location.pathname.startsWith('/taxi/user') ? '/taxi/user/login' : '/login';
-    return <Navigate to={loginPath} replace />;
+  if (getLocalUserToken() || isBrowsableWithoutLogin(location.pathname)) {
+    return <Outlet />;
   }
 
-  return <Outlet />;
+  const loginPath = location.pathname.startsWith('/taxi/user') ? '/taxi/user/login' : '/login';
+  // Remember where they were headed so login can send them back to it.
+  return <Navigate to={loginPath} replace state={{ from: location.pathname + location.search }} />;
 };
 
-const UserHomeRoute = ({ taxiPrefixed = false }) => (
-  getLocalUserToken()
-    ? <UserHome />
-    : <Navigate to={taxiPrefixed ? '/taxi/user/login' : '/login'} replace />
-);
+// The home screen is the shop window - always open.
+const UserHomeRoute = () => <UserHome />;
 
 const UserAccountInvalidationListener = () => {
   const location = useLocation();
@@ -699,7 +755,10 @@ function App() {
             <Toaster position="top-right" />
             <Routes>
               {/* Static / Public routes */}
-              <Route path="/" element={<LandingPage />} />
+              {/* The site opens straight into the app. Browsing is public;
+                  signing in is asked for at the point of booking. */}
+              <Route path="/" element={<Navigate to="/taxi/user" replace />} />
+              <Route path="/landing" element={<LandingPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/support" element={<SupportPage />} />
