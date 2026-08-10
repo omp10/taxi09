@@ -425,7 +425,7 @@ const BusHome = () => {
                 <p className="text-[22px] font-black italic leading-none tracking-[-0.05em] text-slate-950">
                   TAXI<span className="text-white">09</span>
                 </p>
-                <p className="mt-1 text-[9px] font-semibold text-slate-800">Bus Booking</p>
+                <p className="mt-1 text-[11px] font-semibold text-slate-800">Bus Booking</p>
               </div>
               <button
                 type="button"
@@ -434,7 +434,7 @@ const BusHome = () => {
                 aria-label="Notifications"
               >
                 <Bell size={22} strokeWidth={2.4} />
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[8px] font-black text-white ring-2 ring-[#ffd54a]">
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-black text-white ring-2 ring-[#ffd54a]">
                   3
                 </span>
               </button>
@@ -449,7 +449,7 @@ const BusHome = () => {
                   </React.Fragment>
                 ))}
               </h1>
-              <p className="mt-2 text-[11px] font-medium leading-4 text-slate-800">
+              <p className="mt-2 text-[13px] font-medium leading-4 text-slate-800">
                 {activeHero.subtitle.split('\n').map((line) => (
                   <React.Fragment key={line}>
                     {line}
@@ -464,8 +464,8 @@ const BusHome = () => {
                 <div key={title} className="flex flex-1 items-center gap-1.5 px-1.5">
                   <Icon size={15} className="shrink-0 text-[#f5b700]" strokeWidth={2.6} />
                   <div className="min-w-0">
-                    <p className="truncate text-[8.5px] font-black leading-tight text-slate-950">{title}</p>
-                    <p className="truncate text-[7.5px] font-medium leading-tight text-slate-500">{subtitle}</p>
+                    <p className="truncate text-[10.5px] font-black leading-tight text-slate-950">{title}</p>
+                    <p className="truncate text-[9.5px] font-medium leading-tight text-slate-500">{subtitle}</p>
                   </div>
                 </div>
               ))}
@@ -490,13 +490,13 @@ const BusHome = () => {
           <section className={`-mt-6 relative z-20 overflow-hidden rounded-[20px] bg-gradient-to-r ${activeOffer.tone} px-3 py-3.5 shadow-[0_12px_30px_rgba(15,23,42,0.10)]`}>
             <div className="flex items-center gap-1.5">
             <div className="shrink-0">
-              <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-slate-500">{activeOffer.eyebrow}</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">{activeOffer.eyebrow}</p>
               <p className="mt-0.5 flex items-baseline gap-1 leading-none text-[#b8770a]">
                 <span className="text-[28px] font-black tracking-[-0.03em]">{activeOffer.title}</span>
-                <span className="text-[11px] font-black text-slate-900">{activeOffer.suffix}</span>
+                <span className="text-[13px] font-black text-slate-900">{activeOffer.suffix}</span>
               </p>
-              <p className="mt-1.5 text-[9px] font-medium leading-tight text-slate-600">{activeOffer.subtitle}</p>
-              <span className="mt-2 inline-flex rounded-[8px] border border-dashed border-[#d9b25e] px-2 py-1 text-[8.5px] font-bold text-slate-800">
+              <p className="mt-1.5 text-[11px] font-medium leading-tight text-slate-600">{activeOffer.subtitle}</p>
+              <span className="mt-2 inline-flex rounded-[8px] border border-dashed border-[#d9b25e] px-2 py-1 text-[10.5px] font-bold text-slate-800">
                 Use Code: {activeOffer.code}
               </span>
             </div>
@@ -506,7 +506,7 @@ const BusHome = () => {
             </div>
 
             <div className="shrink-0">
-              <p className="text-center text-[8px] font-bold uppercase tracking-[0.12em] text-slate-700">
+              <p className="text-center text-[10px] font-bold uppercase tracking-[0.12em] text-slate-700">
                 Offer Ends In
               </p>
               <div className="mt-1.5 flex items-start justify-center gap-0.5">
@@ -516,12 +516,12 @@ const BusHome = () => {
                   [offerCountdown.secs, 'SECS'],
                 ].map(([value, label], idx) => (
                   <React.Fragment key={label}>
-                    {idx > 0 && <span className="pt-1 text-[12px] font-black leading-none text-slate-400">:</span>}
+                    {idx > 0 && <span className="pt-1 text-[13.5px] font-black leading-none text-slate-400">:</span>}
                     <div className="w-[27px]">
                       <div className="rounded-[7px] border border-[#f0e3c4] bg-white py-1 text-center shadow-[0_2px_5px_rgba(0,0,0,0.04)]">
-                        <p className="text-[14px] font-black leading-none tabular-nums text-slate-950">{value}</p>
+                        <p className="text-[15.5px] font-black leading-none tabular-nums text-slate-950">{value}</p>
                       </div>
-                      <p className="mt-1 text-center text-[6.5px] font-bold text-slate-500">{label}</p>
+                      <p className="mt-1 text-center text-[8.5px] font-bold text-slate-500">{label}</p>
                     </div>
                   </React.Fragment>
                 ))}
@@ -553,13 +553,13 @@ const BusHome = () => {
           {/* Search */}
           <section className="mt-3 rounded-[22px] border border-[#f1e0b8] bg-white px-3 py-4 shadow-[0_10px_24px_rgba(15,23,42,0.06)]">
             <div className="flex items-center justify-between px-0.5">
-              <h2 className="text-[17px] font-black tracking-[-0.02em] text-slate-950">Plan Your Bus Journey</h2>
+              <h2 className="text-[18px] font-black tracking-[-0.02em] text-slate-950">Plan Your Bus Journey</h2>
               {routesLoading && <Loader2 size={16} className="animate-spin text-slate-400" />}
             </div>
 
             <div className="relative mt-3 grid grid-cols-2 gap-2">
               <div className="rounded-[14px] border border-[#eee9df] bg-white px-3 py-2.5">
-                <p className="text-[8px] font-bold uppercase tracking-[0.14em] text-slate-400">From</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">From</p>
                 <div className="mt-1.5 flex items-center gap-1.5">
                   <span className="h-2.5 w-2.5 shrink-0 rounded-full border-[3px] border-[#f5b700]" />
                   <select
@@ -568,7 +568,7 @@ const BusHome = () => {
                       setFromCity(event.target.value);
                       setError('');
                     }}
-                    className="w-full min-w-0 appearance-none bg-transparent text-[13px] font-bold text-slate-950 outline-none"
+                    className="w-full min-w-0 appearance-none bg-transparent text-[14.5px] font-bold text-slate-950 outline-none"
                   >
                     {!originOptions.includes(fromCity) && <option value={fromCity}>{fromCity || 'Select city'}</option>}
                     {originOptions.map((city) => (
@@ -594,7 +594,7 @@ const BusHome = () => {
               </button>
 
               <div className="rounded-[14px] border border-[#eee9df] bg-white px-3 py-2.5">
-                <p className="text-[8px] font-bold uppercase tracking-[0.14em] text-slate-400">To</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">To</p>
                 <div className="mt-1.5 flex items-center gap-1.5">
                   <MapPin size={13} className="shrink-0 text-slate-400" strokeWidth={2.6} />
                   <select
@@ -603,7 +603,7 @@ const BusHome = () => {
                       setToCity(event.target.value);
                       setError('');
                     }}
-                    className="w-full min-w-0 appearance-none bg-transparent text-[13px] font-bold text-slate-950 outline-none"
+                    className="w-full min-w-0 appearance-none bg-transparent text-[14.5px] font-bold text-slate-950 outline-none"
                   >
                     {!destinationOptions.includes(toCity) && <option value={toCity}>{toCity || 'Select city'}</option>}
                     {destinationOptions.map((city) => (
@@ -620,32 +620,32 @@ const BusHome = () => {
                 onClick={openCalendar}
                 className="col-span-2 rounded-[14px] border border-[#eee9df] bg-white px-3 py-2.5 text-left"
               >
-                <p className="text-[8px] font-bold uppercase tracking-[0.14em] text-slate-400">Journey Date</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">Journey Date</p>
                 <div className="mt-1.5 flex items-center justify-between gap-2">
-                  <span className="truncate text-[13px] font-bold text-slate-950">{formatDisplayDate(date)}</span>
+                  <span className="truncate text-[14.5px] font-bold text-slate-950">{formatDisplayDate(date)}</span>
                   <CalendarDays size={15} className="shrink-0 text-slate-400" strokeWidth={2.4} />
                 </div>
               </button>
             </div>
 
             {matchingRoute && (
-              <div className="mt-2.5 rounded-[12px] bg-[#f0fdf4] px-3 py-2 text-[9.5px] font-semibold text-emerald-700">
+              <div className="mt-2.5 rounded-[12px] bg-[#f0fdf4] px-3 py-2 text-[11.5px] font-semibold text-emerald-700">
                 Active route found. Tickets from Rs{Number(matchingRoute.startingPrice || 0)}
               </div>
             )}
 
             {error && (
-              <div className="mt-2.5 rounded-[12px] bg-rose-50 px-3 py-2 text-[9.5px] font-semibold text-rose-600">{error}</div>
+              <div className="mt-2.5 rounded-[12px] bg-rose-50 px-3 py-2 text-[11.5px] font-semibold text-rose-600">{error}</div>
             )}
 
             {routesError && !error && (
-              <div className="mt-2.5 rounded-[12px] bg-rose-50 px-3 py-2 text-[9.5px] font-semibold text-rose-600">
+              <div className="mt-2.5 rounded-[12px] bg-rose-50 px-3 py-2 text-[11.5px] font-semibold text-rose-600">
                 {routesError}
               </div>
             )}
 
             {!busEnabled && !error && (
-              <div className="mt-2.5 rounded-[12px] bg-amber-50 px-3 py-2 text-[9.5px] font-semibold text-amber-700">
+              <div className="mt-2.5 rounded-[12px] bg-amber-50 px-3 py-2 text-[11.5px] font-semibold text-amber-700">
                 Bus service is currently disabled.
               </div>
             )}
@@ -653,7 +653,7 @@ const BusHome = () => {
             <button
               type="button"
               onClick={handleSearch}
-              className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-[14px] bg-[#f5b700] text-[15px] font-black text-slate-950 shadow-[0_10px_22px_rgba(245,183,0,0.28)] active:scale-[0.99] transition-transform"
+              className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-[14px] bg-[#f5b700] text-[16.5px] font-black text-slate-950 shadow-[0_10px_22px_rgba(245,183,0,0.28)] active:scale-[0.99] transition-transform"
             >
               <Search size={17} strokeWidth={3} />
               Search Buses
@@ -663,11 +663,11 @@ const BusHome = () => {
           {/* Popular routes */}
           <section className="mt-4">
             <div className="flex items-center justify-between px-0.5">
-              <h2 className="text-[17px] font-black tracking-[-0.02em] text-slate-950">Popular Routes</h2>
+              <h2 className="text-[18px] font-black tracking-[-0.02em] text-slate-950">Popular Routes</h2>
               <button
                 type="button"
                 onClick={() => navigate(`${routePrefix}/bus/list`, { state: { fromCity, toCity, date } })}
-                className="flex items-center gap-1 text-[11px] font-bold text-slate-600"
+                className="flex items-center gap-1 text-[13px] font-bold text-slate-600"
               >
                 View All <ChevronRight size={13} strokeWidth={2.8} />
               </button>
@@ -696,33 +696,33 @@ const BusHome = () => {
                     >
                       <BusFront size={16} strokeWidth={2.6} />
                     </span>
-                    <span className="rounded-full bg-white/85 px-2 py-1 text-[8px] font-black text-slate-600 shadow-[0_4px_10px_rgba(15,23,42,0.06)]">
+                    <span className="rounded-full bg-white/85 px-2 py-1 text-[10px] font-black text-slate-600 shadow-[0_4px_10px_rgba(15,23,42,0.06)]">
                       Popular
                     </span>
                   </span>
 
                   <div className="relative mt-3">
                     <div className="flex min-w-0 items-center gap-1.5">
-                      <span className="min-w-0 truncate text-[12px] font-black leading-tight text-slate-950">
+                      <span className="min-w-0 truncate text-[13.5px] font-black leading-tight text-slate-950">
                         {splitCityName(route?.fromCity) || 'Route'}
                       </span>
-                      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-white/85 text-[10px] font-black text-slate-500">
+                      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-white/85 text-[12px] font-black text-slate-500">
                         &rarr;
                       </span>
-                      <span className="min-w-0 truncate text-[12px] font-black leading-tight text-slate-950">
+                      <span className="min-w-0 truncate text-[13.5px] font-black leading-tight text-slate-950">
                         {splitCityName(route?.toCity) || 'Destination'}
                       </span>
                     </div>
 
                     <div className="mt-2 flex items-end justify-between gap-2">
                       <div>
-                        <p className="text-[8px] font-bold uppercase tracking-[0.12em] text-slate-400">Starts at</p>
-                        <p className="mt-0.5 text-[13px] font-black text-slate-950">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">Starts at</p>
+                        <p className="mt-0.5 text-[14.5px] font-black text-slate-950">
                           Rs{Number(route?.startingPrice || 0)}
                         </p>
                       </div>
                       {route?.duration && (
-                        <span className="flex items-center gap-1 rounded-full bg-white/80 px-2 py-1 text-[8.5px] font-bold text-slate-600">
+                        <span className="flex items-center gap-1 rounded-full bg-white/80 px-2 py-1 text-[10.5px] font-bold text-slate-600">
                           <Timer size={10} strokeWidth={2.5} />
                           {route.duration}
                         </span>
@@ -741,19 +741,19 @@ const BusHome = () => {
             </div>
 
             {!routesLoading && !featuredRoutes.length && !routesError && (
-              <p className="py-8 text-center text-[12px] font-medium text-slate-400">No active routes found.</p>
+              <p className="py-8 text-center text-[13.5px] font-medium text-slate-400">No active routes found.</p>
             )}
           </section>
 
           {/* Why book */}
           <section className="mt-4">
-            <h2 className="px-0.5 text-[17px] font-black tracking-[-0.02em] text-slate-950">Why Book with Taxi09?</h2>
+            <h2 className="px-0.5 text-[18px] font-black tracking-[-0.02em] text-slate-950">Why Book with Taxi09?</h2>
             <div className="mt-2.5 grid grid-cols-4 divide-x divide-[#f1e6cb] rounded-[18px] border border-[#f4e7c6] bg-[#fffdf6] py-3 shadow-[0_10px_24px_rgba(15,23,42,0.05)]">
               {trustItems.map(({ icon: Icon, title, subtitle, tone }) => (
                 <div key={title} className="flex min-w-0 flex-col items-center gap-1.5 px-1.5 text-center">
                   <Icon size={19} className={`shrink-0 ${tone}`} strokeWidth={2.4} />
-                  <p className="text-[8px] font-black leading-[1.2] text-slate-950">{title}</p>
-                  <p className="text-[7px] font-medium leading-[1.2] text-slate-500">{subtitle}</p>
+                  <p className="text-[10px] font-black leading-[1.2] text-slate-950">{title}</p>
+                  <p className="text-[9px] font-medium leading-[1.2] text-slate-500">{subtitle}</p>
                 </div>
               ))}
             </div>
@@ -770,7 +770,7 @@ const BusHome = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400">Select Journey Date</p>
+                <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">Select Journey Date</p>
                 <h3 className="mt-1 text-[20px] font-extrabold">{monthLabel}</h3>
               </div>
               <button
@@ -790,7 +790,7 @@ const BusHome = () => {
               >
                 <ChevronLeft size={18} />
               </button>
-              <span className="rounded-full bg-[#fff8df] px-4 py-2 text-[12px] font-bold text-slate-800">
+              <span className="rounded-full bg-[#fff8df] px-4 py-2 text-[13.5px] font-bold text-slate-800">
                 {formatDisplayDate(date)}
               </span>
               <button
@@ -804,7 +804,7 @@ const BusHome = () => {
 
             <div className="mt-4 grid grid-cols-7 gap-1 text-center">
               {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day) => (
-                <span key={day} className="py-2 text-[10px] font-bold text-slate-400">
+                <span key={day} className="py-2 text-[12px] font-bold text-slate-400">
                   {day}
                 </span>
               ))}
@@ -821,7 +821,7 @@ const BusHome = () => {
                     type="button"
                     disabled={isDisabled}
                     onClick={() => selectCalendarDate(day)}
-                    className={`aspect-square rounded-[14px] text-[13px] font-bold ${
+                    className={`aspect-square rounded-[14px] text-[14.5px] font-bold ${
                       isSelected
                         ? 'bg-[#f5b700] text-black'
                         : isDisabled
@@ -844,14 +844,14 @@ const BusHome = () => {
                   setDate(getDateOffset(0));
                   setCalendarOpen(false);
                 }}
-                className="rounded-[16px] bg-slate-50 py-3 text-[12px] font-bold text-slate-700"
+                className="rounded-[16px] bg-slate-50 py-3 text-[13.5px] font-bold text-slate-700"
               >
                 Use Today
               </button>
               <button
                 type="button"
                 onClick={() => setCalendarOpen(false)}
-                className="rounded-[16px] bg-[#f5b700] py-3 text-[12px] font-bold text-black"
+                className="rounded-[16px] bg-[#f5b700] py-3 text-[13.5px] font-bold text-black"
               >
                 Confirm
               </button>

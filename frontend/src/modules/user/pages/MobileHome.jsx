@@ -152,8 +152,12 @@ const MobileHome = () => {
           api.get('/users/banners?type=top'),
           api.get('/users/banners?type=bottom'),
         ]);
-        const topResults = unwrapApiPayload(topRes)?.results || [];
-        const bottomResults = unwrapApiPayload(bottomRes)?.results || [];
+        // Only banners with mobile artwork belong here. A desktop-only banner
+        // stretched into a phone-width strip loses its subject, so it is
+        // skipped rather than shown badly - the desktop home filters on
+        // desktopImage for the same reason.
+        const topResults = (unwrapApiPayload(topRes)?.results || []).filter((banner) => banner?.image);
+        const bottomResults = (unwrapApiPayload(bottomRes)?.results || []).filter((banner) => banner?.image);
         setTopBanners(topResults.length ? topResults : [{ image: STATIC_TOP_BANNER }]);
         setBottomBanners(bottomResults.length ? bottomResults : [{ image: STATIC_BOTTOM_BANNER }]);
       } catch (error) {
@@ -424,10 +428,10 @@ const MobileHome = () => {
             className="mx-4 mt-2 bg-white border border-slate-100 rounded-2xl p-4 shadow-sm cursor-pointer hover:border-slate-350 transition-colors"
           >
             <div className="flex justify-between items-center mb-2">
-              <span className="text-[10px] uppercase font-bold tracking-wider text-[#d48c00] bg-[#ffc400]/10 px-2 py-0.5 rounded">
+              <span className="text-[12px] uppercase font-bold tracking-wider text-[#d48c00] bg-[#ffc400]/10 px-2 py-0.5 rounded">
                 Scheduled Confirmed
               </span>
-              <span className="text-[10px] uppercase font-bold tracking-wider text-green-600 animate-pulse flex items-center gap-1">
+              <span className="text-[12px] uppercase font-bold tracking-wider text-green-600 animate-pulse flex items-center gap-1">
                 <span className="h-1.5 w-1.5 rounded-full bg-green-500" /> Live Status
               </span>
             </div>
@@ -449,14 +453,14 @@ const MobileHome = () => {
           >
             <img src="/taxi09_service_attach_car.png" alt="" className="h-10 w-10 object-contain" />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[13px] font-black text-slate-900">
+              <p className="truncate text-[14.5px] font-black text-slate-900">
                 {[attachedVehicle.brand, attachedVehicle.model].filter(Boolean).join(' ') || 'Your car listing'}
               </p>
-              <p className="text-[11.5px] text-slate-500">
+              <p className="text-[13.5px] text-slate-500">
                 {attachedVehicle.reference} · {ATTACH_STATUS[attachedVehicle.status]?.label || attachedVehicle.status}
               </p>
             </div>
-            <span className={`rounded-lg px-2 py-1 text-[10.5px] font-black ${ATTACH_STATUS[attachedVehicle.status]?.tone || 'bg-slate-100 text-slate-600'}`}>
+            <span className={`rounded-lg px-2 py-1 text-[12.5px] font-black ${ATTACH_STATUS[attachedVehicle.status]?.tone || 'bg-slate-100 text-slate-600'}`}>
               {ATTACH_STATUS[attachedVehicle.status]?.chip || attachedVehicle.status}
             </span>
           </div>
@@ -508,7 +512,7 @@ const MobileHome = () => {
             <h2 className="text-[24px] font-black tracking-[-0.05em] text-slate-950">Rental Options</h2>
             <button
               onClick={() => navigate('/taxi/user/rental/type')}
-              className="flex items-center gap-1.5 text-[14px] font-bold text-[#F5B700] active:scale-95 transition-transform"
+              className="flex items-center gap-1.5 text-[15.5px] font-bold text-[#F5B700] active:scale-95 transition-transform"
             >
               View All <ArrowRight size={16} strokeWidth={2.6} />
             </button>
@@ -526,8 +530,8 @@ const MobileHome = () => {
                     <Icon size={17} className="text-slate-900" strokeWidth={2.1} />
                   </span>
                   <span className="min-w-0">
-                    <span className="block text-[12px] font-black leading-[1.15] text-slate-950">{title}</span>
-                    <span className="mt-0.5 block text-[9px] font-medium leading-tight text-slate-600">{subtitle}</span>
+                    <span className="block text-[13.5px] font-black leading-[1.15] text-slate-950">{title}</span>
+                    <span className="mt-0.5 block text-[11px] font-medium leading-tight text-slate-600">{subtitle}</span>
                   </span>
                 </div>
 
@@ -560,7 +564,7 @@ const MobileHome = () => {
                 className="relative flex min-h-[84px] items-center gap-1.5 overflow-hidden rounded-[20px] border border-[#f1ede6] bg-white pl-2 pr-1 py-3 text-left shadow-[0_10px_24px_rgba(15,23,42,0.06)] active:scale-[0.97] transition-transform"
               >
                 <img src={iconImage} alt="" className="h-8 w-8 shrink-0 object-contain" draggable={false} />
-                <span className="min-w-0 break-words text-[10px] font-extrabold leading-[1.2] whitespace-pre-line text-slate-950">
+                <span className="min-w-0 break-words text-[12px] font-extrabold leading-[1.2] whitespace-pre-line text-slate-950">
                   {label}
                 </span>
                 <span className="absolute bottom-1.5 right-1 flex h-[22px] w-[22px] items-center justify-center rounded-full border border-[#f5b700]/35 bg-white shadow-[0_2px_6px_rgba(0,0,0,0.05)]">
@@ -617,7 +621,7 @@ const MobileHome = () => {
             {trustPoints.map(({ icon: Icon, label }) => (
               <div key={label} className="flex min-w-0 flex-col items-center justify-center gap-2 px-2 text-center">
                 <Icon size={22} className="shrink-0 text-[#F5B700]" strokeWidth={2.2} />
-                <span className="whitespace-pre-line text-[9px] font-black leading-[1.25] tracking-tight text-slate-800">{label}</span>
+                <span className="whitespace-pre-line text-[11px] font-black leading-[1.25] tracking-tight text-slate-800">{label}</span>
               </div>
             ))}
           </div>

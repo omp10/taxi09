@@ -39,25 +39,25 @@ const SpiritualTrip = () => {
             <ArrowLeft size={18} className="text-slate-900" strokeWidth={2.5} />
           </button>
           <div className="flex-1">
-            <p className="text-[9px] font-black uppercase tracking-[0.26em] text-slate-400">Auto & Cab</p>
-            <h1 className="text-[19px] font-black tracking-tight text-slate-900">Spiritual Trips</h1>
+            <p className="text-[11px] font-black uppercase tracking-[0.26em] text-slate-400">Auto & Cab</p>
+            <h1 className="text-[20px] font-black tracking-tight text-slate-900">Spiritual Trips</h1>
           </div>
-          <span className="text-[9px] font-black px-2.5 py-1 rounded-full border bg-purple-50 text-purple-600 border-purple-100">Guided Tours</span>
+          <span className="text-[11px] font-black px-2.5 py-1 rounded-full border bg-purple-50 text-purple-600 border-purple-100">Guided Tours</span>
         </div>
       </header>
 
       <div className="px-5 pt-4 space-y-4">
         {/* Intro card */}
         <div className="rounded-[20px] bg-gradient-to-br from-purple-600 to-purple-800 p-5 text-white shadow-[0_8px_24px_rgba(147,51,234,0.25)]">
-          <p className="text-[10px] font-black text-purple-200 uppercase tracking-widest mb-1">From Indore</p>
-          <h2 className="text-[18px] font-black leading-tight">Sacred Journeys<br />to Holy Sites</h2>
-          <p className="text-[11px] font-bold text-purple-200 mt-1">Comfortable cabs · Experienced drivers · Best prices</p>
+          <p className="text-[12px] font-black text-purple-200 uppercase tracking-widest mb-1">From Indore</p>
+          <h2 className="text-[19px] font-black leading-tight">Sacred Journeys<br />to Holy Sites</h2>
+          <p className="text-[13px] font-bold text-purple-200 mt-1">Comfortable cabs · Experienced drivers · Best prices</p>
         </div>
 
         {/* Section label */}
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.26em] text-slate-400">Popular Destinations</p>
-          <h2 className="mt-0.5 text-[16px] font-black tracking-tight text-slate-900">Choose your pilgrimage</h2>
+          <p className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-400">Popular Destinations</p>
+          <h2 className="mt-0.5 text-[17px] font-black tracking-tight text-slate-900">Choose your pilgrimage</h2>
         </div>
 
         {/* Destination grid */}
@@ -71,16 +71,16 @@ const SpiritualTrip = () => {
               className={`rounded-[20px] border border-white/80 shadow-[0_4px_14px_rgba(15,23,42,0.06)] p-4 text-left flex flex-col gap-2 ${dest.accent}`}>
               <span className="text-3xl">{dest.emoji}</span>
               <div>
-                <p className="text-[14px] font-black text-slate-900 leading-tight">{dest.name}</p>
-                <p className="text-[10px] font-bold text-slate-500 mt-0.5 leading-tight">{dest.subtitle}</p>
+                <p className="text-[15.5px] font-black text-slate-900 leading-tight">{dest.name}</p>
+                <p className="text-[12px] font-bold text-slate-500 mt-0.5 leading-tight">{dest.subtitle}</p>
               </div>
               <div className="flex items-center justify-between mt-auto pt-1">
                 <div>
                   <div className="flex items-center gap-1">
                     <MapPin size={9} className="text-slate-400" strokeWidth={2.5} />
-                    <span className="text-[9px] font-bold text-slate-400">{dest.dist}</span>
+                    <span className="text-[11px] font-bold text-slate-400">{dest.dist}</span>
                   </div>
-                  <p className="text-[10px] font-black text-slate-700">{dest.fare}</p>
+                  <p className="text-[12px] font-black text-slate-700">{dest.fare}</p>
                 </div>
                 <div className="w-6 h-6 rounded-full bg-white/70 flex items-center justify-center">
                   <ChevronRight size={12} className="text-slate-500" strokeWidth={2.5} />
@@ -92,7 +92,7 @@ const SpiritualTrip = () => {
 
         {/* Note */}
         <div className="rounded-[16px] border border-white/80 bg-white/90 px-4 py-3 shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
-          <p className="text-[11px] font-bold text-slate-400 leading-relaxed">
+          <p className="text-[13px] font-bold text-slate-400 leading-relaxed">
             All fares are estimates. Final fare depends on vehicle type and route. Drivers are experienced with pilgrimage routes.
           </p>
         </div>

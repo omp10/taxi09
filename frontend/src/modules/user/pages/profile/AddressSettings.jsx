@@ -20,7 +20,7 @@ const defaultState = {
 
 const Field = ({ label, children }) => (
   <div className="space-y-1.5">
-    <div className="text-[10px] font-black uppercase tracking-[0.26em] text-slate-400">{label}</div>
+    <div className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-400">{label}</div>
     {children}
   </div>
 );
@@ -28,7 +28,7 @@ const Field = ({ label, children }) => (
 const PrimaryButton = ({ children, className = '', ...props }) => (
   <button
     type="button"
-    className={`w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 text-white px-4 py-3 text-[12px] font-black uppercase tracking-[0.18em] shadow-[0_16px_34px_rgba(15,23,42,0.18)] active:scale-95 transition-all ${className}`}
+    className={`w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 text-white px-4 py-3 text-[13.5px] font-black uppercase tracking-[0.18em] shadow-[0_16px_34px_rgba(15,23,42,0.18)] active:scale-95 transition-all ${className}`}
     {...props}
   >
     {children}
@@ -38,7 +38,7 @@ const PrimaryButton = ({ children, className = '', ...props }) => (
 const SecondaryButton = ({ children, className = '', ...props }) => (
   <button
     type="button"
-    className={`w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-white/75 backdrop-blur-md border border-white/80 text-slate-800 px-4 py-3 text-[12px] font-black uppercase tracking-[0.18em] shadow-[0_12px_26px_rgba(15,23,42,0.06)] active:scale-95 transition-all ${className}`}
+    className={`w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-white/75 backdrop-blur-md border border-white/80 text-slate-800 px-4 py-3 text-[13.5px] font-black uppercase tracking-[0.18em] shadow-[0_12px_26px_rgba(15,23,42,0.06)] active:scale-95 transition-all ${className}`}
     {...props}
   >
     {children}
@@ -57,8 +57,8 @@ const AddressCard = ({ icon: Icon, title, subtitle, accentClass, onEdit, onDelet
     <div className="flex-1 min-w-0">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="text-[15px] font-black text-slate-900 leading-none">{title}</div>
-          <div className={`mt-1 text-[12px] font-bold ${isEmpty ? 'text-slate-400 italic' : 'text-slate-500'} truncate`}>
+          <div className="text-[16.5px] font-black text-slate-900 leading-none">{title}</div>
+          <div className={`mt-1 text-[13.5px] font-bold ${isEmpty ? 'text-slate-400 italic' : 'text-slate-500'} truncate`}>
             {subtitle}
           </div>
         </div>
@@ -100,8 +100,8 @@ const ModalShell = ({ title, subtitle, onClose, children }) => (
       <div className="px-5 pt-5 pb-4 border-b border-white/70 bg-white/60">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <div className="text-[16px] font-black text-slate-900 tracking-tight">{title}</div>
-            {subtitle && <div className="mt-1 text-[12px] font-bold text-slate-500">{subtitle}</div>}
+            <div className="text-[17px] font-black text-slate-900 tracking-tight">{title}</div>
+            {subtitle && <div className="mt-1 text-[13.5px] font-bold text-slate-500">{subtitle}</div>}
           </div>
           <button
             type="button"
@@ -228,8 +228,8 @@ const AddressSettings = () => {
               <ArrowLeft size={22} className="text-slate-900" strokeWidth={3} />
             </button>
             <div className="min-w-0">
-              <p className="text-[10px] font-black uppercase tracking-[0.26em] text-slate-400">Profile</p>
-              <h1 className="mt-1 text-[18px] font-black text-slate-900 tracking-tight leading-none truncate">
+              <p className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-400">Profile</p>
+              <h1 className="mt-1 text-[19px] font-black text-slate-900 tracking-tight leading-none truncate">
                 Addresses
               </h1>
             </div>
@@ -262,13 +262,13 @@ const AddressSettings = () => {
         <div className="space-y-3">
           <div className="flex items-end justify-between px-1">
             <div>
-              <div className="text-[10px] font-black uppercase tracking-[0.26em] text-slate-400">Landmarks</div>
-              <div className="mt-1 text-[15px] font-black text-slate-900 tracking-tight">Saved places</div>
+              <div className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-400">Landmarks</div>
+              <div className="mt-1 text-[16.5px] font-black text-slate-900 tracking-tight">Saved places</div>
             </div>
             <button
               type="button"
               onClick={() => openEdit('landmark')}
-              className="inline-flex items-center gap-2 rounded-full bg-white/70 backdrop-blur-md border border-white/80 px-3 py-2 text-[11px] font-black text-slate-700 shadow-[0_10px_18px_rgba(15,23,42,0.05)] active:scale-95 transition-all"
+              className="inline-flex items-center gap-2 rounded-full bg-white/70 backdrop-blur-md border border-white/80 px-3 py-2 text-[13px] font-black text-slate-700 shadow-[0_10px_18px_rgba(15,23,42,0.05)] active:scale-95 transition-all"
             >
               <Plus size={14} strokeWidth={3} />
               Add
@@ -283,8 +283,8 @@ const AddressSettings = () => {
                     <MapPin size={18} strokeWidth={2.6} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-[14px] font-black text-slate-900 truncate">{lm.label}</div>
-                    <div className="mt-1 text-[12px] font-bold text-slate-500 truncate">{lm.address}</div>
+                    <div className="text-[15.5px] font-black text-slate-900 truncate">{lm.label}</div>
+                    <div className="mt-1 text-[13.5px] font-bold text-slate-500 truncate">{lm.address}</div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <button
@@ -312,8 +312,8 @@ const AddressSettings = () => {
               <div className="w-12 h-12 rounded-2xl bg-white/70 border border-white/80 shadow-sm flex items-center justify-center mx-auto text-slate-400">
                 <MapPin size={20} strokeWidth={2.6} />
               </div>
-              <div className="mt-3 text-[14px] font-black text-slate-900">No landmarks yet</div>
-              <div className="mt-1 text-[12px] font-bold text-slate-500">
+              <div className="mt-3 text-[15.5px] font-black text-slate-900">No landmarks yet</div>
+              <div className="mt-1 text-[13.5px] font-bold text-slate-500">
                 Save places like “Gym”, “Mom’s house”, or “Office gate”.
               </div>
               <div className="mt-4">
@@ -349,7 +349,7 @@ const AddressSettings = () => {
                     value={draft.label}
                     onChange={(e) => setDraft((prev) => ({ ...prev, label: e.target.value }))}
                     placeholder="e.g., Gym, Office gate"
-                    className="w-full h-12 rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 text-[14px] font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
+                    className="w-full h-12 rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 text-[15.5px] font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
                   />
                 </Field>
               )}
@@ -360,7 +360,7 @@ const AddressSettings = () => {
                   onChange={(e) => setDraft((prev) => ({ ...prev, address: e.target.value }))}
                   placeholder="Add full address"
                   rows={3}
-                  className="w-full rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 py-3 text-[14px] font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200 resize-none"
+                  className="w-full rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 py-3 text-[15.5px] font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200 resize-none"
                 />
               </Field>
 
@@ -369,7 +369,7 @@ const AddressSettings = () => {
                   value={draft.landmark}
                   onChange={(e) => setDraft((prev) => ({ ...prev, landmark: e.target.value }))}
                   placeholder="Near…"
-                  className="w-full h-12 rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 text-[14px] font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
+                  className="w-full h-12 rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 text-[15.5px] font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
                 />
               </Field>
 
@@ -378,7 +378,7 @@ const AddressSettings = () => {
                   value={draft.notes}
                   onChange={(e) => setDraft((prev) => ({ ...prev, notes: e.target.value }))}
                   placeholder="e.g., Ring bell, call on arrival"
-                  className="w-full h-12 rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 text-[14px] font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
+                  className="w-full h-12 rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 text-[15.5px] font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
                 />
               </Field>
 
@@ -405,8 +405,8 @@ const AddressSettings = () => {
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <div className="text-[15px] font-black text-slate-900">Delete</div>
-                  <div className="mt-1 text-[12px] font-bold text-slate-500">
+                  <div className="text-[16.5px] font-black text-slate-900">Delete</div>
+                  <div className="mt-1 text-[13.5px] font-bold text-slate-500">
                     Remove <span className="text-slate-900">{confirmDelete.title}</span> from saved addresses?
                   </div>
                 </div>
@@ -424,14 +424,14 @@ const AddressSettings = () => {
                 <button
                   type="button"
                   onClick={() => setConfirmDelete(null)}
-                  className="flex-1 rounded-2xl bg-white/75 backdrop-blur-md border border-white/80 px-4 py-3 text-[12px] font-black uppercase tracking-[0.16em] text-slate-700 shadow-sm active:scale-95 transition-all"
+                  className="flex-1 rounded-2xl bg-white/75 backdrop-blur-md border border-white/80 px-4 py-3 text-[13.5px] font-black uppercase tracking-[0.16em] text-slate-700 shadow-sm active:scale-95 transition-all"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={doDelete}
-                  className="flex-1 rounded-2xl bg-rose-600 px-4 py-3 text-[12px] font-black uppercase tracking-[0.16em] text-white shadow-[0_16px_34px_rgba(225,29,72,0.22)] active:scale-95 transition-all"
+                  className="flex-1 rounded-2xl bg-rose-600 px-4 py-3 text-[13.5px] font-black uppercase tracking-[0.16em] text-white shadow-[0_16px_34px_rgba(225,29,72,0.22)] active:scale-95 transition-all"
                 >
                   Delete
                 </button>

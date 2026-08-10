@@ -68,7 +68,7 @@ const StoryCard = ({ story, onOpen, onLike }) => (
         />
       ) : null}
 
-      <span className="absolute left-3 top-3 rounded-lg bg-white/95 px-2 py-1 text-[10.5px] font-black text-slate-900">
+      <span className="absolute left-3 top-3 rounded-lg bg-white/95 px-2 py-1 text-[12.5px] font-black text-slate-900">
         {story.category}
       </span>
 
@@ -82,18 +82,18 @@ const StoryCard = ({ story, onOpen, onLike }) => (
             </span>
           </span>
           {story.durationSeconds > 0 ? (
-            <span className="absolute bottom-14 right-3 rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white">
+            <span className="absolute bottom-14 right-3 rounded-md bg-black/70 px-1.5 py-0.5 text-[12px] font-bold text-white">
               {runtime(story.durationSeconds)}
             </span>
           ) : null}
         </>
       ) : null}
       {story.videoUrl ? (
-        <span className="absolute right-3 top-3 rounded-lg bg-[#F5B700] px-2 py-1 text-[10.5px] font-black text-slate-900">
+        <span className="absolute right-3 top-3 rounded-lg bg-[#F5B700] px-2 py-1 text-[12.5px] font-black text-slate-900">
           REEL
         </span>
       ) : story.readMinutes > 0 ? (
-        <span className="absolute right-3 top-3 rounded-lg bg-black/55 px-2 py-1 text-[10.5px] font-bold text-white">
+        <span className="absolute right-3 top-3 rounded-lg bg-black/55 px-2 py-1 text-[12.5px] font-bold text-white">
           {story.readMinutes} min read
         </span>
       ) : null}
@@ -103,14 +103,14 @@ const StoryCard = ({ story, onOpen, onLike }) => (
         {story.authorAvatar ? (
           <img src={story.authorAvatar} alt="" className="h-7 w-7 rounded-full object-cover" />
         ) : (
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F5B700] text-[11px] font-black text-slate-900">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F5B700] text-[13px] font-black text-slate-900">
             {(story.authorName || '?').charAt(0)}
           </span>
         )}
         <span className="min-w-0">
-          <span className="block truncate text-[11.5px] font-bold text-white">{story.authorName}</span>
+          <span className="block truncate text-[13.5px] font-bold text-white">{story.authorName}</span>
           {story.location ? (
-            <span className="block truncate text-[10.5px] text-white/80">
+            <span className="block truncate text-[12.5px] text-white/80">
               {story.location}{story.state ? `, ${story.state}` : ''}
             </span>
           ) : null}
@@ -119,17 +119,17 @@ const StoryCard = ({ story, onOpen, onLike }) => (
     </div>
 
     <div className="p-3.5">
-      <h3 className="line-clamp-2 min-h-[38px] text-[14.5px] font-black leading-snug text-slate-900">
+      <h3 className="line-clamp-2 min-h-[38px] text-[16px] font-black leading-snug text-slate-900">
         {story.title}
       </h3>
 
-      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-500">
+      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-slate-500">
         {story.days > 0 ? <span className="flex items-center gap-1"><Clock size={12} /> {story.days} Days</span> : null}
         {story.distanceKm > 0 ? <span className="flex items-center gap-1"><Route size={12} /> {story.distanceKm} km</span> : null}
         {story.cost > 0 ? <span className="flex items-center gap-1"><IndianRupee size={12} /> {money(story.cost).slice(1)}</span> : null}
       </div>
 
-      <div className="mt-3 flex items-center gap-4 border-t border-slate-100 pt-2.5 text-[11.5px] text-slate-500">
+      <div className="mt-3 flex items-center gap-4 border-t border-slate-100 pt-2.5 text-[13.5px] text-slate-500">
         <button
           onClick={(e) => { e.stopPropagation(); onLike(story); }}
           className={`flex items-center gap-1 transition-colors ${story.liked ? 'text-red-500' : 'hover:text-red-500'}`}
@@ -147,7 +147,7 @@ const StoryCard = ({ story, onOpen, onLike }) => (
 const Panel = ({ title, action, children }) => (
   <section className="rounded-2xl border border-slate-100 bg-white p-4">
     <div className="mb-3 flex items-center justify-between">
-      <h2 className="text-[14.5px] font-black text-slate-900">{title}</h2>
+      <h2 className="text-[16px] font-black text-slate-900">{title}</h2>
       {action}
     </div>
     {children}
@@ -236,7 +236,7 @@ const DesktopTravelStories = () => {
                     <button
                       key={item.key}
                       onClick={() => setTab(item.key)}
-                      className={`-mb-px border-b-2 pb-2.5 text-[13px] font-bold transition-colors ${
+                      className={`-mb-px border-b-2 pb-2.5 text-[14.5px] font-bold transition-colors ${
                         tab === item.key
                           ? 'border-[#F5B700] text-slate-900'
                           : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -255,7 +255,7 @@ const DesktopTravelStories = () => {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search stories, places…"
-                    className="w-60 rounded-xl border border-slate-200 py-2 pl-9 pr-3 text-[13px] outline-none focus:border-[#F5B700]"
+                    className="w-60 rounded-xl border border-slate-200 py-2 pl-9 pr-3 text-[14.5px] outline-none focus:border-[#F5B700]"
                   />
                 </div>
 
@@ -263,7 +263,7 @@ const DesktopTravelStories = () => {
                   <button
                     key={chip}
                     onClick={() => setCategory(chip)}
-                    className={`rounded-xl border px-3 py-2 text-[12.5px] font-bold transition-colors ${
+                    className={`rounded-xl border px-3 py-2 text-[14px] font-bold transition-colors ${
                       category === chip
                         ? 'border-[#F5B700] bg-[#FFF9E6] text-slate-900'
                         : 'border-slate-200 text-slate-600 hover:border-slate-300'
@@ -278,7 +278,7 @@ const DesktopTravelStories = () => {
             {loading ? (
               <div className="flex justify-center py-20"><Loader2 className="animate-spin text-slate-400" /></div>
             ) : stories.length === 0 ? (
-              <p className="rounded-2xl border border-dashed border-slate-200 py-20 text-center text-[13.5px] text-slate-500">
+              <p className="rounded-2xl border border-dashed border-slate-200 py-20 text-center text-[15px] text-slate-500">
                 No stories here yet. Try another category.
               </p>
             ) : (
@@ -305,7 +305,7 @@ const DesktopTravelStories = () => {
                 ].map((stat) => (
                   <div key={stat.label} className="text-center">
                     <p className="text-[20px] font-black text-slate-900">{stat.value}</p>
-                    <p className="text-[11.5px] text-slate-500">{stat.label}</p>
+                    <p className="text-[13.5px] text-slate-500">{stat.label}</p>
                   </div>
                 ))}
               </div>
@@ -331,8 +331,8 @@ const DesktopTravelStories = () => {
                         </span>
                       )}
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[13px] font-bold text-slate-900">{place.label}</span>
-                        <span className="block text-[11px] text-slate-500">
+                        <span className="block truncate text-[14.5px] font-bold text-slate-900">{place.label}</span>
+                        <span className="block text-[13px] text-slate-500">
                           {place.count} {place.count === 1 ? 'story' : 'stories'}
                         </span>
                       </span>
@@ -351,8 +351,8 @@ const DesktopTravelStories = () => {
                       onClick={() => setSearch(tag.tag)}
                       className="flex w-full items-center justify-between rounded-xl px-2 py-2 text-left hover:bg-slate-50"
                     >
-                      <span className="text-[13px] font-bold text-slate-800">#{tag.tag}</span>
-                      <span className="flex items-center gap-1 text-[11px] text-slate-500">
+                      <span className="text-[14.5px] font-bold text-slate-800">#{tag.tag}</span>
+                      <span className="flex items-center gap-1 text-[13px] text-slate-500">
                         <TrendingUp size={12} className="text-emerald-500" />
                         {tag.count}
                       </span>
@@ -363,15 +363,15 @@ const DesktopTravelStories = () => {
             ) : null}
 
             <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-[#FFD400] to-[#F5B700] p-5">
-              <p className="flex items-center gap-2 text-[16px] font-black text-slate-900">
+              <p className="flex items-center gap-2 text-[17px] font-black text-slate-900">
                 <Sparkles size={17} /> Share Your Journey
               </p>
-              <p className="mt-1 text-[12.5px] text-slate-800">
+              <p className="mt-1 text-[14px] text-slate-800">
                 Write up a trip and help other travellers plan theirs.
               </p>
               <button
                 onClick={() => navigate('/taxi/user/stories/new')}
-                className="mt-4 rounded-xl bg-slate-900 px-4 py-2.5 text-[13px] font-black text-white"
+                className="mt-4 rounded-xl bg-slate-900 px-4 py-2.5 text-[14.5px] font-black text-white"
               >
                 Create Story
               </button>

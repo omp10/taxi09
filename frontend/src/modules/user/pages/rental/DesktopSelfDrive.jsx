@@ -107,7 +107,7 @@ const DesktopSelfDrive = () => {
     navigate(`/taxi/user/rental?${params.toString()}`);
   };
 
-  const field = 'w-full bg-transparent text-[13.5px] font-semibold text-[var(--dh-text)] placeholder:text-[var(--dh-muted)] outline-none';
+  const field = 'w-full bg-transparent text-[15px] font-semibold text-[var(--dh-text)] placeholder:text-[var(--dh-muted)] outline-none';
   const fieldBox = 'mt-1.5 flex h-[46px] items-center gap-2 rounded-[11px] border border-[var(--dh-border)] bg-[var(--dh-surface)] px-3';
 
   return (
@@ -131,7 +131,7 @@ const DesktopSelfDrive = () => {
 
           <form onSubmit={submitSearch} className="grid grid-cols-[1.15fr_auto_1.15fr_1fr_1fr_auto] items-end gap-3">
             <label>
-              <span className="block text-[12.5px] font-bold text-[var(--dh-text)]">Pickup Location</span>
+              <span className="block text-[14px] font-bold text-[var(--dh-text)]">Pickup Location</span>
               <span className={fieldBox}>
                 <MapPin size={16} className="shrink-0 text-[var(--dh-muted)]" strokeWidth={2.4} />
                 <input
@@ -154,7 +154,7 @@ const DesktopSelfDrive = () => {
             </button>
 
             <label>
-              <span className="block text-[12.5px] font-bold text-[var(--dh-text)]">Drop Location</span>
+              <span className="block text-[14px] font-bold text-[var(--dh-text)]">Drop Location</span>
               <span className={fieldBox}>
                 <MapPin size={16} className="shrink-0 text-[var(--dh-muted)]" strokeWidth={2.4} />
                 <input
@@ -168,7 +168,7 @@ const DesktopSelfDrive = () => {
             </label>
 
             <label className="cursor-pointer" onClick={(event) => event.currentTarget.querySelector('input')?.showPicker?.()}>
-              <span className="block text-[12.5px] font-bold text-[var(--dh-text)]">Pickup Date</span>
+              <span className="block text-[14px] font-bold text-[var(--dh-text)]">Pickup Date</span>
               <span className={fieldBox}>
                 <CalendarDays size={16} className="shrink-0 text-[var(--dh-muted)]" strokeWidth={2.4} />
                 <input
@@ -182,7 +182,7 @@ const DesktopSelfDrive = () => {
             </label>
 
             <label className="cursor-pointer" onClick={(event) => event.currentTarget.querySelector('input')?.showPicker?.()}>
-              <span className="block text-[12.5px] font-bold text-[var(--dh-text)]">Pickup Time</span>
+              <span className="block text-[14px] font-bold text-[var(--dh-text)]">Pickup Time</span>
               <span className={fieldBox}>
                 <Clock size={16} className="shrink-0 text-[var(--dh-muted)]" strokeWidth={2.4} />
                 <input
@@ -196,7 +196,7 @@ const DesktopSelfDrive = () => {
 
             <button
               type="submit"
-              className="flex h-[46px] items-center gap-2.5 rounded-[12px] bg-[#F5B700] px-6 text-[15px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.32)] transition-transform hover:-translate-y-0.5"
+              className="flex h-[46px] items-center gap-2.5 rounded-[12px] bg-[#F5B700] px-6 text-[16.5px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.32)] transition-transform hover:-translate-y-0.5"
             >
               Search Cars
               <ArrowRight size={17} strokeWidth={2.8} />
@@ -207,7 +207,7 @@ const DesktopSelfDrive = () => {
             {TRUST_CHIPS.map(({ icon: Icon, label }) => (
               <span key={label} className="flex items-center justify-center gap-2 rounded-[11px] bg-[#FFFBEC] py-2.5">
                 <Icon size={16} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
-                <span className="text-[12.5px] font-bold text-slate-800">{label}</span>
+                <span className="text-[14px] font-bold text-slate-800">{label}</span>
               </span>
             ))}
           </div>
@@ -218,7 +218,7 @@ const DesktopSelfDrive = () => {
       <section className="mx-auto mt-12 max-w-[1440px] px-8 xl:px-12">
         <div className="flex items-end justify-between">
           <div>
-            <p className="text-[12.5px] font-black uppercase tracking-[0.12em] text-[#F5B700]">Explore Our Services</p>
+            <p className="text-[14px] font-black uppercase tracking-[0.12em] text-[#F5B700]">Explore Our Services</p>
             <h2 className="mt-2 text-[30px] font-black leading-[1.15] tracking-[-0.035em] text-[var(--dh-text)]">
               Everything You Need
               <br />
@@ -227,7 +227,7 @@ const DesktopSelfDrive = () => {
           </div>
           <button
             onClick={() => navigate('/taxi/user/rental/type')}
-            className="flex items-center gap-2 text-[14.5px] font-bold text-[var(--dh-text)] hover:text-[#F5B700]"
+            className="flex items-center gap-2 text-[16px] font-bold text-[var(--dh-text)] hover:text-[#F5B700]"
           >
             View All Services <ArrowRight size={16} strokeWidth={2.8} />
           </button>
@@ -259,14 +259,14 @@ const DesktopSelfDrive = () => {
                     )}
                   </div>
                   <div className="p-3.5">
-                    <p className="truncate text-[14px] font-black text-[var(--dh-text)]">{car.name}</p>
-                    <p className="mt-0.5 truncate text-[11.5px] font-semibold text-[var(--dh-muted)]">
+                    <p className="truncate text-[15.5px] font-black text-[var(--dh-text)]">{car.name}</p>
+                    <p className="mt-0.5 truncate text-[13.5px] font-semibold text-[var(--dh-muted)]">
                       {[car.transmission, car.fuel, car.capacity ? `${car.capacity} seats` : ''].filter(Boolean).join(' · ')}
                     </p>
                     {car.pricing?.[0]?.price ? (
-                      <p className="mt-2 text-[13.5px] font-black text-[var(--dh-text)]">
+                      <p className="mt-2 text-[15px] font-black text-[var(--dh-text)]">
                         ₹{Number(car.pricing[0].price).toLocaleString('en-IN')}
-                        <span className="text-[11px] font-semibold text-[var(--dh-muted)]"> / {car.pricing[0].label}</span>
+                        <span className="text-[13px] font-semibold text-[var(--dh-muted)]"> / {car.pricing[0].label}</span>
                       </p>
                     ) : null}
                   </div>
@@ -286,15 +286,15 @@ const DesktopSelfDrive = () => {
       {/* -------------------------------------------------------- Why choose */}
       <section className="mx-auto mt-10 max-w-[1440px] px-8 xl:px-12">
         <div className="rounded-[20px] bg-[#FFFBEC] p-6">
-          <p className="text-[12.5px] font-black uppercase tracking-[0.1em] text-slate-800">Why Choose Taxi09 Self Drive?</p>
+          <p className="text-[14px] font-black uppercase tracking-[0.1em] text-slate-800">Why Choose Taxi09 Self Drive?</p>
 
           <div className="mt-4 grid grid-cols-[repeat(5,minmax(0,1fr))_280px] items-center gap-4">
             {WHY_CHOOSE.map(({ icon: Icon, title, copy }) => (
               <div key={title} className="flex items-start gap-2.5">
                 <Icon size={26} className="mt-0.5 shrink-0 text-[#F5B700]" strokeWidth={2} />
                 <span>
-                  <span className="block text-[13.5px] font-black text-slate-900">{title}</span>
-                  <span className="mt-0.5 block text-[11.5px] font-semibold leading-tight text-slate-600">{copy}</span>
+                  <span className="block text-[15px] font-black text-slate-900">{title}</span>
+                  <span className="mt-0.5 block text-[13.5px] font-semibold leading-tight text-slate-600">{copy}</span>
                 </span>
               </div>
             ))}
@@ -302,8 +302,8 @@ const DesktopSelfDrive = () => {
             <div className="flex items-center gap-3 rounded-[16px] bg-[#F5B700] p-4">
               <ShieldCheck size={40} className="shrink-0 text-slate-950" strokeWidth={1.8} />
               <span>
-                <span className="block text-[14px] font-black leading-tight text-slate-950">100% SAFE &amp; VERIFIED CARS</span>
-                <span className="mt-1 block text-[11.5px] font-semibold leading-tight text-slate-800">Your safety is our priority.</span>
+                <span className="block text-[15.5px] font-black leading-tight text-slate-950">100% SAFE &amp; VERIFIED CARS</span>
+                <span className="mt-1 block text-[13.5px] font-semibold leading-tight text-slate-800">Your safety is our priority.</span>
               </span>
             </div>
           </div>
@@ -318,7 +318,7 @@ const DesktopSelfDrive = () => {
               <Icon size={30} className="shrink-0 text-[#F5B700]" strokeWidth={2} />
               <div>
                 <p className="text-[23px] font-black leading-none tracking-[-0.03em] text-white">{value}</p>
-                <p className="mt-1.5 text-[12.5px] font-semibold text-slate-400">{label}</p>
+                <p className="mt-1.5 text-[14px] font-semibold text-slate-400">{label}</p>
               </div>
             </div>
           ))}
@@ -332,8 +332,8 @@ const DesktopSelfDrive = () => {
             <div key={title} className="flex items-center gap-3">
               <Icon size={26} className="shrink-0 text-[#F5B700]" strokeWidth={2} />
               <span>
-                <span className="block text-[13.5px] font-black text-[var(--dh-text)]">{title}</span>
-                <span className="mt-0.5 block text-[11.5px] font-semibold text-[var(--dh-muted)]">{copy}</span>
+                <span className="block text-[15px] font-black text-[var(--dh-text)]">{title}</span>
+                <span className="mt-0.5 block text-[13.5px] font-semibold text-[var(--dh-muted)]">{copy}</span>
               </span>
             </div>
           ))}

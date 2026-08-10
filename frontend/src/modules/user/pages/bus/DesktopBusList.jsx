@@ -74,7 +74,7 @@ const CheckList = ({ title, facets, selected, onToggle }) => {
   if (!facets.length) return null;
   return (
     <div className="border-t border-[var(--dh-border)] px-5 py-4">
-      <p className="text-[13.5px] font-black text-[var(--dh-text)]">{title}</p>
+      <p className="text-[15px] font-black text-[var(--dh-text)]">{title}</p>
       <div className="mt-3 space-y-2.5">
         {facets.map(([label, count]) => (
           <label key={label} className="flex cursor-pointer items-center gap-2.5">
@@ -84,8 +84,8 @@ const CheckList = ({ title, facets, selected, onToggle }) => {
               onChange={() => onToggle(label)}
               className="h-4 w-4 shrink-0 accent-[#F5B700]"
             />
-            <span className="flex-1 truncate text-[13px] font-semibold text-[var(--dh-text)]">{label}</span>
-            <span className="text-[12px] font-bold text-[var(--dh-muted)]">{count}</span>
+            <span className="flex-1 truncate text-[14.5px] font-semibold text-[var(--dh-text)]">{label}</span>
+            <span className="text-[13.5px] font-bold text-[var(--dh-muted)]">{count}</span>
           </label>
         ))}
       </div>
@@ -192,7 +192,7 @@ const DesktopBusList = () => {
     navigate('/taxi/user/bus/seats', { state: { bus, fromCity, toCity, date } });
   };
 
-  const field = 'w-full bg-transparent text-[14px] font-bold text-[var(--dh-text)] outline-none';
+  const field = 'w-full bg-transparent text-[15.5px] font-bold text-[var(--dh-text)] outline-none';
 
   return (
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
@@ -205,7 +205,7 @@ const DesktopBusList = () => {
           className="grid grid-cols-[1.2fr_auto_1.2fr_1fr_auto] items-center rounded-[18px] bg-[var(--dh-surface)] px-5 py-4 shadow-[0_10px_30px_rgba(15,23,42,0.08)] ring-1 ring-[var(--dh-border)]"
         >
           <label className="px-3">
-            <span className="block text-[11.5px] font-black uppercase tracking-[0.07em] text-[var(--dh-muted)]">From</span>
+            <span className="block text-[13.5px] font-black uppercase tracking-[0.07em] text-[var(--dh-muted)]">From</span>
             <span className="mt-1 flex items-center gap-2">
               <MapPin size={16} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               <input value={form.fromCity} onChange={(e) => setForm((c) => ({ ...c, fromCity: e.target.value }))} className={field} />
@@ -222,7 +222,7 @@ const DesktopBusList = () => {
           </button>
 
           <label className="border-l border-[var(--dh-border)] px-5">
-            <span className="block text-[11.5px] font-black uppercase tracking-[0.07em] text-[var(--dh-muted)]">To</span>
+            <span className="block text-[13.5px] font-black uppercase tracking-[0.07em] text-[var(--dh-muted)]">To</span>
             <span className="mt-1 flex items-center gap-2">
               <MapPin size={16} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               <input value={form.toCity} onChange={(e) => setForm((c) => ({ ...c, toCity: e.target.value }))} className={field} />
@@ -230,7 +230,7 @@ const DesktopBusList = () => {
           </label>
 
           <label className="border-l border-[var(--dh-border)] px-5">
-            <span className="block text-[11.5px] font-black uppercase tracking-[0.07em] text-[var(--dh-muted)]">Travel Date</span>
+            <span className="block text-[13.5px] font-black uppercase tracking-[0.07em] text-[var(--dh-muted)]">Travel Date</span>
             <span className="mt-1 flex items-center gap-2">
               <CalendarDays size={16} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               <input type="date" value={form.date} onChange={(e) => setForm((c) => ({ ...c, date: e.target.value }))} className={field} />
@@ -240,30 +240,30 @@ const DesktopBusList = () => {
           <button
             type="button"
             onClick={() => navigate('/taxi/user/bus')}
-            className="ml-3 flex h-[50px] items-center gap-2.5 rounded-[13px] bg-[#F5B700] px-7 text-[15px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)]"
+            className="ml-3 flex h-[50px] items-center gap-2.5 rounded-[13px] bg-[#F5B700] px-7 text-[16.5px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)]"
           >
             <Search size={17} strokeWidth={2.8} /> Modify Search
           </button>
         </form>
 
         {error && (
-          <p className="mt-3 rounded-[11px] bg-rose-50 px-4 py-3 text-[13px] font-bold text-rose-700">{error}</p>
+          <p className="mt-3 rounded-[11px] bg-rose-50 px-4 py-3 text-[14.5px] font-bold text-rose-700">{error}</p>
         )}
 
         <div className="mt-5 grid grid-cols-[224px_minmax(0,1fr)] gap-5">
           {/* --------------------------------------------------------- Filters */}
           <aside className="h-fit rounded-[18px] bg-[var(--dh-surface)] py-1 ring-1 ring-[var(--dh-border)]">
             <div className="flex items-center justify-between px-5 pb-3 pt-4">
-              <p className="text-[14.5px] font-black text-[var(--dh-text)]">Filters</p>
+              <p className="text-[16px] font-black text-[var(--dh-text)]">Filters</p>
               {activeFilters > 0 && (
-                <button onClick={clearAll} className="text-[12px] font-bold text-[#F5B700]">Clear All</button>
+                <button onClick={clearAll} className="text-[13.5px] font-bold text-[#F5B700]">Clear All</button>
               )}
             </div>
 
             {priceCeiling > 0 && (
               <div className="border-t border-[var(--dh-border)] px-5 py-4">
-                <p className="text-[13.5px] font-black text-[var(--dh-text)]">Fare</p>
-                <p className="mt-2 text-[12.5px] font-bold text-[var(--dh-muted)]">
+                <p className="text-[15px] font-black text-[var(--dh-text)]">Fare</p>
+                <p className="mt-2 text-[14px] font-bold text-[var(--dh-muted)]">
                   Up to {formatMoney(maxPrice || priceCeiling)}
                 </p>
                 <input
@@ -285,21 +285,21 @@ const DesktopBusList = () => {
           <div>
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-[19px] font-black tracking-[-0.02em] text-[var(--dh-text)]">
+                <h1 className="text-[20px] font-black tracking-[-0.02em] text-[var(--dh-text)]">
                   {loading ? 'Searching…' : `${results.length} Bus${results.length === 1 ? '' : 'es'} Found`}
                 </h1>
-                <p className="mt-0.5 text-[12.5px] font-semibold text-[var(--dh-muted)]">
+                <p className="mt-0.5 text-[14px] font-semibold text-[var(--dh-muted)]">
                   {fromCity} → {toCity} · {date}
                 </p>
               </div>
 
               <div className="flex items-center gap-2.5">
-                <span className="text-[13px] font-semibold text-[var(--dh-muted)]">Sort by:</span>
+                <span className="text-[14.5px] font-semibold text-[var(--dh-muted)]">Sort by:</span>
                 <span className="relative">
                   <select
                     value={sort}
                     onChange={(e) => setSort(e.target.value)}
-                    className="h-[40px] appearance-none rounded-[10px] border border-[var(--dh-border)] bg-[var(--dh-surface)] pl-3.5 pr-9 text-[13.5px] font-bold text-[var(--dh-text)] outline-none"
+                    className="h-[40px] appearance-none rounded-[10px] border border-[var(--dh-border)] bg-[var(--dh-surface)] pl-3.5 pr-9 text-[15px] font-bold text-[var(--dh-text)] outline-none"
                   >
                     {SORTS.map(({ id, label }) => <option key={id} value={id}>{label}</option>)}
                   </select>
@@ -314,14 +314,14 @@ const DesktopBusList = () => {
               </div>
             ) : results.length === 0 ? (
               <div className="mt-4 rounded-[16px] bg-[var(--dh-surface)] p-14 text-center ring-1 ring-[var(--dh-border)]">
-                <p className="text-[16px] font-black text-[var(--dh-text)]">No buses on this route</p>
-                <p className="mt-2 text-[14px] font-medium text-[var(--dh-muted)]">
+                <p className="text-[17px] font-black text-[var(--dh-text)]">No buses on this route</p>
+                <p className="mt-2 text-[15.5px] font-medium text-[var(--dh-muted)]">
                   {activeFilters > 0 ? 'Try clearing a filter, or pick another date.' : 'Try another date or route.'}
                 </p>
                 {activeFilters > 0 && (
                   <button
                     onClick={clearAll}
-                    className="mt-5 inline-flex items-center gap-2 rounded-[11px] border border-[var(--dh-border)] px-5 py-2.5 text-[13.5px] font-bold text-[var(--dh-text)]"
+                    className="mt-5 inline-flex items-center gap-2 rounded-[11px] border border-[var(--dh-border)] px-5 py-2.5 text-[15px] font-bold text-[var(--dh-text)]"
                   >
                     <X size={15} strokeWidth={2.8} /> Clear filters
                   </button>
@@ -344,7 +344,7 @@ const DesktopBusList = () => {
                         onError={(event) => { event.currentTarget.src = '/bus.png'; }}
                       />
                       {bus.galleryImages?.length > 1 && (
-                        <span className="absolute bottom-2.5 left-2.5 flex items-center gap-1.5 rounded-[7px] bg-black/60 px-2 py-1 text-[10.5px] font-bold text-white">
+                        <span className="absolute bottom-2.5 left-2.5 flex items-center gap-1.5 rounded-[7px] bg-black/60 px-2 py-1 text-[12.5px] font-bold text-white">
                           <Images size={11} strokeWidth={2.4} /> {bus.galleryImages.length}
                         </span>
                       )}
@@ -352,16 +352,16 @@ const DesktopBusList = () => {
 
                     <div className="flex min-w-0 flex-col justify-center px-6 py-4">
                       <span className="flex items-center gap-2.5">
-                        <h2 className="truncate text-[17px] font-black tracking-[-0.02em] text-[var(--dh-text)]">
+                        <h2 className="truncate text-[18px] font-black tracking-[-0.02em] text-[var(--dh-text)]">
                           {bus.operatorName || bus.operator}
                         </h2>
                         {(bus.coachType || bus.type) && (
-                          <span className="shrink-0 rounded-[6px] bg-[var(--dh-chip)] px-2 py-0.5 text-[10.5px] font-black uppercase tracking-[0.05em] text-[var(--dh-muted)]">
+                          <span className="shrink-0 rounded-[6px] bg-[var(--dh-chip)] px-2 py-0.5 text-[12.5px] font-black uppercase tracking-[0.05em] text-[var(--dh-muted)]">
                             {bus.coachType || bus.type}
                           </span>
                         )}
                         {Number(bus.rating) > 0 && (
-                          <span className="flex shrink-0 items-center gap-1 rounded-[6px] bg-emerald-600 px-1.5 py-0.5 text-[11px] font-black text-white">
+                          <span className="flex shrink-0 items-center gap-1 rounded-[6px] bg-emerald-600 px-1.5 py-0.5 text-[13px] font-black text-white">
                             <Star size={10} className="fill-white" /> {bus.rating}
                             {bus.ratingCount > 0 && <span className="font-semibold">({bus.ratingCount})</span>}
                           </span>
@@ -369,20 +369,20 @@ const DesktopBusList = () => {
                       </span>
 
                       {bus.busName && (
-                        <p className="mt-0.5 truncate text-[12.5px] font-semibold text-[var(--dh-muted)]">{bus.busName}</p>
+                        <p className="mt-0.5 truncate text-[14px] font-semibold text-[var(--dh-muted)]">{bus.busName}</p>
                       )}
 
                       <div className="mt-3 flex items-center gap-5">
-                        <span className="text-[19px] font-black text-[var(--dh-text)]">{to12Hour(bus.departure)}</span>
-                        <span className="flex flex-1 items-center gap-2 text-[11.5px] font-semibold text-[var(--dh-muted)]">
+                        <span className="text-[20px] font-black text-[var(--dh-text)]">{to12Hour(bus.departure)}</span>
+                        <span className="flex flex-1 items-center gap-2 text-[13.5px] font-semibold text-[var(--dh-muted)]">
                           <span className="h-[2px] flex-1 rounded bg-[var(--dh-border)]" />
                           <Clock size={12} strokeWidth={2.3} /> {bus.duration || '—'}
                           <span className="h-[2px] flex-1 rounded bg-[var(--dh-border)]" />
                         </span>
-                        <span className="text-[19px] font-black text-[var(--dh-text)]">{to12Hour(bus.arrival)}</span>
+                        <span className="text-[20px] font-black text-[var(--dh-text)]">{to12Hour(bus.arrival)}</span>
                       </div>
 
-                      <p className="mt-1.5 truncate text-[12px] font-semibold text-[var(--dh-muted)]">
+                      <p className="mt-1.5 truncate text-[13.5px] font-semibold text-[var(--dh-muted)]">
                         {bus.fromCity} → {bus.toCity}
                       </p>
 
@@ -391,7 +391,7 @@ const DesktopBusList = () => {
                           {bus.amenities.slice(0, 5).map((amenity) => {
                             const Icon = AMENITY_ICONS[amenity] || Sparkles;
                             return (
-                              <span key={amenity} className="flex shrink-0 items-center gap-1.5 text-[11.5px] font-semibold text-[var(--dh-muted)]">
+                              <span key={amenity} className="flex shrink-0 items-center gap-1.5 text-[13.5px] font-semibold text-[var(--dh-muted)]">
                                 <Icon size={12} strokeWidth={2.2} /> {amenity}
                               </span>
                             );
@@ -404,14 +404,14 @@ const DesktopBusList = () => {
                       <span className="text-[23px] font-black leading-none tracking-[-0.03em] text-[var(--dh-text)]">
                         {formatMoney(bus.price)}
                       </span>
-                      <span className="text-[11.5px] font-semibold text-[var(--dh-muted)]">per seat</span>
-                      <span className={`mt-1 text-[11.5px] font-black ${bus.seats > 5 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      <span className="text-[13.5px] font-semibold text-[var(--dh-muted)]">per seat</span>
+                      <span className={`mt-1 text-[13.5px] font-black ${bus.seats > 5 ? 'text-emerald-600' : 'text-rose-600'}`}>
                         {bus.seats > 0 ? `${bus.seats} seats left` : 'Sold out'}
                       </span>
                       <button
                         onClick={() => openSeats(bus)}
                         disabled={!bus.seats}
-                        className="mt-2 w-full rounded-[10px] bg-[#F5B700] py-2.5 text-[13.5px] font-bold text-slate-950 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="mt-2 w-full rounded-[10px] bg-[#F5B700] py-2.5 text-[15px] font-bold text-slate-950 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         Select Seats
                       </button>

@@ -564,7 +564,7 @@ const RentalDeposit = () => {
                 <ArrowLeft size={20} className="text-white group-hover:opacity-80 transition-opacity" strokeWidth={2.5} />
               </Motion.button>
               <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500/60 leading-none mb-1.5">Step 5 of 5 · Checkout</p>
+                <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-slate-500/60 leading-none mb-1.5">Step 5 of 5 · Checkout</p>
                 <h1 className="text-[22px] font-[900] tracking-tight text-slate-950 leading-none truncate max-w-[200px]">
                   Advance Payment
                 </h1>
@@ -581,39 +581,39 @@ const RentalDeposit = () => {
           transition={{ delay: 0.05 }}
           className="rounded-[20px] border border-white/80 bg-white/90 shadow-[0_4px_14px_rgba(15,23,42,0.05)] px-5 py-4 space-y-3"
         >
-          <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
+          <p className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
             Booking Summary
           </p>
           <div className="flex items-center gap-3">
             <img src={vehicle.image} alt={vehicle.name} className="h-14 w-16 object-contain drop-shadow-md shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="text-[15px] font-bold text-slate-900 leading-tight">{vehicle.name}</p>
-              <p className="text-[11px] font-bold text-slate-400 mt-0.5">
+              <p className="text-[16.5px] font-bold text-slate-900 leading-tight">{vehicle.name}</p>
+              <p className="text-[13px] font-bold text-slate-400 mt-0.5">
                 {selectedPackage?.label || state.duration} - {state.pickup?.slice(0, 16).replace('T', ' ')}
               </p>
               {serviceLocation?.name ? (
-                <p className="text-[11px] font-bold text-slate-400 mt-0.5">
+                <p className="text-[13px] font-bold text-slate-400 mt-0.5">
                   Pickup: {serviceLocation.name}
                 </p>
               ) : null}
             </div>
           </div>
           <div className="border-t border-slate-50 pt-3 space-y-1.5">
-            <div className="flex justify-between text-[12px] font-bold text-slate-500">
+            <div className="flex justify-between text-[13.5px] font-bold text-slate-500">
               <span>Rental cost</span>
               <span>Rs.{totalCost}</span>
             </div>
-            <div className="flex justify-between text-[12px] font-bold text-slate-500">
+            <div className="flex justify-between text-[13.5px] font-bold text-slate-500">
               <span>
                 {advancePaymentLabel}
               </span>
               <span>Rs.{payableNow}</span>
             </div>
-            <div className="flex justify-between text-[14px] font-bold text-slate-950 pt-1 border-t border-slate-50">
+            <div className="flex justify-between text-[15.5px] font-bold text-slate-950 pt-1 border-t border-slate-50">
               <span>Total now</span>
               <span>Rs.{payableNow}</span>
             </div>
-            <p className="text-[10px] font-bold text-slate-400">
+            <p className="text-[12px] font-bold text-slate-400">
               Rental cost Rs.{totalCost} is paid at pickup.
             </p>
           </div>
@@ -628,7 +628,7 @@ const RentalDeposit = () => {
           <div className="w-8 h-8 rounded-[10px] bg-emerald-50 flex items-center justify-center shrink-0">
             <ShieldCheck size={15} className="text-emerald-500" strokeWidth={2} />
           </div>
-          <p className="text-[12px] font-bold text-slate-500 leading-relaxed">
+          <p className="text-[13.5px] font-bold text-slate-500 leading-relaxed">
             You are paying Rs.{payableNow} right now as the booking advance. The remaining rental cost is paid at pickup.
           </p>
         </Motion.div>
@@ -639,7 +639,7 @@ const RentalDeposit = () => {
           transition={{ delay: 0.15 }}
           className="rounded-[20px] border border-white/80 bg-white/90 shadow-[0_4px_14px_rgba(15,23,42,0.05)] px-5 py-4 space-y-3"
         >
-          <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
+          <p className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
             Payment Method
           </p>
           <div className="grid grid-cols-3 gap-2">
@@ -658,26 +658,26 @@ const RentalDeposit = () => {
                   className: method === id ? 'text-orange-500' : 'text-slate-400',
                   strokeWidth: 2,
                 })}
-                <span className={`text-[11px] font-bold ${method === id ? 'text-slate-900' : 'text-slate-400'}`}>
+                <span className={`text-[13px] font-bold ${method === id ? 'text-slate-900' : 'text-slate-400'}`}>
                   {label}
                 </span>
               </button>
             ))}
           </div>
           {method === 'wallet' ? (
-            <div className="rounded-[14px] border border-emerald-100 bg-emerald-50 px-3 py-2 text-[11px] font-bold text-emerald-700">
+            <div className="rounded-[14px] border border-emerald-100 bg-emerald-50 px-3 py-2 text-[13px] font-bold text-emerald-700">
               {walletLoading
                 ? 'Loading wallet balance...'
                 : `Wallet balance: Rs.${Number(walletBalance || 0).toFixed(2)}`}
             </div>
           ) : null}
           {isPhonePeRentalFlow ? (
-            <div className="rounded-[14px] border border-violet-100 bg-violet-50 px-3 py-2 text-[11px] font-bold text-violet-700">
+            <div className="rounded-[14px] border border-violet-100 bg-violet-50 px-3 py-2 text-[13px] font-bold text-violet-700">
               {activePaymentGateway?.label || 'PhonePe'} checkout will be used for this advance payment.
             </div>
           ) : null}
           {paymentError ? (
-            <div className="rounded-[14px] border border-rose-100 bg-rose-50 px-3 py-2 text-[11px] font-bold text-rose-500">
+            <div className="rounded-[14px] border border-rose-100 bg-rose-50 px-3 py-2 text-[13px] font-bold text-rose-500">
               {paymentError}
             </div>
           ) : null}
@@ -689,7 +689,7 @@ const RentalDeposit = () => {
           whileTap={{ scale: 0.98 }}
           onClick={handlePay}
           disabled={paying || (method === 'wallet' && !walletLoading && Number(walletBalance || 0) < payableNow)}
-          className="pointer-events-auto w-full bg-slate-950 py-4 rounded-[18px] text-[15px] font-bold text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2"
+          className="pointer-events-auto w-full bg-slate-950 py-4 rounded-[18px] text-[16.5px] font-bold text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2"
         >
           {paying ? (
             <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

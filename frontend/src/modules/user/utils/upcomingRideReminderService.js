@@ -92,7 +92,7 @@ const emitReminder = ({ reminderKey, title, body, type }) => {
 
   toast(title, {
     duration: 5000,
-    className: 'font-bold text-[13px] rounded-2xl shadow-xl border border-sky-50 bg-white',
+    className: 'font-bold text-[14.5px] rounded-2xl shadow-xl border border-sky-50 bg-white',
   });
 }
 

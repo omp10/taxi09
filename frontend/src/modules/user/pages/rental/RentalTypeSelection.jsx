@@ -42,7 +42,7 @@ const RentalTypeSelection = () => {
             <ArrowLeft className="text-xl" size={20} />
           </motion.button>
           <div className="min-w-0 pt-1">
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#5c4600] leading-none mb-1.5">Self-drive rentals</p>
+            <p className="text-[12px] font-black uppercase tracking-[0.18em] text-[#5c4600] leading-none mb-1.5">Self-drive rentals</p>
             <h1 className="text-[20px] font-black tracking-tight text-[#332000] leading-none">Choose Rental Type</h1>
           </div>
         </div>
@@ -65,7 +65,7 @@ const RentalTypeSelection = () => {
             </div>
           </div>
           <h2 className="text-[20px] font-black text-on-surface tracking-tight">Select vehicle category</h2>
-          <p className="text-[13px] font-semibold text-on-surface-variant max-w-[240px] mx-auto leading-relaxed">
+          <p className="text-[14.5px] font-semibold text-on-surface-variant max-w-[240px] mx-auto leading-relaxed">
             Choose the vehicle type that best suits your journey
           </p>
         </motion.div>
@@ -98,9 +98,9 @@ const RentalTypeSelection = () => {
               <div className="w-8 h-8 rounded-full bg-[#ffc400]/10 border border-[#ffc400]/30 group-hover:bg-[#ffc400] group-hover:text-[#332000] flex items-center justify-center mb-2 shadow-sm transition-colors duration-300">
                 <Bike size={14} className="text-[#d48c00] group-hover:text-[#332000] transition-colors" strokeWidth={2.5} />
               </div>
-              <span className="text-[16px] font-black text-on-surface tracking-tight block">2 Wheeler</span>
+              <span className="text-[17px] font-black text-on-surface tracking-tight block">2 Wheeler</span>
               <div className="w-8 h-[2.5px] bg-gradient-to-r from-[#ffc400] to-[#ffd54f] mt-2 mb-2 rounded-full" />
-              <span className="text-[11px] font-bold text-on-surface-variant block">Bikes & Scooters</span>
+              <span className="text-[13px] font-bold text-on-surface-variant block">Bikes & Scooters</span>
             </div>
           </motion.button>
 
@@ -130,9 +130,9 @@ const RentalTypeSelection = () => {
               <div className="w-8 h-8 rounded-full bg-[#ffc400]/10 border border-[#ffc400]/30 group-hover:bg-[#ffc400] group-hover:text-[#332000] flex items-center justify-center mb-2 shadow-sm transition-colors duration-300">
                 <Car size={14} className="text-[#d48c00] group-hover:text-[#332000] transition-colors" strokeWidth={2.5} />
               </div>
-              <span className="text-[16px] font-black text-on-surface tracking-tight block">4 Wheeler</span>
+              <span className="text-[17px] font-black text-on-surface tracking-tight block">4 Wheeler</span>
               <div className="w-8 h-[2.5px] bg-gradient-to-r from-[#ffc400] to-[#ffd54f] mt-2 mb-2 rounded-full" />
-              <span className="text-[11px] font-bold text-on-surface-variant block">Cars & SUVs</span>
+              <span className="text-[13px] font-bold text-on-surface-variant block">Cars & SUVs</span>
             </div>
           </motion.button>
         </div>
@@ -151,7 +151,7 @@ const RentalTypeSelection = () => {
           <div className="w-10 h-10 rounded-full bg-white/30 flex items-center justify-center">
              <Car size={20} className="text-[#332000]" strokeWidth={2.5} />
           </div>
-          <span className="text-[13px] font-black uppercase tracking-[0.12em] pl-2 flex-1 text-center text-[#332000]">
+          <span className="text-[14.5px] font-black uppercase tracking-[0.12em] pl-2 flex-1 text-center text-[#332000]">
             Explore Entire Fleet
           </span>
           <div className="w-10 h-10 flex items-center justify-end pr-1">

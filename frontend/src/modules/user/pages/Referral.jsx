@@ -198,7 +198,7 @@ const Referral = () => {
             <ArrowLeft size={18} className="text-gray-900" strokeWidth={2.3} />
           </button>
           <div className="flex-1 text-center pr-12">
-            <h1 className="text-[19px] font-semibold text-gray-900">Referrals</h1>
+            <h1 className="text-[20px] font-semibold text-gray-900">Referrals</h1>
           </div>
         </div>
       </header>
@@ -208,7 +208,7 @@ const Referral = () => {
           <div className="bg-[#1830b8] px-5 py-5 text-white flex items-center justify-between">
             <div>
               <p className="text-[26px] font-semibold leading-tight">{bannerText}</p>
-              <p className="text-[11px] text-indigo-100 mt-1">Language: {translation.language_code?.toUpperCase() || 'EN'}</p>
+              <p className="text-[13px] text-indigo-100 mt-1">Language: {translation.language_code?.toUpperCase() || 'EN'}</p>
             </div>
             <div className="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center">
               <Gift size={20} />
@@ -218,10 +218,10 @@ const Referral = () => {
           <div className="px-4 py-4">
             <div className="grid grid-cols-[1fr_auto] gap-2">
               <div className="rounded-xl border border-dashed border-gray-300 px-3 py-3 text-center">
-                <p className="text-[18px] font-semibold text-gray-900 tracking-wide">
+                <p className="text-[19px] font-semibold text-gray-900 tracking-wide">
                   {referralCode || 'Not available'}
                 </p>
-                <p className="text-[10px] text-gray-400 mt-1">Your referral code</p>
+                <p className="text-[12px] text-gray-400 mt-1">Your referral code</p>
               </div>
               <button
                 type="button"
@@ -263,14 +263,14 @@ const Referral = () => {
               </div>
             ) : activeTab === 'refer' ? (
               <div className="space-y-4">
-                <h2 className="text-[18px] font-semibold text-gray-900">How it works?</h2>
+                <h2 className="text-[19px] font-semibold text-gray-900">How it works?</h2>
                 {infoBlocks.length === 0 ? (
                   <p className="text-sm text-gray-400">Referral content will appear here after admin updates this language.</p>
                 ) : (
                   infoBlocks.map((block) => (
                     <div
                       key={block.key}
-                      className="text-[14px] leading-6 text-gray-800 prose prose-sm max-w-none"
+                      className="text-[15.5px] leading-6 text-gray-800 prose prose-sm max-w-none"
                       dangerouslySetInnerHTML={{ __html: block.html }}
                     />
                   ))

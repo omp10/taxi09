@@ -52,8 +52,8 @@ const PromoCard = ({ icon: Icon, iconColor, iconBg, title, description, buttonBo
         <Icon size={15} strokeWidth={2.5} className={iconColor} />
       </div>
 
-      <h3 className="text-[16px] font-bold leading-tight tracking-tight text-slate-900 mb-1 pr-1">{title}</h3>
-      <p className="text-[11.5px] font-medium leading-snug text-slate-500 pr-[70px]">{description}</p>
+      <h3 className="text-[17px] font-bold leading-tight tracking-tight text-slate-900 mb-1 pr-1">{title}</h3>
+      <p className="text-[13.5px] font-medium leading-snug text-slate-500 pr-[70px]">{description}</p>
       
       <div className="flex-1" /> {/* Spacer to push button to bottom */}
       

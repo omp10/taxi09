@@ -22,7 +22,7 @@ const LocationCard = ({ location = 'Fetching location...' }) => {
       >
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <p className="text-[12px] font-black uppercase tracking-[0.16em] text-slate-400">Pickup</p>
+            <p className="text-[13.5px] font-black uppercase tracking-[0.16em] text-slate-400">Pickup</p>
             <h2 className="mt-2 text-[24px] font-bold leading-tight tracking-tight text-slate-900">
               {locationLabel}
               {isFetchingLocation && (
@@ -48,7 +48,7 @@ const LocationCard = ({ location = 'Fetching location...' }) => {
           </div>
 
           <motion.div
-            className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-emerald-700"
+            className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1.5 text-[12px] font-black uppercase tracking-[0.16em] text-emerald-700"
             animate={{ boxShadow: ['0 0 0 0 rgba(16,185,129,0)', '0 0 0 6px rgba(16,185,129,0.08)', '0 0 0 0 rgba(16,185,129,0)'] }}
             transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
           >
@@ -70,8 +70,8 @@ const LocationCard = ({ location = 'Fetching location...' }) => {
             <MapPin size={18} strokeWidth={2.5} />
           </motion.div>
           <div className="min-w-0">
-            <p className="text-[13px] font-black text-slate-700">Current pickup</p>
-            <p className="mt-1 text-[12px] font-bold leading-relaxed text-slate-500">
+            <p className="text-[14.5px] font-black text-slate-700">Current pickup</p>
+            <p className="mt-1 text-[13.5px] font-bold leading-relaxed text-slate-500">
               Update your pickup point or add a stop before booking.
             </p>
           </div>
@@ -92,8 +92,8 @@ const LocationCard = ({ location = 'Fetching location...' }) => {
             <Search size={18} strokeWidth={2.5} />
           </motion.div>
           <div className="flex-1 min-w-0">
-            <p className="text-[17px] font-black tracking-tight text-slate-800">Where to?</p>
-            <p className="mt-1 text-[12px] font-bold text-slate-400">Search destination, compare rides, add stops</p>
+            <p className="text-[18px] font-black tracking-tight text-slate-800">Where to?</p>
+            <p className="mt-1 text-[13.5px] font-bold text-slate-400">Search destination, compare rides, add stops</p>
           </div>
           <motion.div
             className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-500 shadow-sm"
@@ -110,7 +110,7 @@ const LocationCard = ({ location = 'Fetching location...' }) => {
               key={`${String(place || '').trim() || 'place'}-${index}`}
               type="button"
               onClick={() => navigate(`${routePrefix}/ride/select-category`)}
-              className="shrink-0 rounded-full border border-slate-200 bg-white px-4 py-2 text-[12px] font-black text-slate-600 transition-all active:scale-95"
+              className="shrink-0 rounded-full border border-slate-200 bg-white px-4 py-2 text-[13.5px] font-black text-slate-600 transition-all active:scale-95"
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25, delay: 0.08 * index, ease: 'easeOut' }}

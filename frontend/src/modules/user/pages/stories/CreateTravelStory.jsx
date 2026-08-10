@@ -17,7 +17,7 @@ const CATEGORIES = [
 ];
 
 const field =
-  'w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[13.5px] outline-none focus:border-[#F5B700]';
+  'w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] outline-none focus:border-[#F5B700]';
 
 const empty = {
   title: '', category: 'Road Trip', location: '', state: '',
@@ -136,7 +136,7 @@ const CreateTravelStory = () => {
           </button>
           <div>
             <h1 className="text-[22px] font-black leading-tight text-slate-900">Share Your Journey</h1>
-            <p className="text-[12.5px] font-semibold text-slate-700">
+            <p className="text-[14px] font-semibold text-slate-700">
               Tell other travellers how the trip went
             </p>
           </div>
@@ -155,7 +155,7 @@ const CreateTravelStory = () => {
             ) : (
               <span className="flex flex-col items-center gap-1.5 text-slate-500">
                 {uploading ? <Loader2 size={22} className="animate-spin" /> : <ImagePlus size={22} />}
-                <span className="text-[12.5px] font-bold">{uploading ? 'Uploading…' : 'Add a cover photo'}</span>
+                <span className="text-[14px] font-bold">{uploading ? 'Uploading…' : 'Add a cover photo'}</span>
               </span>
             )}
           </button>
@@ -172,10 +172,10 @@ const CreateTravelStory = () => {
               )}
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-[13px] font-black text-slate-900">
+              <span className="block text-[14.5px] font-black text-slate-900">
                 {video ? 'Reel attached' : 'Add a video (optional)'}
               </span>
-              <span className="block text-[11.5px] text-slate-500">
+              <span className="block text-[13.5px] text-slate-500">
                 {videoBusy
                   ? 'Uploading your clip…'
                   : video
@@ -187,7 +187,7 @@ const CreateTravelStory = () => {
               <button
                 type="button"
                 onClick={(event) => { event.preventDefault(); setVideo(''); setDuration(0); }}
-                className="shrink-0 text-[11.5px] font-bold text-red-600"
+                className="shrink-0 text-[13.5px] font-bold text-red-600"
               >
                 Remove
               </button>
@@ -197,56 +197,56 @@ const CreateTravelStory = () => {
 
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <label className="sm:col-span-2">
-              <span className="mb-1.5 block text-[12.5px] font-bold text-slate-800">Title *</span>
+              <span className="mb-1.5 block text-[14px] font-bold text-slate-800">Title *</span>
               <input className={field} value={form.title} onChange={set('title')} required placeholder="Manali to Leh – The Road of Dreams" />
             </label>
 
             <label>
-              <span className="mb-1.5 block text-[12.5px] font-bold text-slate-800">Category</span>
+              <span className="mb-1.5 block text-[14px] font-bold text-slate-800">Category</span>
               <select className={field} value={form.category} onChange={set('category')}>
                 {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </label>
             <label>
-              <span className="mb-1.5 block text-[12.5px] font-bold text-slate-800">Place</span>
+              <span className="mb-1.5 block text-[14px] font-bold text-slate-800">Place</span>
               <input className={field} value={form.location} onChange={set('location')} placeholder="Manali" />
             </label>
             <label>
-              <span className="mb-1.5 block text-[12.5px] font-bold text-slate-800">State</span>
+              <span className="mb-1.5 block text-[14px] font-bold text-slate-800">State</span>
               <input className={field} value={form.state} onChange={set('state')} placeholder="Himachal Pradesh" />
             </label>
             <label>
-              <span className="mb-1.5 block text-[12.5px] font-bold text-slate-800">Days</span>
+              <span className="mb-1.5 block text-[14px] font-bold text-slate-800">Days</span>
               <input type="number" min="0" className={field} value={form.days} onChange={set('days')} />
             </label>
             <label>
-              <span className="mb-1.5 block text-[12.5px] font-bold text-slate-800">Distance (km)</span>
+              <span className="mb-1.5 block text-[14px] font-bold text-slate-800">Distance (km)</span>
               <input type="number" min="0" className={field} value={form.distanceKm} onChange={set('distanceKm')} />
             </label>
             <label>
-              <span className="mb-1.5 block text-[12.5px] font-bold text-slate-800">Trip cost (₹)</span>
+              <span className="mb-1.5 block text-[14px] font-bold text-slate-800">Trip cost (₹)</span>
               <input type="number" min="0" className={field} value={form.cost} onChange={set('cost')} />
             </label>
 
             <label className="sm:col-span-2">
-              <span className="mb-1.5 block text-[12.5px] font-bold text-slate-800">Hashtags</span>
+              <span className="mb-1.5 block text-[14px] font-bold text-slate-800">Hashtags</span>
               <input className={field} value={form.hashtags} onChange={set('hashtags')} placeholder="RoadTrip, HimalayanDiaries" />
             </label>
 
             <label className="sm:col-span-2">
-              <span className="mb-1.5 block text-[12.5px] font-bold text-slate-800">Your story *</span>
+              <span className="mb-1.5 block text-[14px] font-bold text-slate-800">Your story *</span>
               <textarea rows={10} className={field} value={form.body} onChange={set('body')} required placeholder="How did the trip go?" />
             </label>
           </div>
 
-          <p className="mt-3 rounded-xl bg-[#FFF9E6] px-3 py-2.5 text-[11.5px] text-slate-700">
+          <p className="mt-3 rounded-xl bg-[#FFF9E6] px-3 py-2.5 text-[13.5px] text-slate-700">
             Your story is reviewed before it appears in the feed.
           </p>
 
           <button
             type="submit"
             disabled={saving || uploading}
-            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#F5B700] py-3 text-[14px] font-black text-slate-900 disabled:opacity-60"
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#F5B700] py-3 text-[15.5px] font-black text-slate-900 disabled:opacity-60"
           >
             {saving ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />} Submit Story
           </button>

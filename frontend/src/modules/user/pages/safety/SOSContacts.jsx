@@ -120,13 +120,13 @@ const SOSContacts = () => {
             <ArrowLeft size={18} className="text-slate-900" strokeWidth={2.5} />
           </button>
           <div className="flex-1">
-            <p className="text-[9px] font-black uppercase tracking-[0.26em] text-slate-400">Safety</p>
-            <h1 className="text-[19px] font-black tracking-tight text-slate-900">SOS Contacts</h1>
+            <p className="text-[11px] font-black uppercase tracking-[0.26em] text-slate-400">Safety</p>
+            <h1 className="text-[20px] font-black tracking-tight text-slate-900">SOS Contacts</h1>
           </div>
           <motion.button whileTap={{ scale: 0.9 }}
             onClick={() => setShowAddSheet(true)}
             disabled={contacts.length >= MAX_CONTACTS}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-[12px] text-[11px] font-black uppercase tracking-widest transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-[12px] text-[13px] font-black uppercase tracking-widest transition-all ${
               contacts.length >= MAX_CONTACTS
                 ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
                 : 'bg-slate-900 text-white shadow-sm'
@@ -143,12 +143,12 @@ const SOSContacts = () => {
           <div className="flex items-center gap-3 mb-4">
             <ShieldAlert size={22} className="text-white" strokeWidth={2} />
             <div>
-              <p className="text-[14px] font-black leading-tight">Emergency SOS</p>
-              <p className="text-[11px] font-bold text-red-100">Alerts all your emergency contacts</p>
+              <p className="text-[15.5px] font-black leading-tight">Emergency SOS</p>
+              <p className="text-[13px] font-bold text-red-100">Alerts all your emergency contacts</p>
             </div>
           </div>
           <motion.button whileTap={{ scale: 0.96 }} onClick={triggerSOS} disabled={sosActive}
-            className="w-full bg-white text-red-600 py-3.5 rounded-[14px] text-[14px] font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-sm">
+            className="w-full bg-white text-red-600 py-3.5 rounded-[14px] text-[15.5px] font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-sm">
             {sosActive ? (
               <><span className="text-[20px] font-black">{countdown}</span> Alerting contacts...</>
             ) : (
@@ -159,8 +159,8 @@ const SOSContacts = () => {
 
         <div>
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[10px] font-black uppercase tracking-[0.26em] text-slate-400">Emergency Services</p>
-            <span className="text-[10px] font-bold text-slate-400">Quick call</span>
+            <p className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-400">Emergency Services</p>
+            <span className="text-[12px] font-bold text-slate-400">Quick call</span>
           </div>
           <div className="grid grid-cols-1 gap-2.5">
             {EMERGENCY_SERVICES.map((service) => (
@@ -175,10 +175,10 @@ const SOSContacts = () => {
                     <Phone size={15} strokeWidth={2.5} />
                   </div>
                   <div className="min-w-0 flex-1 text-left">
-                    <p className="text-[14px] font-black text-slate-900 leading-tight">{service.label}</p>
-                    <p className="text-[11px] font-bold text-slate-400 mt-0.5">Call {service.phone}</p>
+                    <p className="text-[15.5px] font-black text-slate-900 leading-tight">{service.label}</p>
+                    <p className="text-[13px] font-bold text-slate-400 mt-0.5">Call {service.phone}</p>
                   </div>
-                  <div className="rounded-full bg-slate-900 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-white">
+                  <div className="rounded-full bg-slate-900 px-3 py-1.5 text-[12px] font-black uppercase tracking-wider text-white">
                     {service.phone}
                   </div>
                 </div>
@@ -190,8 +190,8 @@ const SOSContacts = () => {
         {/* Contacts list */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[10px] font-black uppercase tracking-[0.26em] text-slate-400">Emergency Contacts</p>
-            <span className="text-[10px] font-bold text-slate-400">{contacts.length}/{MAX_CONTACTS}</span>
+            <p className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-400">Emergency Contacts</p>
+            <span className="text-[12px] font-bold text-slate-400">{contacts.length}/{MAX_CONTACTS}</span>
           </div>
 
           {loading && (
@@ -203,7 +203,7 @@ const SOSContacts = () => {
           {!loading && contacts.length === 0 && (
             <div className="rounded-[20px] border border-white/80 bg-white/90 p-8 flex flex-col items-center gap-3 text-center shadow-[0_4px_14px_rgba(15,23,42,0.05)]">
               <ShieldAlert size={32} className="text-slate-300" strokeWidth={1.5} />
-              <p className="text-[13px] font-black text-slate-500">Add emergency contacts to stay safe</p>
+              <p className="text-[14.5px] font-black text-slate-500">Add emergency contacts to stay safe</p>
             </div>
           )}
 
@@ -214,11 +214,11 @@ const SOSContacts = () => {
                 transition={{ delay: i * 0.05 }}
                 className="rounded-[18px] border border-white/80 bg-white/90 shadow-[0_4px_14px_rgba(15,23,42,0.05)] px-4 py-3.5 flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
-                  <span className="text-[14px] font-black text-red-500">{c.name.charAt(0)}</span>
+                  <span className="text-[15.5px] font-black text-red-500">{c.name.charAt(0)}</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[14px] font-black text-slate-900 leading-tight">{c.name}</p>
-                  <p className="text-[11px] font-bold text-slate-400 mt-0.5">+91 {c.phone}</p>
+                  <p className="text-[15.5px] font-black text-slate-900 leading-tight">{c.name}</p>
+                  <p className="text-[13px] font-bold text-slate-400 mt-0.5">+91 {c.phone}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <button onClick={() => window.open(`tel:+91${c.phone}`)}
@@ -248,33 +248,33 @@ const SOSContacts = () => {
               className="fixed bottom-0 left-0 right-0 max-w-lg mx-auto bg-white rounded-t-[28px] px-5 pt-4 pb-10 z-[101]">
               <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-5" />
               <div className="flex items-center justify-between mb-5">
-                <h3 className="text-[18px] font-black text-slate-900">Add SOS Contact</h3>
+                <h3 className="text-[19px] font-black text-slate-900">Add SOS Contact</h3>
                 <button onClick={() => setShowAddSheet(false)} className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center">
                   <X size={15} className="text-slate-500" strokeWidth={2.5} />
                 </button>
               </div>
               <div className="space-y-4">
                 <div>
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-1 block">Name</label>
+                  <label className="text-[13px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-1 block">Name</label>
                   <div className={`flex items-center gap-3 rounded-[14px] px-4 py-3 border-2 transition-all ${errors.name ? 'border-red-200 bg-red-50' : 'border-slate-100 bg-slate-50'}`}>
                     <User size={16} className="text-slate-400 shrink-0" strokeWidth={2} />
                     <input type="text" value={name} onChange={e => { setName(e.target.value); setErrors(p => ({ ...p, name: '' })); }}
-                      placeholder="Contact name" className="flex-1 bg-transparent border-none text-[15px] font-bold text-slate-900 focus:outline-none placeholder:text-slate-300" />
+                      placeholder="Contact name" className="flex-1 bg-transparent border-none text-[16.5px] font-bold text-slate-900 focus:outline-none placeholder:text-slate-300" />
                   </div>
-                  {errors.name && <p className="text-[11px] font-black text-red-500 ml-1 mt-1">{errors.name}</p>}
+                  {errors.name && <p className="text-[13px] font-black text-red-500 ml-1 mt-1">{errors.name}</p>}
                 </div>
                 <div>
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-1 block">Mobile Number</label>
+                  <label className="text-[13px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-1 block">Mobile Number</label>
                   <div className={`flex items-center gap-3 rounded-[14px] px-4 py-3 border-2 transition-all ${errors.phone ? 'border-red-200 bg-red-50' : 'border-slate-100 bg-slate-50'}`}>
                     <Phone size={16} className="text-slate-400 shrink-0" strokeWidth={2} />
                     <input type="tel" maxLength={10} value={phone} onChange={e => { setPhone(e.target.value.replace(/\D/g, '')); setErrors(p => ({ ...p, phone: '' })); }}
-                      placeholder="10-digit mobile number" className="flex-1 bg-transparent border-none text-[15px] font-bold text-slate-900 focus:outline-none placeholder:text-slate-300" />
+                      placeholder="10-digit mobile number" className="flex-1 bg-transparent border-none text-[16.5px] font-bold text-slate-900 focus:outline-none placeholder:text-slate-300" />
                     {PHONE_REGEX.test(phone) && <CheckCircle2 size={16} className="text-emerald-500 shrink-0" strokeWidth={2.5} />}
                   </div>
-                  {errors.phone && <p className="text-[11px] font-black text-red-500 ml-1 mt-1">{errors.phone}</p>}
+                  {errors.phone && <p className="text-[13px] font-black text-red-500 ml-1 mt-1">{errors.phone}</p>}
                 </div>
                 <motion.button whileTap={{ scale: 0.97 }} onClick={handleAdd} disabled={saving}
-                  className="w-full bg-slate-900 text-white py-4 rounded-[16px] text-[14px] font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-sm mt-2">
+                  className="w-full bg-slate-900 text-white py-4 rounded-[16px] text-[15.5px] font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-sm mt-2">
                   {saving ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : 'Save Contact'}
                 </motion.button>
               </div>
@@ -295,15 +295,15 @@ const SOSContacts = () => {
               <div className="w-14 h-14 bg-red-50 rounded-[18px] flex items-center justify-center mx-auto mb-4">
                 <Trash2 size={24} className="text-red-400" strokeWidth={2} />
               </div>
-              <h3 className="text-[17px] font-black text-slate-900 mb-1">Remove contact?</h3>
-              <p className="text-[13px] font-bold text-slate-400 mb-6">{deleteTarget?.name} will be removed from your SOS list.</p>
+              <h3 className="text-[18px] font-black text-slate-900 mb-1">Remove contact?</h3>
+              <p className="text-[14.5px] font-bold text-slate-400 mb-6">{deleteTarget?.name} will be removed from your SOS list.</p>
               <div className="space-y-2.5">
                 <motion.button whileTap={{ scale: 0.97 }} onClick={() => handleDelete(deleteTarget.id)}
-                  className="w-full bg-red-500 text-white py-3.5 rounded-[16px] text-[13px] font-black uppercase tracking-widest">
+                  className="w-full bg-red-500 text-white py-3.5 rounded-[16px] text-[14.5px] font-black uppercase tracking-widest">
                   Remove
                 </motion.button>
                 <button onClick={() => setDeleteTarget(null)}
-                  className="w-full py-3.5 text-[13px] font-black text-slate-400 uppercase tracking-widest">
+                  className="w-full py-3.5 text-[14.5px] font-black text-slate-400 uppercase tracking-widest">
                   Cancel
                 </button>
               </div>

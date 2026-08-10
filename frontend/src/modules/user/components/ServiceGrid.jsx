@@ -47,7 +47,7 @@ const ServiceTile = ({ icon, label, description, path, accentClass, shadowClass,
 
         {/* Label */}
         <div className="flex-1 px-1 text-center">
-          <span className="text-[9.5px] font-bold text-slate-900 uppercase leading-tight line-clamp-2">
+          <span className="text-[11.5px] font-bold text-slate-900 uppercase leading-tight line-clamp-2">
             {label}
           </span>
         </div>
@@ -154,12 +154,12 @@ const ServiceGrid = () => {
         {/* Header - Compact */}
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500">Services</p>
+            <p className="text-[12px] font-medium uppercase tracking-[0.18em] text-slate-500">Services</p>
             <h2 className="text-[20px] font-bold text-slate-900 tracking-tight leading-none mt-0.5">Choose your ride</h2>
-            <p className="mt-1 text-[12px] font-medium text-slate-400">Tap to start quickly</p>
+            <p className="mt-1 text-[13.5px] font-medium text-slate-400">Tap to start quickly</p>
           </div>
 
-          <div className="flex items-center gap-1.5 rounded-full border border-primary bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-800 shadow-sm mt-1">
+          <div className="flex items-center gap-1.5 rounded-full border border-primary bg-white px-2.5 py-1 text-[13px] font-semibold text-slate-800 shadow-sm mt-1">
             <SlidersHorizontal size={12} className="text-primary" strokeWidth={2.5} />
             <span>{optionCount} options</span>
           </div>

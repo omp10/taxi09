@@ -60,8 +60,8 @@ const ReelPlayer = ({ reel, onClose, onLike }) => {
         <aside className="hidden w-[300px] shrink-0 self-center rounded-2xl bg-white p-5 lg:block">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-[11px] font-black uppercase tracking-wider text-[#C79100]">{reel.category}</p>
-              <h2 className="mt-1 text-[17px] font-black leading-snug text-slate-900">{reel.title}</h2>
+              <p className="text-[13px] font-black uppercase tracking-wider text-[#C79100]">{reel.category}</p>
+              <h2 className="mt-1 text-[18px] font-black leading-snug text-slate-900">{reel.title}</h2>
             </div>
             <button type="button" onClick={onClose} aria-label="Close" className="shrink-0 rounded-lg p-1 text-slate-500">
               <X size={18} />
@@ -69,25 +69,25 @@ const ReelPlayer = ({ reel, onClose, onLike }) => {
           </div>
 
           {reel.location ? (
-            <p className="mt-2 flex items-center gap-1.5 text-[12.5px] text-slate-500">
+            <p className="mt-2 flex items-center gap-1.5 text-[14px] text-slate-500">
               <MapPin size={13} /> {reel.location}{reel.state ? `, ${reel.state}` : ''}
             </p>
           ) : null}
 
-          <p className="mt-3 text-[13px] leading-relaxed text-slate-700">{reel.excerpt}</p>
+          <p className="mt-3 text-[14.5px] leading-relaxed text-slate-700">{reel.excerpt}</p>
 
-          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 border-t border-slate-100 pt-3 text-[12px] text-slate-600">
+          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 border-t border-slate-100 pt-3 text-[13.5px] text-slate-600">
             {reel.days > 0 ? <span>{reel.days} days</span> : null}
             {reel.distanceKm > 0 ? <span>{reel.distanceKm} km</span> : null}
             {reel.cost > 0 ? <span>₹{Number(reel.cost).toLocaleString('en-IN')}</span> : null}
           </div>
 
           <div className="mt-4 flex items-center justify-between">
-            <span className="text-[12.5px] font-bold text-slate-700">by {reel.authorName}</span>
+            <span className="text-[14px] font-bold text-slate-700">by {reel.authorName}</span>
             <button
               type="button"
               onClick={() => onLike(reel)}
-              className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12.5px] font-bold ${
+              className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[14px] font-bold ${
                 reel.liked ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-700'
               }`}
             >

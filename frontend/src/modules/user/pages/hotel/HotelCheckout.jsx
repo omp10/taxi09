@@ -110,7 +110,7 @@ const Stepper = ({ current }) => (
         <React.Fragment key={label}>
           <div className="flex w-[62px] shrink-0 flex-col items-center gap-1.5">
             <span
-              className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-extrabold ${
+              className={`flex h-7 w-7 items-center justify-center rounded-full text-[13px] font-extrabold ${
                 done
                   ? 'bg-[var(--primary)] text-[var(--text)]'
                   : active
@@ -121,7 +121,7 @@ const Stepper = ({ current }) => (
               {done ? <Check size={14} strokeWidth={3.2} /> : index + 1}
             </span>
             <span
-              className={`text-center text-[9px] leading-tight ${
+              className={`text-center text-[11px] leading-tight ${
                 done || active ? 'font-extrabold text-[var(--text)]' : 'font-semibold text-[var(--text-light)]'
               }`}
             >
@@ -139,16 +139,16 @@ const Stepper = ({ current }) => (
 
 const Field = ({ label, required, error, children }) => (
   <label className="block">
-    <span className="text-[10px] font-bold text-[var(--text-light)]">
+    <span className="text-[12px] font-bold text-[var(--text-light)]">
       {label} {required ? <span className="text-[var(--danger)]">*</span> : null}
     </span>
     <div className="mt-1">{children}</div>
-    {error ? <p className="mt-1 text-[9.5px] font-semibold text-[var(--danger)]">{error}</p> : null}
+    {error ? <p className="mt-1 text-[11.5px] font-semibold text-[var(--danger)]">{error}</p> : null}
   </label>
 );
 
 const inputClass = (hasError) =>
-  `w-full rounded-[10px] border bg-white px-3 py-2.5 text-[12.5px] font-semibold outline-none placeholder:font-medium placeholder:text-slate-300 ${
+  `w-full rounded-[10px] border bg-white px-3 py-2.5 text-[14px] font-semibold outline-none placeholder:font-medium placeholder:text-slate-300 ${
     hasError ? 'border-[var(--danger)]' : 'border-[var(--border)] focus:border-[var(--primary)]'
   }`;
 
@@ -297,7 +297,7 @@ const HotelCheckout = () => {
 
       <div className="flex items-center justify-center gap-1.5 bg-[var(--secondary)] py-1.5">
         <Lock size={11} className="text-[var(--primary-dark)]" />
-        <span className="text-[10px] font-extrabold text-[var(--primary-dark)]">Secure Booking</span>
+        <span className="text-[12px] font-extrabold text-[var(--primary-dark)]">Secure Booking</span>
       </div>
 
       <div className="space-y-3 px-3 pt-3">
@@ -315,13 +315,13 @@ const HotelCheckout = () => {
             />
             <div className="min-w-0 flex-1">
               <div className="flex items-start justify-between gap-2">
-                <h2 className="min-w-0 text-[14px] font-extrabold leading-tight">{hotel.name}</h2>
-                <span className="flex shrink-0 items-center gap-1 rounded-[8px] bg-[var(--secondary)] px-1.5 py-1 text-[10.5px] font-extrabold">
+                <h2 className="min-w-0 text-[15.5px] font-extrabold leading-tight">{hotel.name}</h2>
+                <span className="flex shrink-0 items-center gap-1 rounded-[8px] bg-[var(--secondary)] px-1.5 py-1 text-[12.5px] font-extrabold">
                   {hotel.rating}
                   <Star size={10} className="fill-[var(--primary)] text-[var(--primary)]" />
                 </span>
               </div>
-              <p className="mt-1 flex items-start gap-1 text-[10px] font-medium leading-[1.35] text-[var(--text-light)]">
+              <p className="mt-1 flex items-start gap-1 text-[12px] font-medium leading-[1.35] text-[var(--text-light)]">
                 <MapPin size={10} className="mt-[1px] shrink-0" />
                 <span>
                   {hotel.area} <span className="text-slate-300">•</span> {hotel.distance}
@@ -336,7 +336,7 @@ const HotelCheckout = () => {
               return (
               <span key={label} className="flex min-w-0 flex-col items-center gap-1 text-center">
                 <Icon size={15} className="text-[var(--primary-dark)]" />
-                <span className="text-[8px] font-semibold leading-tight text-[var(--text-light)]">{label}</span>
+                <span className="text-[10px] font-semibold leading-tight text-[var(--text-light)]">{label}</span>
               </span>
               );
             })}
@@ -350,12 +350,12 @@ const HotelCheckout = () => {
               { label: 'Guests', value: `${guests} Guest${guests > 1 ? 's' : ''}`, sub: `${room.adults} Adults + ${room.children} Child`, icon: Users },
             ].map(({ label, value, sub, icon: Icon }) => (
               <div key={label} className="min-w-0">
-                <p className="text-[8.5px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">{label}</p>
-                <p className="mt-0.5 flex items-center gap-1 text-[11.5px] font-extrabold">
+                <p className="text-[10.5px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">{label}</p>
+                <p className="mt-0.5 flex items-center gap-1 text-[13.5px] font-extrabold">
                   {Icon ? <Icon size={11} className="shrink-0 text-[var(--primary-dark)]" /> : null}
                   <span className="truncate">{value}</span>
                 </p>
-                <p className="text-[9px] font-medium text-[var(--text-light)]">{sub}</p>
+                <p className="text-[11px] font-medium text-[var(--text-light)]">{sub}</p>
               </div>
             ))}
           </div>
@@ -364,11 +364,11 @@ const HotelCheckout = () => {
         {/* Selected room */}
         <section className="rounded-[16px] border border-[var(--border)] bg-white p-3 shadow-[var(--shadow-sm)]">
           <div className="flex items-center justify-between">
-            <h3 className="text-[13.5px] font-extrabold">Selected Room</h3>
+            <h3 className="text-[15px] font-extrabold">Selected Room</h3>
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="flex items-center gap-1 text-[11px] font-bold text-[var(--primary-dark)]"
+              className="flex items-center gap-1 text-[13px] font-bold text-[var(--primary-dark)]"
             >
               <Pencil size={11} /> Edit
             </button>
@@ -378,13 +378,13 @@ const HotelCheckout = () => {
             <img src={room.image} alt={room.name} className="h-[74px] w-[84px] shrink-0 rounded-[11px] object-cover" />
             <div className="min-w-0 flex-1">
               <div className="flex items-start justify-between gap-2">
-                <p className="min-w-0 text-[12.5px] font-extrabold leading-tight">{room.name}</p>
+                <p className="min-w-0 text-[14px] font-extrabold leading-tight">{room.name}</p>
                 <div className="shrink-0 text-right">
-                  <p className="text-[16px] font-extrabold leading-none">{rupees(room.price)}</p>
-                  <p className="text-[8.5px] font-medium text-[var(--text-light)]">/ night</p>
+                  <p className="text-[17px] font-extrabold leading-none">{rupees(room.price)}</p>
+                  <p className="text-[10.5px] font-medium text-[var(--text-light)]">/ night</p>
                 </div>
               </div>
-              <div className="mt-1.5 flex flex-wrap gap-x-2.5 gap-y-1 text-[9px] font-semibold text-[var(--text-light)]">
+              <div className="mt-1.5 flex flex-wrap gap-x-2.5 gap-y-1 text-[11px] font-semibold text-[var(--text-light)]">
                 <span className="flex items-center gap-1">
                   <Maximize2 size={9} className="text-[var(--primary-dark)]" /> {room.sqft} sq.ft.
                 </span>
@@ -399,7 +399,7 @@ const HotelCheckout = () => {
                 {room.perks.map((perk) => (
                   <span
                     key={perk}
-                    className="flex items-center gap-1 rounded-[6px] bg-emerald-50 px-1.5 py-0.5 text-[8.5px] font-semibold text-[var(--success)]"
+                    className="flex items-center gap-1 rounded-[6px] bg-emerald-50 px-1.5 py-0.5 text-[10.5px] font-semibold text-[var(--success)]"
                   >
                     <CircleCheck size={9} /> {perk}
                   </span>
@@ -412,7 +412,7 @@ const HotelCheckout = () => {
         {/* Guest details */}
         <section className="rounded-[16px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
           <div className="flex items-center justify-between">
-            <h3 className="text-[13.5px] font-extrabold">Guest Details</h3>
+            <h3 className="text-[15px] font-extrabold">Guest Details</h3>
             <button
               type="button"
               onClick={() => {
@@ -429,7 +429,7 @@ const HotelCheckout = () => {
                   toast.error('No saved profile found');
                 }
               }}
-              className="flex items-center gap-1 text-[11px] font-bold text-[var(--primary-dark)]"
+              className="flex items-center gap-1 text-[13px] font-bold text-[var(--primary-dark)]"
             >
               <LogIn size={11} /> Autofill
             </button>
@@ -453,7 +453,7 @@ const HotelCheckout = () => {
                   showError('phone') ? 'border-[var(--danger)]' : 'border-[var(--border)] focus-within:border-[var(--primary)]'
                 }`}
               >
-                <span className="shrink-0 border-r border-[var(--border)] px-2.5 py-2.5 text-[12px] font-bold text-[var(--text-light)]">
+                <span className="shrink-0 border-r border-[var(--border)] px-2.5 py-2.5 text-[13.5px] font-bold text-[var(--text-light)]">
                   +91
                 </span>
                 <input
@@ -464,7 +464,7 @@ const HotelCheckout = () => {
                   onChange={(event) => update({ phone: event.target.value.replace(/\D/g, '').slice(0, 10) })}
                   onBlur={() => markTouched('phone')}
                   placeholder="Enter mobile number"
-                  className="w-full min-w-0 bg-transparent px-2.5 py-2.5 text-[12.5px] font-semibold outline-none placeholder:font-medium placeholder:text-slate-300"
+                  className="w-full min-w-0 bg-transparent px-2.5 py-2.5 text-[14px] font-semibold outline-none placeholder:font-medium placeholder:text-slate-300"
                 />
               </div>
             </Field>
@@ -486,7 +486,7 @@ const HotelCheckout = () => {
                   <select
                     value={guest.idType}
                     onChange={(event) => update({ idType: event.target.value })}
-                    className="w-full appearance-none rounded-[10px] border border-[var(--border)] bg-white px-3 py-2.5 pr-7 text-[12px] font-semibold outline-none focus:border-[var(--primary)]"
+                    className="w-full appearance-none rounded-[10px] border border-[var(--border)] bg-white px-3 py-2.5 pr-7 text-[13.5px] font-semibold outline-none focus:border-[var(--primary)]"
                   >
                     {ID_PROOFS.map((proof) => (
                       <option key={proof}>{proof}</option>
@@ -511,16 +511,16 @@ const HotelCheckout = () => {
 
         {/* Add-ons */}
         <section className="rounded-[16px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
-          <h3 className="text-[13.5px] font-extrabold">
-            Add-ons <span className="text-[11px] font-medium text-[var(--text-light)]">(Optional)</span>
+          <h3 className="text-[15px] font-extrabold">
+            Add-ons <span className="text-[13px] font-medium text-[var(--text-light)]">(Optional)</span>
           </h3>
 
           <div className="mt-2.5 space-y-2">
             <div className="flex items-center gap-2.5 rounded-[12px] border border-[var(--border)] px-3 py-2.5">
               <Coffee size={17} className="shrink-0 text-[var(--primary-dark)]" />
               <span className="min-w-0 flex-1">
-                <span className="block text-[12px] font-extrabold leading-tight">Extra Breakfast</span>
-                <span className="block text-[9.5px] font-medium text-[var(--text-light)]">
+                <span className="block text-[13.5px] font-extrabold leading-tight">Extra Breakfast</span>
+                <span className="block text-[11.5px] font-medium text-[var(--text-light)]">
                   ₹350 per person per day
                 </span>
               </span>
@@ -533,7 +533,7 @@ const HotelCheckout = () => {
                 >
                   <Minus size={12} strokeWidth={3} />
                 </button>
-                <span className="w-4 text-center text-[12.5px] font-extrabold">{breakfastQty}</span>
+                <span className="w-4 text-center text-[14px] font-extrabold">{breakfastQty}</span>
                 <button
                   type="button"
                   disabled={breakfastQty >= 10}
@@ -554,10 +554,10 @@ const HotelCheckout = () => {
             >
               <Sparkles size={17} className="shrink-0 text-[var(--primary-dark)]" />
               <span className="min-w-0 flex-1">
-                <span className="block text-[12px] font-extrabold leading-tight">Airport Pickup</span>
-                <span className="block text-[9.5px] font-medium text-[var(--text-light)]">Sedan • Max 3 Persons</span>
+                <span className="block text-[13.5px] font-extrabold leading-tight">Airport Pickup</span>
+                <span className="block text-[11.5px] font-medium text-[var(--text-light)]">Sedan • Max 3 Persons</span>
               </span>
-              <span className="shrink-0 text-[12px] font-extrabold">₹799</span>
+              <span className="shrink-0 text-[13.5px] font-extrabold">₹799</span>
               <span
                 className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border-2 ${
                   airportPickup ? 'border-[var(--primary-dark)] bg-[var(--primary)]' : 'border-[var(--border)]'
@@ -573,37 +573,37 @@ const HotelCheckout = () => {
         {/* Coupon: the server validates the code and re-prices, so nothing here
             claims a discount the quote has not already applied. */}
         <section className="rounded-[16px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
-          <h3 className="text-[13.5px] font-extrabold">Have a coupon?</h3>
+          <h3 className="text-[15px] font-extrabold">Have a coupon?</h3>
           <div className="mt-2.5 flex gap-2">
             <input
               type="text"
               value={couponInput}
               onChange={(event) => { setCouponInput(event.target.value.toUpperCase()); setCouponError(''); }}
               placeholder="Coupon code"
-              className="min-w-0 flex-1 rounded-[10px] border border-[var(--border)] px-3 py-2.5 text-[12.5px] font-semibold uppercase outline-none placeholder:font-medium placeholder:normal-case placeholder:text-slate-300 focus:border-[var(--primary)]"
+              className="min-w-0 flex-1 rounded-[10px] border border-[var(--border)] px-3 py-2.5 text-[14px] font-semibold uppercase outline-none placeholder:font-medium placeholder:normal-case placeholder:text-slate-300 focus:border-[var(--primary)]"
             />
             <button
               type="button"
               onClick={() => { setCouponError(''); setCoupon(couponInput.trim().toUpperCase()); }}
-              className="shrink-0 rounded-[10px] border-2 border-[var(--primary)] px-4 text-[12px] font-extrabold"
+              className="shrink-0 rounded-[10px] border-2 border-[var(--primary)] px-4 text-[13.5px] font-extrabold"
             >
               Apply
             </button>
           </div>
           {couponDiscount > 0 ? (
-            <p className="mt-2 flex items-center gap-1.5 text-[10.5px] font-bold text-[var(--success)]">
+            <p className="mt-2 flex items-center gap-1.5 text-[12.5px] font-bold text-[var(--success)]">
               <CircleCheck size={12} /> {quote?.couponCode} applied
               <button
                 type="button"
                 onClick={() => { setCoupon(''); setCouponInput(''); }}
-                className="ml-auto text-[10px] font-bold text-[var(--text-light)] underline"
+                className="ml-auto text-[12px] font-bold text-[var(--text-light)] underline"
               >
                 Remove
               </button>
             </p>
           ) : null}
           {couponError ? (
-            <p className="mt-2 text-[10.5px] font-bold text-[#e11d48]">{couponError}</p>
+            <p className="mt-2 text-[12.5px] font-bold text-[#e11d48]">{couponError}</p>
           ) : null}
         </section>
 
@@ -614,15 +614,15 @@ const HotelCheckout = () => {
             onClick={() => setSummaryOpen((current) => !current)}
             className="flex w-full items-center justify-between"
           >
-            <h3 className="text-[13.5px] font-extrabold">Price Summary</h3>
-            <span className="flex items-center gap-1 text-[11px] font-bold text-[var(--text-light)]">
+            <h3 className="text-[15px] font-extrabold">Price Summary</h3>
+            <span className="flex items-center gap-1 text-[13px] font-bold text-[var(--text-light)]">
               {summaryOpen ? 'Hide' : 'Show'}
               {summaryOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
             </span>
           </button>
 
           {summaryOpen ? (
-            <div className="mt-2.5 space-y-1.5 text-[11.5px] font-semibold">
+            <div className="mt-2.5 space-y-1.5 text-[13.5px] font-semibold">
               <div className="flex justify-between">
                 <span className="text-[var(--text-light)]">
                   Room Charges ({nights} Night{nights > 1 ? 's' : ''}
@@ -663,10 +663,10 @@ const HotelCheckout = () => {
                 <span>{rupees(taxes)}</span>
               </div>
               <div className="flex items-center justify-between border-t border-[var(--border)] pt-2">
-                <span className="text-[13px] font-extrabold">Total Amount</span>
-                <span className="text-[18px] font-extrabold">{rupees(total)}</span>
+                <span className="text-[14.5px] font-extrabold">Total Amount</span>
+                <span className="text-[19px] font-extrabold">{rupees(total)}</span>
               </div>
-              <p className="text-[9px] font-medium text-[var(--text-light)]">Inclusive of all taxes</p>
+              <p className="text-[11px] font-medium text-[var(--text-light)]">Inclusive of all taxes</p>
             </div>
           ) : null}
         </section>
@@ -676,10 +676,10 @@ const HotelCheckout = () => {
       <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-lg -translate-x-1/2 border-t border-[var(--border)] bg-white px-4 pb-6 pt-3">
         <div className="mb-2.5 flex items-end justify-between">
           <div>
-            <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">Total Amount</p>
-            <p className="text-[19px] font-extrabold leading-tight">{rupees(total)}</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">Total Amount</p>
+            <p className="text-[20px] font-extrabold leading-tight">{rupees(total)}</p>
           </div>
-          <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-[var(--success)]">
+          <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[12px] font-bold text-[var(--success)]">
             <Lock size={10} /> Secure
           </span>
         </div>
@@ -687,7 +687,7 @@ const HotelCheckout = () => {
           type="button"
           onClick={handlePay}
           disabled={paying || !quote}
-          className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[15px] font-extrabold shadow-[0_8px_20px_rgba(255,193,7,.4)] active:scale-[0.99] transition-transform"
+          className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[16.5px] font-extrabold shadow-[0_8px_20px_rgba(255,193,7,.4)] active:scale-[0.99] transition-transform"
         >
           Proceed to Payment
         </button>

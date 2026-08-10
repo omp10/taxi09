@@ -560,11 +560,11 @@ const IntercityHome = () => {
                 </motion.button>
                 <div className="flex-1 bg-white rounded-[24px] shadow-lg border border-blue-50 px-5 py-4 min-w-0">
                   <div className="mb-1 flex items-center justify-between gap-3">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600">Pinpoint Pickup</p>
+                    <p className="text-[12px] font-black uppercase tracking-[0.2em] text-blue-600">Pinpoint Pickup</p>
                     <button
                       type="button"
                       onClick={handleEditPickup}
-                      className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-slate-600"
+                      className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-[12px] font-black uppercase tracking-[0.12em] text-slate-600"
                     >
                       <Pencil size={10} />
                       Edit
@@ -581,11 +581,11 @@ const IntercityHome = () => {
                           onChange={(event) => setMapSearchInput(event.target.value)}
                           onFocus={() => setIsMapSearchFocused(true)}
                           placeholder={isGeocoding ? 'Finding exact address...' : 'Search pickup location'}
-                          className="w-full bg-transparent text-[14px] font-bold text-slate-900 outline-none placeholder:text-slate-400"
+                          className="w-full bg-transparent text-[15.5px] font-bold text-slate-900 outline-none placeholder:text-slate-400"
                         />
                       </>
                     ) : (
-                      <p className="truncate text-[14px] font-bold text-slate-900 leading-tight">
+                      <p className="truncate text-[15.5px] font-bold text-slate-900 leading-tight">
                         {isGeocoding ? 'Finding exact address...' : (pickupAddress || 'Set location on map')}
                       </p>
                     )}
@@ -595,7 +595,7 @@ const IntercityHome = () => {
               {(isSearchingMapLocations || mapSearchResults.length > 0) ? (
                 <div className="mt-4 rounded-[24px] border border-slate-200 bg-white px-4 py-3 shadow-sm">
                   {isSearchingMapLocations ? (
-                    <div className="flex items-center gap-2 px-1 py-2 text-[12px] font-bold text-slate-500">
+                    <div className="flex items-center gap-2 px-1 py-2 text-[13.5px] font-bold text-slate-500">
                       <LoaderCircle size={14} className="animate-spin text-blue-500" />
                       Searching suggestions...
                     </div>
@@ -609,8 +609,8 @@ const IntercityHome = () => {
                     >
                       <MapPin size={15} className="mt-0.5 shrink-0 text-blue-500" />
                       <span className="min-w-0">
-                        <span className="block truncate text-[13px] font-black text-slate-900">{result.title}</span>
-                        <span className="mt-0.5 block text-[12px] font-bold leading-5 text-slate-500">{result.address}</span>
+                        <span className="block truncate text-[14.5px] font-black text-slate-900">{result.title}</span>
+                        <span className="mt-0.5 block text-[13.5px] font-bold leading-5 text-slate-500">{result.address}</span>
                       </span>
                     </button>
                   ))}
@@ -636,7 +636,7 @@ const IntercityHome = () => {
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center gap-4 bg-slate-50 p-10 text-center">
                   <AlertTriangle size={40} className="text-amber-400" />
-                  <p className="text-[14px] font-bold text-slate-500">
+                  <p className="text-[15.5px] font-bold text-slate-500">
                     Map service unavailable. Please check your connection or API key.
                   </p>
                 </div>
@@ -676,7 +676,7 @@ const IntercityHome = () => {
                   setShowMapPicker(false);
                 }}
                 disabled={isGeocoding}
-                className="w-full h-16 bg-blue-600 rounded-[22px] text-white font-black text-[16px] uppercase tracking-widest shadow-xl shadow-blue-500/20 flex items-center justify-center gap-3 active:scale-95 transition-all disabled:opacity-40"
+                className="w-full h-16 bg-blue-600 rounded-[22px] text-white font-black text-[17px] uppercase tracking-widest shadow-xl shadow-blue-500/20 flex items-center justify-center gap-3 active:scale-95 transition-all disabled:opacity-40"
               >
                 <Check size={20} strokeWidth={3} />
                 Confirm Pickup
@@ -695,7 +695,7 @@ const IntercityHome = () => {
         >
           <ArrowLeft size={20} className="text-slate-800" strokeWidth={2.5} />
         </motion.button>
-        <h2 className="text-[17px] font-extrabold text-slate-900 tracking-tight">Outstation Cabs</h2>
+        <h2 className="text-[18px] font-extrabold text-slate-900 tracking-tight">Outstation Cabs</h2>
         <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 hover:opacity-90 cursor-pointer shadow-inner">
           <User size={18} strokeWidth={2.5} />
         </div>
@@ -708,7 +708,7 @@ const IntercityHome = () => {
           {/* Subtitle Header */}
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-slate-200" />
-            <span className="text-[10px] font-extrabold text-blue-500 tracking-[0.15em] uppercase whitespace-nowrap">
+            <span className="text-[12px] font-extrabold text-blue-500 tracking-[0.15em] uppercase whitespace-nowrap">
               India's Premier Intercity Cabs
             </span>
             <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-slate-200" />
@@ -721,8 +721,8 @@ const IntercityHome = () => {
               className={`flex-1 py-3.5 rounded-lg text-center transition-all duration-200 flex flex-col items-center justify-center ${tripType === 'One Way' ? 'bg-[#1E90FF] text-white shadow-sm font-bold' : 'text-slate-800 hover:bg-slate-50'
                 }`}
             >
-              <span className="text-[13px] font-extrabold tracking-wide uppercase leading-tight">One Way</span>
-              <span className={`text-[9px] mt-0.5 leading-none opacity-85 ${tripType === 'One Way' ? 'text-white' : 'text-slate-500'}`}>
+              <span className="text-[14.5px] font-extrabold tracking-wide uppercase leading-tight">One Way</span>
+              <span className={`text-[11px] mt-0.5 leading-none opacity-85 ${tripType === 'One Way' ? 'text-white' : 'text-slate-500'}`}>
                 Drop-off only
               </span>
             </button>
@@ -731,8 +731,8 @@ const IntercityHome = () => {
               className={`flex-1 py-3.5 rounded-lg text-center transition-all duration-200 flex flex-col items-center justify-center ${tripType === 'Round Trip' ? 'bg-[#1E90FF] text-white shadow-sm font-bold' : 'text-slate-800 hover:bg-slate-50'
                 }`}
             >
-              <span className="text-[13px] font-extrabold tracking-wide uppercase leading-tight">Round Trip</span>
-              <span className={`text-[9px] mt-0.5 leading-none opacity-85 ${tripType === 'Round Trip' ? 'text-white' : 'text-slate-500'}`}>
+              <span className="text-[14.5px] font-extrabold tracking-wide uppercase leading-tight">Round Trip</span>
+              <span className={`text-[11px] mt-0.5 leading-none opacity-85 ${tripType === 'Round Trip' ? 'text-white' : 'text-slate-500'}`}>
                 Return with same cab
               </span>
             </button>
@@ -750,8 +750,8 @@ const IntercityHome = () => {
                 <MapPin size={20} />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-[9px] font-extrabold text-slate-400 tracking-wider uppercase leading-none mb-1.5">FROM</p>
-                <p className="text-[15px] font-bold text-slate-800 truncate leading-snug">
+                <p className="text-[11px] font-extrabold text-slate-400 tracking-wider uppercase leading-none mb-1.5">FROM</p>
+                <p className="text-[16.5px] font-bold text-slate-800 truncate leading-snug">
                   {pickupAddress || 'Enter Pickup Location'}
                 </p>
               </div>
@@ -772,7 +772,7 @@ const IntercityHome = () => {
                 <MapPin size={20} />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-[9px] font-extrabold text-slate-400 tracking-wider uppercase leading-none mb-1">TO</p>
+                <p className="text-[11px] font-extrabold text-slate-400 tracking-wider uppercase leading-none mb-1">TO</p>
                 <input
                   type="text"
                   placeholder="Enter Drop Location"
@@ -784,7 +784,7 @@ const IntercityHome = () => {
                     }
                   }}
                   onFocus={() => setIsToFocused(true)}
-                  className="w-full bg-transparent border-0 outline-none p-0 font-bold text-[15px] text-slate-800 placeholder:text-slate-400 leading-snug mt-0.5"
+                  className="w-full bg-transparent border-0 outline-none p-0 font-bold text-[16.5px] text-slate-800 placeholder:text-slate-400 leading-snug mt-0.5"
                 />
               </div>
               {toCitySearch && (
@@ -816,7 +816,7 @@ const IntercityHome = () => {
                       {loading ? (
                         <div className="p-8 flex items-center justify-center gap-2.5 text-slate-400">
                           <LoaderCircle size={18} className="animate-spin text-blue-500" />
-                          <span className="text-[13px] font-medium">Loading routes...</span>
+                          <span className="text-[14.5px] font-medium">Loading routes...</span>
                         </div>
                       ) : filteredPackages.length > 0 ? (
                         filteredPackages.map((pkg) => (
@@ -832,16 +832,16 @@ const IntercityHome = () => {
                             className="w-full px-5 py-3.5 text-left hover:bg-slate-50 flex items-center justify-between border-b border-slate-50 last:border-0 transition-colors group"
                           >
                             <div className="min-w-0 flex-1">
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">
+                              <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">
                                 From {pkg.serviceLocationName}
                               </p>
-                              <p className="text-[14px] font-black text-slate-800 group-hover:text-blue-600 transition-colors">
+                              <p className="text-[15.5px] font-black text-slate-800 group-hover:text-blue-600 transition-colors">
                                 To {pkg.destination}
                               </p>
                             </div>
                             <div className="text-right pl-3">
-                              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Starts from</p>
-                              <p className="text-[14px] font-black text-slate-900 group-hover:text-blue-600">
+                              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Starts from</p>
+                              <p className="text-[15.5px] font-black text-slate-900 group-hover:text-blue-600">
                                 ₹{pkg.vehicles?.[0]?.basePrice || '---'}
                               </p>
                             </div>
@@ -849,8 +849,8 @@ const IntercityHome = () => {
                         ))
                       ) : (
                         <div className="p-8 text-center text-slate-400">
-                          <p className="text-[13px] font-bold">No routes matching query</p>
-                          <p className="text-[11px] mt-0.5">Check spelling or try a different city</p>
+                          <p className="text-[14.5px] font-bold">No routes matching query</p>
+                          <p className="text-[13px] mt-0.5">Check spelling or try a different city</p>
                         </div>
                       )}
                     </motion.div>
@@ -869,10 +869,10 @@ const IntercityHome = () => {
               <Calendar size={18} />
             </div>
             <div className="flex-1">
-              <p className="text-[9px] font-extrabold text-slate-400 tracking-wider uppercase leading-none mb-1.5">TRIP START</p>
+              <p className="text-[11px] font-extrabold text-slate-400 tracking-wider uppercase leading-none mb-1.5">TRIP START</p>
               <div className="flex items-baseline gap-2">
-                <span className="text-[15px] font-black text-slate-800 leading-none">{displayDateStr}</span>
-                <span className="text-[12px] font-medium text-slate-500 leading-none">{displayTimeStr}</span>
+                <span className="text-[16.5px] font-black text-slate-800 leading-none">{displayDateStr}</span>
+                <span className="text-[13.5px] font-medium text-slate-500 leading-none">{displayTimeStr}</span>
               </div>
             </div>
             <ChevronRight size={16} className="text-slate-400 group-hover:translate-x-0.5 transition-transform" />
@@ -892,7 +892,7 @@ const IntercityHome = () => {
           <button
             onClick={handleExploreCabs}
             type="button"
-            className="mt-5 w-full bg-[#FF7A1A] hover:bg-[#E06610] text-white font-extrabold text-[15px] py-4 rounded-xl tracking-widest shadow-md hover:shadow-lg active:scale-[0.98] transition-all text-center uppercase"
+            className="mt-5 w-full bg-[#FF7A1A] hover:bg-[#E06610] text-white font-extrabold text-[16.5px] py-4 rounded-xl tracking-widest shadow-md hover:shadow-lg active:scale-[0.98] transition-all text-center uppercase"
           >
             EXPLORE CABS
           </button>
@@ -912,10 +912,10 @@ const IntercityHome = () => {
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent flex flex-col justify-end p-4">
-              <span className="self-start bg-black/75 border border-amber-400/40 text-amber-400 text-[8px] font-extrabold px-2 py-0.5 rounded-full tracking-wider uppercase mb-1">
+              <span className="self-start bg-black/75 border border-amber-400/40 text-amber-400 text-[10px] font-extrabold px-2 py-0.5 rounded-full tracking-wider uppercase mb-1">
                 ★ Exclusive ★
               </span>
-              <h4 className="text-white text-[15px] font-black uppercase tracking-tight leading-tight">
+              <h4 className="text-white text-[16.5px] font-black uppercase tracking-tight leading-tight">
                 Chardham Cab Packages
               </h4>
             </div>
@@ -929,10 +929,10 @@ const IntercityHome = () => {
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent flex flex-col justify-end p-4">
-              <span className="self-start bg-amber-500 text-slate-900 text-[8px] font-extrabold px-2 py-0.5 rounded-full tracking-wider uppercase mb-1">
+              <span className="self-start bg-amber-500 text-slate-900 text-[10px] font-extrabold px-2 py-0.5 rounded-full tracking-wider uppercase mb-1">
                 Offers
               </span>
-              <h4 className="text-white text-[15px] font-black uppercase tracking-tight leading-tight">
+              <h4 className="text-white text-[16.5px] font-black uppercase tracking-tight leading-tight">
                 First Intercity Trip? Get 20% Off!
               </h4>
             </div>
@@ -945,14 +945,14 @@ const IntercityHome = () => {
       <div className="px-5 mt-6">
         <div className="p-4 bg-gradient-to-r from-[#E3F2FD]/80 to-[#E1F5FE]/80 border border-blue-100 rounded-2xl flex items-center justify-between shadow-sm">
           <div className="min-w-0 flex-1 pr-3">
-            <p className="text-[8px] font-extrabold text-blue-500 tracking-wider uppercase mb-0.5">SAY HELLO TO</p>
-            <h4 className="text-[13px] font-extrabold text-slate-900 leading-tight">YOUR TRAVEL EXPERT</h4>
-            <p className="text-[10px] text-slate-500 mt-0.5 leading-snug">Get expert advice for smarter travel plans!</p>
+            <p className="text-[10px] font-extrabold text-blue-500 tracking-wider uppercase mb-0.5">SAY HELLO TO</p>
+            <h4 className="text-[14.5px] font-extrabold text-slate-900 leading-tight">YOUR TRAVEL EXPERT</h4>
+            <p className="text-[12px] text-slate-500 mt-0.5 leading-snug">Get expert advice for smarter travel plans!</p>
           </div>
           <button
             onClick={() => window.open('tel:+918000000000', '_self')}
             type="button"
-            className="bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 rounded-xl px-3 py-2 flex items-center gap-1.5 shadow-sm transition-all text-[11px] font-black cursor-pointer shrink-0 active:scale-95"
+            className="bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 rounded-xl px-3 py-2 flex items-center gap-1.5 shadow-sm transition-all text-[13px] font-black cursor-pointer shrink-0 active:scale-95"
           >
             <PhoneCall size={12} className="text-[#1E90FF]" />
             Call Expert | 24x7
@@ -972,7 +972,7 @@ const IntercityHome = () => {
             }`}
         >
           <Compass size={18} strokeWidth={2.5} className="mb-0.5" />
-          <span className="text-[9px] tracking-wide uppercase font-extrabold">One Way</span>
+          <span className="text-[11px] tracking-wide uppercase font-extrabold">One Way</span>
         </button>
 
         {/* ROUND TRIP */}
@@ -984,7 +984,7 @@ const IntercityHome = () => {
             }`}
         >
           <Briefcase size={18} strokeWidth={2.5} className="mb-0.5" />
-          <span className="text-[9px] tracking-wide uppercase font-extrabold">Round Trip</span>
+          <span className="text-[11px] tracking-wide uppercase font-extrabold">Round Trip</span>
         </button>
 
         {/* LOCAL */}
@@ -993,7 +993,7 @@ const IntercityHome = () => {
           className="flex flex-col items-center justify-center h-full border-r border-slate-100 text-slate-500 hover:bg-slate-50 transition-colors"
         >
           <Clock size={18} strokeWidth={2.5} className="mb-0.5" />
-          <span className="text-[9px] tracking-wide uppercase font-extrabold">Local</span>
+          <span className="text-[11px] tracking-wide uppercase font-extrabold">Local</span>
         </button>
 
         {/*
@@ -1002,7 +1002,7 @@ const IntercityHome = () => {
           className="flex flex-col items-center justify-center h-full text-slate-500 hover:bg-slate-50 transition-colors"
         >
           <Plane size={18} strokeWidth={2.5} className="mb-0.5" />
-          <span className="text-[9px] tracking-wide uppercase font-extrabold">Airport</span>
+          <span className="text-[11px] tracking-wide uppercase font-extrabold">Airport</span>
         </button>
         */}
 

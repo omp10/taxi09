@@ -77,7 +77,7 @@ const ActivityCard = ({
             onError={() => setBroken(true)}
           />
           {tag ? (
-            <span className="absolute bottom-1 left-1 rounded-[5px] bg-white/95 px-1 py-[1px] text-[8px] font-extrabold tracking-wide text-slate-700 shadow-sm">
+            <span className="absolute bottom-1 left-1 rounded-[5px] bg-white/95 px-1 py-[1px] text-[10px] font-extrabold tracking-wide text-slate-700 shadow-sm">
               {tag}
             </span>
           ) : null}
@@ -86,25 +86,25 @@ const ActivityCard = ({
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <h4 className="truncate text-[12.5px] font-extrabold leading-tight text-[var(--text)]">{title}</h4>
+              <h4 className="truncate text-[14px] font-extrabold leading-tight text-[var(--text)]">{title}</h4>
               {eyebrow ? (
-                <p className="mt-0.5 truncate text-[8.5px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">
+                <p className="mt-0.5 truncate text-[10.5px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">
                   {eyebrow}
                 </p>
               ) : null}
             </div>
-            <span className="shrink-0 whitespace-nowrap text-[13px] font-extrabold text-[var(--text)]">
+            <span className="shrink-0 whitespace-nowrap text-[14.5px] font-extrabold text-[var(--text)]">
               ₹{Number(price || 0).toLocaleString('en-IN')}
             </span>
           </div>
 
           <div className="mt-1 space-y-0.5">
-            <p className="flex items-start gap-1 text-[9.5px] font-semibold text-[var(--text-light)]">
+            <p className="flex items-start gap-1 text-[11.5px] font-semibold text-[var(--text-light)]">
               <MapPin size={10} className="mt-[2px] shrink-0 text-[var(--primary-dark)]" />
               <span className="truncate">{from}</span>
             </p>
             {to ? (
-              <p className="flex items-start gap-1 text-[10px] font-semibold text-[var(--text-light)]">
+              <p className="flex items-start gap-1 text-[12px] font-semibold text-[var(--text-light)]">
                 <MapPin size={10} className="mt-[2px] shrink-0 text-slate-400" />
                 <span className="truncate">{to}</span>
               </p>
@@ -118,16 +118,16 @@ const ActivityCard = ({
       </div>
 
       <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1 border-t border-[var(--border)] pt-2">
-        <span className="flex items-center gap-1 text-[9px] font-semibold text-[var(--text-light)]">
+        <span className="flex items-center gap-1 text-[11px] font-semibold text-[var(--text-light)]">
           <Calendar size={11} strokeWidth={2.4} />
           {date}
         </span>
-        <span className="flex items-center gap-1 text-[9px] font-semibold text-[var(--text-light)]">
+        <span className="flex items-center gap-1 text-[11px] font-semibold text-[var(--text-light)]">
           <Clock size={11} strokeWidth={2.4} />
           {time}
         </span>
         <span
-          className={`ml-auto rounded-full px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide ${
+          className={`ml-auto rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-wide ${
             STATUS_TONE[statusTone] || STATUS_TONE.warning
           }`}
         >

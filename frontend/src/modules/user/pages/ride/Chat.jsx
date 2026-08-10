@@ -196,8 +196,8 @@ const Chat = () => {
             <ArrowLeft size={18} className="text-slate-900" strokeWidth={2.5} />
           </button>
           <div className="text-right">
-            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">Support</p>
-            <h1 className="text-[16px] font-black text-slate-900">
+            <p className="text-[12px] font-black uppercase tracking-[0.24em] text-slate-400">Support</p>
+            <h1 className="text-[17px] font-black text-slate-900">
               {chatRole === 'driver' ? 'Driver Chat' : 'User Chat'}
             </h1>
           </div>
@@ -249,8 +249,8 @@ const Chat = () => {
         </div>
 
         <div className="flex-1 min-w-0">
-          <p className="text-[14px] font-black text-slate-900 leading-tight">{otherName}</p>
-          <p className="text-[10px] font-black text-emerald-500 uppercase tracking-wider">{otherSub}</p>
+          <p className="text-[15.5px] font-black text-slate-900 leading-tight">{otherName}</p>
+          <p className="text-[12px] font-black text-emerald-500 uppercase tracking-wider">{otherSub}</p>
         </div>
 
         <motion.button
@@ -273,21 +273,21 @@ const Chat = () => {
           <div className="h-full flex items-center justify-center">
             <div className="flex items-center gap-3 rounded-2xl bg-white/90 border border-slate-100 px-4 py-3 shadow-sm">
               <Loader2 size={18} className="animate-spin text-slate-500" />
-              <span className="text-[13px] font-bold text-slate-600">Connecting trip chat...</span>
+              <span className="text-[14.5px] font-bold text-slate-600">Connecting trip chat...</span>
             </div>
           </div>
         ) : (
           <>
             {!messages.length && !chatError && (
               <div className="flex justify-center pt-6">
-                <div className="rounded-2xl bg-white/90 border border-slate-100 px-4 py-3 text-[12px] font-bold text-slate-500 shadow-sm">
+                <div className="rounded-2xl bg-white/90 border border-slate-100 px-4 py-3 text-[13.5px] font-bold text-slate-500 shadow-sm">
                   Trip chat is connected.
                 </div>
               </div>
             )}
 
             {chatError && (
-              <div className="rounded-2xl border border-rose-100 bg-rose-50 px-4 py-3 text-[12px] font-bold text-rose-600 shadow-sm">
+              <div className="rounded-2xl border border-rose-100 bg-rose-50 px-4 py-3 text-[13.5px] font-bold text-rose-600 shadow-sm">
                 {chatError}
               </div>
             )}
@@ -308,8 +308,8 @@ const Chat = () => {
                         isUser ? 'bg-slate-900 text-white rounded-br-[6px]' : 'bg-white/95 border border-white/80 text-slate-800 rounded-bl-[6px]'
                       }`}
                     >
-                      <p className="text-[14px] font-bold leading-relaxed">{m.text}</p>
-                      <span className={`text-[9px] font-black mt-1 block uppercase tracking-wider ${isUser ? 'text-white/50' : 'text-slate-400'}`}>
+                      <p className="text-[15.5px] font-bold leading-relaxed">{m.text}</p>
+                      <span className={`text-[11px] font-black mt-1 block uppercase tracking-wider ${isUser ? 'text-white/50' : 'text-slate-400'}`}>
                         {m.time}
                       </span>
                     </div>
@@ -325,7 +325,7 @@ const Chat = () => {
       <div className="bg-white/90 backdrop-blur-md border-t border-white/80 px-4 pt-3 pb-6 space-y-2.5 shadow-[0_-4px_20px_rgba(15,23,42,0.05)]">
         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-0.5">
           {quickReplies.map((r) => (
-            <motion.button key={r} whileTap={{ scale: 0.95 }} onClick={() => send(r)} className="shrink-0 px-3.5 py-1.5 rounded-full border border-slate-200 bg-slate-50 text-[11px] font-black text-slate-600 active:bg-slate-100 transition-all">
+            <motion.button key={r} whileTap={{ scale: 0.95 }} onClick={() => send(r)} className="shrink-0 px-3.5 py-1.5 rounded-full border border-slate-200 bg-slate-50 text-[13px] font-black text-slate-600 active:bg-slate-100 transition-all">
               {r}
             </motion.button>
           ))}
@@ -340,7 +340,7 @@ const Chat = () => {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && send()}
             disabled={!rideId || isJoiningRide}
-            className="flex-1 bg-transparent border-none text-[14px] font-bold text-slate-900 focus:outline-none placeholder:text-slate-300 disabled:text-slate-400"
+            className="flex-1 bg-transparent border-none text-[15.5px] font-bold text-slate-900 focus:outline-none placeholder:text-slate-300 disabled:text-slate-400"
           />
           <motion.button
             whileTap={{ scale: 0.9 }}

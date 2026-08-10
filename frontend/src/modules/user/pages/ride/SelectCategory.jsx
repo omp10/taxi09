@@ -131,7 +131,7 @@ const SelectCategory = () => {
         >
           <ArrowLeft size={18} className="text-slate-900" strokeWidth={2.5} />
         </motion.button>
-        <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Step 1 of 3</span>
+        <span className="text-[13px] font-bold uppercase tracking-[0.16em] text-slate-400">Step 1 of 3</span>
         <div className="w-10 h-10 opacity-0" />
       </header>
 
@@ -140,7 +140,7 @@ const SelectCategory = () => {
         <h1 className="text-[28px] font-extrabold text-slate-900 tracking-tight leading-tight">
           How would you like to ride?
         </h1>
-        <p className="mt-1.5 text-[13px] font-medium text-slate-500">
+        <p className="mt-1.5 text-[14.5px] font-medium text-slate-500">
           Choose a category to find available drivers nearby.
         </p>
       </div>
@@ -150,7 +150,7 @@ const SelectCategory = () => {
         {loading ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 gap-3 text-slate-400">
             <LoaderCircle size={32} className="animate-spin text-orange-500" />
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em]">Analyzing local fleets...</p>
+            <p className="text-[13px] font-bold uppercase tracking-[0.18em]">Analyzing local fleets...</p>
           </div>
         ) : (
           <div className="flex flex-col gap-6">
@@ -158,8 +158,8 @@ const SelectCategory = () => {
               <div className="flex items-start gap-2.5 rounded-[18px] border border-amber-200 bg-amber-50 px-4 py-3">
                 <AlertCircle size={16} className="mt-0.5 shrink-0 text-amber-500" strokeWidth={2.5} />
                 <div>
-                  <p className="text-[12px] font-bold text-slate-900">{error}</p>
-                  <p className="mt-0.5 text-[11px] font-medium text-slate-500">
+                  <p className="text-[13.5px] font-bold text-slate-900">{error}</p>
+                  <p className="mt-0.5 text-[13px] font-medium text-slate-500">
                     Check your connection and try again.
                   </p>
                 </div>
@@ -193,36 +193,36 @@ const SelectCategory = () => {
                   <div className="p-5 flex flex-col justify-between flex-1 min-w-0">
                     <div>
                       <div className="flex items-center justify-between gap-2">
-                        <h2 className="text-[18px] font-black text-slate-900 leading-none">
+                        <h2 className="text-[19px] font-black text-slate-900 leading-none">
                           {cat.title}
                         </h2>
                         
                         <div className="flex items-center gap-1.5 shrink-0">
                           {isAvailable ? (
-                            <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider ${cat.pillClass}`}>
+                            <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wider ${cat.pillClass}`}>
                               Available
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-slate-400">
+                            <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
                               Offline
                             </span>
                           )}
                         </div>
                       </div>
 
-                      <p className="mt-2.5 text-[12px] font-medium leading-relaxed text-slate-500">
+                      <p className="mt-2.5 text-[13.5px] font-medium leading-relaxed text-slate-500">
                         {cat.description}
                       </p>
                     </div>
 
                     <div className="mt-4 flex items-center justify-between pt-3 border-t border-slate-100">
-                      <div className="flex items-center gap-1.5 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
+                      <div className="flex items-center gap-1.5 text-[12px] font-extrabold text-slate-400 uppercase tracking-wider">
                         <Users size={13} className="text-slate-400" />
                         <span>{cat.capacity}</span>
                       </div>
                       
                       {isAvailable && (
-                        <div className="flex items-center gap-1.5 text-[11px] font-black text-slate-900 uppercase tracking-wider">
+                        <div className="flex items-center gap-1.5 text-[13px] font-black text-slate-900 uppercase tracking-wider">
                           <span>Select</span>
                           <div className="w-6 h-6 rounded-full bg-slate-950 flex items-center justify-center text-white shadow-sm shrink-0">
                             <ChevronRight size={14} strokeWidth={3} />
@@ -241,7 +241,7 @@ const SelectCategory = () => {
       {/* Safety message at the bottom */}
       <div className="mt-auto pt-6 px-5 relative z-10 flex items-center justify-center gap-2 text-slate-400 select-none">
         <CheckCircle2 size={13} className="text-emerald-500" />
-        <span className="text-[10px] font-semibold uppercase tracking-[0.14em]">Verified active drivers only</span>
+        <span className="text-[12px] font-semibold uppercase tracking-[0.14em]">Verified active drivers only</span>
       </div>
     </div>
   );

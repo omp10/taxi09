@@ -84,7 +84,7 @@ const BottomNavbar = () => {
                   >
                     <Icon size={28} strokeWidth={2.2} className="text-slate-900" />
                   </motion.span>
-                  <span className="text-[11px] font-bold text-slate-700">{label}</span>
+                  <span className="text-[13px] font-bold text-slate-700">{label}</span>
                 </button>
               );
             }
@@ -101,7 +101,7 @@ const BottomNavbar = () => {
                   strokeWidth={isActive ? 2.5 : 2}
                   className={isActive ? 'text-[#F5B700]' : 'text-slate-600'}
                 />
-                <span className={`text-[11px] ${isActive ? 'font-black text-[#F5B700]' : 'font-semibold text-slate-600'}`}>
+                <span className={`text-[13px] ${isActive ? 'font-black text-[#F5B700]' : 'font-semibold text-slate-600'}`}>
                   {label}
                 </span>
                 <span className={`h-[3px] w-6 rounded-full ${isActive ? 'bg-[#F5B700]' : 'bg-transparent'}`} />
@@ -130,7 +130,7 @@ const BottomNavbar = () => {
               <button
                 key={item.label}
                 onClick={() => navigate(item.path)}
-                className={`text-[15px] font-bold transition-all outline-none px-4 py-1.5 rounded-full ${isActive
+                className={`text-[16.5px] font-bold transition-all outline-none px-4 py-1.5 rounded-full ${isActive
                   ? 'text-white bg-slate-950/90 shadow-sm'
                   : 'text-slate-800 hover:text-slate-950 hover:bg-slate-950/5'
                   }`}

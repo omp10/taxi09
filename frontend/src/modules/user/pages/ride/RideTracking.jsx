@@ -1158,7 +1158,7 @@ const RideTracking = () => {
       className={`flex-1 flex flex-col items-center gap-1.5 py-3 rounded-[14px] border border-slate-100 bg-slate-50/80 transition-all ${colorClass || ''}`}
     >
       <Icon size={17} className="text-slate-700" strokeWidth={2} />
-      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{label}</span>
+      <span className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">{label}</span>
     </motion.button>
   );
 
@@ -1170,7 +1170,7 @@ const RideTracking = () => {
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
-            className="fixed top-4 left-1/2 -translate-x-1/2 z-[200] bg-slate-900 text-white px-5 py-3 rounded-[14px] text-[12px] font-black shadow-xl whitespace-nowrap"
+            className="fixed top-4 left-1/2 -translate-x-1/2 z-[200] bg-slate-900 text-white px-5 py-3 rounded-[14px] text-[13.5px] font-black shadow-xl whitespace-nowrap"
           >
             Ride details copied!
           </motion.div>
@@ -1193,9 +1193,9 @@ const RideTracking = () => {
               onClick={(event) => event.stopPropagation()}
               className="w-full max-w-md rounded-[28px] bg-white p-5 shadow-2xl"
             >
-              <p className="text-[11px] font-black uppercase tracking-[0.22em] text-slate-400">Share Ride</p>
+              <p className="text-[13px] font-black uppercase tracking-[0.22em] text-slate-400">Share Ride</p>
               <h3 className="mt-2 text-[20px] font-black tracking-tight text-slate-900">Send trip details</h3>
-              <p className="mt-1 text-[12px] font-bold text-slate-500">Choose how you want to share this ongoing ride.</p>
+              <p className="mt-1 text-[13.5px] font-bold text-slate-500">Choose how you want to share this ongoing ride.</p>
 
               <div className="mt-5 grid grid-cols-2 gap-3">
                 {navigator.share ? (
@@ -1204,8 +1204,8 @@ const RideTracking = () => {
                     onClick={handleShare}
                     className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-4 text-left"
                   >
-                    <p className="text-[13px] font-black text-slate-900">System share</p>
-                    <p className="mt-1 text-[11px] font-bold text-slate-500">Open phone share apps</p>
+                    <p className="text-[14.5px] font-black text-slate-900">System share</p>
+                    <p className="mt-1 text-[13px] font-bold text-slate-500">Open phone share apps</p>
                   </button>
                 ) : null}
                 <a
@@ -1220,8 +1220,8 @@ const RideTracking = () => {
                   rel="noreferrer"
                   className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-4 text-left"
                 >
-                  <p className="text-[13px] font-black text-slate-900">WhatsApp</p>
-                  <p className="mt-1 text-[11px] font-bold text-slate-500">Share in chat</p>
+                  <p className="text-[14.5px] font-black text-slate-900">WhatsApp</p>
+                  <p className="mt-1 text-[13px] font-bold text-slate-500">Share in chat</p>
                 </a>
                 <a
                   href={buildShareLinks(buildRideShareText({
@@ -1233,23 +1233,23 @@ const RideTracking = () => {
                   })).sms}
                   className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-4 text-left"
                 >
-                  <p className="text-[13px] font-black text-slate-900">SMS</p>
-                  <p className="mt-1 text-[11px] font-bold text-slate-500">Open messages</p>
+                  <p className="text-[14.5px] font-black text-slate-900">SMS</p>
+                  <p className="mt-1 text-[13px] font-bold text-slate-500">Open messages</p>
                 </a>
                 <button
                   type="button"
                   onClick={handleCopyShareText}
                   className="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-4 text-left"
                 >
-                  <p className="text-[13px] font-black text-slate-900">Copy details</p>
-                  <p className="mt-1 text-[11px] font-bold text-slate-500">Copy to clipboard</p>
+                  <p className="text-[14.5px] font-black text-slate-900">Copy details</p>
+                  <p className="mt-1 text-[13px] font-bold text-slate-500">Copy to clipboard</p>
                 </button>
               </div>
 
               <button
                 type="button"
                 onClick={() => setShareSheetOpen(false)}
-                className="mt-4 h-12 w-full rounded-[18px] bg-slate-900 text-[12px] font-black uppercase tracking-[0.16em] text-white"
+                className="mt-4 h-12 w-full rounded-[18px] bg-slate-900 text-[13.5px] font-black uppercase tracking-[0.16em] text-white"
               >
                 Close
               </button>
@@ -1262,15 +1262,15 @@ const RideTracking = () => {
         {!HAS_VALID_GOOGLE_MAPS_KEY ? (
           <div className="flex h-full w-full items-center justify-center bg-slate-200 px-6 text-center">
             <div className="rounded-[18px] bg-white/90 px-4 py-4 shadow-sm">
-              <p className="text-[12px] font-bold text-slate-900">Google Maps key missing</p>
-              <p className="mt-1 text-[11px] font-bold text-slate-500">Set `VITE_GOOGLE_MAPS_API_KEY` in `frontend/.env`.</p>
+              <p className="text-[13.5px] font-bold text-slate-900">Google Maps key missing</p>
+              <p className="mt-1 text-[13px] font-bold text-slate-500">Set `VITE_GOOGLE_MAPS_API_KEY` in `frontend/.env`.</p>
             </div>
           </div>
         ) : loadError ? (
           <div className="flex h-full w-full items-center justify-center bg-slate-200 px-6 text-center">
             <div className="rounded-[18px] bg-white/90 px-4 py-4 shadow-sm">
-              <p className="text-[12px] font-bold text-slate-900">Google Maps failed to load</p>
-              <p className="mt-1 text-[11px] font-bold text-slate-500">Check the browser key restrictions and reload.</p>
+              <p className="text-[13.5px] font-bold text-slate-900">Google Maps failed to load</p>
+              <p className="mt-1 text-[13px] font-bold text-slate-500">Check the browser key restrictions and reload.</p>
             </div>
           </div>
         ) : isLoaded ? (
@@ -1324,7 +1324,7 @@ const RideTracking = () => {
           </GoogleMap>
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-slate-200">
-            <div className="rounded-[16px] bg-white/90 px-4 py-3 shadow-sm text-[12px] font-bold text-slate-700">
+            <div className="rounded-[16px] bg-white/90 px-4 py-3 shadow-sm text-[13.5px] font-bold text-slate-700">
               Loading map
             </div>
           </div>
@@ -1340,7 +1340,7 @@ const RideTracking = () => {
       </motion.button>
 
       <div className="absolute top-8 left-16 right-4 z-10 bg-white/90 backdrop-blur-md rounded-[14px] px-3.5 py-2.5 shadow-[0_4px_14px_rgba(15,23,42,0.08)] border border-white/80">
-        <p className="text-[11px] font-black text-slate-500 truncate">{pickupLabel} → {dropLabel}</p>
+        <p className="text-[13px] font-black text-slate-500 truncate">{pickupLabel} → {dropLabel}</p>
       </div>
 
       <motion.button
@@ -1349,13 +1349,13 @@ const RideTracking = () => {
         className="absolute top-24 right-4 z-10 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-full border border-white/80 shadow-[0_4px_14px_rgba(15,23,42,0.08)] flex items-center gap-1.5"
       >
         <Shield size={13} className="text-blue-500" strokeWidth={2.5} />
-        <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Safety</span>
+        <span className="text-[12px] font-bold text-slate-700 uppercase tracking-wider">Safety</span>
       </motion.button>
 
       {routeError && (
         <div className="absolute top-24 left-4 z-10 rounded-[12px] border border-amber-100 bg-white/90 px-3 py-2 shadow-sm">
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Route</p>
-          <p className="text-[11px] font-bold text-slate-700">Using fallback path while directions load.</p>
+          <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest">Route</p>
+          <p className="text-[13px] font-bold text-slate-700">Using fallback path while directions load.</p>
         </div>
       )}
 
@@ -1363,17 +1363,17 @@ const RideTracking = () => {
         <div className="absolute top-[132px] left-4 right-4 z-10 rounded-[18px] border border-emerald-100 bg-white/92 px-4 py-3 shadow-[0_10px_28px_rgba(16,185,129,0.12)] backdrop-blur-md">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-700">Scheduled ride</p>
-              <p className="mt-1 text-[15px] font-black tracking-tight text-slate-950">{scheduledDateLabel}</p>
-              <p className="mt-1 text-[11px] font-bold text-slate-500">
+              <p className="text-[12px] font-black uppercase tracking-[0.2em] text-emerald-700">Scheduled ride</p>
+              <p className="mt-1 text-[16.5px] font-black tracking-tight text-slate-950">{scheduledDateLabel}</p>
+              <p className="mt-1 text-[13px] font-bold text-slate-500">
                 {hasLiveDriverLocation
                   ? 'Your driver has started sharing location for this pickup.'
                   : 'Driver assigned. We will light up live movement here as pickup time gets closer.'}
               </p>
             </div>
             <div className="rounded-[16px] bg-emerald-50 px-3 py-2 text-right">
-              <p className="text-[9px] font-black uppercase tracking-[0.18em] text-emerald-700">Countdown</p>
-              <p className="mt-1 text-[13px] font-black text-slate-950">{scheduledCountdown || 'Ready'}</p>
+              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-emerald-700">Countdown</p>
+              <p className="mt-1 text-[14.5px] font-black text-slate-950">{scheduledCountdown || 'Ready'}</p>
             </div>
           </div>
         </div>
@@ -1411,18 +1411,18 @@ const RideTracking = () => {
                 {/* Rating Badge */}
                 <div className="absolute -bottom-1 -right-1 bg-yellow-400 px-1.5 py-0.5 rounded-full border-2 border-white flex items-center gap-0.5 shadow-md">
                   <Star size={9} className="text-slate-900 fill-slate-900" />
-                  <span className="text-[9px] font-black text-slate-900">{driver.rating || '4.9'}</span>
+                  <span className="text-[11px] font-black text-slate-900">{driver.rating || '4.9'}</span>
                 </div>
               </div>
 
               <div className="min-w-0 pt-0.5">
-                <h3 className="truncate text-[17px] font-black text-slate-900 leading-tight tracking-tight">
+                <h3 className="truncate text-[18px] font-black text-slate-900 leading-tight tracking-tight">
                   {driver.name || 'James Bond'}
                 </h3>
-                <p className="text-[13px] font-black text-[#f97316] mt-1 tracking-tight">
+                <p className="text-[14.5px] font-black text-[#f97316] mt-1 tracking-tight">
                   {tripStatus === 'arrived' ? 'Reached destination' : tripStatus === 'started' || tripStatus === 'ongoing' ? 'Trip started' : driverSubtitle}
                 </p>
-                <p className="truncate text-[11px] font-bold text-slate-400 mt-0.5 uppercase tracking-[0.14em]">
+                <p className="truncate text-[13px] font-bold text-slate-400 mt-0.5 uppercase tracking-[0.14em]">
                   {driver.plate || 'MH12AB1234'} &middot; {vehicleLabel}
                 </p>
               </div>
@@ -1433,13 +1433,13 @@ const RideTracking = () => {
                 below is done on both sides. */}
             {otp ? (
               <div className="bg-[#fff9ef] border border-[#fef3c7] rounded-[20px] px-3 py-3 flex flex-col items-center justify-center min-w-[80px] shadow-sm">
-                <span className="text-[9px] font-black text-orange-500 uppercase tracking-[0.18em] mb-1 leading-none">OTP</span>
-                <span className="text-[18px] font-black text-slate-900 tracking-tighter leading-none">{otp}</span>
+                <span className="text-[11px] font-black text-orange-500 uppercase tracking-[0.18em] mb-1 leading-none">OTP</span>
+                <span className="text-[19px] font-black text-slate-900 tracking-tighter leading-none">{otp}</span>
               </div>
             ) : isOdometerStep ? (
               <div className="bg-slate-50 border border-slate-100 rounded-[20px] px-3 py-3 flex flex-col items-center justify-center min-w-[80px]">
-                <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.18em] mb-1 leading-none">OTP</span>
-                <span className="text-[18px] font-black text-slate-300 tracking-tighter leading-none">----</span>
+                <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.18em] mb-1 leading-none">OTP</span>
+                <span className="text-[19px] font-black text-slate-300 tracking-tighter leading-none">----</span>
               </div>
             ) : null}
           </div>
@@ -1458,17 +1458,17 @@ const RideTracking = () => {
             <div className="rounded-[22px] border border-emerald-100 bg-emerald-50/70 px-4 py-4 shadow-sm">
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-[9px] font-black uppercase tracking-[0.22em] text-emerald-700">Trip plan</p>
-                  <p className="mt-1 text-[15px] font-black text-slate-950">{scheduledDateLabel}</p>
-                  <p className="mt-1 text-[11px] font-bold text-slate-500">
+                  <p className="text-[11px] font-black uppercase tracking-[0.22em] text-emerald-700">Trip plan</p>
+                  <p className="mt-1 text-[16.5px] font-black text-slate-950">{scheduledDateLabel}</p>
+                  <p className="mt-1 text-[13px] font-bold text-slate-500">
                     {isScheduledUpcoming
                       ? 'We will switch from booking mode to live pickup tracking automatically as your slot approaches.'
                       : 'Your scheduled ride is now in its live service window.'}
                   </p>
                 </div>
                 <div className="rounded-[16px] bg-white px-3 py-2 text-right shadow-sm">
-                  <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400">Status</p>
-                  <p className="mt-1 text-[13px] font-black text-slate-950">{isScheduledUpcoming ? scheduledCountdown || 'Ready' : 'Live now'}</p>
+                  <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">Status</p>
+                  <p className="mt-1 text-[14.5px] font-black text-slate-950">{isScheduledUpcoming ? scheduledCountdown || 'Ready' : 'Live now'}</p>
                 </div>
               </div>
             </div>
@@ -1482,23 +1482,23 @@ const RideTracking = () => {
                     <Clock3 size={18} strokeWidth={2.5} />
                   </div>
                   <div>
-                    <p className="text-[9px] font-black uppercase tracking-[0.22em] text-amber-600">Waiting Clock</p>
+                    <p className="text-[11px] font-black uppercase tracking-[0.22em] text-amber-600">Waiting Clock</p>
                     <p className="mt-1 text-[22px] font-black tracking-tight text-slate-900">{formatTimerClock(waitingElapsedSeconds)}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400">Free Left</p>
-                  <p className="mt-1 text-[13px] font-black text-slate-900">{formatTimerClock(freeWaitingRemainingSeconds)}</p>
+                  <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">Free Left</p>
+                  <p className="mt-1 text-[14.5px] font-black text-slate-900">{formatTimerClock(freeWaitingRemainingSeconds)}</p>
                 </div>
               </div>
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <div className="rounded-2xl bg-white px-3 py-3 shadow-sm">
-                  <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400">Free Before Ride</p>
-                  <p className="mt-1 text-[13px] font-black text-slate-900">{formatWholeMinutes(freeWaitingBeforeMinutes)}</p>
+                  <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">Free Before Ride</p>
+                  <p className="mt-1 text-[14.5px] font-black text-slate-900">{formatWholeMinutes(freeWaitingBeforeMinutes)}</p>
                 </div>
                 <div className="rounded-2xl bg-white px-3 py-3 shadow-sm">
-                  <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400">Waiting Charge</p>
-                  <p className="mt-1 text-[13px] font-black text-slate-900">
+                  <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">Waiting Charge</p>
+                  <p className="mt-1 text-[14.5px] font-black text-slate-900">
                     Rs {waitingChargePerMinute}/min
                     {waitingChargeableMinutes > 0 ? ` • ${waitingChargeableMinutes} billable` : ''}
                   </p>
@@ -1522,9 +1522,9 @@ const RideTracking = () => {
                 )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 mb-0.5">Vehicle</p>
-              <p className="text-[15px] font-black text-slate-900 leading-tight truncate">{vehicleLabel}</p>
-              <p className="text-[12px] font-bold text-slate-500 mt-0.5 truncate">{vehicleDetails || 'Blue'}</p>
+              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 mb-0.5">Vehicle</p>
+              <p className="text-[16.5px] font-black text-slate-900 leading-tight truncate">{vehicleLabel}</p>
+              <p className="text-[13.5px] font-bold text-slate-500 mt-0.5 truncate">{vehicleDetails || 'Blue'}</p>
             </div>
           </div>
 
@@ -1545,7 +1545,7 @@ const RideTracking = () => {
                 <div className="p-0.5">
                   <btn.icon size={18} className="text-slate-800" strokeWidth={2} />
                 </div>
-                <span className="text-[9px] font-black text-slate-500 uppercase tracking-[0.1em] leading-none">{btn.label}</span>
+                <span className="text-[11px] font-black text-slate-500 uppercase tracking-[0.1em] leading-none">{btn.label}</span>
               </motion.button>
             ))}
           </div>
@@ -1553,16 +1553,16 @@ const RideTracking = () => {
           {/* Footer: Fare & Cancellation Section */}
           <div className="flex items-end justify-between pt-2 border-t border-slate-50">
             <div className="space-y-0.5">
-              <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.18em] leading-none mb-1">Total Fare</p>
+              <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.18em] leading-none mb-1">Total Fare</p>
               <div className="flex items-center gap-2">
-                <span className="text-[19px] font-black text-slate-950 tracking-tight leading-none">Rs {fare}.00</span>
-                <span className="text-[9px] font-black bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg uppercase tracking-wider border border-slate-200/50 shadow-sm">{paymentMethod}</span>
+                <span className="text-[20px] font-black text-slate-950 tracking-tight leading-none">Rs {fare}.00</span>
+                <span className="text-[11px] font-black bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg uppercase tracking-wider border border-slate-200/50 shadow-sm">{paymentMethod}</span>
               </div>
             </div>
             <motion.button
               whileTap={{ scale: 0.96 }}
               onClick={() => setShowCancelConfirm(true)}
-              className="bg-white border-2 border-slate-50 text-red-500 font-black text-[11px] uppercase tracking-[0.16em] px-5 py-3 rounded-[18px] shadow-[0_8px_20px_rgba(239,68,68,0.08)] active:shadow-none hover:bg-red-50/10 transition-all"
+              className="bg-white border-2 border-slate-50 text-red-500 font-black text-[13px] uppercase tracking-[0.16em] px-5 py-3 rounded-[18px] shadow-[0_8px_20px_rgba(239,68,68,0.08)] active:shadow-none hover:bg-red-50/10 transition-all"
             >
               Cancel
             </motion.button>
@@ -1589,19 +1589,19 @@ const RideTracking = () => {
               <div className="w-14 h-14 bg-red-50 rounded-[18px] flex items-center justify-center mx-auto mb-4">
                 <AlertTriangle size={26} className="text-red-400" strokeWidth={2} />
               </div>
-              <h3 className="text-[18px] font-bold text-slate-900 mb-1.5">Cancel your ride?</h3>
-              <p className="text-[13px] font-bold text-slate-400 mb-6 leading-relaxed">Your captain is already on the way.</p>
+              <h3 className="text-[19px] font-bold text-slate-900 mb-1.5">Cancel your ride?</h3>
+              <p className="text-[14.5px] font-bold text-slate-400 mb-6 leading-relaxed">Your captain is already on the way.</p>
               <div className="space-y-2.5">
                 <motion.button
                   whileTap={{ scale: 0.97 }}
                   onClick={handleCancelRide}
-                  className="w-full bg-slate-900 text-white py-3.5 rounded-[16px] text-[13px] font-bold uppercase tracking-widest"
+                  className="w-full bg-slate-900 text-white py-3.5 rounded-[16px] text-[14.5px] font-bold uppercase tracking-widest"
                 >
                   Yes, Cancel
                 </motion.button>
                 <button
                   onClick={() => setShowCancelConfirm(false)}
-                  className="w-full py-3.5 text-[13px] font-bold text-slate-400 uppercase tracking-widest"
+                  className="w-full py-3.5 text-[14.5px] font-bold text-slate-400 uppercase tracking-widest"
                 >
                   No, Go Back
                 </button>

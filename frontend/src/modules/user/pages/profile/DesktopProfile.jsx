@@ -90,7 +90,7 @@ const DesktopProfile = () => {
           <aside className="space-y-4">
             {SECTIONS.map((section) => (
               <section key={section.title} className="overflow-hidden rounded-2xl border border-slate-100 bg-white">
-                <p className="border-b border-slate-100 px-4 py-2.5 text-[10.5px] font-black uppercase tracking-wider text-slate-400">
+                <p className="border-b border-slate-100 px-4 py-2.5 text-[12.5px] font-black uppercase tracking-wider text-slate-400">
                   {section.title}
                 </p>
                 {section.items.map((item) => {
@@ -109,10 +109,10 @@ const DesktopProfile = () => {
                         <item.icon size={15} />
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className={`block truncate text-[13px] ${selected ? 'font-black text-slate-900' : 'font-bold text-slate-800'}`}>
+                        <span className={`block truncate text-[14.5px] ${selected ? 'font-black text-slate-900' : 'font-bold text-slate-800'}`}>
                           {item.title}
                         </span>
-                        <span className="block truncate text-[11px] text-slate-500">{item.sub}</span>
+                        <span className="block truncate text-[13px] text-slate-500">{item.sub}</span>
                       </span>
                       <ChevronRight size={14} className="shrink-0 text-slate-300" />
                     </button>
@@ -123,7 +123,7 @@ const DesktopProfile = () => {
 
             <button
               onClick={() => navigate('/taxi/user/login')}
-              className="flex w-full items-center gap-2 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-[13px] font-black text-rose-700"
+              className="flex w-full items-center gap-2 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-[14.5px] font-black text-rose-700"
             >
               <LogOut size={15} /> Log out
             </button>
@@ -133,8 +133,8 @@ const DesktopProfile = () => {
               so they are capped to a readable column rather than stretched. */}
           <section className="min-h-[560px] overflow-hidden rounded-2xl border border-slate-100 bg-white">
             <div className="border-b border-slate-100 px-6 py-4">
-              <h2 className="text-[16px] font-black text-slate-900">{current.title}</h2>
-              <p className="text-[12px] text-slate-500">{current.sub}</p>
+              <h2 className="text-[17px] font-black text-slate-900">{current.title}</h2>
+              <p className="text-[13.5px] text-slate-500">{current.sub}</p>
             </div>
 
             <Suspense

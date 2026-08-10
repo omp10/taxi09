@@ -171,7 +171,7 @@ const BikeCategoriesSelection = () => {
         >
           <ChevronLeft size={24} strokeWidth={2.5} />
         </button>
-        <h1 className="text-[17px] font-black tracking-tight uppercase">Explore Categories</h1>
+        <h1 className="text-[18px] font-black tracking-tight uppercase">Explore Categories</h1>
       </div>
 
       {/* Categories List */}
@@ -191,7 +191,7 @@ const BikeCategoriesSelection = () => {
 
             {/* Title Text */}
             <div className="absolute top-5 left-5 z-20">
-              <span className="text-[15px] font-bold tracking-wider text-slate-800 opacity-90 block">
+              <span className="text-[16.5px] font-bold tracking-wider text-slate-800 opacity-90 block">
                 {cat.title}
               </span>
             </div>

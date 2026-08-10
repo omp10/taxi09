@@ -140,10 +140,10 @@ const DateTimePickerCard = ({
           <Icon size={13} className="text-slate-900" strokeWidth={2.5} />
         </div>
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500/80">
+          <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-slate-500/80">
             {title}
           </p>
-          <p className="text-[12px] font-bold text-slate-800 mt-1">
+          <p className="text-[13.5px] font-bold text-slate-800 mt-1">
             {formatDateLabel(selectedDate)} · {formatTimeLabel(selectedTime)}
           </p>
         </div>
@@ -158,7 +158,7 @@ const DateTimePickerCard = ({
           >
             <ChevronLeft size={15} />
           </button>
-          <p className="text-[14px] font-bold text-slate-950">
+          <p className="text-[15.5px] font-bold text-slate-950">
             {monthDate.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}
           </p>
           <button
@@ -172,7 +172,7 @@ const DateTimePickerCard = ({
 
         <div className="grid grid-cols-7 gap-2 text-center">
           {WEEK_DAYS.map((day) => (
-            <div key={day} className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            <div key={day} className="text-[12px] font-bold uppercase tracking-wider text-slate-400">
               {day}
             </div>
           ))}
@@ -190,7 +190,7 @@ const DateTimePickerCard = ({
                 type="button"
                 disabled={disabled}
                 onClick={() => onDateSelect(day)}
-                className={`h-10 rounded-[12px] text-[12px] font-bold transition-all ${
+                className={`h-10 rounded-[12px] text-[13.5px] font-bold transition-all ${
                   selected
                     ? 'bg-slate-950 text-white shadow-[0_8px_20px_rgba(15,23,42,0.18)]'
                     : disabled
@@ -206,7 +206,7 @@ const DateTimePickerCard = ({
       </div>
 
       <div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500/80 mb-3">
+        <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-slate-500/80 mb-3">
           Select Time
         </p>
         <div className="grid grid-cols-3 gap-2">
@@ -222,7 +222,7 @@ const DateTimePickerCard = ({
                 type="button"
                 disabled={disabled}
                 onClick={() => onTimeSelect(time)}
-                className={`rounded-[12px] px-3 py-2.5 text-[11px] font-bold transition-all ${
+                className={`rounded-[12px] px-3 py-2.5 text-[13px] font-bold transition-all ${
                   selected
                     ? 'bg-slate-950 text-white'
                     : disabled
@@ -602,7 +602,7 @@ const RentalSchedule = () => {
             </button>
             <div className="text-center">
               <h1 className="text-[24px] font-black leading-none tracking-tight">Booking Details</h1>
-              <p className="mt-1 text-[11px] font-black text-slate-700">Confirm & Pay</p>
+              <p className="mt-1 text-[13px] font-black text-slate-700">Confirm & Pay</p>
             </div>
             <span />
           </div>
@@ -613,12 +613,12 @@ const RentalSchedule = () => {
               return (
                 <div key={step} className="relative">
                   {index > 0 && <span className="absolute right-1/2 top-3 h-px w-full bg-slate-200" />}
-                  <span className={`relative z-10 mx-auto flex h-6 w-6 items-center justify-center rounded-full text-[9px] font-black ${
+                  <span className={`relative z-10 mx-auto flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-black ${
                     active ? 'bg-[#f5b700] text-white' : 'bg-slate-100 text-slate-500'
                   }`}>
                     {index + 1}
                   </span>
-                  <p className={`mt-1 text-[10px] font-black ${active ? 'text-[#d59b00]' : 'text-slate-700'}`}>{step}</p>
+                  <p className={`mt-1 text-[12px] font-black ${active ? 'text-[#d59b00]' : 'text-slate-700'}`}>{step}</p>
                 </div>
               );
             })}
@@ -629,31 +629,31 @@ const RentalSchedule = () => {
           <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-[0_4px_14px_rgba(15,23,42,0.05)]">
             <div className="mb-2 flex items-center justify-between">
               <h2 className="text-[20px] font-black tracking-tight">Trip Summary</h2>
-              <button className="text-[11px] font-black text-slate-900">Edit</button>
+              <button className="text-[13px] font-black text-slate-900">Edit</button>
             </div>
             <div className="grid grid-cols-[1fr_82px] gap-3">
               <div className="space-y-2.5">
                 <div className="flex gap-2">
                   <span className="mt-1 h-2.5 w-2.5 rounded-full bg-green-500" />
                   <div>
-                    <p className="text-[11px] font-black text-slate-700">Pickup</p>
-                    <p className="text-[12px] font-black">{pickupLabel}</p>
-                    <p className="text-[10px] font-bold text-slate-700">{pickupDateLabel}, {pickupTimeLabel}</p>
+                    <p className="text-[13px] font-black text-slate-700">Pickup</p>
+                    <p className="text-[13.5px] font-black">{pickupLabel}</p>
+                    <p className="text-[12px] font-bold text-slate-700">{pickupDateLabel}, {pickupTimeLabel}</p>
                   </div>
                 </div>
                 <div className="flex gap-2">
                   <span className="mt-1 h-2.5 w-2.5 rounded-full bg-red-500" />
                   <div>
-                    <p className="text-[11px] font-black text-slate-700">Drop-off</p>
-                    <p className="text-[12px] font-black">{dropLabel}</p>
-                    <p className="text-[10px] font-bold text-slate-700">{returnDateLabel}, {returnTimeLabel}</p>
+                    <p className="text-[13px] font-black text-slate-700">Drop-off</p>
+                    <p className="text-[13.5px] font-black">{dropLabel}</p>
+                    <p className="text-[12px] font-bold text-slate-700">{returnDateLabel}, {returnTimeLabel}</p>
                   </div>
                 </div>
               </div>
               <div className="rounded-[11px] border border-slate-100 bg-slate-50 p-2 text-center">
-                <p className="text-[9px] font-black text-slate-700">Duration</p>
-                <p className="mt-2 text-[13px] font-black">{Math.max(1, Math.ceil(Number(hours || 24) / 24))} Day</p>
-                <p className="text-[10px] font-bold">{Math.round(Number(hours || 24) % 24 || 10)} Hrs</p>
+                <p className="text-[11px] font-black text-slate-700">Duration</p>
+                <p className="mt-2 text-[14.5px] font-black">{Math.max(1, Math.ceil(Number(hours || 24) / 24))} Day</p>
+                <p className="text-[12px] font-bold">{Math.round(Number(hours || 24) % 24 || 10)} Hrs</p>
               </div>
             </div>
           </section>
@@ -665,17 +665,17 @@ const RentalSchedule = () => {
                 {vehicleImage ? <img src={vehicleImage} alt={vehicleName} className="h-full w-full object-contain p-1" /> : <Car size={32} />}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[13px] font-black">{vehicleName}</p>
-                <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-[9px] font-black text-slate-800">
+                <p className="truncate text-[14.5px] font-black">{vehicleName}</p>
+                <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-[11px] font-black text-slate-800">
                   <span className="flex items-center gap-1"><Fuel size={10} />{vehicle.fuel || 'Petrol'}</span>
                   <span className="flex items-center gap-1"><Settings2 size={10} />{vehicle.transmission || 'Manual'}</span>
                   <span className="flex items-center gap-1"><Users size={10} />{vehicle.capacity || 5} Seats</span>
                 </div>
-                <span className="mt-2 inline-flex rounded-[6px] bg-[#fff0b8] px-2 py-1 text-[9px] font-black text-slate-950">{packageLabel}</span>
+                <span className="mt-2 inline-flex rounded-[6px] bg-[#fff0b8] px-2 py-1 text-[11px] font-black text-slate-950">{packageLabel}</span>
               </div>
               <div className="text-right">
-                <p className="text-[12px] font-black">{formatCurrency(planPrice)}</p>
-                <p className="text-[9px] font-black text-slate-700">/day</p>
+                <p className="text-[13.5px] font-black">{formatCurrency(planPrice)}</p>
+                <p className="text-[11px] font-black text-slate-700">/day</p>
               </div>
             </div>
           </section>
@@ -683,7 +683,7 @@ const RentalSchedule = () => {
           <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
               <h2 className="text-[20px] font-black tracking-tight">Add-ons ({selectedAddOns.length})</h2>
-              <button type="button" onClick={() => navigate(-1)} className="text-[11px] font-black text-slate-900">Edit</button>
+              <button type="button" onClick={() => navigate(-1)} className="text-[13px] font-black text-slate-900">Edit</button>
             </div>
             <div className="space-y-2">
               {(selectedAddOns.length ? selectedAddOns : [{ id: 'none', label: 'No add-ons selected', price: 0 }]).slice(0, 3).map((item) => (
@@ -691,11 +691,11 @@ const RentalSchedule = () => {
                   <div className="flex items-center gap-2">
                     <Tag size={13} className="text-[#f5b700]" />
                     <div>
-                      <p className="text-[12px] font-black text-slate-900">{item.label}</p>
-                      {item.price > 0 && <p className="text-[10px] font-bold text-slate-700">{formatCurrency(item.price)} / day x 1</p>}
+                      <p className="text-[13.5px] font-black text-slate-900">{item.label}</p>
+                      {item.price > 0 && <p className="text-[12px] font-bold text-slate-700">{formatCurrency(item.price)} / day x 1</p>}
                     </div>
                   </div>
-                  <p className="text-[11px] font-black">{item.price > 0 ? formatCurrency(item.price) : '₹0'}</p>
+                  <p className="text-[13px] font-black">{item.price > 0 ? formatCurrency(item.price) : '₹0'}</p>
                 </div>
               ))}
             </div>
@@ -703,39 +703,39 @@ const RentalSchedule = () => {
 
           <section className="rounded-[13px] border border-[#f5b700] bg-[#fffdf5] p-3 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
-              <h2 className="text-[18px] font-black tracking-tight">Payment Preference</h2>
-              <span className="rounded-full bg-[#fff0b8] px-2 py-0.5 text-[9px] font-black text-[#9a6b00]">Recommended</span>
+              <h2 className="text-[19px] font-black tracking-tight">Payment Preference</h2>
+              <span className="rounded-full bg-[#fff0b8] px-2 py-0.5 text-[11px] font-black text-[#9a6b00]">Recommended</span>
             </div>
             <div className="rounded-[11px] border border-slate-100 bg-white p-2.5">
               <div className="flex items-center gap-2">
                 <CreditCard size={15} className="text-[#f5b700]" />
                 <div>
-                  <p className="text-[13px] font-black">Pay Partial Now, Rest Later</p>
-                  <p className="text-[10px] font-black text-slate-700">Choose how much you want to pay now</p>
+                  <p className="text-[14.5px] font-black">Pay Partial Now, Rest Later</p>
+                  <p className="text-[12px] font-black text-slate-700">Choose how much you want to pay now</p>
                 </div>
               </div>
-              <div className="mt-3 space-y-1.5 text-[11px] font-black text-slate-900">
+              <div className="mt-3 space-y-1.5 text-[13px] font-black text-slate-900">
                 <div className="flex justify-between"><span>{advanceLabel}</span><span>{formatCurrency(payableNow)}</span></div>
                 <div className="flex justify-between"><span>Pay before pickup</span><span>{formatCurrency(payLater)}</span></div>
               </div>
               {quoteError ? (
-                <p className="mt-2 rounded-[8px] bg-rose-50 px-2 py-1.5 text-[9.5px] font-black text-rose-700">{quoteError}</p>
+                <p className="mt-2 rounded-[8px] bg-rose-50 px-2 py-1.5 text-[11.5px] font-black text-rose-700">{quoteError}</p>
               ) : null}
-              <p className="mt-2 rounded-[8px] bg-blue-50 px-2 py-1.5 text-[9.5px] font-black text-blue-800">
+              <p className="mt-2 rounded-[8px] bg-blue-50 px-2 py-1.5 text-[11.5px] font-black text-blue-800">
                 Remaining amount is paid before pickup.
               </p>
             </div>
           </section>
 
           <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
-            <h2 className="text-[18px] font-black tracking-tight">Price Breakdown</h2>
-            <div className="mt-2 space-y-1.5 text-[11px] font-black text-slate-900">
+            <h2 className="text-[19px] font-black tracking-tight">Price Breakdown</h2>
+            <div className="mt-2 space-y-1.5 text-[13px] font-black text-slate-900">
               <div className="flex justify-between"><span>Base Fare (1 Day)</span><span>{formatCurrency(planPrice)}</span></div>
               <div className="flex justify-between"><span>Add-ons Total ({selectedAddOns.length} items)</span><span>{formatCurrency(addOnsTotal)}</span></div>
               <div className="flex justify-between"><span>Taxes & Fees</span><span>{formatCurrency(taxAmount)}</span></div>
-              <div className="flex justify-between border-t border-dashed border-slate-200 pt-2 text-[12px] font-black"><span>Total Payable</span><span>{formatCurrency(totalPayable)}</span></div>
+              <div className="flex justify-between border-t border-dashed border-slate-200 pt-2 text-[13.5px] font-black"><span>Total Payable</span><span>{formatCurrency(totalPayable)}</span></div>
             </div>
-            <div className="mt-2 flex items-center justify-between rounded-[9px] bg-green-50 px-2.5 py-2 text-[10px] font-black text-green-800">
+            <div className="mt-2 flex items-center justify-between rounded-[9px] bg-green-50 px-2.5 py-2 text-[12px] font-black text-green-800">
               <span>You save ₹280 with DRIVE10</span>
               <span className="rounded border border-green-200 bg-white px-1.5 py-0.5">DRIVE10</span>
             </div>
@@ -744,10 +744,10 @@ const RentalSchedule = () => {
           <section className="grid grid-cols-2 gap-2">
             <div className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
               <div className="mb-2 flex items-center justify-between">
-                <h2 className="text-[13px] font-black">Customer Details</h2>
-                <button className="text-[9px] font-black text-slate-900">Edit</button>
+                <h2 className="text-[14.5px] font-black">Customer Details</h2>
+                <button className="text-[11px] font-black text-slate-900">Edit</button>
               </div>
-              <div className="space-y-1.5 text-[9.5px] font-black text-slate-800">
+              <div className="space-y-1.5 text-[11.5px] font-black text-slate-800">
                 <p className="flex items-center gap-1.5"><User size={10} /> Om Partek</p>
                 <p className="flex items-center gap-1.5"><Phone size={10} /> +91 72230 77880</p>
                 <p className="flex items-center gap-1.5"><Mail size={10} /> ompartek@gmail.com</p>
@@ -755,13 +755,13 @@ const RentalSchedule = () => {
               </div>
             </div>
             <div className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
-              <h2 className="text-[13px] font-black">Secure Your Booking</h2>
+              <h2 className="text-[14.5px] font-black">Secure Your Booking</h2>
               <div className="mt-2 flex gap-2">
                 <ShieldCheck size={18} className="shrink-0 text-slate-900" />
                 <div>
-                  <p className="text-[10px] font-black">Security Deposit</p>
-                  <p className="text-[9px] font-black text-slate-700">Refundable after ride completion.</p>
-                  <p className="mt-1 text-[11px] font-black">₹2000</p>
+                  <p className="text-[12px] font-black">Security Deposit</p>
+                  <p className="text-[11px] font-black text-slate-700">Refundable after ride completion.</p>
+                  <p className="mt-1 text-[13px] font-black">₹2000</p>
                 </div>
               </div>
             </div>
@@ -771,23 +771,23 @@ const RentalSchedule = () => {
         <footer className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-lg bg-white px-3 pb-[max(env(safe-area-inset-bottom),8px)] pt-2 shadow-[0_-8px_24px_rgba(15,23,42,0.10)]">
           <div className="grid grid-cols-[1fr_1fr_1.45fr] items-center gap-2">
             <div>
-              <p className="text-[9px] font-black text-slate-700">Total Payable</p>
-              <p className="text-[14px] font-black">{formatCurrency(totalPayable)}</p>
-              <p className="text-[9px] font-black text-slate-700">View Price Breakup</p>
+              <p className="text-[11px] font-black text-slate-700">Total Payable</p>
+              <p className="text-[15.5px] font-black">{formatCurrency(totalPayable)}</p>
+              <p className="text-[11px] font-black text-slate-700">View Price Breakup</p>
             </div>
             <div>
-              <p className="text-[9px] font-black text-slate-700">Pay Now</p>
-              <p className="text-[14px] font-black">{formatCurrency(payableNow)}</p>
+              <p className="text-[11px] font-black text-slate-700">Pay Now</p>
+              <p className="text-[15.5px] font-black">{formatCurrency(payableNow)}</p>
             </div>
             <button
               type="button"
               onClick={proceedRentalPayment}
-              className="flex h-11 items-center justify-center gap-1 rounded-[8px] bg-[#f5b700] text-[12px] font-black text-black"
+              className="flex h-11 items-center justify-center gap-1 rounded-[8px] bg-[#f5b700] text-[13.5px] font-black text-black"
             >
               Proceed to Payment <ChevronRight size={15} />
             </button>
           </div>
-          <div className="mt-2 grid grid-cols-3 text-center text-[8.5px] font-black text-slate-700">
+          <div className="mt-2 grid grid-cols-3 text-center text-[10.5px] font-black text-slate-700">
             <span className="flex items-center justify-center gap-1"><ShieldCheck size={10} />100% Secure</span>
             <span>No Hidden Charges</span>
             <span>24x7 Support</span>
@@ -836,7 +836,7 @@ const RentalSchedule = () => {
                 <ArrowLeft size={20} className="text-white group-hover:opacity-80 transition-opacity" strokeWidth={2.5} />
               </motion.button>
               <div className="min-w-0">
-                <p className={`text-[10px] font-bold uppercase tracking-[0.18em] leading-none mb-1.5 ${
+                <p className={`text-[12px] font-bold uppercase tracking-[0.18em] leading-none mb-1.5 ${
                   isSubscriptionMode ? 'text-white/75' : 'text-slate-500/60'
                 }`}>
                   {isSubscriptionMode ? 'Subscription Summary' : `Schedule · ${vehicle.name}`}
@@ -861,10 +861,10 @@ const RentalSchedule = () => {
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
                   <h2 className="text-[24px] font-black tracking-tight text-slate-950">{vehicle.name}</h2>
-                  <p className="mt-1 text-[13px] font-bold text-slate-500">
+                  <p className="mt-1 text-[14.5px] font-bold text-slate-500">
                     {vehicle.fuel || 'Petrol'} · {vehicle.transmission || 'Manual'}
                   </p>
-                  <div className="mt-3 flex items-center gap-2 text-[12px] font-bold text-slate-500">
+                  <div className="mt-3 flex items-center gap-2 text-[13.5px] font-bold text-slate-500">
                     <MapPin size={14} className="text-slate-400" />
                     <span>{serviceLocation?.name || 'Mumbai'}</span>
                   </div>
@@ -884,7 +884,7 @@ const RentalSchedule = () => {
                 <button
                   type="button"
                   onClick={handleApplyPromo}
-                  className="text-[13px] font-black text-[#D96B42] underline underline-offset-4"
+                  className="text-[14.5px] font-black text-[#D96B42] underline underline-offset-4"
                 >
                   Apply Promo Code
                 </button>
@@ -893,20 +893,20 @@ const RentalSchedule = () => {
                     value={promoCode}
                     onChange={(event) => setPromoCode(event.target.value)}
                     placeholder="Use SUB500 or WELCOME10"
-                    className="flex-1 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-[13px] font-bold text-slate-700 outline-none"
+                    className="flex-1 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-[14.5px] font-bold text-slate-700 outline-none"
                   />
                   <button
                     type="button"
                     onClick={handleApplyPromo}
-                    className="rounded-2xl bg-slate-900 px-4 py-3 text-[12px] font-bold text-white"
+                    className="rounded-2xl bg-slate-900 px-4 py-3 text-[13.5px] font-bold text-white"
                   >
                     Apply
                   </button>
                 </div>
                 {appliedPromo?.invalid ? (
-                  <p className="mt-2 text-[12px] font-bold text-rose-500">{promoError || 'Promo code is not valid.'}</p>
+                  <p className="mt-2 text-[13.5px] font-bold text-rose-500">{promoError || 'Promo code is not valid.'}</p>
                 ) : appliedPromo?.code ? (
-                  <p className="mt-2 text-[12px] font-bold text-emerald-600">
+                  <p className="mt-2 text-[13.5px] font-bold text-emerald-600">
                     {appliedPromo.code} applied. You saved {formatCurrency(promoDiscount)}.
                   </p>
                 ) : null}
@@ -919,46 +919,46 @@ const RentalSchedule = () => {
               transition={{ delay: 0.05 }}
               className="rounded-[24px] bg-white px-4 py-5 shadow-[0_10px_28px_rgba(15,23,42,0.06)]"
             >
-              <p className="text-[15px] font-bold text-slate-700">
+              <p className="text-[16.5px] font-bold text-slate-700">
                 Subscription tenure: <span className="font-black text-slate-950">{selectedSubscriptionPlan?.label || formatSubscriptionDuration(selectedSubscriptionPlan?.durationDays)}</span>
               </p>
-              <p className="mt-2 text-[12px] font-bold text-slate-500">
+              <p className="mt-2 text-[13.5px] font-bold text-slate-500">
                 Delivery date: {subscriptionDeliveryDateLabel}
               </p>
 
               <div className="mt-5 space-y-3 border-t border-slate-100 pt-4">
                 <div className="flex items-end justify-between gap-3">
                   <div>
-                    <p className="text-[15px] font-bold text-slate-800">Base fare</p>
-                    <p className="text-[11px] font-semibold text-slate-400">(inclusive of maintenance & insurance)</p>
+                    <p className="text-[16.5px] font-bold text-slate-800">Base fare</p>
+                    <p className="text-[13px] font-semibold text-slate-400">(inclusive of maintenance & insurance)</p>
                   </div>
-                  <p className="text-[15px] font-bold text-slate-800">{formatCurrency(subscriptionBaseFare)}</p>
+                  <p className="text-[16.5px] font-bold text-slate-800">{formatCurrency(subscriptionBaseFare)}</p>
                 </div>
                 <div className="flex items-center justify-between gap-3">
-                  <p className="text-[14px] font-bold text-slate-600">Taxes <span className="text-[10px] text-slate-400">{`${Math.round(subscriptionTaxRate * 100)}%`}</span></p>
-                  <p className="text-[14px] font-bold text-slate-600">{formatCurrency(subscriptionTaxes)}</p>
+                  <p className="text-[15.5px] font-bold text-slate-600">Taxes <span className="text-[12px] text-slate-400">{`${Math.round(subscriptionTaxRate * 100)}%`}</span></p>
+                  <p className="text-[15.5px] font-bold text-slate-600">{formatCurrency(subscriptionTaxes)}</p>
                 </div>
                 {promoDiscount > 0 ? (
                   <div className="flex items-center justify-between gap-3">
-                    <p className="text-[14px] font-bold text-emerald-600">Promo discount</p>
-                    <p className="text-[14px] font-bold text-emerald-600">- {formatCurrency(promoDiscount)}</p>
+                    <p className="text-[15.5px] font-bold text-emerald-600">Promo discount</p>
+                    <p className="text-[15.5px] font-bold text-emerald-600">- {formatCurrency(promoDiscount)}</p>
                   </div>
                 ) : null}
                 <div className="flex items-center justify-between gap-3 rounded-[18px] bg-[#FCE7DF] px-4 py-4">
-                  <p className="text-[16px] font-black text-slate-800">Booking charges</p>
-                  <p className="text-[16px] font-black text-slate-800">{formatCurrency(Math.max(0, subscriptionBookingCharges - promoDiscount))}</p>
+                  <p className="text-[17px] font-black text-slate-800">Booking charges</p>
+                  <p className="text-[17px] font-black text-slate-800">{formatCurrency(Math.max(0, subscriptionBookingCharges - promoDiscount))}</p>
                 </div>
                 <div className="flex items-center justify-between gap-3">
-                  <p className="text-[14px] font-bold text-slate-600">Processing fee <span className="text-[10px] text-slate-400">(one time)</span></p>
-                  <p className="text-[14px] font-bold text-slate-600">{formatCurrency(subscriptionProcessingFee)}</p>
+                  <p className="text-[15.5px] font-bold text-slate-600">Processing fee <span className="text-[12px] text-slate-400">(one time)</span></p>
+                  <p className="text-[15.5px] font-bold text-slate-600">{formatCurrency(subscriptionProcessingFee)}</p>
                 </div>
                 <div className="flex items-center justify-between gap-3">
-                  <p className="text-[14px] font-bold text-slate-600">Refundable deposit <span className="text-[10px] text-slate-400">(one time)</span></p>
-                  <p className="text-[14px] font-bold text-slate-600">{formatCurrency(subscriptionRefundableDeposit)}</p>
+                  <p className="text-[15.5px] font-bold text-slate-600">Refundable deposit <span className="text-[12px] text-slate-400">(one time)</span></p>
+                  <p className="text-[15.5px] font-bold text-slate-600">{formatCurrency(subscriptionRefundableDeposit)}</p>
                 </div>
                 <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
-                  <p className="text-[16px] font-black text-slate-900">Payable amount</p>
-                  <p className="text-[16px] font-black text-slate-900">{formatCurrency(subscriptionPayableAmount)}</p>
+                  <p className="text-[17px] font-black text-slate-900">Payable amount</p>
+                  <p className="text-[17px] font-black text-slate-900">{formatCurrency(subscriptionPayableAmount)}</p>
                 </div>
               </div>
             </motion.div>
@@ -971,9 +971,9 @@ const RentalSchedule = () => {
             >
               <div className="flex items-center gap-2">
                 <ShieldCheck size={16} className="text-[#D96B42]" />
-                <p className="text-[16px] font-black text-slate-800">Trip protection</p>
+                <p className="text-[17px] font-black text-slate-800">Trip protection</p>
               </div>
-              <p className="mt-3 text-[13px] font-semibold leading-6 text-slate-600">
+              <p className="mt-3 text-[14.5px] font-semibold leading-6 text-slate-600">
                 Protect yourself from high repair costs with our damage liability protection. For just {formatCurrency(462)},
                 your maximum liability stays capped during accidental damage, and support can help you activate it after payment.
               </p>
@@ -988,16 +988,16 @@ const RentalSchedule = () => {
                 transition={{ delay: 0.03 }}
                 className="rounded-[20px] border border-white/80 bg-white/90 shadow-[0_4px_14px_rgba(15,23,42,0.05)] px-5 py-4 space-y-2"
               >
-                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
+                <p className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
                   Rental Setup
                 </p>
                 {selectedPackage ? (
-                  <p className="text-[13px] font-bold text-slate-900">
+                  <p className="text-[14.5px] font-bold text-slate-900">
                     {selectedPackage.label} - Rs.{selectedPackage.price}
                   </p>
                 ) : null}
                 {serviceLocation?.name ? (
-                  <p className="text-[12px] font-bold text-slate-500">
+                  <p className="text-[13.5px] font-bold text-slate-500">
                     Pickup location: {serviceLocation.name}
                   </p>
                 ) : null}
@@ -1041,7 +1041,7 @@ const RentalSchedule = () => {
             />
 
             {!isValid ? (
-              <div className="rounded-[18px] border border-rose-100 bg-rose-50 px-4 py-3 text-[12px] font-bold text-rose-500">
+              <div className="rounded-[18px] border border-rose-100 bg-rose-50 px-4 py-3 text-[13.5px] font-bold text-rose-500">
                 Return time must be after pickup.
               </div>
             ) : null}
@@ -1059,18 +1059,18 @@ const RentalSchedule = () => {
                     <div className="w-7 h-7 rounded-[9px] bg-emerald-50 flex items-center justify-center">
                       <Tag size={13} className="text-emerald-500" strokeWidth={2.5} />
                     </div>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500/80">
+                    <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-slate-500/80">
                       Cost Estimate
                     </p>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <p className="text-[12px] font-bold text-slate-400">{vehicle.name}</p>
-                      <p className="text-[12px] font-bold text-slate-400">
+                      <p className="text-[13.5px] font-bold text-slate-400">{vehicle.name}</p>
+                      <p className="text-[13.5px] font-bold text-slate-400">
                         {hours} hrs - Rs.{selectedPackage?.price || vehicle.prices[duration]}/{suffix}
                       </p>
                       {selectedPackage?.durationHours ? (
-                        <p className="text-[11px] font-bold text-slate-400">
+                        <p className="text-[13px] font-bold text-slate-400">
                           Includes {includedHours} hrs for Rs.{basePrice}
                           {extraHours > 0
                             ? ` + ${Math.ceil(extraHours)} extra hr x Rs.${extraHourRate}`
@@ -1079,13 +1079,13 @@ const RentalSchedule = () => {
                       ) : null}
                     </div>
                     <div className="text-right">
-                      <p className="text-[9px] font-bold text-slate-500 uppercase tracking-[0.12em]">
+                      <p className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.12em]">
                         Total
                       </p>
                       <p className="text-[28px] font-extrabold text-slate-950 leading-none">
                         Rs.{totalCost}
                       </p>
-                      <p className="text-[10px] font-bold text-slate-400">+ deposit (refundable)</p>
+                      <p className="text-[12px] font-bold text-slate-400">+ deposit (refundable)</p>
                     </div>
                   </div>
                 </motion.div>
@@ -1105,14 +1105,14 @@ const RentalSchedule = () => {
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={() => proceedSubscriptionPayment('deposit')}
-              className="rounded-[16px] bg-[#1488A3] px-4 py-4 text-[14px] font-black text-white shadow-[0_8px_22px_rgba(20,136,163,0.28)]"
+              className="rounded-[16px] bg-[#1488A3] px-4 py-4 text-[15.5px] font-black text-white shadow-[0_8px_22px_rgba(20,136,163,0.28)]"
             >
               Pay {formatCurrency(subscriptionRefundableDeposit)} Now
             </motion.button>
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={() => proceedSubscriptionPayment('full')}
-              className="flex items-center justify-center gap-2 rounded-[16px] border border-[#7ED6D0] bg-white px-4 py-4 text-[14px] font-black text-[#12A29C] shadow-[0_8px_22px_rgba(15,23,42,0.06)]"
+              className="flex items-center justify-center gap-2 rounded-[16px] border border-[#7ED6D0] bg-white px-4 py-4 text-[15.5px] font-black text-[#12A29C] shadow-[0_8px_22px_rgba(15,23,42,0.06)]"
             >
               Pay {formatCurrency(subscriptionPayableAmount)}
               <ChevronRight size={16} strokeWidth={3} />
@@ -1142,7 +1142,7 @@ const RentalSchedule = () => {
 
               navigate(`${routePrefix}/rental/kyc`);
             }}
-            className={`pointer-events-auto w-full py-4 rounded-[18px] text-[15px] font-bold text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 transition-all ${
+            className={`pointer-events-auto w-full py-4 rounded-[18px] text-[16.5px] font-bold text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 transition-all ${
               isValid ? 'bg-slate-950' : 'bg-slate-300'
             }`}
           >

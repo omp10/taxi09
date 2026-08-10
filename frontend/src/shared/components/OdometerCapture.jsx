@@ -106,8 +106,8 @@ const OdometerCapture = ({
           <Gauge size={18} strokeWidth={2.5} />
         </div>
         <div className="min-w-0">
-          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Odometer</p>
-          <p className="text-[13px] font-black text-slate-900">
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">Odometer</p>
+          <p className="text-[14.5px] font-black text-slate-900">
             {mine?.recorded ? 'Reading saved' : 'Record before the trip starts'}
           </p>
         </div>
@@ -119,8 +119,8 @@ const OdometerCapture = ({
             <img src={mine.imageUrl} alt="Odometer" className="h-12 w-12 rounded-xl object-cover" />
           ) : null}
           <div className="min-w-0">
-            <p className="text-[15px] font-black leading-none text-slate-900">{formatKm(mine.readingKm)} km</p>
-            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-600">Your reading</p>
+            <p className="text-[16.5px] font-black leading-none text-slate-900">{formatKm(mine.readingKm)} km</p>
+            <p className="mt-1 text-[12px] font-bold uppercase tracking-[0.14em] text-emerald-600">Your reading</p>
           </div>
           <CheckCircle2 size={18} className="ml-auto shrink-0 text-emerald-500" strokeWidth={2.5} />
         </div>
@@ -148,17 +148,17 @@ const OdometerCapture = ({
               </span>
             )}
             <span className="min-w-0">
-              <span className="block text-[12px] font-black text-slate-900">
+              <span className="block text-[13.5px] font-black text-slate-900">
                 {photo ? 'Photo added' : 'Take a photo'}
               </span>
-              <span className="block text-[10.5px] font-semibold text-slate-400">
+              <span className="block text-[12.5px] font-semibold text-slate-400">
                 {photo ? 'Tap to replace it' : 'Point the camera at the odometer'}
               </span>
             </span>
           </button>
 
           <label className="mt-3 block">
-            <span className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400">Reading in km</span>
+            <span className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">Reading in km</span>
             <input
               type="number"
               inputMode="decimal"
@@ -166,7 +166,7 @@ const OdometerCapture = ({
               value={reading}
               onChange={(event) => setReading(event.target.value)}
               placeholder="41250"
-              className="mt-1 w-full rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3 text-[16px] font-black text-slate-900 outline-none focus:border-slate-300"
+              className="mt-1 w-full rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3 text-[17px] font-black text-slate-900 outline-none focus:border-slate-300"
             />
           </label>
 
@@ -174,7 +174,7 @@ const OdometerCapture = ({
             type="button"
             onClick={submit}
             disabled={saving}
-            className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-[12px] font-black uppercase tracking-widest text-white transition-transform active:scale-95 disabled:opacity-60"
+            className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-[13.5px] font-black uppercase tracking-widest text-white transition-transform active:scale-95 disabled:opacity-60"
             style={{ backgroundColor: accentColor }}
           >
             {saving ? <Loader2 size={16} className="animate-spin" strokeWidth={2.5} /> : null}
@@ -184,10 +184,10 @@ const OdometerCapture = ({
       )}
 
       {error ? (
-        <p className="mt-2 text-center text-[11px] font-black uppercase tracking-wide text-red-500">{error}</p>
+        <p className="mt-2 text-center text-[13px] font-black uppercase tracking-wide text-red-500">{error}</p>
       ) : null}
 
-      <p className={`mt-3 text-center text-[10.5px] font-bold ${theirs?.recorded ? 'text-emerald-600' : 'text-slate-400'}`}>
+      <p className={`mt-3 text-center text-[12.5px] font-bold ${theirs?.recorded ? 'text-emerald-600' : 'text-slate-400'}`}>
         {counterpartLine}
       </p>
     </div>

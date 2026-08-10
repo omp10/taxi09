@@ -38,7 +38,7 @@ export const DesktopNav = ({ activePath, theme, onToggleTheme, loading = false }
                 <button
                   key={label}
                   onClick={() => navigate(path)}
-                  className={`group flex shrink-0 items-center whitespace-nowrap rounded-[14px] px-1.5 py-2.5 text-[13px] transition-colors ${
+                  className={`group flex shrink-0 items-center whitespace-nowrap rounded-[14px] px-1.5 py-2.5 text-[14.5px] transition-colors ${
                     isActive
                       ? 'bg-[#F5B700] font-bold text-slate-950'
                       : 'font-semibold text-[var(--dh-text)] hover:bg-[var(--dh-chip)] hover:text-[#F5B700]'
@@ -58,7 +58,7 @@ export const DesktopNav = ({ activePath, theme, onToggleTheme, loading = false }
                   {label}
                   {badge ? (
                     <span
-                      className={`ml-1.5 rounded-md px-1.5 py-[2px] text-[8px] font-black ${
+                      className={`ml-1.5 rounded-md px-1.5 py-[2px] text-[10px] font-black ${
                         isActive ? 'bg-slate-950 text-[#F5B700]' : 'bg-[#F5B700] text-slate-950'
                       }`}
                     >
@@ -83,7 +83,7 @@ export const DesktopNav = ({ activePath, theme, onToggleTheme, loading = false }
 
             <button
               onClick={() => navigate(isAuthenticated ? '/taxi/user/profile' : '/taxi/user/login')}
-              className="flex h-[52px] items-center gap-2 rounded-[16px] bg-[#F5B700] px-4 text-[14.5px] font-bold text-slate-950 transition-transform hover:-translate-y-0.5"
+              className="flex h-[52px] items-center gap-2 rounded-[16px] bg-[#F5B700] px-4 text-[16px] font-bold text-slate-950 transition-transform hover:-translate-y-0.5"
             >
               <UserRound size={18} strokeWidth={2.6} />
               {isAuthenticated ? 'My Account' : 'Login / Sign Up'}
@@ -115,7 +115,7 @@ export const QuickRail = () => {
           className="flex w-full flex-col items-center gap-1.5 px-2 py-2.5 transition-colors hover:bg-[var(--dh-chip)]"
         >
           <Icon size={22} className="text-[#F5B700]" strokeWidth={2.2} />
-          <span className="text-center text-[10.5px] font-bold leading-tight text-[var(--dh-text)]">{label}</span>
+          <span className="text-center text-[12.5px] font-bold leading-tight text-[var(--dh-text)]">{label}</span>
         </button>
       ))}
     </div>
@@ -134,9 +134,9 @@ export const LiveFleetPanel = ({ fleet, className = '' }) => {
     <div className={`w-[230px] rounded-[18px] bg-[var(--dh-surface)] p-4 shadow-[0_18px_44px_rgba(15,23,42,0.16)] ${className}`}>
       <div className="flex items-center gap-2">
         <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-        <span className="text-[14px] font-black text-[var(--dh-text)]">Live Booking</span>
+        <span className="text-[15.5px] font-black text-[var(--dh-text)]">Live Booking</span>
       </div>
-      <p className="mt-1 text-[12.5px] font-semibold text-[var(--dh-muted)]">Available now</p>
+      <p className="mt-1 text-[14px] font-semibold text-[var(--dh-muted)]">Available now</p>
 
       <div className="mt-3 space-y-2">
         {fleet.map((vehicle) => (
@@ -151,8 +151,8 @@ export const LiveFleetPanel = ({ fleet, className = '' }) => {
               className="h-9 w-12 shrink-0 rounded-[6px] object-cover"
             />
             <span className="min-w-0">
-              <span className="block truncate text-[12.5px] font-black text-[var(--dh-text)]">{vehicle.name}</span>
-              <span className="block truncate text-[11px] font-semibold text-[var(--dh-muted)]">
+              <span className="block truncate text-[14px] font-black text-[var(--dh-text)]">{vehicle.name}</span>
+              <span className="block truncate text-[13px] font-semibold text-[var(--dh-muted)]">
                 {vehicle.vehicleCategory || 'Car'}
               </span>
             </span>
@@ -176,13 +176,13 @@ export const ServiceCard = ({ title, copy, image, path, badge, highlighted }) =>
       }`}
     >
       {badge && (
-        <span className="absolute left-0 top-0 rounded-br-[12px] bg-[#F5B700] px-2.5 py-1 text-[10.5px] font-black text-slate-950">
+        <span className="absolute left-0 top-0 rounded-br-[12px] bg-[#F5B700] px-2.5 py-1 text-[12.5px] font-black text-slate-950">
           {badge}
         </span>
       )}
       <img src={image} alt="" className="h-[92px] w-full object-contain" />
-      <span className="mt-2.5 block min-h-[40px] text-[15px] font-black leading-[1.3] tracking-[-0.02em] text-[var(--dh-text)]">{title}</span>
-      <span className="mt-1.5 block min-h-[70px] text-[12px] font-medium leading-[1.45] text-[var(--dh-muted)]">{copy}</span>
+      <span className="mt-2.5 block min-h-[40px] text-[16.5px] font-black leading-[1.3] tracking-[-0.02em] text-[var(--dh-text)]">{title}</span>
+      <span className="mt-1.5 block min-h-[70px] text-[13.5px] font-medium leading-[1.45] text-[var(--dh-muted)]">{copy}</span>
       <span className="mt-auto flex h-8 w-8 items-center justify-center self-end rounded-full border border-[#F5B700] mt-3 text-[#F5B700] transition-colors group-hover:bg-[#F5B700] group-hover:text-slate-950">
         <ArrowRight size={15} strokeWidth={2.8} />
       </span>
@@ -216,7 +216,7 @@ export const DesktopFooter = ({ locations = [] }) => {
     (link) => link.label !== 'Home' && !serviceLabels.has(link.label) && !SERVICES.some((service) => service.path === link.path),
   );
 
-  const column = 'text-[13px] font-medium text-[var(--dh-muted)] transition-colors hover:text-[#F5B700]';
+  const column = 'text-[14.5px] font-medium text-[var(--dh-muted)] transition-colors hover:text-[#F5B700]';
 
   return (
     <footer className="border-t border-[var(--dh-border)] bg-[var(--dh-surface)]">
@@ -226,7 +226,7 @@ export const DesktopFooter = ({ locations = [] }) => {
             <div className="flex text-[var(--dh-text)]">
               <BrandLogo height={48} />
             </div>
-            <p className="mt-4 max-w-[300px] text-[13.5px] font-medium leading-[1.65] text-[var(--dh-muted)]">
+            <p className="mt-4 max-w-[300px] text-[15px] font-medium leading-[1.65] text-[var(--dh-muted)]">
               Self drive cars, bikes, buses, hotels and tour packages - booked in one place,
               with round the clock support on every trip.
             </p>
@@ -236,11 +236,11 @@ export const DesktopFooter = ({ locations = [] }) => {
                   <a
                     key={label}
                     href={`tel:${value}`}
-                    className="flex items-center gap-2.5 text-[13.5px] font-semibold text-[var(--dh-text)] transition-colors hover:text-[#F5B700]"
+                    className="flex items-center gap-2.5 text-[15px] font-semibold text-[var(--dh-text)] transition-colors hover:text-[#F5B700]"
                   >
                     <Phone size={15} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
                     {value}
-                    <span className="text-[11.5px] font-medium text-[var(--dh-muted)]">{label}</span>
+                    <span className="text-[13.5px] font-medium text-[var(--dh-muted)]">{label}</span>
                   </a>
                 ))}
               </div>
@@ -248,7 +248,7 @@ export const DesktopFooter = ({ locations = [] }) => {
           </div>
 
           <div>
-            <p className="text-[12px] font-black uppercase tracking-[0.12em] text-[var(--dh-text)]">Services</p>
+            <p className="text-[13.5px] font-black uppercase tracking-[0.12em] text-[var(--dh-text)]">Services</p>
             <ul className="mt-4 space-y-2.5">
               {SERVICES.map((service) => (
                 <li key={service.title}>
@@ -261,7 +261,7 @@ export const DesktopFooter = ({ locations = [] }) => {
           </div>
 
           <div>
-            <p className="text-[12px] font-black uppercase tracking-[0.12em] text-[var(--dh-text)]">Company</p>
+            <p className="text-[13.5px] font-black uppercase tracking-[0.12em] text-[var(--dh-text)]">Company</p>
             <ul className="mt-4 space-y-2.5">
               {company.map((link) => (
                 <li key={link.label}>
@@ -275,10 +275,10 @@ export const DesktopFooter = ({ locations = [] }) => {
 
           {locations.length ? (
             <div>
-              <p className="text-[12px] font-black uppercase tracking-[0.12em] text-[var(--dh-text)]">Where We Operate</p>
+              <p className="text-[13.5px] font-black uppercase tracking-[0.12em] text-[var(--dh-text)]">Where We Operate</p>
               <ul className="mt-4 space-y-2.5">
                 {locations.map((name) => (
-                  <li key={name} className="flex items-start gap-2 text-[13px] font-medium text-[var(--dh-muted)]">
+                  <li key={name} className="flex items-start gap-2 text-[14.5px] font-medium text-[var(--dh-muted)]">
                     <MapPin size={14} className="mt-0.5 shrink-0 text-[#F5B700]" strokeWidth={2.4} />
                     {name}
                   </li>
@@ -290,8 +290,8 @@ export const DesktopFooter = ({ locations = [] }) => {
 
         {general.footer_1 || general.footer_2 ? (
           <div className="mt-10 flex items-center justify-between gap-6 border-t border-[var(--dh-border)] pt-6">
-            <p className="text-[12.5px] font-medium text-[var(--dh-muted)]">{general.footer_1}</p>
-            <p className="text-[12.5px] font-medium text-[var(--dh-muted)]">{general.footer_2}</p>
+            <p className="text-[14px] font-medium text-[var(--dh-muted)]">{general.footer_1}</p>
+            <p className="text-[14px] font-medium text-[var(--dh-muted)]">{general.footer_2}</p>
           </div>
         ) : null}
       </div>

@@ -225,7 +225,7 @@ const DateTimePickerModal = ({
           <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-slate-300" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-600">
+              <p className="text-[13px] font-bold uppercase tracking-[0.15em] text-slate-600">
                 Pick Schedule
               </p>
               <h3 className="mt-1 text-lg font-extrabold text-slate-950">{title}</h3>
@@ -248,7 +248,7 @@ const DateTimePickerModal = ({
               >
                 <ChevronLeft size={16} />
               </button>
-              <p className="text-[14px] font-bold text-slate-950">
+              <p className="text-[15.5px] font-bold text-slate-950">
                 {monthDate.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}
               </p>
               <button
@@ -262,7 +262,7 @@ const DateTimePickerModal = ({
 
             <div className="mt-4 grid grid-cols-7 gap-2 text-center">
               {WEEK_DAYS.map((day) => (
-                <div key={day} className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
+                <div key={day} className="text-[12px] font-bold uppercase tracking-wider text-slate-600">
                   {day}
                 </div>
               ))}
@@ -280,7 +280,7 @@ const DateTimePickerModal = ({
                     type="button"
                     disabled={disabled}
                     onClick={() => onDateSelect(day)}
-                    className={`h-10 rounded-[12px] text-[12px] font-bold transition-all ${
+                    className={`h-10 rounded-[12px] text-[13.5px] font-bold transition-all ${
                       selected
                         ? 'bg-[#2e3c78] text-white shadow-[0_10px_24px_rgba(46,60,120,0.28)]'
                         : disabled
@@ -298,7 +298,7 @@ const DateTimePickerModal = ({
           <div className="mt-4 rounded-[24px] border border-white/80 bg-white p-4 shadow-[0_8px_24px_rgba(15,23,42,0.06)]">
             <div className="mb-3 flex items-center gap-2">
               <Clock size={15} className="text-slate-600" />
-              <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-700">
+              <p className="text-[13px] font-bold uppercase tracking-[0.15em] text-slate-700">
                 Select Time
               </p>
             </div>
@@ -314,7 +314,7 @@ const DateTimePickerModal = ({
                     type="button"
                     disabled={disabled}
                     onClick={() => onTimeSelect(time)}
-                    className={`rounded-[12px] px-3 py-2.5 text-[11px] font-bold transition-all ${
+                    className={`rounded-[12px] px-3 py-2.5 text-[13px] font-bold transition-all ${
                       selected
                         ? 'bg-[#2e3c78] text-white'
                         : disabled
@@ -347,7 +347,7 @@ const SeatPreview = ({ blueprint }) => {
 
   if (!rows.length) {
     return (
-      <div className="rounded-[20px] border border-slate-200 bg-slate-50 px-4 py-6 text-center text-[12px] font-semibold text-slate-600">
+      <div className="rounded-[20px] border border-slate-200 bg-slate-50 px-4 py-6 text-center text-[13.5px] font-semibold text-slate-600">
         No seating blueprint available
       </div>
     );
@@ -1397,8 +1397,8 @@ const RentalVehicleDetail = () => {
                 <ArrowLeft size={18} />
               </button>
               <div>
-                <h1 className="text-[16px] font-black">Add-ons</h1>
-                <p className="text-[10px] font-semibold text-slate-500">Customize your trip</p>
+                <h1 className="text-[17px] font-black">Add-ons</h1>
+                <p className="text-[12px] font-semibold text-slate-500">Customize your trip</p>
               </div>
             </div>
           </header>
@@ -1423,12 +1423,12 @@ const RentalVehicleDetail = () => {
                       <Icon size={22} className="text-slate-900" />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-[12px] font-black leading-tight">{label}</span>
-                      <span className="mt-0.5 block text-[9.5px] font-semibold leading-tight text-slate-500">{description}</span>
+                      <span className="block text-[13.5px] font-black leading-tight">{label}</span>
+                      <span className="mt-0.5 block text-[11.5px] font-semibold leading-tight text-slate-500">{description}</span>
                     </span>
                     <span className="text-right">
-                      <span className="block text-[11px] font-black">₹{price}</span>
-                      <span className="block text-[8.5px] font-semibold text-slate-500">/ day</span>
+                      <span className="block text-[13px] font-black">₹{price}</span>
+                      <span className="block text-[10.5px] font-semibold text-slate-500">/ day</span>
                     </span>
                   </button>
                 );
@@ -1439,8 +1439,8 @@ const RentalVehicleDetail = () => {
               <div className="flex items-center gap-3">
                 <span className="text-[23px]">🎁</span>
                 <div>
-                  <p className="text-[12px] font-black">Get 10% OFF on add-ons</p>
-                  <p className="text-[9.5px] font-semibold text-slate-600">Use coupon code EXTRA10 to save more</p>
+                  <p className="text-[13.5px] font-black">Get 10% OFF on add-ons</p>
+                  <p className="text-[11.5px] font-semibold text-slate-600">Use coupon code EXTRA10 to save more</p>
                 </div>
               </div>
               <TicketPercent size={24} className="text-[#f5b700]" />
@@ -1449,12 +1449,12 @@ const RentalVehicleDetail = () => {
             <section className="mt-4 rounded-[13px] border border-slate-100 bg-white p-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-[12px] font-black">Your Selection</p>
-                  <p className="text-[9.5px] font-semibold text-slate-500">
+                  <p className="text-[13.5px] font-black">Your Selection</p>
+                  <p className="text-[11.5px] font-semibold text-slate-500">
                     {selectedAddOns.length} add-on{selectedAddOns.length === 1 ? '' : 's'} selected
                   </p>
                 </div>
-                <p className="text-[13px] font-black">₹{addOnTotal}</p>
+                <p className="text-[14.5px] font-black">₹{addOnTotal}</p>
               </div>
             </section>
           </main>
@@ -1463,11 +1463,11 @@ const RentalVehicleDetail = () => {
             <button
               type="button"
               onClick={() => setShowAddOnsPanel(false)}
-              className="h-11 w-full rounded-[8px] bg-[#f5b700] text-[13px] font-black text-black"
+              className="h-11 w-full rounded-[8px] bg-[#f5b700] text-[14.5px] font-black text-black"
             >
               Add Selected & Continue
             </button>
-            <p className="mt-2 text-center text-[9px] font-semibold text-slate-500">
+            <p className="mt-2 text-center text-[11px] font-semibold text-slate-500">
               You won't be charged yet
             </p>
           </footer>
@@ -1487,15 +1487,15 @@ const RentalVehicleDetail = () => {
               <ArrowLeft size={19} strokeWidth={2.5} />
             </button>
             <div className="text-center">
-              <h1 className="text-[18px] lg:text-[22px] font-black leading-tight">Car Details</h1>
-              <p className="text-[10px] font-semibold text-slate-600">Review & Book</p>
+              <h1 className="text-[19px] lg:text-[22px] font-black leading-tight">Car Details</h1>
+              <p className="text-[12px] font-semibold text-slate-600">Review & Book</p>
             </div>
             <div className="flex items-center gap-2">
-              <button type="button" className="flex flex-col items-center text-[9px] font-bold">
+              <button type="button" className="flex flex-col items-center text-[11px] font-bold">
                 <Share2 size={17} />
                 Share
               </button>
-              <button type="button" className="flex flex-col items-center text-[9px] font-bold">
+              <button type="button" className="flex flex-col items-center text-[11px] font-bold">
                 <Heart size={18} />
                 Save
               </button>
@@ -1507,25 +1507,25 @@ const RentalVehicleDetail = () => {
           <div className="space-y-2.5 lg:min-w-0">
           <section className="grid grid-cols-[39%_1fr] lg:grid-cols-[46%_1fr] overflow-hidden rounded-[13px] lg:rounded-[18px] border border-slate-100 bg-white shadow-[0_5px_16px_rgba(15,23,42,0.06)]">
             <div className="relative min-h-[132px] lg:min-h-[300px] bg-gradient-to-br from-amber-50 via-slate-100 to-slate-200">
-              <span className="absolute left-2 top-2 z-10 rounded-[7px] bg-[#fff0b8] px-1.5 py-0.5 text-[8px] font-black">Most Popular</span>
+              <span className="absolute left-2 top-2 z-10 rounded-[7px] bg-[#fff0b8] px-1.5 py-0.5 text-[10px] font-black">Most Popular</span>
               {selectedImage ? (
                 <img src={selectedImage} alt={displayName} className="absolute inset-0 h-full w-full object-contain p-2.5" />
               ) : (
                 <Car className="absolute inset-0 m-auto text-slate-400" size={64} />
               )}
-              <span className="absolute bottom-2 right-2 rounded-md bg-black/75 px-1.5 py-0.5 text-[9px] font-bold text-white">1/12</span>
+              <span className="absolute bottom-2 right-2 rounded-md bg-black/75 px-1.5 py-0.5 text-[11px] font-bold text-white">1/12</span>
             </div>
             <div className="p-3">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <h2 className="line-clamp-2 text-[16px] font-black leading-[1.08]">{displayName}</h2>
-                  <p className="mt-1 text-[10px] font-semibold text-slate-600">{vehicle.subCategory || vehicle.vehicleCategory || 'Hatchback'}</p>
+                  <h2 className="line-clamp-2 text-[17px] font-black leading-[1.08]">{displayName}</h2>
+                  <p className="mt-1 text-[12px] font-semibold text-slate-600">{vehicle.subCategory || vehicle.vehicleCategory || 'Hatchback'}</p>
                 </div>
-                <span className="flex shrink-0 items-center gap-1 rounded-full border border-slate-100 px-1.5 py-0.5 text-[10px] font-bold">
+                <span className="flex shrink-0 items-center gap-1 rounded-full border border-slate-100 px-1.5 py-0.5 text-[12px] font-bold">
                   <Star size={11} fill="#f5b700" className="text-[#f5b700]" /> 4.6
                 </span>
               </div>
-              <div className="mt-2.5 grid grid-cols-2 gap-x-2 gap-y-2 text-[10px] font-bold">
+              <div className="mt-2.5 grid grid-cols-2 gap-x-2 gap-y-2 text-[12px] font-bold">
                 <span className="flex items-center gap-1.5"><Fuel size={13} />{getVehicleFuelLabel(vehicle)}</span>
                 <span className="flex items-center gap-1.5"><Car size={13} />{getVehicleTransmissionLabel(vehicle)}</span>
                 <span className="flex items-center gap-1.5"><Users size={13} />{vehicle.capacity || 5} Seats</span>
@@ -1533,7 +1533,7 @@ const RentalVehicleDetail = () => {
                 <span className="flex items-center gap-1.5"><Shield size={13} />Airbags</span>
                 <span className="flex items-center gap-1.5"><CheckCircle2 size={13} />A/C</span>
               </div>
-              <span className="mt-2.5 inline-flex items-center gap-1.5 rounded-[7px] bg-green-100 px-2 py-1.5 text-[10px] font-bold text-green-700">
+              <span className="mt-2.5 inline-flex items-center gap-1.5 rounded-[7px] bg-green-100 px-2 py-1.5 text-[12px] font-bold text-green-700">
                 <Shield size={12} fill="currentColor" /> Sanitized Car
               </span>
             </div>
@@ -1543,9 +1543,9 @@ const RentalVehicleDetail = () => {
             <div className="flex gap-2">
               <span className="mt-5 h-3 w-3 rounded-full bg-green-500" />
               <div>
-                <p className="text-[10px] font-semibold text-slate-500">Pickup</p>
-                <p className="text-[12px] font-black">Bhubaneswar</p>
-                <p className="text-[10px] font-semibold text-slate-600">26 Jun, 06:00 PM</p>
+                <p className="text-[12px] font-semibold text-slate-500">Pickup</p>
+                <p className="text-[13.5px] font-black">Bhubaneswar</p>
+                <p className="text-[12px] font-semibold text-slate-600">26 Jun, 06:00 PM</p>
               </div>
             </div>
             <button className="mx-2 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-[0_5px_14px_rgba(15,23,42,0.12)]">
@@ -1554,17 +1554,17 @@ const RentalVehicleDetail = () => {
             <div className="flex gap-2">
               <span className="mt-5 h-3 w-3 rounded-full bg-red-500" />
               <div>
-                <p className="text-[10px] font-semibold text-slate-500">Drop-off</p>
-                <p className="text-[12px] font-black">Bhubaneswar</p>
-                <p className="text-[10px] font-semibold text-slate-600">27 Jun, 04:00 PM</p>
+                <p className="text-[12px] font-semibold text-slate-500">Drop-off</p>
+                <p className="text-[13.5px] font-black">Bhubaneswar</p>
+                <p className="text-[12px] font-semibold text-slate-600">27 Jun, 04:00 PM</p>
               </div>
             </div>
           </section>
 
           <section>
             <div className="mb-1.5 flex items-center justify-between">
-              <h3 className="flex items-center gap-1 text-[12px] lg:text-[15px] font-black tracking-tight">Choose KM Plan <Info size={11} /></h3>
-              <button className="flex items-center gap-1 text-[10px] font-bold text-slate-700"><PackageCheck size={12} />Compare</button>
+              <h3 className="flex items-center gap-1 text-[13.5px] lg:text-[16.5px] font-black tracking-tight">Choose KM Plan <Info size={11} /></h3>
+              <button className="flex items-center gap-1 text-[12px] font-bold text-slate-700"><PackageCheck size={12} />Compare</button>
             </div>
             <div className="grid grid-cols-3 gap-1.5">
               {kmPlans.map((plan) => {
@@ -1584,7 +1584,7 @@ const RentalVehicleDetail = () => {
                     }`}
                   >
                     {plan.tag && (
-                      <span className="absolute left-0 top-0 rounded-br-[8px] bg-[#f5b700] px-1.5 py-0.5 text-[6px] font-black uppercase leading-none">
+                      <span className="absolute left-0 top-0 rounded-br-[8px] bg-[#f5b700] px-1.5 py-0.5 text-[8px] font-black uppercase leading-none">
                         Best
                       </span>
                     )}
@@ -1593,16 +1593,16 @@ const RentalVehicleDetail = () => {
                     }`}>
                       {isSelected && <Check size={9} strokeWidth={3} />}
                     </span>
-                    <p className={`mt-2.5 text-[15px] font-black leading-none ${plan.id === 'unlimited' ? 'text-[11.5px]' : ''}`}>
+                    <p className={`mt-2.5 text-[16.5px] font-black leading-none ${plan.id === 'unlimited' ? 'text-[13.5px]' : ''}`}>
                       {displayTitle}
                     </p>
-                    <p className="mt-1 text-[8.5px] font-bold uppercase tracking-[0.08em] text-slate-500">
+                    <p className="mt-1 text-[10.5px] font-bold uppercase tracking-[0.08em] text-slate-500">
                       {caption}
                     </p>
-                    <p className="mt-2 text-[9px] font-bold text-slate-500">{extraRate}</p>
+                    <p className="mt-2 text-[11px] font-bold text-slate-500">{extraRate}</p>
                     <div className="mt-1.5 flex items-end justify-between">
-                      <p className="text-[13px] font-black text-slate-950">&#8377;{plan.price}</p>
-                      <p className="text-[8px] font-bold text-slate-400">/day</p>
+                      <p className="text-[14.5px] font-black text-slate-950">&#8377;{plan.price}</p>
+                      <p className="text-[10px] font-bold text-slate-400">/day</p>
                     </div>
                     <p className="hidden" />
                   </button>
@@ -1614,13 +1614,13 @@ const RentalVehicleDetail = () => {
           <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
               <div>
-                <h3 className="text-[13px] lg:text-[15px] font-black">Add-ons (Optional)</h3>
-                <p className="text-[10px] font-semibold text-slate-600">Customize your trip</p>
+                <h3 className="text-[14.5px] lg:text-[16.5px] font-black">Add-ons (Optional)</h3>
+                <p className="text-[12px] font-semibold text-slate-600">Customize your trip</p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowAddOnsPanel(true)}
-                className="rounded-[8px] border border-slate-200 px-3 py-1.5 text-[11px] font-bold"
+                className="rounded-[8px] border border-slate-200 px-3 py-1.5 text-[13px] font-bold"
               >
                 View All
               </button>
@@ -1643,8 +1643,8 @@ const RentalVehicleDetail = () => {
                   >
                     <span className={`absolute left-1.5 top-1.5 h-3.5 w-3.5 rounded border ${isSelected ? 'border-[#f5b700] bg-[#f5b700]' : 'border-slate-300'}`} />
                     <Icon className="mx-auto mt-3 text-slate-900" size={19} />
-                    <p className="mt-1.5 min-h-[24px] text-[8.5px] font-bold leading-tight">{label}</p>
-                    {price > 0 && <p className="mt-0.5 text-[8.5px] font-black">₹{price}</p>}
+                    <p className="mt-1.5 min-h-[24px] text-[10.5px] font-bold leading-tight">{label}</p>
+                    {price > 0 && <p className="mt-0.5 text-[10.5px] font-black">₹{price}</p>}
                   </button>
                 );
               })}
@@ -1652,7 +1652,7 @@ const RentalVehicleDetail = () => {
           </section>
 
           <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
-            <h3 className="text-[13px] lg:text-[15px] font-black">Package Includes</h3>
+            <h3 className="text-[14.5px] lg:text-[16.5px] font-black">Package Includes</h3>
             <div className="mt-3 grid grid-cols-5 gap-2 text-center">
               {[
                 ['Insurance', Shield],
@@ -1661,7 +1661,7 @@ const RentalVehicleDetail = () => {
                 ['Toll Tax', Building2],
                 ['State Tax', ReceiptText],
               ].map(([label, Icon]) => (
-                <div key={label} className="text-[8.5px] font-bold leading-tight">
+                <div key={label} className="text-[10.5px] font-bold leading-tight">
                   <Icon className="mx-auto mb-1" size={17} />
                   {label}
                   <p className="text-green-600">Included</p>
@@ -1671,8 +1671,8 @@ const RentalVehicleDetail = () => {
           </section>
 
           <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
-            <h3 className="text-[13px] lg:text-[15px] font-black">Rental Information</h3>
-            <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1.5 text-[10.5px] font-semibold">
+            <h3 className="text-[14.5px] lg:text-[16.5px] font-black">Rental Information</h3>
+            <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1.5 text-[12.5px] font-semibold">
               <span className="text-slate-600">Fuel Policy</span><span className="text-right">Full to Full</span>
               <span className="text-slate-600">Security Deposit</span><span className="text-right">₹2000 Refundable</span>
               <span className="text-slate-600">Minimum Driver Age</span><span className="text-right">21 Years</span>
@@ -1685,11 +1685,11 @@ const RentalVehicleDetail = () => {
           {/* Booking rail - sticky beside the content on desktop */}
           <aside className="space-y-2.5 lg:sticky lg:top-4">
           <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
-            <h3 className="text-[13px] font-black">Price Summary <span className="font-semibold text-slate-600">({selectedPlan.title})</span></h3>
-            <div className="mt-2 space-y-1.5 text-[11px] font-semibold">
+            <h3 className="text-[14.5px] font-black">Price Summary <span className="font-semibold text-slate-600">({selectedPlan.title})</span></h3>
+            <div className="mt-2 space-y-1.5 text-[13px] font-semibold">
               <div className="flex justify-between"><span>Base Fare (1 Day)</span><span>₹{selectedPlan.price}</span></div>
               <div className="flex justify-between"><span>Add-ons</span><span>₹{addOnTotal}</span></div>
-              <div className="flex justify-between border-t border-dashed border-slate-200 pt-2 text-[13px] font-black"><span>Total Payable</span><span>₹{totalPayable}</span></div>
+              <div className="flex justify-between border-t border-dashed border-slate-200 pt-2 text-[14.5px] font-black"><span>Total Payable</span><span>₹{totalPayable}</span></div>
             </div>
           </section>
 
@@ -1697,29 +1697,29 @@ const RentalVehicleDetail = () => {
             <div className="flex items-center gap-2">
               <TicketPercent className="text-green-700" size={24} />
               <div>
-                <p className="text-[10px] font-black text-green-700">LIMITED TIME OFFER</p>
-                <p className="mt-0.5 text-[10px] font-semibold">Get 10% OFF up to ₹300</p>
-                <p className="mt-0.5 text-[10px] font-bold">Code: <span className="rounded border border-green-300 bg-white px-1.5 py-0.5 text-green-700">DRIVE10</span></p>
+                <p className="text-[12px] font-black text-green-700">LIMITED TIME OFFER</p>
+                <p className="mt-0.5 text-[12px] font-semibold">Get 10% OFF up to ₹300</p>
+                <p className="mt-0.5 text-[12px] font-bold">Code: <span className="rounded border border-green-300 bg-white px-1.5 py-0.5 text-green-700">DRIVE10</span></p>
               </div>
             </div>
-            <button className="rounded-[9px] border border-green-300 px-3 py-2 text-[11px] font-black text-green-700">Apply</button>
+            <button className="rounded-[9px] border border-green-300 px-3 py-2 text-[13px] font-black text-green-700">Apply</button>
           </section>
 
           {/* Desktop CTA: the fixed mobile bar is hidden at lg, so the rail owns it */}
           <div className="hidden lg:block rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
             <div className="flex items-baseline justify-between">
-              <span className="text-[11px] font-semibold text-slate-600">Total Payable</span>
+              <span className="text-[13px] font-semibold text-slate-600">Total Payable</span>
               <span className="text-[22px] font-black leading-none">₹{totalPayable}</span>
             </div>
             <button
               type="button"
               onClick={continueFromDetail}
               disabled={!selectedPackage || locationsLoading || !selectedServiceLocation}
-              className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-[10px] bg-[#f5b700] text-[14px] font-black text-black disabled:opacity-60"
+              className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-[10px] bg-[#f5b700] text-[15.5px] font-black text-black disabled:opacity-60"
             >
               Continue to Book <ChevronRight size={20} />
             </button>
-            <p className="mt-2 text-center text-[10px] font-semibold text-slate-600">
+            <p className="mt-2 text-center text-[12px] font-semibold text-slate-600">
               Secure Booking • No Hidden Charges
             </p>
           </div>
@@ -1729,19 +1729,19 @@ const RentalVehicleDetail = () => {
         <footer className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-lg bg-white px-3 pb-[max(env(safe-area-inset-bottom),8px)] pt-2 shadow-[0_-8px_24px_rgba(15,23,42,0.10)] lg:hidden">
           <div className="flex items-center gap-3">
             <div className="w-[38%]">
-              <p className="text-[18px] font-black leading-tight">₹{totalPayable}</p>
-              <p className="text-[10px] font-semibold text-slate-700">View Price Breakup</p>
+              <p className="text-[19px] font-black leading-tight">₹{totalPayable}</p>
+              <p className="text-[12px] font-semibold text-slate-700">View Price Breakup</p>
             </div>
             <button
               type="button"
               onClick={continueFromDetail}
               disabled={!selectedPackage || locationsLoading || !selectedServiceLocation}
-              className="flex h-12 flex-1 items-center justify-center gap-2 rounded-[9px] bg-[#f5b700] text-[14px] font-black text-black disabled:opacity-60"
+              className="flex h-12 flex-1 items-center justify-center gap-2 rounded-[9px] bg-[#f5b700] text-[15.5px] font-black text-black disabled:opacity-60"
             >
               Continue to Book <ChevronRight size={20} />
             </button>
           </div>
-          <p className="mt-2 text-center text-[10px] font-semibold text-slate-600">
+          <p className="mt-2 text-center text-[12px] font-semibold text-slate-600">
             Secure Booking • No Hidden Charges
           </p>
         </footer>
@@ -1764,7 +1764,7 @@ const RentalVehicleDetail = () => {
               <ArrowLeft size={20} strokeWidth={2.5} />
             </button>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-600">
+              <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-slate-600">
                 VEHICLE DETAILS
               </p>
               <h1 className="text-[24px] font-black tracking-tight text-slate-900">{vehicle.name}</h1>
@@ -1776,8 +1776,8 @@ const RentalVehicleDetail = () => {
                 <Car size={18} strokeWidth={2.5} />
               </div>
               <div>
-                <p className="text-[12px] font-bold text-slate-900">Self-drive vehicles</p>
-                <p className="text-[11px] font-semibold text-slate-600">Drive at your convenience</p>
+                <p className="text-[13.5px] font-bold text-slate-900">Self-drive vehicles</p>
+                <p className="text-[13px] font-semibold text-slate-600">Drive at your convenience</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -1785,8 +1785,8 @@ const RentalVehicleDetail = () => {
                 <Shield size={18} strokeWidth={2.5} />
               </div>
               <div>
-                <p className="text-[12px] font-bold text-slate-900">Verified & Inspected</p>
-                <p className="text-[11px] font-semibold text-slate-600">Quality and safety assured</p>
+                <p className="text-[13.5px] font-bold text-slate-900">Verified & Inspected</p>
+                <p className="text-[13px] font-semibold text-slate-600">Quality and safety assured</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -1794,8 +1794,8 @@ const RentalVehicleDetail = () => {
                 <Users size={18} strokeWidth={2.5} />
               </div>
               <div>
-                <p className="text-[12px] font-bold text-slate-900">24/7 Roadside Support</p>
-                <p className="text-[11px] font-semibold text-slate-600">We're here for you</p>
+                <p className="text-[13.5px] font-bold text-slate-900">24/7 Roadside Support</p>
+                <p className="text-[13px] font-semibold text-slate-600">We're here for you</p>
               </div>
             </div>
           </div>
@@ -1821,7 +1821,7 @@ const RentalVehicleDetail = () => {
                 <ArrowLeft size={20} strokeWidth={2.5} />
               </motion.button>
               <div className="text-center min-w-0 px-12">
-                <p className="text-[11px] font-bold uppercase tracking-[0.18em] leading-none mb-1.5 text-slate-600">
+                <p className="text-[13px] font-bold uppercase tracking-[0.18em] leading-none mb-1.5 text-slate-600">
                   {isSubscriptionMode ? 'Subscription details' : 'Vehicle Details'}
                 </p>
                 <h1 className="text-[20px] font-black tracking-tight leading-none truncate max-w-[220px] text-slate-900 mx-auto">
@@ -1902,20 +1902,20 @@ const RentalVehicleDetail = () => {
                 <h2 className="text-[28px] font-black tracking-tight text-slate-950">{vehicle.name}</h2>
                 <div className="mt-4 grid grid-cols-3 gap-2 border-t border-slate-100 pt-4 text-left">
                   <div className="border-r border-slate-100 pr-2 min-w-0">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">Variant</p>
-                    <p className="mt-1 text-[13px] font-extrabold text-slate-800 truncate" title={subscriptionVariantLabel}>
+                    <p className="text-[12px] font-bold uppercase tracking-wider text-slate-600">Variant</p>
+                    <p className="mt-1 text-[14.5px] font-extrabold text-slate-800 truncate" title={subscriptionVariantLabel}>
                       {subscriptionVariantLabel}
                     </p>
                   </div>
                   <div className="border-r border-slate-100 px-2 min-w-0">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">Gearbox</p>
-                    <p className="mt-1 text-[13px] font-extrabold text-slate-800 truncate" title={subscriptionTransmissionLabel}>
+                    <p className="text-[12px] font-bold uppercase tracking-wider text-slate-600">Gearbox</p>
+                    <p className="mt-1 text-[14.5px] font-extrabold text-slate-800 truncate" title={subscriptionTransmissionLabel}>
                       {subscriptionTransmissionLabel}
                     </p>
                   </div>
                   <div className="pl-2 min-w-0">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">Fuel</p>
-                    <p className="mt-1 text-[13px] font-extrabold text-slate-800 truncate" title={subscriptionFuelLabel}>
+                    <p className="text-[12px] font-bold uppercase tracking-wider text-slate-600">Fuel</p>
+                    <p className="mt-1 text-[14.5px] font-extrabold text-slate-800 truncate" title={subscriptionFuelLabel}>
                       {subscriptionFuelLabel}
                     </p>
                   </div>
@@ -1952,7 +1952,7 @@ const RentalVehicleDetail = () => {
                             : Number(plan.durationDays || 0)
                           : Number(plan.durationDays || 0)}
                       </p>
-                      <p className={`mt-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+                      <p className={`mt-1 text-[12px] font-bold uppercase tracking-[0.12em] ${
                         isSelected ? 'text-white/80' : 'text-slate-600'
                       }`}>
                         {Number(plan.durationDays || 0) >= 30
@@ -1967,22 +1967,22 @@ const RentalVehicleDetail = () => {
               </div>
 
               <div className="mt-5">
-                <p className="text-[12px] font-bold text-slate-600">Starting from</p>
+                <p className="text-[13.5px] font-bold text-slate-600">Starting from</p>
                 <div className="mt-1 flex items-end gap-2">
                   <p className="text-[38px] font-black leading-none tracking-tight text-slate-950">
                     {formatCurrency(selectedSubscriptionPlan?.price)}
                   </p>
                   {subscriptionStrikePrice ? (
-                    <p className="pb-1 text-[16px] font-bold text-slate-500 line-through">
+                    <p className="pb-1 text-[17px] font-bold text-slate-500 line-through">
                       {formatCurrency(subscriptionStrikePrice)}
                     </p>
                   ) : null}
                 </div>
-                <p className="mt-2 text-[12px] font-semibold text-slate-600">
+                <p className="mt-2 text-[13.5px] font-semibold text-slate-600">
                   Inclusive of insurance and maintenance
                 </p>
                 {selectedSubscriptionPlan?.includedKm ? (
-                  <p className="mt-1 text-[12px] font-semibold text-slate-600">
+                  <p className="mt-1 text-[13.5px] font-semibold text-slate-600">
                     Includes {selectedSubscriptionPlan.includedKm} km for the selected tenure
                   </p>
                 ) : null}
@@ -1995,14 +1995,14 @@ const RentalVehicleDetail = () => {
               transition={{ delay: 0.1 }}
               className="rounded-[26px] bg-white px-4 py-5 shadow-[0_12px_30px_rgba(15,23,42,0.06)]"
             >
-              <p className="text-[13px] font-bold text-[#D0604D]">Select delivery date to proceed</p>
+              <p className="text-[14.5px] font-bold text-[#D0604D]">Select delivery date to proceed</p>
 
               <div className="mt-3 rounded-[20px] border border-[#D66D57] bg-[#F8FBFD] p-4">
                 <div className="flex items-center gap-2 text-[#0B84A6]">
-                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#0B84A6] text-[11px] font-black text-white">i</div>
-                  <p className="text-[13px] font-black">Check exact price for your dates</p>
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#0B84A6] text-[13px] font-black text-white">i</div>
+                  <p className="text-[14.5px] font-black">Check exact price for your dates</p>
                 </div>
-                <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
+                <p className="mt-3 text-[13px] font-bold uppercase tracking-[0.14em] text-slate-600">
                   Select Delivery Date
                 </p>
                 <button
@@ -2011,10 +2011,10 @@ const RentalVehicleDetail = () => {
                   className="mt-2 flex w-full items-center gap-3 rounded-[16px] border border-slate-200 bg-white px-4 py-3 text-left"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
+                    <p className="text-[13px] font-bold uppercase tracking-[0.14em] text-slate-600">
                       Tap to choose
                     </p>
-                    <p className="mt-1 truncate text-[15px] font-bold text-slate-700">
+                    <p className="mt-1 truncate text-[16.5px] font-bold text-slate-700">
                       {subscriptionStartDate
                         ? formatPickerSummary(subscriptionStartDate)
                         : 'Choose delivery date'}
@@ -2033,13 +2033,13 @@ const RentalVehicleDetail = () => {
             >
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-slate-600">Place of delivery</p>
-                  <p className="mt-1 text-[14px] font-bold text-slate-600">
+                  <p className="text-[13.5px] font-bold uppercase tracking-[0.16em] text-slate-600">Place of delivery</p>
+                  <p className="mt-1 text-[15.5px] font-bold text-slate-600">
                     Choose the nearest pickup or delivery point for this subscription.
                   </p>
                 </div>
                 {selectedServiceLocation?.distanceLabel ? (
-                  <span className="rounded-full bg-emerald-50 px-3 py-1 text-[10px] font-bold text-emerald-700">
+                  <span className="rounded-full bg-emerald-50 px-3 py-1 text-[12px] font-bold text-emerald-700">
                     {selectedServiceLocation.distanceLabel}
                   </span>
                 ) : null}
@@ -2047,16 +2047,16 @@ const RentalVehicleDetail = () => {
 
               <div className="mt-4 space-y-3">
                 {locationsLoading ? (
-                  <div className="flex items-center justify-center gap-2 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-6 text-[12px] font-bold text-slate-600">
+                  <div className="flex items-center justify-center gap-2 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-6 text-[13.5px] font-bold text-slate-600">
                     <Loader2 size={16} className="animate-spin text-slate-600" />
                     Loading delivery points...
                   </div>
                 ) : locationError ? (
-                  <div className="rounded-2xl border border-rose-100 bg-rose-50 px-4 py-4 text-[12px] font-bold text-rose-500">
+                  <div className="rounded-2xl border border-rose-100 bg-rose-50 px-4 py-4 text-[13.5px] font-bold text-rose-500">
                     {locationError}
                   </div>
                 ) : serviceLocations.length === 0 ? (
-                  <div className="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-6 text-[12px] font-bold text-slate-600">
+                  <div className="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-6 text-[13.5px] font-bold text-slate-600">
                     No delivery points are available for this vehicle right now.
                   </div>
                 ) : (
@@ -2077,14 +2077,14 @@ const RentalVehicleDetail = () => {
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-2">
-                              <p className={`text-[14px] font-black ${isSelected ? 'text-[#332000]' : 'text-slate-900'}`}>{item.name}</p>
+                              <p className={`text-[15.5px] font-black ${isSelected ? 'text-[#332000]' : 'text-slate-900'}`}>{item.name}</p>
                               {index === 0 && userCoordinates ? (
-                                <span className="rounded-full bg-emerald-100/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-500">
+                                <span className="rounded-full bg-emerald-100/20 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-emerald-500">
                                   Closest
                                 </span>
                               ) : null}
                             </div>
-                            <p className={`mt-1 text-[12px] font-bold ${isSelected ? 'text-slate-300' : 'text-slate-600'}`}>
+                            <p className={`mt-1 text-[13.5px] font-bold ${isSelected ? 'text-slate-300' : 'text-slate-600'}`}>
                               {item.pickupLabel || item.address || `${appName} delivery point`}
                             </p>
                           </div>
@@ -2114,14 +2114,14 @@ const RentalVehicleDetail = () => {
               >
                 <div className="absolute top-6 left-6 flex items-center gap-1.5 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm">
                   <Star size={14} className="text-yellow-500 fill-yellow-500" />
-                  <span className="text-[12px] font-bold text-amber-600">Most Popular</span>
+                  <span className="text-[13.5px] font-bold text-amber-600">Most Popular</span>
                 </div>
                 <div className="absolute top-6 right-6 text-right">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-600 mb-1">RATE</p>
+                  <p className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-600 mb-1">RATE</p>
                   <p className="text-[24px] font-black text-slate-900 leading-none">
                     Rs.{selectedPackage?.price || vehicle.prices?.[duration] || 0}
                   </p>
-                  <p className="text-[13px] font-bold text-slate-600 mt-1">
+                  <p className="text-[14.5px] font-bold text-slate-600 mt-1">
                     {selectedPackage ? packageSuffix(selectedPackage.durationHours) : '/hr'}
                   </p>
                 </div>
@@ -2183,14 +2183,14 @@ const RentalVehicleDetail = () => {
                 
                 <div className="text-center">
                   <h2 className="text-[32px] font-black text-slate-900 tracking-tight leading-tight text-center">{vehicle.name}</h2>
-                  <p className="text-[17px] font-bold text-slate-700 mt-2 text-center">{vehicle.vehicleCategory || vehicle.shortDescription || 'Vehicle'}</p>
+                  <p className="text-[18px] font-bold text-slate-700 mt-2 text-center">{vehicle.vehicleCategory || vehicle.shortDescription || 'Vehicle'}</p>
                   <div className="flex items-center justify-center gap-4 mt-4">
                     <div className="flex items-center gap-1.5 bg-yellow-50 px-2.5 py-1.5 rounded-md">
                       <Star size={16} className="text-yellow-500 fill-yellow-500" />
-                      <span className="text-[15px] font-bold text-slate-900">{vehicle.rating || '4.8'}</span>
+                      <span className="text-[16.5px] font-bold text-slate-900">{vehicle.rating || '4.8'}</span>
                     </div>
                     <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
-                    <span className="text-[15px] font-bold text-slate-700">
+                    <span className="text-[16.5px] font-bold text-slate-700">
                       {selectedPackage ? selectedPackage.includedKm : (vehicle.kmLimit?.[duration] || '10')} km included
                     </span>
                   </div>
@@ -2206,23 +2206,23 @@ const RentalVehicleDetail = () => {
               >
                 <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
                   <Users size={22} className="text-slate-500 mb-2" />
-                  <p className="text-[18px] font-black text-slate-900">{vehicle.capacity || 1}</p>
-                  <p className="text-[14px] font-bold text-slate-700">Seat</p>
+                  <p className="text-[19px] font-black text-slate-900">{vehicle.capacity || 1}</p>
+                  <p className="text-[15.5px] font-bold text-slate-700">Seat</p>
                 </div>
                 <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
                   <Luggage size={22} className="text-slate-500 mb-2" />
-                  <p className="text-[18px] font-black text-slate-900">{vehicle.luggageCapacity || 1}</p>
-                  <p className="text-[14px] font-bold text-slate-700">Bag Space</p>
+                  <p className="text-[19px] font-black text-slate-900">{vehicle.luggageCapacity || 1}</p>
+                  <p className="text-[15.5px] font-bold text-slate-700">Bag Space</p>
                 </div>
                 <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
                   <Car size={22} className="text-slate-500 mb-2" />
-                  <p className="text-[16px] font-black text-slate-900 truncate w-full">{vehicle.vehicleCategory || 'Bike'}</p>
-                  <p className="text-[14px] font-bold text-slate-700">Vehicle Type</p>
+                  <p className="text-[17px] font-black text-slate-900 truncate w-full">{vehicle.vehicleCategory || 'Bike'}</p>
+                  <p className="text-[15.5px] font-bold text-slate-700">Vehicle Type</p>
                 </div>
                 <div className="rounded-[16px] border border-slate-100 bg-white p-5 flex flex-col items-center justify-center text-center shadow-sm">
                   <Fuel size={22} className="text-slate-500 mb-2" />
-                  <p className="text-[16px] font-black text-slate-900">{cleanDescription(vehicle.fuel) || '80 km/hr'}</p>
-                  <p className="text-[14px] font-bold text-slate-700">Mileage (Approx.)</p>
+                  <p className="text-[17px] font-black text-slate-900">{cleanDescription(vehicle.fuel) || '80 km/hr'}</p>
+                  <p className="text-[15.5px] font-bold text-slate-700">Mileage (Approx.)</p>
                 </div>
               </motion.div>
 
@@ -2233,18 +2233,18 @@ const RentalVehicleDetail = () => {
                 transition={{ delay: 0.1 }}
                 className="rounded-[20px] border border-slate-100 bg-white p-6 shadow-sm space-y-5"
               >
-                <p className="text-[15px] font-black uppercase tracking-[0.15em] text-slate-800 text-center">WHAT'S INCLUDED</p>
+                <p className="text-[16.5px] font-black uppercase tracking-[0.15em] text-slate-800 text-center">WHAT'S INCLUDED</p>
                 <div className="flex flex-col items-center justify-center space-y-4">
                   {(vehicle.amenities?.length ? vehicle.amenities : vehicle.features || []).map((feature) => (
                     <div key={feature} className="flex items-center gap-3 justify-center">
                       <div className="w-5 h-5 rounded-full border-[1.5px] border-emerald-500 flex items-center justify-center text-emerald-500 shrink-0">
                         <CheckCircle2 size={12} strokeWidth={3} />
                       </div>
-                      <span className="text-[16px] font-extrabold text-slate-800">{feature}</span>
+                      <span className="text-[17px] font-extrabold text-slate-800">{feature}</span>
                     </div>
                   ))}
                   {(!vehicle.amenities?.length && !vehicle.features?.length) && (
-                    <div className="text-slate-600 text-[14px] font-semibold text-center">Standard features included.</div>
+                    <div className="text-slate-600 text-[15.5px] font-semibold text-center">Standard features included.</div>
                   )}
                 </div>
               </motion.div>
@@ -2260,12 +2260,12 @@ const RentalVehicleDetail = () => {
                   <Calendar size={24} className="text-slate-900" />
                 </div>
                 <div>
-                  <p className="text-[18px] font-black text-slate-900">Need a different duration?</p>
-                  <p className="text-[15px] font-bold text-slate-600 mt-2 leading-relaxed">Contact us for custom rental packages and long-term offers.</p>
+                  <p className="text-[19px] font-black text-slate-900">Need a different duration?</p>
+                  <p className="text-[16.5px] font-bold text-slate-600 mt-2 leading-relaxed">Contact us for custom rental packages and long-term offers.</p>
                 </div>
                 <button
                   onClick={() => setShowQuoteForm(true)}
-                  className="w-full sm:w-auto shrink-0 rounded-[14px] border border-slate-200 bg-white px-6 py-3.5 text-[14px] font-bold text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-2 transition-colors"
+                  className="w-full sm:w-auto shrink-0 rounded-[14px] border border-slate-200 bg-white px-6 py-3.5 text-[15.5px] font-bold text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-2 transition-colors"
                 >
                   Contact Us <ChevronRight size={16} />
                 </button>
@@ -2277,10 +2277,10 @@ const RentalVehicleDetail = () => {
               <div className="sticky top-24 space-y-6">
                 <div className="rounded-[24px] border border-slate-100 bg-white p-6 shadow-sm">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-[14px] font-black uppercase tracking-[0.15em] text-slate-800">
+                    <h3 className="text-[15.5px] font-black uppercase tracking-[0.15em] text-slate-800">
                       CHOOSE HOURLY RENTAL
                     </h3>
-                    <span className="text-[14px] font-bold text-amber-600">
+                    <span className="text-[15.5px] font-bold text-amber-600">
                       Step {selectionStep === 'package' ? '1' : '2'} of 2
                     </span>
                   </div>
@@ -2307,24 +2307,24 @@ const RentalVehicleDetail = () => {
                                   {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-slate-900" />}
                                 </div>
                                 <div>
-                                  <p className={`text-[17px] font-black ${isSelected ? 'text-slate-950' : 'text-slate-950'}`}>
+                                  <p className={`text-[18px] font-black ${isSelected ? 'text-slate-950' : 'text-slate-950'}`}>
                                     {row.label || `${row.durationHours} Hours`}
                                   </p>
-                                  <p className={`text-[13.5px] font-bold mt-1.5 ${isSelected ? 'text-slate-900/90' : 'text-slate-800'}`}>
+                                  <p className={`text-[15px] font-bold mt-1.5 ${isSelected ? 'text-slate-900/90' : 'text-slate-800'}`}>
                                     {row.durationHours} hour{row.durationHours > 1 ? 's' : ''} - {row.includedKm} km included
                                   </p>
                                 </div>
                               </div>
                               <div className="text-right">
-                                <p className={`text-[17px] font-black ${isSelected ? 'text-slate-950' : 'text-slate-950'}`}>
+                                <p className={`text-[18px] font-black ${isSelected ? 'text-slate-950' : 'text-slate-950'}`}>
                                   Rs.{row.price}
                                 </p>
-                                <p className={`text-[13px] font-bold mt-1.5 ${isSelected ? 'text-slate-900/90' : 'text-slate-800'}`}>
+                                <p className={`text-[14.5px] font-bold mt-1.5 ${isSelected ? 'text-slate-900/90' : 'text-slate-800'}`}>
                                   {packageSuffix(row.durationHours)}
                                 </p>
                               </div>
                             </div>
-                            <div className={`mt-4 pt-4 border-t text-[13px] font-black flex gap-2 sm:gap-3 flex-wrap ${
+                            <div className={`mt-4 pt-4 border-t text-[14.5px] font-black flex gap-2 sm:gap-3 flex-wrap ${
                               isSelected ? 'border-slate-900/20 text-slate-950' : 'border-slate-200 text-slate-800'
                             }`}>
                               <span>Extra hour: Rs.{row.extraHourPrice || 0}</span>
@@ -2338,26 +2338,26 @@ const RentalVehicleDetail = () => {
                   ) : (
                     <div className="space-y-4">
                       <div className="flex items-center justify-between pb-2">
-                        <p className="text-[17px] font-black text-slate-950">Select Location</p>
+                        <p className="text-[18px] font-black text-slate-950">Select Location</p>
                         <button
                           onClick={() => setSelectionStep('package')}
-                          className="text-[14px] font-black text-[#FFB800] hover:text-yellow-600 transition-colors flex items-center gap-1"
+                          className="text-[15.5px] font-black text-[#FFB800] hover:text-yellow-600 transition-colors flex items-center gap-1"
                         >
                           <ChevronLeft size={16} /> Back
                         </button>
                       </div>
                       
                       {locationsLoading ? (
-                        <div className="py-10 text-center text-[13px] font-bold text-slate-600 flex flex-col items-center bg-slate-50 rounded-xl">
+                        <div className="py-10 text-center text-[14.5px] font-bold text-slate-600 flex flex-col items-center bg-slate-50 rounded-xl">
                           <Loader2 className="animate-spin mb-3 text-slate-600" size={24} />
                           Loading service locations...
                         </div>
                       ) : locationError ? (
-                        <div className="p-5 rounded-[16px] bg-rose-50 text-rose-600 text-[13px] font-bold border border-rose-100">
+                        <div className="p-5 rounded-[16px] bg-rose-50 text-rose-600 text-[14.5px] font-bold border border-rose-100">
                           {locationError}
                         </div>
                       ) : serviceLocations.length === 0 ? (
-                        <div className="p-8 rounded-[16px] bg-slate-50 border border-slate-100 text-center text-slate-600 text-[13px] font-bold">
+                        <div className="p-8 rounded-[16px] bg-slate-50 border border-slate-100 text-center text-slate-600 text-[14.5px] font-bold">
                           No locations found for this vehicle.
                         </div>
                       ) : (
@@ -2377,18 +2377,18 @@ const RentalVehicleDetail = () => {
                                 <div className="flex items-start justify-between gap-3">
                                   <div className="min-w-0 pr-2">
                                     <div className="flex items-center gap-2 flex-wrap">
-                                      <p className={`text-[15px] font-black truncate ${isSelected ? 'text-[#332000]' : 'text-slate-950'}`}>
+                                      <p className={`text-[16.5px] font-black truncate ${isSelected ? 'text-[#332000]' : 'text-slate-950'}`}>
                                         {item.name}
                                       </p>
                                       {index === 0 && userCoordinates && (
-                                        <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                                        <span className={`text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
                                           isSelected ? 'bg-white/20 text-white' : 'bg-emerald-150 text-emerald-800'
                                         }`}>
                                           Closest
                                         </span>
                                       )}
                                     </div>
-                                    <p className={`text-[13.5px] font-bold mt-1.5 truncate ${isSelected ? 'text-[#473000]' : 'text-slate-800'}`}>
+                                    <p className={`text-[15px] font-bold mt-1.5 truncate ${isSelected ? 'text-[#473000]' : 'text-slate-800'}`}>
                                       {item.pickupLabel || item.address}
                                     </p>
                                   </div>
@@ -2408,8 +2408,8 @@ const RentalVehicleDetail = () => {
                 </div>
 
                 <div className="rounded-[24px] border border-slate-100 bg-white p-6 shadow-sm">
-                  <p className="text-[14px] font-black uppercase tracking-[0.15em] text-slate-800 mb-5">BOOKING SUMMARY</p>
-                  <div className="space-y-4 text-[15px]">
+                  <p className="text-[15.5px] font-black uppercase tracking-[0.15em] text-slate-800 mb-5">BOOKING SUMMARY</p>
+                  <div className="space-y-4 text-[16.5px]">
                     <div className="flex justify-between items-center">
                       <span className="font-bold text-slate-800">Base Fare</span>
                       <span className="font-black text-slate-950">Rs.{selectedPackage?.price || 0}</span>
@@ -2425,14 +2425,14 @@ const RentalVehicleDetail = () => {
                   </div>
                   
                   <div className="mt-5 pt-5 border-t border-slate-150 flex justify-between items-end">
-                    <span className="text-[17px] font-black text-slate-950">Total <span className="text-[13px] font-bold text-slate-800">(Estimated)</span></span>
+                    <span className="text-[18px] font-black text-slate-950">Total <span className="text-[14.5px] font-bold text-slate-800">(Estimated)</span></span>
                     <div className="text-right">
                       <span className="text-[25px] font-black text-slate-950 leading-none">Rs.{selectedPackage?.price || 0}</span>
-                      <span className="text-[13px] font-extrabold text-slate-800 block mt-1">/hr</span>
+                      <span className="text-[14.5px] font-extrabold text-slate-800 block mt-1">/hr</span>
                     </div>
                   </div>
 
-                  <div className="mt-5 p-3.5 rounded-[14px] bg-slate-50 flex items-start gap-2.5 text-[13px] font-bold text-slate-800 leading-relaxed border border-slate-200">
+                  <div className="mt-5 p-3.5 rounded-[14px] bg-slate-50 flex items-start gap-2.5 text-[14.5px] font-bold text-slate-800 leading-relaxed border border-slate-200">
                     <Shield size={14} className="shrink-0 mt-0.5 text-slate-700" />
                     <p>Security deposit and taxes may apply at checkout.</p>
                   </div>
@@ -2441,7 +2441,7 @@ const RentalVehicleDetail = () => {
                     <button 
                       onClick={handleProceed}
                       disabled={rentalProceedDisabled}
-                      className="w-full rounded-[16px] bg-[#ffc400] disabled:bg-slate-200 disabled:text-slate-400 text-white py-4 px-6 text-[15px] font-black flex items-center justify-between transition-colors hover:bg-black"
+                      className="w-full rounded-[16px] bg-[#ffc400] disabled:bg-slate-200 disabled:text-slate-400 text-white py-4 px-6 text-[16.5px] font-black flex items-center justify-between transition-colors hover:bg-black"
                     >
                       {selectionStep === 'package' ? 'Proceed to Service Location' : 'Select Date & Time'}
                       <ChevronRight size={18} strokeWidth={2.5} />
@@ -2475,7 +2475,7 @@ const RentalVehicleDetail = () => {
                     <div className="w-8 h-8 rounded-full bg-[#FFB800]/20 flex items-center justify-center text-[#FFB800]">
                       <Calendar size={14} />
                     </div>
-                    <p className="text-[12px] font-black uppercase tracking-[0.15em] text-slate-900">
+                    <p className="text-[13.5px] font-black uppercase tracking-[0.15em] text-slate-900">
                       Custom Quote Request
                     </p>
                   </div>
@@ -2483,13 +2483,13 @@ const RentalVehicleDetail = () => {
                     <span className="text-xl leading-none">&times;</span>
                   </button>
                 </div>
-                <p className="text-[13px] font-semibold text-slate-600 mb-6">
+                <p className="text-[14.5px] font-semibold text-slate-600 mb-6">
                   Share your required hours and dates. Our admin team will review and offer a custom price.
                 </p>
                 
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600">
+                    <label className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-600">
                       Hours needed
                     </label>
                     <input
@@ -2507,7 +2507,7 @@ const RentalVehicleDetail = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600">
+                    <label className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-600">
                       Start date and time
                     </label>
                     <button
@@ -2520,10 +2520,10 @@ const RentalVehicleDetail = () => {
                           <Calendar size={18} />
                         </span>
                         <span className="min-w-0 text-left">
-                          <span className="block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-600">
+                          <span className="block text-[12px] font-bold uppercase tracking-[0.15em] text-slate-600">
                             Tap to choose
                           </span>
-                          <span className="mt-0.5 block truncate text-[14px] font-bold text-slate-900">
+                          <span className="mt-0.5 block truncate text-[15.5px] font-bold text-slate-900">
                             {formatPickerSummary(quoteForm.pickupDateTime)}
                           </span>
                         </span>
@@ -2531,7 +2531,7 @@ const RentalVehicleDetail = () => {
                     </button>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600">
+                    <label className="text-[13px] font-black uppercase tracking-[0.15em] text-slate-600">
                       End date and time
                     </label>
                     <button
@@ -2544,10 +2544,10 @@ const RentalVehicleDetail = () => {
                           <Clock size={18} />
                         </span>
                         <span className="min-w-0 text-left">
-                          <span className="block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-600">
+                          <span className="block text-[12px] font-bold uppercase tracking-[0.15em] text-slate-600">
                             Tap to choose
                           </span>
-                          <span className="mt-0.5 block truncate text-[14px] font-bold text-slate-900">
+                          <span className="mt-0.5 block truncate text-[15.5px] font-bold text-slate-900">
                             {formatPickerSummary(quoteForm.returnDateTime)}
                           </span>
                         </span>
@@ -2558,7 +2558,7 @@ const RentalVehicleDetail = () => {
                     type="button"
                     onClick={submitQuote}
                     disabled={submittingQuote}
-                    className="w-full mt-4 rounded-[16px] bg-[#ffc400] px-5 py-4 text-[14px] font-black text-white disabled:opacity-60 transition-colors hover:bg-black"
+                    className="w-full mt-4 rounded-[16px] bg-[#ffc400] px-5 py-4 text-[15.5px] font-black text-white disabled:opacity-60 transition-colors hover:bg-black"
                   >
                     {submittingQuote ? 'Sending Request...' : 'Send To Admin For Review'}
                   </button>
@@ -2596,7 +2596,7 @@ const RentalVehicleDetail = () => {
           <button
             onClick={handleProceed}
             disabled={rentalProceedDisabled}
-            className="pointer-events-auto w-full py-4 rounded-[16px] text-[15px] font-black text-white shadow-[0_8px_24px_rgba(17,24,39,0.2)] flex items-center justify-between px-6 transition-all bg-[#ffc400] disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none"
+            className="pointer-events-auto w-full py-4 rounded-[16px] text-[16.5px] font-black text-white shadow-[0_8px_24px_rgba(17,24,39,0.2)] flex items-center justify-between px-6 transition-all bg-[#ffc400] disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none"
           >
             {selectionStep === 'package' ? 'Proceed to Service Location' : 'Select Date & Time'}
             <ChevronRight size={18} strokeWidth={2.5} />
@@ -2611,7 +2611,7 @@ const RentalVehicleDetail = () => {
             whileTap={{ scale: 0.98 }}
             onClick={handleProceed}
             disabled={subscriptionProceedDisabled}
-            className={`pointer-events-auto w-full py-4 rounded-[16px] text-[15px] font-black text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 transition-all ${
+            className={`pointer-events-auto w-full py-4 rounded-[16px] text-[16.5px] font-black text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 transition-all ${
               subscriptionProceedDisabled ? 'bg-slate-300 shadow-none' : 'bg-[#ffc400]'
             }`}
           >

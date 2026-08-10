@@ -83,10 +83,10 @@ const SupportTicketDetail = () => {
             <ArrowLeft size={18} className="text-slate-900" strokeWidth={2.5} />
           </button>
           <div className="flex-1 min-w-0">
-            <p className="text-[9px] font-black uppercase tracking-[0.26em] text-slate-400">{ticket?.supportType || 'support'}</p>
-            <h1 className="text-[16px] font-black tracking-tight text-slate-900 leading-tight truncate">{ticket?.title || 'Support Ticket'}</h1>
+            <p className="text-[11px] font-black uppercase tracking-[0.26em] text-slate-400">{ticket?.supportType || 'support'}</p>
+            <h1 className="text-[17px] font-black tracking-tight text-slate-900 leading-tight truncate">{ticket?.title || 'Support Ticket'}</h1>
           </div>
-          <span className={`text-[9px] font-black px-2.5 py-1 rounded-full border shrink-0 mt-1 ${STATUS_STYLES[ticket?.status] || STATUS_STYLES.pending}`}>{ticket?.status || 'pending'}</span>
+          <span className={`text-[11px] font-black px-2.5 py-1 rounded-full border shrink-0 mt-1 ${STATUS_STYLES[ticket?.status] || STATUS_STYLES.pending}`}>{ticket?.status || 'pending'}</span>
         </div>
       </header>
 
@@ -98,7 +98,7 @@ const SupportTicketDetail = () => {
           </div>
         ) : null}
         {error ? (
-          <div className="rounded-[12px] border border-red-100 bg-red-50 px-4 py-3 text-[12px] font-bold text-red-600">
+          <div className="rounded-[12px] border border-red-100 bg-red-50 px-4 py-3 text-[13.5px] font-bold text-red-600">
             {error}
           </div>
         ) : null}
@@ -112,8 +112,8 @@ const SupportTicketDetail = () => {
                 ? 'bg-slate-900 text-white rounded-br-[4px]'
                 : 'bg-white border border-white/80 shadow-[0_2px_8px_rgba(15,23,42,0.06)] text-slate-900 rounded-bl-[4px]'
             }`}>
-              <p className={`text-[13px] font-bold leading-relaxed ${m.senderRole === pathRole ? 'text-white' : 'text-slate-800'}`}>{m.message}</p>
-              <p className={`text-[9px] font-bold mt-1 ${m.senderRole === pathRole ? 'text-white/50 text-right' : 'text-slate-400'}`}>
+              <p className={`text-[14.5px] font-bold leading-relaxed ${m.senderRole === pathRole ? 'text-white' : 'text-slate-800'}`}>{m.message}</p>
+              <p className={`text-[11px] font-bold mt-1 ${m.senderRole === pathRole ? 'text-white/50 text-right' : 'text-slate-400'}`}>
                 {new Date(m.createdAt).toLocaleString()}
               </p>
             </div>
@@ -129,7 +129,7 @@ const SupportTicketDetail = () => {
           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
           placeholder="Type your reply..."
           rows={1}
-          className="flex-1 bg-slate-50 border border-slate-100 rounded-[14px] px-4 py-3 text-[14px] font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-200 resize-none"
+          className="flex-1 bg-slate-50 border border-slate-100 rounded-[14px] px-4 py-3 text-[15.5px] font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-200 resize-none"
         />
         <motion.button whileTap={{ scale: 0.9 }} onClick={handleSend} disabled={!reply.trim() || sending}
           className={`w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0 transition-all ${

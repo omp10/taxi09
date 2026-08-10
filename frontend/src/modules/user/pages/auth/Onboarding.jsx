@@ -87,7 +87,7 @@ const Onboarding = () => {
       {/* Skip button */}
       <div className="flex justify-end px-6 pt-12 pb-4 relative z-10">
         <button onClick={finish}
-          className="text-[12px] font-black text-white/70 uppercase tracking-widest px-4 py-2 rounded-full border border-white/20 active:bg-white/10 transition-all">
+          className="text-[13.5px] font-black text-white/70 uppercase tracking-widest px-4 py-2 rounded-full border border-white/20 active:bg-white/10 transition-all">
           Skip
         </button>
       </div>
@@ -110,7 +110,7 @@ const Onboarding = () => {
             </div>
             {/* Text */}
             <h1 className="text-[28px] font-black text-white leading-tight tracking-tight mb-3">{slide.title}</h1>
-            <p className="text-[14px] font-bold text-white/75 leading-relaxed max-w-[280px]">{slideBody}</p>
+            <p className="text-[15.5px] font-bold text-white/75 leading-relaxed max-w-[280px]">{slideBody}</p>
           </motion.div>
         </AnimatePresence>
       </div>
@@ -130,7 +130,7 @@ const Onboarding = () => {
 
         {/* CTA button */}
         <motion.button whileTap={{ scale: 0.97 }} onClick={handleNext}
-          className="w-full bg-white py-4 rounded-[18px] text-[15px] font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(0,0,0,0.15)]"
+          className="w-full bg-white py-4 rounded-[18px] text-[16.5px] font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(0,0,0,0.15)]"
           style={{ color: slide.gradientTo }}>
           {isLast ? 'Get Started' : 'Next'}
           <ChevronRight size={17} strokeWidth={3} className="opacity-60" />

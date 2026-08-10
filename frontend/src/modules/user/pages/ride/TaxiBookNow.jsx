@@ -284,11 +284,11 @@ const TaxiBookNow = () => {
     return (
       <div className="absolute left-0 right-0 z-30 mt-1 max-h-64 overflow-y-auto rounded-[14px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.16)]">
         {typed && searching ? (
-          <p className="px-4 py-3 text-[12px] font-semibold text-slate-400">Searching...</p>
+          <p className="px-4 py-3 text-[13.5px] font-semibold text-slate-400">Searching...</p>
         ) : null}
 
         {typed && !searching && predictions.length === 0 ? (
-          <p className="px-4 py-3 text-[12px] font-semibold text-slate-400">
+          <p className="px-4 py-3 text-[13.5px] font-semibold text-slate-400">
             {mapsReady ? 'No places found' : 'Place search is unavailable right now'}
           </p>
         ) : null}
@@ -303,8 +303,8 @@ const TaxiBookNow = () => {
             >
               <MapPin size={15} className="mt-0.5 shrink-0 text-[#f5b700]" />
               <span className="min-w-0">
-                <span className="block truncate text-[13px] font-semibold text-slate-800">{prediction.title}</span>
-                <span className="block truncate text-[11px] text-slate-500">{prediction.address}</span>
+                <span className="block truncate text-[14.5px] font-semibold text-slate-800">{prediction.title}</span>
+                <span className="block truncate text-[13px] text-slate-500">{prediction.address}</span>
               </span>
             </button>
           ))
@@ -315,7 +315,7 @@ const TaxiBookNow = () => {
                 key={place.name}
                 type="button"
                 onClick={() => chooseStore(place)}
-                className="flex w-full items-center gap-2 border-b border-slate-50 px-4 py-2.5 text-left text-[13px] font-semibold text-slate-700 last:border-b-0"
+                className="flex w-full items-center gap-2 border-b border-slate-50 px-4 py-2.5 text-left text-[14.5px] font-semibold text-slate-700 last:border-b-0"
               >
                 <MapPin size={15} className="text-[#f5b700]" />
                 <span className="truncate">{place.name}</span>
@@ -359,7 +359,7 @@ const TaxiBookNow = () => {
                 key={category?.id || index}
                 disabled={!category}
                 onClick={() => category && setSelectedCategoryId(String(category.id))}
-                className={`flex h-[58px] flex-col items-center justify-center rounded-[10px] border px-1 text-[11px] font-semibold shadow-[0_5px_14px_rgba(15,23,42,0.07)] ${
+                className={`flex h-[58px] flex-col items-center justify-center rounded-[10px] border px-1 text-[13px] font-semibold shadow-[0_5px_14px_rgba(15,23,42,0.07)] ${
                   category && String(selectedCategoryId) === String(category.id)
                     ? 'border-[#ffc400] bg-[#ffc400] text-black'
                     : 'border-slate-100 bg-white text-black'
@@ -377,13 +377,13 @@ const TaxiBookNow = () => {
               <div className="flex min-h-[68px] w-full items-center gap-3 rounded-[14px] border border-slate-200 bg-white px-4 shadow-[0_4px_14px_rgba(15,23,42,0.04)]">
                 <span className="h-6 w-6 shrink-0 rounded-full bg-[#22c55e]" />
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[12px] font-medium text-slate-500">Pick-up Location</span>
+                  <span className="block text-[13.5px] font-medium text-slate-500">Pick-up Location</span>
                   <input
                     value={openField === 'pickup' ? query : pickup.label}
                     onFocus={() => { setOpenField('pickup'); setQuery(''); }}
                     onChange={(event) => setQuery(event.target.value)}
                     placeholder="Where from?"
-                    className="block w-full truncate bg-transparent text-[16px] font-semibold text-black outline-none placeholder:font-medium placeholder:text-slate-400"
+                    className="block w-full truncate bg-transparent text-[17px] font-semibold text-black outline-none placeholder:font-medium placeholder:text-slate-400"
                   />
                 </span>
                 <ChevronDown size={21} className="shrink-0 text-slate-500" />
@@ -395,13 +395,13 @@ const TaxiBookNow = () => {
               <div className="flex min-h-[68px] w-full items-center gap-3 rounded-[14px] border border-slate-200 bg-white px-4 shadow-[0_4px_14px_rgba(15,23,42,0.04)]">
                 <MapPin size={28} className="shrink-0 text-[#ff3b4f]" strokeWidth={2.4} />
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[12px] font-medium text-slate-500">Drop-off Location</span>
+                  <span className="block text-[13.5px] font-medium text-slate-500">Drop-off Location</span>
                   <input
                     value={openField === 'drop' ? query : drop.label}
                     onFocus={() => { setOpenField('drop'); setQuery(''); }}
                     onChange={(event) => setQuery(event.target.value)}
                     placeholder="Where to?"
-                    className="block w-full truncate bg-transparent text-[16px] font-semibold text-black outline-none placeholder:font-medium placeholder:text-slate-400"
+                    className="block w-full truncate bg-transparent text-[17px] font-semibold text-black outline-none placeholder:font-medium placeholder:text-slate-400"
                   />
                 </span>
                 <ChevronDown size={21} className="shrink-0 text-slate-500" />
@@ -431,14 +431,14 @@ const TaxiBookNow = () => {
                 type="button"
                 key={key}
                 onClick={() => setRideMode(key)}
-                className={`flex min-h-[56px] flex-col items-center justify-center rounded-[12px] border text-[13px] font-bold shadow-[0_4px_14px_rgba(15,23,42,0.04)] ${
+                className={`flex min-h-[56px] flex-col items-center justify-center rounded-[12px] border text-[14.5px] font-bold shadow-[0_4px_14px_rgba(15,23,42,0.04)] ${
                   rideMode === key
                     ? 'border-[#ffc400] bg-[#ffc400] text-black'
                     : 'border-slate-200 bg-white text-black'
                 }`}
               >
                 {label}
-                <span className="text-[10px] font-medium text-slate-600">{sub}</span>
+                <span className="text-[12px] font-medium text-slate-600">{sub}</span>
               </button>
             ))}
           </div>
@@ -455,8 +455,8 @@ const TaxiBookNow = () => {
                 >
                   <Icon size={23} className="text-black" strokeWidth={2.5} />
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[11px] font-medium text-slate-500">{label}</span>
-                    <span className="block truncate text-[14px] font-semibold text-black">{value}</span>
+                    <span className="block text-[13px] font-medium text-slate-500">{label}</span>
+                    <span className="block truncate text-[15.5px] font-semibold text-black">{value}</span>
                   </span>
                   <ChevronDown size={18} className="text-slate-500" />
                   <input
@@ -473,15 +473,15 @@ const TaxiBookNow = () => {
 
           {estimate && (
             <div className="mt-4 flex items-center justify-between rounded-[12px] bg-slate-50 px-4 py-3">
-              <span className="text-[13px] font-semibold text-slate-600">
+              <span className="text-[14.5px] font-semibold text-slate-600">
                 {(estimate.distanceMeters / 1000).toFixed(1)} km · ~{estimate.durationMinutes} min
               </span>
-              <span className="text-[17px] font-black text-black">₹{estimate.fare}</span>
+              <span className="text-[18px] font-black text-black">₹{estimate.fare}</span>
             </div>
           )}
 
           {error && (
-            <div className="mt-3 rounded-[12px] border border-rose-200 bg-rose-50 px-4 py-2.5 text-[13px] font-semibold text-rose-600">
+            <div className="mt-3 rounded-[12px] border border-rose-200 bg-rose-50 px-4 py-2.5 text-[14.5px] font-semibold text-rose-600">
               {error}
             </div>
           )}
@@ -505,7 +505,7 @@ const TaxiBookNow = () => {
             ].map(({ icon: Icon, label }) => (
               <div key={label} className="flex flex-col items-center justify-center gap-2 px-2 text-center">
                 <Icon size={25} className="text-black" strokeWidth={2.1} />
-                <span className="whitespace-pre-line text-[11px] font-medium leading-tight text-black">{label}</span>
+                <span className="whitespace-pre-line text-[13px] font-medium leading-tight text-black">{label}</span>
               </div>
             ))}
           </div>

@@ -32,8 +32,8 @@ const AirportCabConfirm = () => {
             <ArrowLeft size={18} className="text-slate-900" strokeWidth={2.5} />
           </button>
           <div className="flex-1">
-            <p className="text-[9px] font-black uppercase tracking-[0.26em] text-slate-400">Booking Status</p>
-            <h1 className="text-[19px] font-black tracking-tight text-slate-900">Success</h1>
+            <p className="text-[11px] font-black uppercase tracking-[0.26em] text-slate-400">Booking Status</p>
+            <h1 className="text-[20px] font-black tracking-tight text-slate-900">Success</h1>
           </div>
         </div>
       </header>
@@ -55,7 +55,7 @@ const AirportCabConfirm = () => {
           className="text-center mb-8"
         >
           <h2 className="text-[24px] font-black tracking-tight text-slate-900 leading-tight">Booking Confirmed!</h2>
-          <p className="text-[13px] font-bold text-slate-500 mt-2">Your Airport Cab has been scheduled.</p>
+          <p className="text-[14.5px] font-bold text-slate-500 mt-2">Your Airport Cab has been scheduled.</p>
         </motion.div>
 
         <motion.div
@@ -68,14 +68,14 @@ const AirportCabConfirm = () => {
           
           <div className="flex justify-between items-center pb-4 border-b border-slate-100">
             <div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Service</p>
-              <h3 className="text-[16px] font-black text-blue-600 flex items-center gap-1.5">
+              <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-1">Service</p>
+              <h3 className="text-[17px] font-black text-blue-600 flex items-center gap-1.5">
                 <Plane size={16} strokeWidth={2.5} /> Airport Drop
               </h3>
             </div>
             <div className="text-right">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Vehicle</p>
-              <h3 className="text-[16px] font-black text-slate-900">{state.vehicle?.name} {state.vehicle?.icon}</h3>
+              <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-1">Vehicle</p>
+              <h3 className="text-[17px] font-black text-slate-900">{state.vehicle?.name} {state.vehicle?.icon}</h3>
             </div>
           </div>
 
@@ -87,12 +87,12 @@ const AirportCabConfirm = () => {
             </div>
             <div className="flex-1 space-y-4">
               <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Pickup Address</p>
-                <p className="text-[14px] font-bold text-slate-900 leading-snug">{state.pickup}</p>
+                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-1">Pickup Address</p>
+                <p className="text-[15.5px] font-bold text-slate-900 leading-snug">{state.pickup}</p>
               </div>
               <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Destination</p>
-                <p className="text-[14px] font-bold text-slate-900 leading-snug tracking-tight">Indore Airport — Terminal {state.terminal}</p>
+                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-1">Destination</p>
+                <p className="text-[15.5px] font-bold text-slate-900 leading-snug tracking-tight">Indore Airport — Terminal {state.terminal}</p>
               </div>
             </div>
           </div>
@@ -101,16 +101,16 @@ const AirportCabConfirm = () => {
             <div className="flex items-center gap-3">
               <Calendar size={18} className="text-slate-500" />
               <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Date</p>
-                <p className="text-[13px] font-bold text-slate-900">{state.date}</p>
+                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">Date</p>
+                <p className="text-[14.5px] font-bold text-slate-900">{state.date}</p>
               </div>
             </div>
             <div className="h-8 w-px bg-slate-200" />
             <div className="flex items-center gap-3 pr-2">
               <Clock size={18} className="text-slate-500" />
               <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Time</p>
-                <p className="text-[13px] font-bold text-slate-900">{state.time}</p>
+                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">Time</p>
+                <p className="text-[14.5px] font-bold text-slate-900">{state.time}</p>
               </div>
             </div>
           </div>
@@ -126,11 +126,11 @@ const AirportCabConfirm = () => {
         className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg px-5 pb-6 pt-3 bg-gradient-to-t from-[#EEF2F7] via-[#F3F4F6]/95 to-transparent pointer-events-none z-30"
       >
         <div className="pointer-events-auto bg-white/90 rounded-[20px] border border-white/80 shadow-[0_4px_14px_rgba(15,23,42,0.06)] px-5 py-4 flex items-center justify-between mb-3">
-          <p className="text-[13px] font-black text-slate-700">Fixed Fare</p>
+          <p className="text-[14.5px] font-black text-slate-700">Fixed Fare</p>
           <p className="text-[22px] font-black text-slate-900 tracking-tight">₹{state.fare}</p>
         </div>
         <motion.button onClick={() => navigate('/taxi/user')}
-          className="pointer-events-auto w-full bg-slate-900 py-4 rounded-[18px] text-[15px] font-black text-white shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+          className="pointer-events-auto w-full bg-slate-900 py-4 rounded-[18px] text-[16.5px] font-black text-white shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
           <Home size={16} strokeWidth={2.5} /> Go to Home Dashboard
         </motion.button>
       </motion.div>

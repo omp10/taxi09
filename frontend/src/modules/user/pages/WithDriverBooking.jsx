@@ -307,7 +307,7 @@ const WithDriverBooking = () => {
           <ArrowLeft size={19} strokeWidth={2.7} />
         </button>
         <div className="text-center">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">Step 1 of 5</p>
+          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-slate-500">Step 1 of 5</p>
           <div className="mt-1 flex justify-center gap-1">
             <span className="h-1.5 w-7 rounded-full bg-[#f5b700]" />
             <span className="h-1.5 w-2 rounded-full bg-slate-200" />
@@ -331,10 +331,10 @@ const WithDriverBooking = () => {
           </div>
           <div className="relative z-10 max-w-[58%]">
             <h1 className="text-[25px] font-extrabold tracking-[-0.04em]">{config.title}</h1>
-            <p className="mt-1 text-[12px] font-semibold leading-5 text-slate-900">{config.subtitle}</p>
+            <p className="mt-1 text-[13.5px] font-semibold leading-5 text-slate-900">{config.subtitle}</p>
             <div className="mt-4 grid grid-cols-3 gap-1.5">
               {['Police Verified', 'Background Checked', '24x7 Support'].map((label) => (
-                <span key={label} className="rounded-lg bg-white/78 px-2 py-2 text-center text-[8px] font-bold leading-3 text-slate-900">
+                <span key={label} className="rounded-lg bg-white/78 px-2 py-2 text-center text-[10px] font-bold leading-3 text-slate-900">
                   {label}
                 </span>
               ))}
@@ -348,14 +348,14 @@ const WithDriverBooking = () => {
         </section>
 
         <section className="rounded-[15px] border border-slate-100 bg-white p-3 shadow-[0_6px_18px_rgba(15,23,42,0.06)]">
-          <h2 className="text-[15px] font-bold">Trip Type</h2>
+          <h2 className="text-[16.5px] font-bold">Trip Type</h2>
           <div className="mt-2 grid grid-cols-2 gap-2">
             {[config.primaryPlan, config.secondaryPlan].map((type) => (
               <button
                 key={type}
                 type="button"
                 onClick={() => setTripType(type)}
-                className={`flex h-10 items-center justify-center gap-2 rounded-xl border text-[13px] font-semibold transition ${
+                className={`flex h-10 items-center justify-center gap-2 rounded-xl border text-[14.5px] font-semibold transition ${
                   tripType === type ? 'border-[#f5b700] bg-[#fff7d8]' : 'border-slate-200 bg-white'
                 }`}
               >
@@ -380,9 +380,9 @@ const WithDriverBooking = () => {
                 <MapPin size={18} fill="currentColor" strokeWidth={2.5} />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-medium text-slate-500">Pickup City / Address</p>
-                <p className="truncate text-[14px] font-semibold">{pickup}</p>
-                <p className="text-[9px] font-semibold text-[#f5b700]">Use Current Location</p>
+                <p className="text-[12px] font-medium text-slate-500">Pickup City / Address</p>
+                <p className="truncate text-[15.5px] font-semibold">{pickup}</p>
+                <p className="text-[11px] font-semibold text-[#f5b700]">Use Current Location</p>
               </div>
               <span
                 role="button"
@@ -409,8 +409,8 @@ const WithDriverBooking = () => {
                 <MapPin size={18} fill="currentColor" strokeWidth={2.5} />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-medium text-slate-500">Destination City / Address</p>
-                <p className="truncate text-[14px] font-semibold">{drop}</p>
+                <p className="text-[12px] font-medium text-slate-500">Destination City / Address</p>
+                <p className="truncate text-[15.5px] font-semibold">{drop}</p>
               </div>
               <span
                 role="button"
@@ -450,8 +450,8 @@ const WithDriverBooking = () => {
               <span className="flex items-center gap-2">
                 <Icon size={17} strokeWidth={2.5} />
                 <span>
-                  <span className="block text-[9px] font-medium text-slate-500">{label}</span>
-                  <span className="block text-[12px] font-semibold">{value}</span>
+                  <span className="block text-[11px] font-medium text-slate-500">{label}</span>
+                  <span className="block text-[13.5px] font-semibold">{value}</span>
                 </span>
               </span>
               <ChevronDown size={15} className="text-slate-500" strokeWidth={2.5} />
@@ -460,7 +460,7 @@ const WithDriverBooking = () => {
         </section>
 
         <section>
-          <h2 className="text-[15px] font-bold">Driver Preference</h2>
+          <h2 className="text-[16.5px] font-bold">Driver Preference</h2>
           <div className="mt-2 grid grid-cols-3 gap-2">
             {preferenceOptions.map(({ label, icon: Icon, recommended }) => (
               <button
@@ -474,8 +474,8 @@ const WithDriverBooking = () => {
                 <span className={`mx-auto flex h-9 w-9 items-center justify-center rounded-full ${preference === label ? 'bg-[#fff2b6] text-[#c18d00]' : 'bg-slate-100 text-slate-700'}`}>
                   <Icon size={18} strokeWidth={2.4} />
                 </span>
-                <span className="mt-1 block text-[10px] font-semibold leading-3">{label}</span>
-                {recommended && <span className="text-[7px] font-semibold text-slate-500">Recommended</span>}
+                <span className="mt-1 block text-[12px] font-semibold leading-3">{label}</span>
+                {recommended && <span className="text-[9px] font-semibold text-slate-500">Recommended</span>}
                 {preference === label && <span className="absolute bottom-2 right-2 h-2.5 w-2.5 rounded-full bg-[#f5b700]" />}
               </button>
             ))}
@@ -483,7 +483,7 @@ const WithDriverBooking = () => {
         </section>
 
         <section>
-          <h2 className="text-[15px] font-bold">Journey Options</h2>
+          <h2 className="text-[16.5px] font-bold">Journey Options</h2>
           <div className="mt-2 grid grid-cols-2 gap-2">
             {journeyOptions.map(({ key, label, icon: Icon }) => {
               const active = Boolean(enabledOptions[key]);
@@ -494,7 +494,7 @@ const WithDriverBooking = () => {
                   onClick={() => toggleOption(key)}
                   className="flex h-12 items-center justify-between rounded-[13px] border border-slate-100 bg-white px-3 shadow-[0_5px_16px_rgba(15,23,42,0.05)]"
                 >
-                  <span className="flex items-center gap-2 text-[11px] font-semibold">
+                  <span className="flex items-center gap-2 text-[13px] font-semibold">
                     <Icon size={15} strokeWidth={2.7} />
                     {label}
                   </span>
@@ -513,30 +513,30 @@ const WithDriverBooking = () => {
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-600 text-white">
                 <BadgeCheck size={19} strokeWidth={2.7} />
               </span>
-              <p className="text-[12px] font-semibold text-emerald-900">18 Verified Drivers Available</p>
+              <p className="text-[13.5px] font-semibold text-emerald-900">18 Verified Drivers Available</p>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-2">
               <div>
-                <p className="text-[8px] font-medium text-slate-500">Avg. Arrival Time</p>
-                <p className="text-[17px] font-semibold">22 mins</p>
+                <p className="text-[10px] font-medium text-slate-500">Avg. Arrival Time</p>
+                <p className="text-[18px] font-semibold">22 mins</p>
               </div>
               <div>
-                <p className="text-[8px] font-medium text-slate-500">Response Rate</p>
-                <p className="text-[17px] font-semibold">98%</p>
+                <p className="text-[10px] font-medium text-slate-500">Response Rate</p>
+                <p className="text-[18px] font-semibold">98%</p>
               </div>
             </div>
           </div>
 
           <div className="rounded-[15px] border border-slate-100 bg-white p-3 shadow-[0_6px_18px_rgba(15,23,42,0.05)]">
-            <h2 className="text-[13px] font-bold">Estimated Charges</h2>
-            <div className="mt-2 space-y-1.5 text-[10px] font-bold text-slate-700">
+            <h2 className="text-[14.5px] font-bold">Estimated Charges</h2>
+            <div className="mt-2 space-y-1.5 text-[12px] font-bold text-slate-700">
               <div className="flex justify-between"><span>Driver Charges</span><span className="font-semibold text-slate-950">₹{config.baseFare}</span></div>
               <div className="flex justify-between"><span>Add-ons</span><span className="font-semibold text-slate-950">₹{optionTotal}</span></div>
               <div className="flex justify-between"><span>Toll & Parking</span><span className="font-semibold text-slate-950">Actual</span></div>
               <div className="flex justify-between"><span>Food Allowance</span><span className="font-semibold text-emerald-600">Included</span></div>
             </div>
             <div className="mt-3 border-t border-dashed border-slate-200 pt-2">
-              <p className="text-[9px] font-medium text-slate-500">Estimated Total</p>
+              <p className="text-[11px] font-medium text-slate-500">Estimated Total</p>
               <p className="text-[24px] font-extrabold text-[#f5b700]">₹{estimatedTotal.toLocaleString('en-IN')}</p>
             </div>
           </div>
@@ -546,7 +546,7 @@ const WithDriverBooking = () => {
           {trustItems.map(({ label, icon: Icon }) => (
             <div key={label} className="text-center">
               <Icon size={18} className="mx-auto text-slate-700" strokeWidth={2.4} />
-              <p className="mt-1 whitespace-pre-line text-[8px] font-semibold leading-3 text-slate-700">{label}</p>
+              <p className="mt-1 whitespace-pre-line text-[10px] font-semibold leading-3 text-slate-700">{label}</p>
             </div>
           ))}
         </section>
@@ -556,7 +556,7 @@ const WithDriverBooking = () => {
         <button
           type="button"
           onClick={findVerifiedDrivers}
-          className="flex h-12 w-full items-center justify-center gap-3 rounded-[13px] bg-[#f5b700] text-[16px] font-bold text-black shadow-[0_8px_18px_rgba(245,183,0,0.24)]"
+          className="flex h-12 w-full items-center justify-center gap-3 rounded-[13px] bg-[#f5b700] text-[17px] font-bold text-black shadow-[0_8px_18px_rgba(245,183,0,0.24)]"
         >
           {isVehicleLoading ? 'Find Verified Drivers' : 'Find Verified Drivers'}
           <ArrowRight size={20} strokeWidth={3} />
@@ -570,7 +570,7 @@ const WithDriverBooking = () => {
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mx-auto mb-3 h-1.5 w-12 rounded-full bg-slate-200" />
-            <h3 className="text-[18px] font-bold text-slate-950">{dropdownConfig[activeDropdown].title}</h3>
+            <h3 className="text-[19px] font-bold text-slate-950">{dropdownConfig[activeDropdown].title}</h3>
             <div className="mt-3 space-y-2">
               {dropdownConfig[activeDropdown].options.map((option) => {
                 const selected = dropdownConfig[activeDropdown].value === option;
@@ -579,7 +579,7 @@ const WithDriverBooking = () => {
                     key={option}
                     type="button"
                     onClick={() => handleSelectDropdownValue(option)}
-                    className={`flex h-12 w-full items-center justify-between rounded-[14px] border px-3 text-left text-[14px] font-semibold ${
+                    className={`flex h-12 w-full items-center justify-between rounded-[14px] border px-3 text-left text-[15.5px] font-semibold ${
                       selected ? 'border-[#f5b700] bg-[#fff8df]' : 'border-slate-100 bg-white'
                     }`}
                   >

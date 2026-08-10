@@ -9,7 +9,7 @@ const ActivityTabs = ({ tabs, activeTab, onChange }) => {
             key={`${String(tab || '').trim() || 'tab'}-${index}`}
             type="button"
             onClick={() => onChange(tab)}
-            className={`shrink-0 rounded-full px-4 py-2 text-[10.5px] font-extrabold uppercase tracking-[0.1em] transition-colors ${
+            className={`shrink-0 rounded-full px-4 py-2 text-[12.5px] font-extrabold uppercase tracking-[0.1em] transition-colors ${
               activeTab === tab
                 ? 'bg-[var(--primary)] text-[var(--text)] shadow-[0_6px_14px_rgba(245,183,0,0.32)]'
                 : 'bg-slate-50 text-[var(--text-light)]'

@@ -178,7 +178,7 @@ const AppSidebar = ({ open, onClose }) => {
               <span className="text-[24px] font-black italic tracking-[-0.05em] text-slate-950">
                 Taxi<span className="rounded-full bg-slate-950 px-2 py-0.5 text-[#F5B700]">09</span>
               </span>
-              <p className="mt-2 text-[11.5px] font-semibold text-slate-800">Ride Your Way</p>
+              <p className="mt-2 text-[13.5px] font-semibold text-slate-800">Ride Your Way</p>
             </div>
             <button onClick={onClose} aria-label="Close menu" className="rounded-full p-1.5 text-slate-900 active:scale-95">
               <X size={20} strokeWidth={2.6} />
@@ -199,16 +199,16 @@ const AppSidebar = ({ open, onClose }) => {
             )}
             <span className="min-w-0 flex-1">
               <span className="flex items-center gap-1.5">
-                <span className="truncate text-[15px] font-black text-slate-900">
+                <span className="truncate text-[16.5px] font-black text-slate-900">
                   {profile.name || 'Your account'}
                 </span>
                 {membership ? (
-                  <span className="flex shrink-0 items-center gap-1 rounded-md bg-[#FFF0B8] px-1.5 py-0.5 text-[9.5px] font-black text-[#9A6B00]">
+                  <span className="flex shrink-0 items-center gap-1 rounded-md bg-[#FFF0B8] px-1.5 py-0.5 text-[11.5px] font-black text-[#9A6B00]">
                     <Crown size={10} fill="currentColor" /> {membership.planName}
                   </span>
                 ) : null}
               </span>
-              <span className="block truncate text-[12.5px] font-semibold text-slate-500">
+              <span className="block truncate text-[14px] font-semibold text-slate-500">
                 {profile.phone || 'Tap to view profile'}
               </span>
             </span>
@@ -221,7 +221,7 @@ const AppSidebar = ({ open, onClose }) => {
           {NAV_SECTIONS.map((section, index) => (
             <div key={section.title || index} className={index ? 'mt-3 border-t border-slate-100 pt-3' : ''}>
               {section.title ? (
-                <p className="px-3 pb-1.5 text-[10.5px] font-bold uppercase tracking-[0.14em] text-slate-400">
+                <p className="px-3 pb-1.5 text-[12.5px] font-bold uppercase tracking-[0.14em] text-slate-400">
                   {section.title}
                 </p>
               ) : null}
@@ -239,26 +239,26 @@ const AppSidebar = ({ open, onClose }) => {
                     }`}
                   >
                     <Icon size={19} strokeWidth={2} className={active ? 'text-[#C79100]' : 'text-slate-700'} />
-                    <span className={`flex-1 text-[14px] ${active ? 'font-black text-slate-900' : 'font-semibold text-slate-800'}`}>
+                    <span className={`flex-1 text-[15.5px] ${active ? 'font-black text-slate-900' : 'font-semibold text-slate-800'}`}>
                       {item.label}
                     </span>
 
                     {item.badge ? (
-                      <span className="rounded-md bg-[#FFF0B8] px-1.5 py-0.5 text-[9.5px] font-black text-[#9A6B00]">
+                      <span className="rounded-md bg-[#FFF0B8] px-1.5 py-0.5 text-[11.5px] font-black text-[#9A6B00]">
                         {item.badge}
                       </span>
                     ) : null}
 
                     {/* The tier only appears once a membership is actually held. */}
                     {item.showsTier && membership ? (
-                      <span className="rounded-md bg-[#FFF0B8] px-1.5 py-0.5 text-[10px] font-black text-[#9A6B00]">
+                      <span className="rounded-md bg-[#FFF0B8] px-1.5 py-0.5 text-[12px] font-black text-[#9A6B00]">
                         {membership.planName}
                       </span>
                     ) : null}
 
                     {/* Only rendered once the balance has actually arrived. */}
                     {item.showsBalance && wallet !== null ? (
-                      <span className="rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10.5px] font-bold text-emerald-700">
+                      <span className="rounded-md bg-emerald-50 px-1.5 py-0.5 text-[12.5px] font-bold text-emerald-700">
                         {money(wallet)}
                       </span>
                     ) : null}
@@ -274,7 +274,7 @@ const AppSidebar = ({ open, onClose }) => {
         <div className="border-t border-slate-100 px-4 py-3">
           <button
             onClick={logout}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-red-50 py-3 text-[14px] font-black text-red-600 active:scale-[0.99]"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-red-50 py-3 text-[15.5px] font-black text-red-600 active:scale-[0.99]"
           >
             <LogOut size={18} strokeWidth={2.4} /> Logout
           </button>

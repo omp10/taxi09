@@ -317,7 +317,7 @@ const BikeCategoryList = () => {
           >
             <ChevronLeft size={24} strokeWidth={2} />
           </button>
-          <h1 className="text-[17px] font-bold text-slate-800 tracking-tight">{categoryTitle}</h1>
+          <h1 className="text-[18px] font-bold text-slate-800 tracking-tight">{categoryTitle}</h1>
         </div>
 
         {/* Search Bar */}
@@ -331,7 +331,7 @@ const BikeCategoryList = () => {
               placeholder="Search for Vehicle"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#F3F4F6] border-0 rounded-xl pl-10 pr-10 py-2.5 text-[14px] font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:bg-slate-100 transition-colors"
+              className="w-full bg-[#F3F4F6] border-0 rounded-xl pl-10 pr-10 py-2.5 text-[15.5px] font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:bg-slate-100 transition-colors"
             />
             {searchQuery && (
               <button
@@ -360,10 +360,10 @@ const BikeCategoryList = () => {
             {/* Image panel */}
             <div className={`relative h-[132px] ${v.bgClass} flex items-center justify-center overflow-hidden`}>
               <SkylineSVG />
-              <span className="absolute left-3 top-3 z-20 rounded-[8px] bg-white/90 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-slate-800 backdrop-blur-sm">
+              <span className="absolute left-3 top-3 z-20 rounded-[8px] bg-white/90 px-2 py-1 text-[12px] font-extrabold uppercase tracking-wide text-slate-800 backdrop-blur-sm">
                 {v.name}
               </span>
-              <span className="absolute right-3 top-3 z-20 flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 text-[10px] font-extrabold text-slate-800 backdrop-blur-sm">
+              <span className="absolute right-3 top-3 z-20 flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 text-[12px] font-extrabold text-slate-800 backdrop-blur-sm">
                 <Star size={10} className="fill-[#f5b700] text-[#f5b700]" /> 4.8
               </span>
               <motion.img
@@ -377,16 +377,16 @@ const BikeCategoryList = () => {
             <div className="px-3.5 py-3">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <h3 className="truncate text-[14px] font-extrabold leading-tight text-slate-900">{v.fullName}</h3>
+                  <h3 className="truncate text-[15.5px] font-extrabold leading-tight text-slate-900">{v.fullName}</h3>
                   {v.amenities?.length ? (
-                    <p className="mt-0.5 truncate text-[9.5px] font-semibold text-slate-500">
+                    <p className="mt-0.5 truncate text-[11.5px] font-semibold text-slate-500">
                       {v.amenities.slice(0, 3).join(' · ')}
                     </p>
                   ) : null}
                 </div>
                 <div className="shrink-0 text-right">
-                  <p className="text-[17px] font-extrabold leading-none text-slate-900">Rs{v.price}</p>
-                  <p className="text-[9px] font-semibold text-slate-500">per day</p>
+                  <p className="text-[18px] font-extrabold leading-none text-slate-900">Rs{v.price}</p>
+                  <p className="text-[11px] font-semibold text-slate-500">per day</p>
                 </div>
               </div>
 
@@ -397,7 +397,7 @@ const BikeCategoryList = () => {
                     return (
                       <span
                         key={spec}
-                        className="flex items-center gap-1 rounded-[7px] bg-slate-50 px-2 py-1 text-[9px] font-semibold text-slate-600"
+                        className="flex items-center gap-1 rounded-[7px] bg-slate-50 px-2 py-1 text-[11px] font-semibold text-slate-600"
                       >
                         <Icon size={10} className="text-[#d99c00]" />
                         {spec}
@@ -408,11 +408,11 @@ const BikeCategoryList = () => {
               ) : null}
 
               <div className="mt-2.5 flex items-center justify-between border-t border-slate-100 pt-2.5">
-                <span className="min-w-0 text-[9.5px] font-semibold text-slate-500">
+                <span className="min-w-0 text-[11.5px] font-semibold text-slate-500">
                   {v.hourlyPrice ? `From Rs${v.hourlyPrice}/hr` : 'Flexible packages'}
                   {v.deposit ? ` · Rs${v.deposit} deposit` : ''}
                 </span>
-                <span className="flex shrink-0 items-center gap-1 rounded-[9px] bg-[#f5b700] px-3 py-1.5 text-[10.5px] font-extrabold text-slate-950">
+                <span className="flex shrink-0 items-center gap-1 rounded-[9px] bg-[#f5b700] px-3 py-1.5 text-[12.5px] font-extrabold text-slate-950">
                   Book <ChevronRight size={12} strokeWidth={3} />
                 </span>
               </div>
@@ -421,7 +421,7 @@ const BikeCategoryList = () => {
         ))}
 
         {displayedVehicles.length === 0 && (
-          <div className="py-12 text-center text-slate-400 font-medium text-[13px]">
+          <div className="py-12 text-center text-slate-400 font-medium text-[14.5px]">
             No vehicles matched "{searchQuery}"
           </div>
         )}
@@ -434,7 +434,7 @@ const BikeCategoryList = () => {
           className="flex flex-col items-center gap-1 text-[#E53935] hover:opacity-90 py-1"
         >
           <HomeIcon size={20} strokeWidth={2.2} />
-          <span className="text-[10px] font-bold tracking-wide">Home</span>
+          <span className="text-[12px] font-bold tracking-wide">Home</span>
         </button>
 
         <button
@@ -442,7 +442,7 @@ const BikeCategoryList = () => {
           className="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 py-1"
         >
           <MapPin size={20} strokeWidth={2.2} />
-          <span className="text-[10px] font-bold tracking-wide">Nearby</span>
+          <span className="text-[12px] font-bold tracking-wide">Nearby</span>
         </button>
 
         <button
@@ -450,7 +450,7 @@ const BikeCategoryList = () => {
           className="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 py-1"
         >
           <Headphones size={20} strokeWidth={2.2} />
-          <span className="text-[10px] font-bold tracking-wide">Support</span>
+          <span className="text-[12px] font-bold tracking-wide">Support</span>
         </button>
 
         <button
@@ -458,7 +458,7 @@ const BikeCategoryList = () => {
           className="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 py-1"
         >
           <Menu size={20} strokeWidth={2.2} />
-          <span className="text-[10px] font-bold tracking-wide">Menu</span>
+          <span className="text-[12px] font-bold tracking-wide">Menu</span>
         </button>
       </div>
     </div>

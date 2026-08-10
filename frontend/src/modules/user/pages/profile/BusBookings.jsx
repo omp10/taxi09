@@ -153,7 +153,7 @@ const BusBookings = () => {
           </button>
           <div className="flex-1">
             <h1 className="text-lg font-bold text-slate-900">Bus Bookings</h1>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Your travel history</p>
+            <p className="text-[12px] font-bold text-slate-400 uppercase tracking-wider">Your travel history</p>
           </div>
         </div>
       </div>
@@ -166,7 +166,7 @@ const BusBookings = () => {
               key={filter.id}
               type="button"
               onClick={() => setActiveFilter(filter.id)}
-              className={`shrink-0 px-4 py-2 rounded-xl text-[11px] font-bold transition-all border ${
+              className={`shrink-0 px-4 py-2 rounded-xl text-[13px] font-bold transition-all border ${
                 activeFilter === filter.id
                   ? 'bg-slate-900 text-white border-slate-900 shadow-md shadow-slate-200'
                   : 'bg-white text-slate-500 border-slate-100 hover:border-slate-200'
@@ -222,10 +222,10 @@ const BusBookings = () => {
                 {/* Header Row: PNR & Status */}
                 <div className="px-4 py-2 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
                   <div className="flex items-center gap-2">
-                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">PNR</p>
-                    <p className="text-[11px] font-black tracking-widest text-slate-900">{booking.bookingCode}</p>
+                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">PNR</p>
+                    <p className="text-[13px] font-black tracking-widest text-slate-900">{booking.bookingCode}</p>
                   </div>
-                  <div className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border ${statusTone[booking.status] || 'bg-white text-slate-400 border-slate-200'}`}>
+                  <div className={`px-2 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider border ${statusTone[booking.status] || 'bg-white text-slate-400 border-slate-200'}`}>
                     {booking.status}
                   </div>
                 </div>
@@ -235,7 +235,7 @@ const BusBookings = () => {
                   <div className="flex items-center justify-between gap-3 mb-4">
                     <div className="flex-1">
                       <p className="text-sm font-black text-slate-900 truncate">{booking.bus?.fromCity || 'From'}</p>
-                      <p className="text-[10px] font-bold text-slate-500 mt-0.5">{booking.bus?.departure || '--:--'}</p>
+                      <p className="text-[12px] font-bold text-slate-500 mt-0.5">{booking.bus?.departure || '--:--'}</p>
                     </div>
                     <div className="flex flex-col items-center px-1">
                       <div className="w-12 h-[1px] bg-slate-100 relative">
@@ -245,7 +245,7 @@ const BusBookings = () => {
                     </div>
                     <div className="flex-1 text-right">
                       <p className="text-sm font-black text-slate-900 truncate">{booking.bus?.toCity || 'To'}</p>
-                      <p className="text-[10px] font-bold text-slate-500 mt-0.5">{booking.bus?.arrival || '--:--'}</p>
+                      <p className="text-[12px] font-bold text-slate-500 mt-0.5">{booking.bus?.arrival || '--:--'}</p>
                     </div>
                   </div>
 
@@ -253,16 +253,16 @@ const BusBookings = () => {
                   <div className="flex items-center justify-between gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-100">
                     <div className="flex items-center gap-1.5">
                       <CalendarDays size={12} className="text-slate-400" />
-                      <p className="text-[10px] font-black text-slate-900">{booking.travelDate || 'NA'}</p>
+                      <p className="text-[12px] font-black text-slate-900">{booking.travelDate || 'NA'}</p>
                     </div>
                     <div className="w-[1px] h-3 bg-slate-200" />
                     <div className="flex items-center gap-1.5">
                       <Ticket size={12} className="text-slate-400" />
-                      <p className="text-[10px] font-black text-slate-900">{(booking.activeSeatLabels || []).join(', ') || 'NA'}</p>
+                      <p className="text-[12px] font-black text-slate-900">{(booking.activeSeatLabels || []).join(', ') || 'NA'}</p>
                     </div>
                     <div className="w-[1px] h-3 bg-slate-200" />
                     <div className="flex items-center gap-1.5">
-                      <p className="text-[10px] font-black text-slate-900">{formatMoney(booking.amount, booking.currency)}</p>
+                      <p className="text-[12px] font-black text-slate-900">{formatMoney(booking.amount, booking.currency)}</p>
                     </div>
                   </div>
 
@@ -288,18 +288,18 @@ const BusBookings = () => {
                             </button>
                           );
                         })}
-                        <span className="ml-1 text-[9px] font-bold text-slate-400 uppercase">
+                        <span className="ml-1 text-[11px] font-bold text-slate-400 uppercase">
                           {booking.review?.userRating ? 'Rated' : 'Rate trip'}
                         </span>
                       </div>
-                      <div className="flex items-center gap-1 text-[10px] font-bold text-slate-900 uppercase">
+                      <div className="flex items-center gap-1 text-[12px] font-bold text-slate-900 uppercase">
                         Details <MoveRight size={10} />
                       </div>
                     </div>
                   ) : (
                     <div className="mt-3 pt-3 border-t border-slate-50 flex items-center justify-between">
-                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tight">Booked {formatDateTime(booking.createdAt)}</p>
-                      <div className="flex items-center gap-1 text-[10px] font-bold text-slate-900 uppercase">
+                      <p className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Booked {formatDateTime(booking.createdAt)}</p>
+                      <div className="flex items-center gap-1 text-[12px] font-bold text-slate-900 uppercase">
                         Details <MoveRight size={10} />
                       </div>
                     </div>
@@ -321,7 +321,7 @@ const BusBookings = () => {
             >
               <ChevronLeft size={16} />
             </button>
-            <p className="text-[10px] font-black text-slate-900 uppercase">
+            <p className="text-[12px] font-black text-slate-900 uppercase">
               Page {pagination.page} / {pagination.totalPages}
             </p>
             <button

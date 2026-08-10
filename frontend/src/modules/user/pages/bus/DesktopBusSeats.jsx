@@ -64,7 +64,7 @@ const SeatCell = ({ seat, isSelected, onToggle }) => {
           }`}
         />
       )}
-      <span className={`text-[10.5px] font-black ${isBooked ? 'text-slate-400' : isSelected ? 'text-slate-900' : 'text-[var(--dh-muted)]'}`}>
+      <span className={`text-[12.5px] font-black ${isBooked ? 'text-slate-400' : isSelected ? 'text-slate-900' : 'text-[var(--dh-muted)]'}`}>
         {seat.label || seat.id}
       </span>
     </button>
@@ -149,7 +149,7 @@ const DesktopBusSeats = () => {
         <div className="rounded-[20px] bg-[var(--dh-surface)] p-6 ring-1 ring-[var(--dh-border)]">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-[13.5px] font-bold text-[var(--dh-text)] hover:text-[#F5B700]"
+            className="flex items-center gap-2 text-[15px] font-bold text-[var(--dh-text)] hover:text-[#F5B700]"
           >
             <ArrowLeft size={16} strokeWidth={2.6} /> Back to Buses
           </button>
@@ -162,18 +162,18 @@ const DesktopBusSeats = () => {
                   {bus?.operatorName || bus?.operator || 'Bus'}
                 </h1>
                 {(bus?.coachType || bus?.type) && (
-                  <span className="shrink-0 rounded-[6px] bg-[var(--dh-chip)] px-2 py-0.5 text-[10.5px] font-black uppercase tracking-[0.05em] text-[var(--dh-muted)]">
+                  <span className="shrink-0 rounded-[6px] bg-[var(--dh-chip)] px-2 py-0.5 text-[12.5px] font-black uppercase tracking-[0.05em] text-[var(--dh-muted)]">
                     {bus.coachType || bus.type}
                   </span>
                 )}
                 {Number(bus?.rating) > 0 && (
-                  <span className="flex shrink-0 items-center gap-1 rounded-[6px] bg-emerald-600 px-1.5 py-0.5 text-[11px] font-black text-white">
+                  <span className="flex shrink-0 items-center gap-1 rounded-[6px] bg-emerald-600 px-1.5 py-0.5 text-[13px] font-black text-white">
                     <Star size={10} className="fill-white" /> {bus.rating}
                   </span>
                 )}
               </div>
-              {bus?.busName && <p className="mt-0.5 text-[13px] font-semibold text-[var(--dh-muted)]">{bus.busName}</p>}
-              <p className="mt-2 flex items-center gap-4 text-[13px] font-semibold text-[var(--dh-muted)]">
+              {bus?.busName && <p className="mt-0.5 text-[14.5px] font-semibold text-[var(--dh-muted)]">{bus.busName}</p>}
+              <p className="mt-2 flex items-center gap-4 text-[14.5px] font-semibold text-[var(--dh-muted)]">
                 <span className="flex items-center gap-1.5"><MapPin size={14} strokeWidth={2.2} /> {fromCity} → {toCity}</span>
                 <span className="flex items-center gap-1.5">
                   <Clock size={14} strokeWidth={2.2} /> {to12Hour(bus?.departure)} – {to12Hour(bus?.arrival)}
@@ -182,9 +182,9 @@ const DesktopBusSeats = () => {
             </div>
 
             <div className="shrink-0 text-right">
-              <p className="text-[12px] font-semibold text-[var(--dh-muted)]">{date}</p>
+              <p className="text-[13.5px] font-semibold text-[var(--dh-muted)]">{date}</p>
               {!loading && !error && (
-                <p className="mt-1 text-[12.5px] font-black text-emerald-600">{availableCount} seats available</p>
+                <p className="mt-1 text-[14px] font-black text-emerald-600">{availableCount} seats available</p>
               )}
             </div>
           </div>
@@ -197,7 +197,7 @@ const DesktopBusSeats = () => {
                   key={deck}
                   onClick={() => setActiveDeck(deck)}
                   aria-pressed={activeDeck === deck}
-                  className={`rounded-[11px] border px-5 py-2.5 text-[13.5px] font-bold capitalize transition-colors ${
+                  className={`rounded-[11px] border px-5 py-2.5 text-[15px] font-bold capitalize transition-colors ${
                     activeDeck === deck
                       ? 'border-[#F5B700] bg-[#FFF7DC] text-slate-900'
                       : 'border-[var(--dh-border)] text-[var(--dh-text)] hover:bg-[var(--dh-chip)]'
@@ -215,9 +215,9 @@ const DesktopBusSeats = () => {
               {[0, 1, 2, 3].map((i) => <div key={i} className="skeleton h-[74px] rounded-[12px]" />)}
             </div>
           ) : error ? (
-            <p className="mt-5 rounded-[12px] bg-rose-50 px-4 py-3.5 text-[13px] font-bold text-rose-700">{error}</p>
+            <p className="mt-5 rounded-[12px] bg-rose-50 px-4 py-3.5 text-[14.5px] font-bold text-rose-700">{error}</p>
           ) : activeRows.length === 0 ? (
-            <p className="mt-5 rounded-[12px] bg-[var(--dh-chip)] px-4 py-10 text-center text-[13.5px] font-semibold text-[var(--dh-muted)]">
+            <p className="mt-5 rounded-[12px] bg-[var(--dh-chip)] px-4 py-10 text-center text-[15px] font-semibold text-[var(--dh-muted)]">
               No seat map configured for this bus.
             </p>
           ) : (
@@ -228,14 +228,14 @@ const DesktopBusSeats = () => {
                   ['Selected', 'border-[#F4B400] bg-[linear-gradient(180deg,#FFD54F,#FFC107)]'],
                   ['Sold out', 'border-[var(--dh-border)] bg-[var(--dh-chip)]'],
                 ].map(([label, tone]) => (
-                  <span key={label} className="flex items-center gap-2 text-[12px] font-semibold text-[var(--dh-muted)]">
+                  <span key={label} className="flex items-center gap-2 text-[13.5px] font-semibold text-[var(--dh-muted)]">
                     <span className={`h-4 w-4 rounded-[5px] border-2 ${tone}`} /> {label}
                   </span>
                 ))}
               </div>
 
               <div className="mt-5 w-fit rounded-[16px] border border-[var(--dh-border)] bg-[var(--dh-chip)]/40 p-5">
-                <div className="mb-3 flex items-center justify-end gap-1.5 text-[11px] font-bold text-[var(--dh-muted)]">
+                <div className="mb-3 flex items-center justify-end gap-1.5 text-[13px] font-bold text-[var(--dh-muted)]">
                   <Armchair size={13} strokeWidth={2.3} /> Driver
                 </div>
                 <div className="space-y-2">
@@ -263,10 +263,10 @@ const DesktopBusSeats = () => {
 
         {/* ------------------------------------------------------------- Sidebar */}
         <aside className="sticky top-[100px] h-fit rounded-[20px] bg-[var(--dh-surface)] p-5 shadow-[0_10px_30px_rgba(15,23,42,0.08)] ring-1 ring-[var(--dh-border)]">
-          <h2 className="text-[17px] font-black tracking-[-0.02em] text-[var(--dh-text)]">Your Selection</h2>
+          <h2 className="text-[18px] font-black tracking-[-0.02em] text-[var(--dh-text)]">Your Selection</h2>
 
           {selectedSeats.length === 0 ? (
-            <p className="mt-4 rounded-[12px] bg-[var(--dh-chip)] px-4 py-8 text-center text-[13px] font-semibold text-[var(--dh-muted)]">
+            <p className="mt-4 rounded-[12px] bg-[var(--dh-chip)] px-4 py-8 text-center text-[14.5px] font-semibold text-[var(--dh-muted)]">
               Pick a seat from the layout to continue.
             </p>
           ) : (
@@ -276,7 +276,7 @@ const DesktopBusSeats = () => {
                   <button
                     key={seat.id}
                     onClick={() => toggleSeat(seat)}
-                    className="flex items-center gap-1.5 rounded-[9px] bg-[#FFF7DC] px-2.5 py-1.5 text-[12.5px] font-black text-slate-900"
+                    className="flex items-center gap-1.5 rounded-[9px] bg-[#FFF7DC] px-2.5 py-1.5 text-[14px] font-black text-slate-900"
                     aria-label={`Remove ${seat.label}`}
                   >
                     <Ticket size={12} strokeWidth={2.6} /> {seat.label}
@@ -285,15 +285,15 @@ const DesktopBusSeats = () => {
               </div>
 
               <dl className="mt-4 space-y-2.5 border-t border-[var(--dh-border)] pt-4">
-                <div className="flex justify-between text-[13px] font-semibold text-[var(--dh-muted)]">
+                <div className="flex justify-between text-[14.5px] font-semibold text-[var(--dh-muted)]">
                   <dt>Seats</dt>
                   <dd className="text-[var(--dh-text)]">{selectedSeats.length}</dd>
                 </div>
                 <div className="flex items-center justify-between border-t border-[var(--dh-border)] pt-3">
-                  <dt className="text-[15px] font-black text-[var(--dh-text)]">Total Fare</dt>
+                  <dt className="text-[16.5px] font-black text-[var(--dh-text)]">Total Fare</dt>
                   <dd className="text-[21px] font-black text-[var(--dh-text)]">{formatMoney(totalFare)}</dd>
                 </div>
-                <p className="text-[11.5px] font-medium text-[var(--dh-muted)]">
+                <p className="text-[13.5px] font-medium text-[var(--dh-muted)]">
                   Taxes and any operator fees are confirmed on the payment step.
                 </p>
               </dl>
@@ -303,14 +303,14 @@ const DesktopBusSeats = () => {
           <button
             onClick={proceed}
             disabled={selectedSeats.length === 0 || Boolean(error) || loading}
-            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-[13px] bg-[#F5B700] py-3.5 text-[15.5px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)] transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-[13px] bg-[#F5B700] py-3.5 text-[17px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)] transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Proceed to Payment <ArrowRight size={18} strokeWidth={2.8} />
           </button>
 
           <button
             onClick={() => navigate(-1)}
-            className="mt-2.5 flex w-full items-center justify-center gap-2.5 rounded-[13px] border border-[var(--dh-border)] py-3 text-[14.5px] font-bold text-[var(--dh-text)] hover:bg-[var(--dh-chip)]"
+            className="mt-2.5 flex w-full items-center justify-center gap-2.5 rounded-[13px] border border-[var(--dh-border)] py-3 text-[16px] font-bold text-[var(--dh-text)] hover:bg-[var(--dh-chip)]"
           >
             <ArrowLeft size={17} strokeWidth={2.4} /> Back to Buses
           </button>

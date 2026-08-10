@@ -81,7 +81,7 @@ const WithDriverHome = () => {
           <span className="text-[21px] font-black italic tracking-[-0.04em]">
             TAXI<span className="text-[#f5b700]">09</span>
           </span>
-          <span className="mt-0.5 text-[8px] font-black text-slate-700">Drive On Hire</span>
+          <span className="mt-0.5 text-[10px] font-black text-slate-700">Drive On Hire</span>
         </button>
         <button
           type="button"
@@ -108,9 +108,9 @@ const WithDriverHome = () => {
             ))}
           </div>
           <div className="relative z-10 max-w-[58%]">
-            <h1 className="text-[17px] font-black leading-tight">Professional Drivers</h1>
-            <p className="mt-1 text-[11px] font-black">Safe. Reliable. On Your Terms.</p>
-            <p className="mt-4 text-[10px] font-bold leading-4 text-slate-900">
+            <h1 className="text-[18px] font-black leading-tight">Professional Drivers</h1>
+            <p className="mt-1 text-[13px] font-black">Safe. Reliable. On Your Terms.</p>
+            <p className="mt-4 text-[12px] font-bold leading-4 text-slate-900">
               Hire verified, experienced & police verified drivers for your own car.
             </p>
           </div>
@@ -127,8 +127,8 @@ const WithDriverHome = () => {
         </section>
 
         <section className="mt-4">
-          <p className="text-[12px] font-black uppercase text-[#f5b700]">Hire</p>
-          <h2 className="text-[18px] font-black leading-tight">
+          <p className="text-[13.5px] font-black uppercase text-[#f5b700]">Hire</p>
+          <h2 className="text-[19px] font-black leading-tight">
             Professional, Experienced &<br />Police Verified <span className="text-[#f5b700]">DRIVERS</span>
           </h2>
         </section>
@@ -150,8 +150,8 @@ const WithDriverHome = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/10" />
               </div>
               <div className="relative min-h-[78px] px-3 pb-3 pt-2">
-                <h3 className="text-[13px] font-black">{title}</h3>
-                <p className="mt-1 pr-8 text-[9.5px] font-bold leading-4 text-slate-700">{subtitle}</p>
+                <h3 className="text-[14.5px] font-black">{title}</h3>
+                <p className="mt-1 pr-8 text-[11.5px] font-bold leading-4 text-slate-700">{subtitle}</p>
                 <span className={`absolute bottom-3 right-3 flex h-7 w-7 items-center justify-center rounded-full ${action}`}>
                   <ArrowRight size={15} className="text-white" strokeWidth={3} />
                 </span>
@@ -166,7 +166,7 @@ const WithDriverHome = () => {
               <span className="mx-auto flex h-8 w-8 items-center justify-center rounded-full border border-[#f5b700]/40 bg-[#fff8df]">
                 <Icon size={16} className="text-[#f5b700]" strokeWidth={2.5} />
               </span>
-              <p className="mt-1 whitespace-pre-line text-[7.5px] font-black leading-3 text-slate-800">{label}</p>
+              <p className="mt-1 whitespace-pre-line text-[9.5px] font-black leading-3 text-slate-800">{label}</p>
             </div>
           ))}
         </section>

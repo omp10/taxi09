@@ -21,7 +21,7 @@ const SavingsBanner = () => {
 
         <div className="relative z-10 flex min-h-[168px] items-end justify-between gap-4">
           <div className="max-w-[62%]">
-            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-200/50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-800 border border-emerald-200/50">
+            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-200/50 px-2.5 py-1 text-[12px] font-black uppercase tracking-[0.18em] text-emerald-800 border border-emerald-200/50">
               <Sparkles size={12} strokeWidth={2.5} className="text-emerald-600" />
               Savings
             </div>
@@ -29,13 +29,13 @@ const SavingsBanner = () => {
             <h3 className="mt-3 text-[20px] font-black leading-tight tracking-tight text-slate-900">
               Better savings on your next ride.
             </h3>
-            <p className="mt-1.5 text-[11px] font-bold leading-relaxed text-slate-500">Book quickly and save more.</p>
+            <p className="mt-1.5 text-[13px] font-bold leading-relaxed text-slate-500">Book quickly and save more.</p>
 
             <motion.button
               type="button"
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate(`${routePrefix}/ride/select-category`)}
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-[12px] font-black text-white shadow-lg shadow-emerald-500/25 active:scale-95 border border-emerald-400"
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-[13.5px] font-black text-white shadow-lg shadow-emerald-500/25 active:scale-95 border border-emerald-400"
             >
               Ride Now
               <ArrowRight size={14} strokeWidth={3} />

@@ -96,7 +96,7 @@ const BusConfirm = () => {
           transition={{ delay: 0.1 }} 
           className="text-center mb-10"
         >
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Booking Confirmed</p>
+          <p className="text-[12px] font-bold text-slate-400 uppercase tracking-wider mb-1">Booking Confirmed</p>
           <h2 className="text-2xl font-bold text-slate-900">Your ticket is ready</h2>
         </motion.div>
 
@@ -109,11 +109,11 @@ const BusConfirm = () => {
           <div className="p-6 bg-slate-900 text-white relative">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <p className="text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-1">PNR Number</p>
+                <p className="text-[12px] font-bold uppercase text-slate-400 tracking-wider mb-1">PNR Number</p>
                 <p className="text-lg font-bold tracking-widest">{booking.bookingCode}</p>
               </div>
                 <div className="text-right">
-                  <p className="text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-1">Seat(s)</p>
+                  <p className="text-[12px] font-bold uppercase text-slate-400 tracking-wider mb-1">Seat(s)</p>
                   <p className="text-lg font-bold">{(booking.seatLabels || booking.seatIds || []).join(', ')}</p>
                 </div>
               </div>
@@ -129,16 +129,16 @@ const BusConfirm = () => {
             <div className="flex items-center justify-between gap-4">
               <div className="flex-1">
                 <p className="text-xl font-bold text-slate-900">{booking.bus?.departure}</p>
-                <p className="text-[10px] font-bold text-slate-400 uppercase mt-1 truncate">{booking.bus?.fromCity || fromCity}</p>
+                <p className="text-[12px] font-bold text-slate-400 uppercase mt-1 truncate">{booking.bus?.fromCity || fromCity}</p>
               </div>
               <div className="flex flex-col items-center flex-1 px-2">
-                <span className="text-[9px] font-bold text-slate-500 bg-slate-50 px-2 py-1 rounded-full">{formatDurationCompact(booking.bus?.duration)}</span>
+                <span className="text-[11px] font-bold text-slate-500 bg-slate-50 px-2 py-1 rounded-full">{formatDurationCompact(booking.bus?.duration)}</span>
                 <div className="w-full h-px border-t border-dashed border-slate-200 my-2" />
-                <span className="text-[9px] font-bold text-slate-400">{formatTravelDate(booking.travelDate || date)}</span>
+                <span className="text-[11px] font-bold text-slate-400">{formatTravelDate(booking.travelDate || date)}</span>
               </div>
               <div className="flex-1 text-right">
                 <p className="text-xl font-bold text-slate-900">{booking.bus?.arrival}</p>
-                <p className="text-[10px] font-bold text-slate-400 uppercase mt-1 truncate">{booking.bus?.toCity || toCity}</p>
+                <p className="text-[12px] font-bold text-slate-400 uppercase mt-1 truncate">{booking.bus?.toCity || toCity}</p>
               </div>
             </div>
 
@@ -146,7 +146,7 @@ const BusConfirm = () => {
               <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
                 <div className="flex items-center gap-2 text-slate-500">
                   <BusFront size={15} />
-                  <p className="text-[10px] font-black uppercase tracking-[0.18em]">Bus number</p>
+                  <p className="text-[12px] font-black uppercase tracking-[0.18em]">Bus number</p>
                 </div>
                 <p className="mt-2 text-sm font-black text-slate-900">
                   {booking.bus?.registrationNumber
@@ -157,7 +157,7 @@ const BusConfirm = () => {
               <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
                 <div className="flex items-center gap-2 text-slate-500">
                   <Phone size={15} />
-                  <p className="text-[10px] font-black uppercase tracking-[0.18em]">Driver contact</p>
+                  <p className="text-[12px] font-black uppercase tracking-[0.18em]">Driver contact</p>
                 </div>
                 <p className="mt-2 text-sm font-black text-slate-900">{booking.bus?.driverPhone || booking.bus?.driverName || 'Assigned before departure'}</p>
               </div>
@@ -166,15 +166,15 @@ const BusConfirm = () => {
             <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
               <div className="flex items-center gap-2 text-slate-500">
                 <Route size={15} />
-                <p className="text-[10px] font-black uppercase tracking-[0.18em]">Pickup & drop</p>
+                <p className="text-[12px] font-black uppercase tracking-[0.18em]">Pickup & drop</p>
               </div>
               <div className="mt-3 space-y-3">
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-emerald-600">Pickup</p>
+                  <p className="text-[12px] font-black uppercase tracking-[0.16em] text-emerald-600">Pickup</p>
                   <p className="mt-1 text-sm font-black text-slate-900">{booking.bus?.pickupLocation || booking.bus?.fromCity || fromCity}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-rose-600">Drop</p>
+                  <p className="text-[12px] font-black uppercase tracking-[0.16em] text-rose-600">Drop</p>
                   <p className="mt-1 text-sm font-black text-slate-900">{booking.bus?.dropLocation || booking.bus?.toCity || toCity}</p>
                 </div>
               </div>
@@ -182,7 +182,7 @@ const BusConfirm = () => {
 
             <div className="bg-slate-50 rounded-2xl p-5 flex justify-between items-center border border-slate-100">
               <div>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Passenger</p>
+                <p className="text-[12px] font-bold text-slate-400 uppercase tracking-wider mb-1">Passenger</p>
                 <p className="text-sm font-bold text-slate-900">
                   {booking.passenger?.name}
                   <span className="text-slate-400 ml-2 font-medium">

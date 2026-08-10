@@ -164,12 +164,12 @@ const RideDetail = () => {
           </button>
           <div className="min-w-0">
             <h1
-              className="truncate text-[17px] font-black text-gray-900 leading-none"
+              className="truncate text-[18px] font-black text-gray-900 leading-none"
               title={`Trip ID: #${details.rideCode}`}
             >
               Trip ID: #{details.shortRideCode}
             </h1>
-            <p className="mt-1 truncate text-[11px] font-bold uppercase tracking-widest text-gray-400">
+            <p className="mt-1 truncate text-[13px] font-bold uppercase tracking-widest text-gray-400">
               {details.statusLabel}: {formatLongDate(details.timeSource)}
             </p>
           </div>
@@ -181,13 +181,13 @@ const RideDetail = () => {
 
       <div className="flex-1 p-5 space-y-8 overflow-y-auto no-scrollbar">
         {loading && (
-          <div className="rounded-[24px] border border-gray-50 bg-white p-5 text-center text-[13px] font-black text-gray-500 shadow-sm">
+          <div className="rounded-[24px] border border-gray-50 bg-white p-5 text-center text-[14.5px] font-black text-gray-500 shadow-sm">
             Loading trip details...
           </div>
         )}
 
         {error && (
-          <div className="rounded-[24px] border border-red-100 bg-red-50 p-5 text-center text-[13px] font-black text-red-600 shadow-sm">
+          <div className="rounded-[24px] border border-red-100 bg-red-50 p-5 text-center text-[14.5px] font-black text-red-600 shadow-sm">
             {error}
           </div>
         )}
@@ -204,18 +204,18 @@ const RideDetail = () => {
             <div className="absolute -left-9 top-0.5 w-4 h-4 rounded-full border-2 border-green-500 bg-white shadow-sm flex items-center justify-center">
               <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
             </div>
-            <h4 className="text-[12px] font-black text-gray-400 uppercase tracking-widest mb-1">Pickup</h4>
-            <p className="text-[15px] font-black text-gray-800 leading-tight">{details.pickup}</p>
-            <span className="text-[11px] font-bold text-gray-400 block mt-1">{formatTime(details.startTime)}</span>
+            <h4 className="text-[13.5px] font-black text-gray-400 uppercase tracking-widest mb-1">Pickup</h4>
+            <p className="text-[16.5px] font-black text-gray-800 leading-tight">{details.pickup}</p>
+            <span className="text-[13px] font-bold text-gray-400 block mt-1">{formatTime(details.startTime)}</span>
           </div>
 
           <div className="relative">
             <div className="absolute -left-9 top-0.5 w-4 h-4 rounded-full border-2 border-orange-500 bg-white shadow-sm flex items-center justify-center">
               <div className="w-1.5 h-1.5 bg-orange-500 rounded-full" />
             </div>
-            <h4 className="text-[12px] font-black text-gray-400 uppercase tracking-widest mb-1">Drop</h4>
-            <p className="text-[15px] font-black text-gray-800 leading-tight">{details.drop}</p>
-            <span className="text-[11px] font-bold text-gray-400 block mt-1">{formatTime(details.endTime)}</span>
+            <h4 className="text-[13.5px] font-black text-gray-400 uppercase tracking-widest mb-1">Drop</h4>
+            <p className="text-[16.5px] font-black text-gray-800 leading-tight">{details.drop}</p>
+            <span className="text-[13px] font-bold text-gray-400 block mt-1">{formatTime(details.endTime)}</span>
           </div>
         </div>
 
@@ -225,21 +225,21 @@ const RideDetail = () => {
               <Bike size={22} />
             </div>
             <div>
-              <h3 className="text-[15px] font-black text-gray-900">{details.vehicle} Ride</h3>
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Payment by {details.paymentMethod}</p>
+              <h3 className="text-[16.5px] font-black text-gray-900">{details.vehicle} Ride</h3>
+              <p className="text-[13px] font-bold text-gray-400 uppercase tracking-widest">Payment by {details.paymentMethod}</p>
             </div>
           </div>
 
           <div className="space-y-3 pt-2">
-            <div className="flex justify-between items-center text-[13px] font-bold text-gray-500">
+            <div className="flex justify-between items-center text-[14.5px] font-bold text-gray-500">
               <span>Base Fare</span>
               <span className="text-gray-900">Rs {details.baseFare}.00</span>
             </div>
-            <div className="flex justify-between items-center text-[13px] font-bold text-gray-500">
+            <div className="flex justify-between items-center text-[14.5px] font-bold text-gray-500">
               <span>Taxes & Fees</span>
               <span className="text-gray-900">Rs {details.taxes}.00</span>
             </div>
-            <div className="flex justify-between items-center text-[16px] font-black text-gray-900 border-t border-gray-50 pt-3">
+            <div className="flex justify-between items-center text-[17px] font-black text-gray-900 border-t border-gray-50 pt-3">
               <span>Total Paid</span>
               <span>Rs {details.fare}.00</span>
             </div>
@@ -256,8 +256,8 @@ const RideDetail = () => {
               />
             </div>
             <div>
-              <h4 className="text-[14px] font-black text-gray-900">{details.driverName}</h4>
-              <div className="flex items-center gap-1 text-[11px] font-black text-orange-600">
+              <h4 className="text-[15.5px] font-black text-gray-900">{details.driverName}</h4>
+              <div className="flex items-center gap-1 text-[13px] font-black text-orange-600">
                 <Star size={12} className="fill-orange-600" />
                 <span>{details.rating} - {details.plate}</span>
               </div>
@@ -266,7 +266,7 @@ const RideDetail = () => {
           <button
             type="button"
             onClick={() => navigate(routePrefix ? `${routePrefix}/support` : '/ride/support')}
-            className="bg-white px-4 py-2 rounded-full text-[12px] font-black text-gray-900 border border-orange-100 active:scale-95 transition-all"
+            className="bg-white px-4 py-2 rounded-full text-[13.5px] font-black text-gray-900 border border-orange-100 active:scale-95 transition-all"
           >
             Support
           </button>
@@ -294,7 +294,7 @@ const RideDetail = () => {
               },
             });
           }}
-          className="flex-[2] bg-[#1C2833] text-white py-5 rounded-[24px] text-[14px] font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-3 active:scale-95 transition-all"
+          className="flex-[2] bg-[#1C2833] text-white py-5 rounded-[24px] text-[15.5px] font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-3 active:scale-95 transition-all"
         >
           <Repeat size={18} />
           <span>Rebook Ride</span>
@@ -302,7 +302,7 @@ const RideDetail = () => {
         <button
           type="button"
           onClick={() => navigate(routePrefix ? `${routePrefix}/support` : '/ride/support')}
-          className="flex-1 bg-gray-50 text-gray-900 py-5 rounded-[24px] text-[14px] font-black uppercase tracking-widest border border-gray-100 flex items-center justify-center gap-2 active:scale-95 transition-all"
+          className="flex-1 bg-gray-50 text-gray-900 py-5 rounded-[24px] text-[15.5px] font-black uppercase tracking-widest border border-gray-100 flex items-center justify-center gap-2 active:scale-95 transition-all"
         >
           <HelpCircle size={18} />
           <span>Help</span>

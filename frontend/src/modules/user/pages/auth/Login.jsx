@@ -214,7 +214,7 @@ const Login = () => {
               >
                 <button
                   onClick={() => setShowInput(true)}
-                  className="w-full py-5 bg-slate-900 text-white hover:bg-slate-800 rounded-2xl text-[16px] font-bold shadow-2xl flex items-center justify-center gap-3 transition-all cursor-pointer"
+                  className="w-full py-5 bg-slate-900 text-white hover:bg-slate-800 rounded-2xl text-[17px] font-bold shadow-2xl flex items-center justify-center gap-3 transition-all cursor-pointer"
                 >
                   <Phone size={18} />
                   <span>Continue with Phone Number</span>
@@ -226,7 +226,7 @@ const Login = () => {
                   <div className="h-px flex-1 bg-slate-200" />
                 </div>
 
-                <p className="text-[11px] text-slate-500 leading-relaxed">
+                <p className="text-[13px] text-slate-500 leading-relaxed">
                   By continuing, you agree that you have read and accept our{' '}
                   <Link to="/terms" className="text-amber-600 font-bold hover:underline">T&Cs</Link> and{' '}
                   <Link to="/privacy" className="text-amber-600 font-bold hover:underline">Privacy Policy</Link>
@@ -286,7 +286,7 @@ const Login = () => {
                   <button
                     type="submit"
                     disabled={loading || !isValidPhone}
-                    className={`w-full py-5 rounded-2xl text-[16px] font-bold transition-all flex items-center justify-center gap-3 cursor-pointer ${
+                    className={`w-full py-5 rounded-2xl text-[17px] font-bold transition-all flex items-center justify-center gap-3 cursor-pointer ${
                       isValidPhone
                         ? 'bg-[#FFC107] text-black hover:bg-amber-400 shadow-2xl shadow-amber-400/20'
                         : 'bg-slate-100 text-slate-400 pointer-events-none border border-slate-200/50'

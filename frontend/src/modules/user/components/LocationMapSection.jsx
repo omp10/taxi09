@@ -126,8 +126,8 @@ const LocationMapSection = () => {
       >
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#FFC107]">MAP</p>
-          <h3 className="mt-1 flex items-baseline gap-1 text-[18px] font-black tracking-tight text-slate-800">
+          <p className="text-[13px] font-bold uppercase tracking-[0.15em] text-[#FFC107]">MAP</p>
+          <h3 className="mt-1 flex items-baseline gap-1 text-[19px] font-black tracking-tight text-slate-800">
             <span className="truncate">Pin your location on map</span>
             {status === 'loading' && (
               <span className="inline-flex" aria-hidden="true">
@@ -149,14 +149,14 @@ const LocationMapSection = () => {
               </span>
             )}
           </h3>
-          <p className="mt-1 truncate text-[13px] font-medium text-slate-500">{helperText}</p>
+          <p className="mt-1 truncate text-[14.5px] font-medium text-slate-500">{helperText}</p>
         </div>
 
         <motion.button
           type="button"
           whileTap={{ scale: 0.96 }}
           onClick={requestLocation}
-          className="inline-flex items-center gap-2 rounded-[14px] border-[1.5px] border-[#FFC107] bg-white px-4 py-2 text-[14px] font-bold text-[#FFC107] shadow-sm transition-all active:bg-[#FFC107]/5"
+          className="inline-flex items-center gap-2 rounded-[14px] border-[1.5px] border-[#FFC107] bg-white px-4 py-2 text-[15.5px] font-bold text-[#FFC107] shadow-sm transition-all active:bg-[#FFC107]/5"
         >
           <div className="relative">
             <LocateFixed 
@@ -174,8 +174,8 @@ const LocationMapSection = () => {
           {!HAS_VALID_GOOGLE_MAPS_KEY && (
             <div className="flex h-full w-full items-center justify-center px-5 text-center bg-slate-50">
               <div>
-                <p className="text-[12px] font-semibold text-slate-900">Google Maps key missing</p>
-                <p className="mt-1 text-[11px] font-medium text-slate-500">Add `VITE_GOOGLE_MAPS_API_KEY` in `frontend/.env`.</p>
+                <p className="text-[13.5px] font-semibold text-slate-900">Google Maps key missing</p>
+                <p className="mt-1 text-[13px] font-medium text-slate-500">Add `VITE_GOOGLE_MAPS_API_KEY` in `frontend/.env`.</p>
               </div>
             </div>
           )}
@@ -183,8 +183,8 @@ const LocationMapSection = () => {
           {HAS_VALID_GOOGLE_MAPS_KEY && loadError && (
             <div className="flex h-full w-full items-center justify-center px-5 text-center bg-slate-50">
               <div>
-                <p className="text-[12px] font-semibold text-slate-900">Map failed to load</p>
-                <p className="mt-1 text-[11px] font-medium text-slate-500">Check your Google Maps browser key restrictions.</p>
+                <p className="text-[13.5px] font-semibold text-slate-900">Map failed to load</p>
+                <p className="mt-1 text-[13px] font-medium text-slate-500">Check your Google Maps browser key restrictions.</p>
               </div>
             </div>
           )}
@@ -193,7 +193,7 @@ const LocationMapSection = () => {
             <div className="flex h-full w-full items-center justify-center bg-slate-50">
               <div className="flex items-center gap-2 rounded-[16px] bg-white/90 px-4 py-3 shadow-sm">
                 <LoaderCircle size={18} className="animate-spin text-slate-500" />
-                <span className="text-[12px] font-medium text-slate-700">Loading map</span>
+                <span className="text-[13.5px] font-medium text-slate-700">Loading map</span>
               </div>
             </div>
           )}

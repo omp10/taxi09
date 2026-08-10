@@ -201,7 +201,7 @@ const HotelRooms = () => {
           <ChevronRight size={17} strokeWidth={2.8} />
         </button>
 
-        <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm">
+        <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-2.5 py-1 text-[12px] font-bold text-white backdrop-blur-sm">
           {galleryIndex + 1} / {gallery.length}
         </span>
         <span className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90">
@@ -214,11 +214,11 @@ const HotelRooms = () => {
         <section className="-mt-4 relative z-10 rounded-[18px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-md)]">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <h1 className="text-[16px] font-extrabold leading-[1.25]">
+              <h1 className="text-[17px] font-extrabold leading-[1.25]">
                 {hotel.name}
                 <BadgeCheck size={14} className="ml-1 inline-block -translate-y-[1px] text-emerald-500" />
               </h1>
-              <p className="mt-1.5 flex items-start gap-1 text-[10.5px] font-medium leading-[1.35] text-[var(--text-light)]">
+              <p className="mt-1.5 flex items-start gap-1 text-[12.5px] font-medium leading-[1.35] text-[var(--text-light)]">
                 <MapPin size={11} className="mt-[1px] shrink-0" />
                 <span>
                   {hotel.area} <span className="text-slate-300">•</span> {hotel.distance}
@@ -226,11 +226,11 @@ const HotelRooms = () => {
               </p>
             </div>
             <div className="shrink-0 rounded-[10px] bg-[var(--secondary)] px-2 py-1.5 text-center">
-              <p className="flex items-center gap-1 text-[13px] font-extrabold">
+              <p className="flex items-center gap-1 text-[14.5px] font-extrabold">
                 <Star size={12} className="fill-[var(--primary)] text-[var(--primary)]" />
                 {hotel.rating}
               </p>
-              <p className="mt-0.5 text-[8.5px] font-medium text-[var(--text-light)]">{hotel.reviews} reviews</p>
+              <p className="mt-0.5 text-[10.5px] font-medium text-[var(--text-light)]">{hotel.reviews} reviews</p>
             </div>
           </div>
 
@@ -240,7 +240,7 @@ const HotelRooms = () => {
               return (
               <span
                 key={label}
-                className="flex shrink-0 flex-col items-center gap-1 text-[8.5px] font-semibold text-[var(--text-light)]"
+                className="flex shrink-0 flex-col items-center gap-1 text-[10.5px] font-semibold text-[var(--text-light)]"
               >
                 <Icon size={15} className="text-[var(--primary-dark)]" />
                 {label}
@@ -253,21 +253,21 @@ const HotelRooms = () => {
         {/* Stay summary */}
         <section className="mt-3 flex items-center gap-2 rounded-[14px] border border-[var(--border)] bg-white px-3 py-2.5 shadow-[var(--shadow-sm)]">
           <div className="min-w-0 flex-1 border-r border-[var(--border)] pr-2">
-            <p className="truncate text-[11px] font-extrabold">{formatRange(checkIn, checkOut)}</p>
-            <p className="text-[9px] font-medium text-[var(--text-light)]">
+            <p className="truncate text-[13px] font-extrabold">{formatRange(checkIn, checkOut)}</p>
+            <p className="text-[11px] font-medium text-[var(--text-light)]">
               {nights} Night{nights > 1 ? 's' : ''}
             </p>
           </div>
           <div className="min-w-0 flex-1 pl-1">
-            <p className="truncate text-[11px] font-extrabold">
+            <p className="truncate text-[13px] font-extrabold">
               {roomCount} Room{roomCount > 1 ? 's' : ''}, {guests} Guest{guests > 1 ? 's' : ''}
             </p>
-            <p className="text-[9px] font-medium text-[var(--text-light)]">Occupancy</p>
+            <p className="text-[11px] font-medium text-[var(--text-light)]">Occupancy</p>
           </div>
           <button
             type="button"
             onClick={() => setModifyOpen((current) => !current)}
-            className={`shrink-0 rounded-[10px] border border-[var(--primary)] px-2.5 py-2 text-[10px] font-extrabold transition-colors ${
+            className={`shrink-0 rounded-[10px] border border-[var(--primary)] px-2.5 py-2 text-[12px] font-extrabold transition-colors ${
               modifyOpen ? 'bg-[var(--secondary)]' : ''
             }`}
           >
@@ -277,11 +277,11 @@ const HotelRooms = () => {
 
         {modifyOpen ? (
           <section className="mt-2 rounded-[14px] border border-[var(--border)] bg-white p-3 shadow-[var(--shadow-sm)]">
-            <p className="text-[11px] font-extrabold">Modify stay at {hotel.name}</p>
+            <p className="text-[13px] font-extrabold">Modify stay at {hotel.name}</p>
 
             <div className="mt-2.5 grid grid-cols-2 gap-2">
               <label className="rounded-[12px] border border-[var(--border)] px-3 py-2">
-                <span className="block text-[8.5px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">
+                <span className="block text-[10.5px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">
                   Check-in
                 </span>
                 <input
@@ -293,11 +293,11 @@ const HotelRooms = () => {
                     setCheckIn(next);
                     if (checkOut <= next) setCheckOut(addDays(next, 1));
                   }}
-                  className="mt-1 w-full bg-transparent text-[12px] font-extrabold outline-none"
+                  className="mt-1 w-full bg-transparent text-[13.5px] font-extrabold outline-none"
                 />
               </label>
               <label className="rounded-[12px] border border-[var(--border)] px-3 py-2">
-                <span className="block text-[8.5px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">
+                <span className="block text-[10.5px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">
                   Check-out
                 </span>
                 <input
@@ -305,7 +305,7 @@ const HotelRooms = () => {
                   min={addDays(checkIn, 1)}
                   value={checkOut}
                   onChange={(event) => setCheckOut(event.target.value)}
-                  className="mt-1 w-full bg-transparent text-[12px] font-extrabold outline-none"
+                  className="mt-1 w-full bg-transparent text-[13.5px] font-extrabold outline-none"
                 />
               </label>
             </div>
@@ -315,7 +315,7 @@ const HotelRooms = () => {
               { label: 'Guests', value: guests, set: setGuests, min: 1, max: 20 },
             ].map(({ label, value, set, min, max }) => (
               <div key={label} className="flex items-center justify-between border-t border-[var(--border)] py-2.5">
-                <span className="text-[12px] font-extrabold">{label}</span>
+                <span className="text-[13.5px] font-extrabold">{label}</span>
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
@@ -325,7 +325,7 @@ const HotelRooms = () => {
                   >
                     <Minus size={13} strokeWidth={3} />
                   </button>
-                  <span className="w-5 text-center text-[13px] font-extrabold">{value}</span>
+                  <span className="w-5 text-center text-[14.5px] font-extrabold">{value}</span>
                   <button
                     type="button"
                     disabled={value >= max}
@@ -341,7 +341,7 @@ const HotelRooms = () => {
             <button
               type="button"
               onClick={() => setModifyOpen(false)}
-              className="mt-1 w-full rounded-[12px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-2.5 text-[12px] font-extrabold"
+              className="mt-1 w-full rounded-[12px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-2.5 text-[13.5px] font-extrabold"
             >
               Apply to this hotel
             </button>
@@ -355,7 +355,7 @@ const HotelRooms = () => {
               key={tab}
               type="button"
               onClick={() => setActiveTab(tab)}
-              className={`shrink-0 rounded-full border px-3.5 py-2 text-[11px] font-bold transition-colors ${
+              className={`shrink-0 rounded-full border px-3.5 py-2 text-[13px] font-bold transition-colors ${
                 activeTab === tab
                   ? 'border-[var(--primary)] bg-[var(--secondary)] text-[var(--text)]'
                   : 'border-[var(--border)] bg-white text-[var(--text-light)]'
@@ -386,13 +386,13 @@ const HotelRooms = () => {
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="min-w-0 flex-1 text-[13px] font-extrabold leading-tight">{room.name}</h3>
-                      <span className="shrink-0 rounded-[6px] bg-emerald-50 px-1.5 py-0.5 text-[9px] font-extrabold text-[var(--success)]">
+                      <h3 className="min-w-0 flex-1 text-[14.5px] font-extrabold leading-tight">{room.name}</h3>
+                      <span className="shrink-0 rounded-[6px] bg-emerald-50 px-1.5 py-0.5 text-[11px] font-extrabold text-[var(--success)]">
                         {room.off}% OFF
                       </span>
                     </div>
 
-                    <div className="mt-1.5 flex flex-wrap gap-x-2.5 gap-y-1 text-[9.5px] font-semibold text-[var(--text-light)]">
+                    <div className="mt-1.5 flex flex-wrap gap-x-2.5 gap-y-1 text-[11.5px] font-semibold text-[var(--text-light)]">
                       <span className="flex items-center gap-1">
                         <Maximize2 size={10} className="text-[var(--primary-dark)]" />
                         {room.sqft} sqft
@@ -411,7 +411,7 @@ const HotelRooms = () => {
                       {room.perks.map((perk) => (
                         <span
                           key={perk}
-                          className="flex items-center gap-1 rounded-[6px] bg-slate-50 px-1.5 py-0.5 text-[8.5px] font-semibold text-[var(--text-light)]"
+                          className="flex items-center gap-1 rounded-[6px] bg-slate-50 px-1.5 py-0.5 text-[10.5px] font-semibold text-[var(--text-light)]"
                         >
                           <CircleCheck size={9} className="text-emerald-500" />
                           {perk}
@@ -420,13 +420,13 @@ const HotelRooms = () => {
                     </div>
 
                     {room.left <= 3 ? (
-                      <p className="mt-1.5 text-[9px] font-bold text-[var(--danger)]">
+                      <p className="mt-1.5 text-[11px] font-bold text-[var(--danger)]">
                         Only {room.left} room{room.left > 1 ? 's' : ''} left
                       </p>
                     ) : null}
 
                     {!fits ? (
-                      <p className="mt-1 text-[9px] font-bold text-amber-600">
+                      <p className="mt-1 text-[11px] font-bold text-amber-600">
                         Fits {room.capacity * roomCount} of {guests} guests
                       </p>
                     ) : null}
@@ -436,13 +436,13 @@ const HotelRooms = () => {
                 <div className="flex items-center justify-between gap-2 border-t border-[var(--border)] px-3 py-2.5">
                   <div className="min-w-0">
                     <p className="flex flex-wrap items-baseline gap-x-1.5">
-                      <span className="text-[10px] font-medium text-slate-400 line-through">
+                      <span className="text-[12px] font-medium text-slate-400 line-through">
                         {rupees(room.oldPrice)}
                       </span>
-                      <span className="text-[17px] font-extrabold leading-none">{rupees(room.price)}</span>
-                      <span className="text-[9px] font-medium text-[var(--text-light)]">/ night</span>
+                      <span className="text-[18px] font-extrabold leading-none">{rupees(room.price)}</span>
+                      <span className="text-[11px] font-medium text-[var(--text-light)]">/ night</span>
                     </p>
-                    <p className="mt-0.5 text-[9px] font-medium text-[var(--text-light)]">
+                    <p className="mt-0.5 text-[11px] font-medium text-[var(--text-light)]">
                       {rupees(room.price * nights * roomCount)} for {nights} night{nights > 1 ? 's' : ''}
                       {roomCount > 1 ? ` · ${roomCount} rooms` : ''}
                     </p>
@@ -455,7 +455,7 @@ const HotelRooms = () => {
                         state: { hotel, room, checkIn, checkOut, rooms: roomCount, guests },
                       });
                     }}
-                    className={`shrink-0 rounded-[10px] px-3.5 py-2.5 text-[11px] font-extrabold transition-colors ${
+                    className={`shrink-0 rounded-[10px] px-3.5 py-2.5 text-[13px] font-extrabold transition-colors ${
                       isSelected
                         ? 'bg-slate-950 text-white'
                         : 'bg-[linear-gradient(180deg,#FFD54F,#FFC107)] text-[var(--text)] shadow-[0_6px_14px_rgba(245,183,0,0.32)]'
@@ -471,11 +471,11 @@ const HotelRooms = () => {
           {visibleRooms.length === 0 ? (
             <div className="rounded-[16px] border border-dashed border-[var(--border)] bg-white px-4 py-10 text-center">
               <BedDouble size={24} className="mx-auto text-slate-300" />
-              <p className="mt-2 text-[12.5px] font-extrabold">No {activeTab} rooms here</p>
+              <p className="mt-2 text-[14px] font-extrabold">No {activeTab} rooms here</p>
               <button
                 type="button"
                 onClick={() => setActiveTab('All Rooms')}
-                className="mt-3 rounded-[12px] bg-[var(--secondary)] px-4 py-2 text-[11.5px] font-extrabold text-[var(--primary-dark)]"
+                className="mt-3 rounded-[12px] bg-[var(--secondary)] px-4 py-2 text-[13.5px] font-extrabold text-[var(--primary-dark)]"
               >
                 Show all rooms
               </button>
@@ -488,24 +488,24 @@ const HotelRooms = () => {
       <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-lg -translate-x-1/2 border-t border-[var(--border)] bg-white px-4 pb-6 pt-3">
         <div className="mb-2.5 flex items-end justify-between gap-3">
           <div className="min-w-0">
-            <p className="truncate text-[11.5px] font-extrabold">
+            <p className="truncate text-[13.5px] font-extrabold">
               {selectedRoom ? selectedRoom.name : 'No room selected'}
             </p>
-            <p className="truncate text-[9.5px] font-medium text-[var(--text-light)]">
+            <p className="truncate text-[11.5px] font-medium text-[var(--text-light)]">
               {formatRange(checkIn, checkOut)} · {roomCount} Room{roomCount > 1 ? 's' : ''}, {guests} Guest
               {guests > 1 ? 's' : ''}
             </p>
           </div>
           <div className="shrink-0 text-right">
-            <p className="text-[17px] font-extrabold leading-none">{rupees(stayTotal)}</p>
-            <p className="mt-0.5 text-[9px] font-medium text-[var(--text-light)]">incl. taxes &amp; fees</p>
+            <p className="text-[18px] font-extrabold leading-none">{rupees(stayTotal)}</p>
+            <p className="mt-0.5 text-[11px] font-medium text-[var(--text-light)]">incl. taxes &amp; fees</p>
           </div>
         </div>
         <button
           type="button"
           onClick={handleContinue}
           disabled={!selectedRoom}
-          className={`flex w-full items-center justify-center gap-2 rounded-[16px] py-3.5 text-[15px] font-extrabold transition-colors ${
+          className={`flex w-full items-center justify-center gap-2 rounded-[16px] py-3.5 text-[16.5px] font-extrabold transition-colors ${
             selectedRoom
               ? 'bg-[linear-gradient(180deg,#FFD54F,#FFC107)] text-[var(--text)] shadow-[0_8px_20px_rgba(255,193,7,.4)]'
               : 'cursor-not-allowed bg-slate-100 text-slate-400'

@@ -72,7 +72,7 @@ const DesktopBus = () => {
     navigate('/taxi/user/bus/list', { state: query });
   };
 
-  const field = 'w-full bg-transparent text-[14px] font-bold text-[var(--dh-text)] placeholder:font-semibold placeholder:text-[var(--dh-muted)] outline-none';
+  const field = 'w-full bg-transparent text-[15.5px] font-bold text-[var(--dh-text)] placeholder:font-semibold placeholder:text-[var(--dh-muted)] outline-none';
 
   return (
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
@@ -88,7 +88,7 @@ const DesktopBus = () => {
           className="relative z-20 -mt-5 mx-6 grid grid-cols-[1.2fr_auto_1.2fr_1fr_auto] items-center rounded-[18px] bg-[var(--dh-surface)] p-3 shadow-[0_16px_44px_rgba(15,23,42,0.12)] ring-1 ring-[var(--dh-border)]"
         >
           <label className="px-5 py-1">
-            <span className="block text-[12.5px] font-bold text-[var(--dh-text)]">From</span>
+            <span className="block text-[14px] font-bold text-[var(--dh-text)]">From</span>
             <span className="mt-1.5 flex items-center gap-2">
               <MapPin size={16} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               <input
@@ -111,7 +111,7 @@ const DesktopBus = () => {
           </button>
 
           <label className="border-l border-[var(--dh-border)] px-5 py-1">
-            <span className="block text-[12.5px] font-bold text-[var(--dh-text)]">To</span>
+            <span className="block text-[14px] font-bold text-[var(--dh-text)]">To</span>
             <span className="mt-1.5 flex items-center gap-2">
               <MapPin size={16} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               <input
@@ -125,7 +125,7 @@ const DesktopBus = () => {
           </label>
 
           <label className="border-l border-[var(--dh-border)] px-5 py-1">
-            <span className="block text-[12.5px] font-bold text-[var(--dh-text)]">Travel Date</span>
+            <span className="block text-[14px] font-bold text-[var(--dh-text)]">Travel Date</span>
             <span className="mt-1.5 flex items-center gap-2">
               <CalendarDays size={16} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               <input
@@ -139,7 +139,7 @@ const DesktopBus = () => {
 
           <button
             type="submit"
-            className="ml-3 flex h-[54px] items-center gap-2.5 rounded-[13px] bg-[#F5B700] px-7 text-[15.5px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)]"
+            className="ml-3 flex h-[54px] items-center gap-2.5 rounded-[13px] bg-[#F5B700] px-7 text-[17px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)]"
           >
             <Search size={18} strokeWidth={2.8} /> Search Buses
           </button>
@@ -150,7 +150,7 @@ const DesktopBus = () => {
         </form>
 
         {error && (
-          <p className="mx-6 mt-3 rounded-[11px] bg-rose-50 px-4 py-3 text-[13px] font-bold text-rose-700">{error}</p>
+          <p className="mx-6 mt-3 rounded-[11px] bg-rose-50 px-4 py-3 text-[14.5px] font-bold text-rose-700">{error}</p>
         )}
 
         <div className="mt-4 grid grid-cols-5 gap-4 rounded-[16px] bg-[var(--dh-surface)] px-7 py-4 ring-1 ring-[var(--dh-border)]">
@@ -158,8 +158,8 @@ const DesktopBus = () => {
             <div key={title} className="flex items-center gap-2.5">
               <Icon size={22} className="shrink-0 text-[#F5B700]" strokeWidth={2} />
               <span>
-                <span className="block text-[12.5px] font-black text-[var(--dh-text)]">{title}</span>
-                <span className="mt-0.5 block text-[11px] font-semibold text-[var(--dh-muted)]">{copy}</span>
+                <span className="block text-[14px] font-black text-[var(--dh-text)]">{title}</span>
+                <span className="mt-0.5 block text-[13px] font-semibold text-[var(--dh-muted)]">{copy}</span>
               </span>
             </div>
           ))}
@@ -168,7 +168,7 @@ const DesktopBus = () => {
         {/* ------------------------------------------------------ Popular routes */}
         <div className="mt-6">
           <h2 className="text-[20px] font-black tracking-[-0.03em] text-[var(--dh-text)]">Popular Routes</h2>
-          <p className="mt-1 text-[13.5px] font-medium text-[var(--dh-muted)]">
+          <p className="mt-1 text-[15px] font-medium text-[var(--dh-muted)]">
             Tap a route to see buses for your travel date.
           </p>
 
@@ -185,12 +185,12 @@ const DesktopBus = () => {
                   className="flex items-center justify-between gap-3 rounded-[14px] bg-[var(--dh-surface)] px-5 py-4 text-left ring-1 ring-[var(--dh-border)] transition-transform hover:-translate-y-0.5"
                 >
                   <span className="min-w-0">
-                    <span className="block truncate text-[14.5px] font-black text-[var(--dh-text)]">{route.fromCity}</span>
-                    <span className="mt-0.5 flex items-center gap-1.5 truncate text-[12.5px] font-semibold text-[var(--dh-muted)]">
+                    <span className="block truncate text-[16px] font-black text-[var(--dh-text)]">{route.fromCity}</span>
+                    <span className="mt-0.5 flex items-center gap-1.5 truncate text-[14px] font-semibold text-[var(--dh-muted)]">
                       <ArrowRight size={13} strokeWidth={2.4} className="shrink-0" /> {route.toCity}
                     </span>
                     {route.startingPrice > 0 && (
-                      <span className="mt-1 block text-[11.5px] font-bold text-[var(--dh-muted)]">
+                      <span className="mt-1 block text-[13.5px] font-bold text-[var(--dh-muted)]">
                         from {formatMoney(route.startingPrice)}
                       </span>
                     )}

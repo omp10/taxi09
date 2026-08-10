@@ -124,7 +124,7 @@ const DesktopWithDriver = () => {
     navigate('/taxi/user/with-driver/review', { state: payload });
   };
 
-  const field = 'w-full bg-transparent text-[13.5px] font-semibold text-[var(--dh-text)] placeholder:text-[var(--dh-muted)] outline-none';
+  const field = 'w-full bg-transparent text-[15px] font-semibold text-[var(--dh-text)] placeholder:text-[var(--dh-muted)] outline-none';
   const fieldBox = 'mt-1.5 flex h-[46px] items-center gap-2 rounded-[11px] border border-[var(--dh-border)] px-3';
 
   return (
@@ -142,7 +142,7 @@ const DesktopWithDriver = () => {
           <div className="mx-6 -mt-1 rounded-[16px] border border-[var(--dh-border)] bg-[var(--dh-surface)] p-4">
             <div className="grid grid-cols-[1.2fr_auto_1.2fr_1fr_1fr_auto] items-end gap-3">
               <label>
-                <span className="flex items-center gap-1.5 text-[12.5px] font-bold text-[var(--dh-text)]">
+                <span className="flex items-center gap-1.5 text-[14px] font-bold text-[var(--dh-text)]">
                   <span className="h-2 w-2 rounded-full bg-emerald-500" /> Pickup Location
                 </span>
                 <span className={fieldBox}>
@@ -166,7 +166,7 @@ const DesktopWithDriver = () => {
               </button>
 
               <label>
-                <span className="flex items-center gap-1.5 text-[12.5px] font-bold text-[var(--dh-text)]">
+                <span className="flex items-center gap-1.5 text-[14px] font-bold text-[var(--dh-text)]">
                   <span className="h-2 w-2 rounded-full bg-rose-500" /> Drop Location
                 </span>
                 <span className={fieldBox}>
@@ -181,7 +181,7 @@ const DesktopWithDriver = () => {
               </label>
 
               <label>
-                <span className="text-[12.5px] font-bold text-[var(--dh-text)]">Date</span>
+                <span className="text-[14px] font-bold text-[var(--dh-text)]">Date</span>
                 <span className={fieldBox}>
                   <Calendar size={16} className="shrink-0 text-[var(--dh-muted)]" strokeWidth={2.3} />
                   <input type="date" value={trip.date} onChange={(e) => setTrip((c) => ({ ...c, date: e.target.value }))} className={field} />
@@ -189,7 +189,7 @@ const DesktopWithDriver = () => {
               </label>
 
               <label>
-                <span className="text-[12.5px] font-bold text-[var(--dh-text)]">Time</span>
+                <span className="text-[14px] font-bold text-[var(--dh-text)]">Time</span>
                 <span className={fieldBox}>
                   <Clock size={16} className="shrink-0 text-[var(--dh-muted)]" strokeWidth={2.3} />
                   <input type="time" value={trip.time} onChange={(e) => setTrip((c) => ({ ...c, time: e.target.value }))} className={field} />
@@ -199,7 +199,7 @@ const DesktopWithDriver = () => {
               <button
                 type="button"
                 onClick={() => document.getElementById('available-drivers')?.scrollIntoView({ behavior: 'smooth' })}
-                className="flex h-[46px] items-center gap-2.5 rounded-[12px] bg-[#F5B700] px-6 text-[15px] font-bold text-slate-950"
+                className="flex h-[46px] items-center gap-2.5 rounded-[12px] bg-[#F5B700] px-6 text-[16.5px] font-bold text-slate-950"
               >
                 Search Drivers <ArrowRight size={17} strokeWidth={2.8} />
               </button>
@@ -207,7 +207,7 @@ const DesktopWithDriver = () => {
 
             <div className="mt-3 grid grid-cols-4 gap-3 rounded-[12px] bg-[#FFFBEC] py-2.5">
               {PROMISES.map(({ icon: Icon, label }) => (
-                <span key={label} className="flex items-center justify-center gap-2 text-[12.5px] font-bold text-slate-800">
+                <span key={label} className="flex items-center justify-center gap-2 text-[14px] font-bold text-slate-800">
                   <Icon size={15} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} /> {label}
                 </span>
               ))}
@@ -219,18 +219,18 @@ const DesktopWithDriver = () => {
             <div className="flex items-end justify-between">
               <div>
                 <h2 className="text-[20px] font-black tracking-[-0.03em] text-[var(--dh-text)]">Available Drivers</h2>
-                <p className="mt-0.5 text-[12.5px] font-semibold text-[var(--dh-muted)]">
+                <p className="mt-0.5 text-[14px] font-semibold text-[var(--dh-muted)]">
                   {loading ? 'Loading drivers…' : `${sorted.length} ${sorted.length === 1 ? 'driver' : 'drivers'} available for your trip`}
                 </p>
               </div>
 
               <div className="flex items-center gap-2.5">
-                <span className="text-[13px] font-semibold text-[var(--dh-muted)]">Sort By:</span>
+                <span className="text-[14.5px] font-semibold text-[var(--dh-muted)]">Sort By:</span>
                 <span className="relative">
                   <select
                     value={sort}
                     onChange={(e) => setSort(e.target.value)}
-                    className="h-[40px] appearance-none rounded-[10px] border border-[var(--dh-border)] bg-[var(--dh-surface)] pl-3.5 pr-9 text-[13.5px] font-bold text-[var(--dh-text)] outline-none"
+                    className="h-[40px] appearance-none rounded-[10px] border border-[var(--dh-border)] bg-[var(--dh-surface)] pl-3.5 pr-9 text-[15px] font-bold text-[var(--dh-text)] outline-none"
                   >
                     {SORTS.map(({ id, label }) => <option key={id} value={id}>{label}</option>)}
                   </select>
@@ -244,7 +244,7 @@ const DesktopWithDriver = () => {
                 {[0, 1, 2].map((i) => <div key={i} className="skeleton h-[132px] rounded-[16px]" />)}
               </div>
             ) : sorted.length === 0 ? (
-              <p className="mt-4 rounded-[16px] bg-[var(--dh-chip)] px-6 py-12 text-center text-[13.5px] font-semibold text-[var(--dh-muted)]">
+              <p className="mt-4 rounded-[16px] bg-[var(--dh-chip)] px-6 py-12 text-center text-[15px] font-semibold text-[var(--dh-muted)]">
                 No drivers are listed for hire yet.
               </p>
             ) : (
@@ -262,25 +262,25 @@ const DesktopWithDriver = () => {
                           <Users size={26} className="absolute inset-0 m-auto text-[var(--dh-muted)]" strokeWidth={1.8} />
                         )}
                         {driver.available && (
-                          <span className="absolute bottom-0 left-1/2 -translate-x-1/2 rounded-full bg-emerald-500 px-1.5 text-[8.5px] font-black text-white">
+                          <span className="absolute bottom-0 left-1/2 -translate-x-1/2 rounded-full bg-emerald-500 px-1.5 text-[10.5px] font-black text-white">
                             Online
                           </span>
                         )}
                       </span>
                       <span className="min-w-0">
-                        <span className="block truncate text-[16px] font-black text-[var(--dh-text)]">{driver.name}</span>
+                        <span className="block truncate text-[17px] font-black text-[var(--dh-text)]">{driver.name}</span>
                         {Number(driver.rating) > 0 && (
                           <span className="mt-1 flex items-center gap-1.5">
                             <Star size={14} className="fill-[#F5B700] text-[#F5B700]" />
-                            <span className="text-[13px] font-black text-[var(--dh-text)]">{driver.rating}</span>
-                            {driver.trips && <span className="text-[12px] font-semibold text-[var(--dh-muted)]">({driver.trips} trips)</span>}
+                            <span className="text-[14.5px] font-black text-[var(--dh-text)]">{driver.rating}</span>
+                            {driver.trips && <span className="text-[13.5px] font-semibold text-[var(--dh-muted)]">({driver.trips} trips)</span>}
                           </span>
                         )}
                         {driver.experience && (
-                          <span className="mt-0.5 block text-[12px] font-semibold text-[var(--dh-muted)]">{driver.experience} Experience</span>
+                          <span className="mt-0.5 block text-[13.5px] font-semibold text-[var(--dh-muted)]">{driver.experience} Experience</span>
                         )}
                         {driver.languages?.length > 0 && (
-                          <span className="mt-0.5 flex items-center gap-1 text-[11.5px] font-semibold text-[var(--dh-muted)]">
+                          <span className="mt-0.5 flex items-center gap-1 text-[13.5px] font-semibold text-[var(--dh-muted)]">
                             <Languages size={12} strokeWidth={2.2} /> {driver.languages.join(', ')}
                           </span>
                         )}
@@ -295,20 +295,20 @@ const DesktopWithDriver = () => {
                       )}
                       <span className="min-w-0">
                         <span className="flex items-center gap-2">
-                          <span className="truncate text-[15px] font-black text-[var(--dh-text)]">{driver.vehicleName || 'Vehicle on assignment'}</span>
+                          <span className="truncate text-[16.5px] font-black text-[var(--dh-text)]">{driver.vehicleName || 'Vehicle on assignment'}</span>
                           {driver.vehicleClass && (
-                            <span className="shrink-0 rounded-[7px] bg-[var(--dh-chip)] px-2 py-0.5 text-[11px] font-bold text-[var(--dh-muted)]">
+                            <span className="shrink-0 rounded-[7px] bg-[var(--dh-chip)] px-2 py-0.5 text-[13px] font-bold text-[var(--dh-muted)]">
                               {driver.vehicleClass}
                             </span>
                           )}
                         </span>
                         {driver.vehiclePlate && (
-                          <span className="mt-1.5 flex items-center gap-1.5 text-[12.5px] font-semibold text-[var(--dh-muted)]">
+                          <span className="mt-1.5 flex items-center gap-1.5 text-[14px] font-semibold text-[var(--dh-muted)]">
                             <Car size={13} strokeWidth={2.2} /> {driver.vehiclePlate}
                           </span>
                         )}
                         {driver.vehicleColor && (
-                          <span className="mt-1 flex items-center gap-1.5 text-[12.5px] font-semibold text-[var(--dh-muted)]">
+                          <span className="mt-1 flex items-center gap-1.5 text-[14px] font-semibold text-[var(--dh-muted)]">
                             <Palette size={13} strokeWidth={2.2} /> {driver.vehicleColor}
                           </span>
                         )}
@@ -317,17 +317,17 @@ const DesktopWithDriver = () => {
 
                     <div className="space-y-2 border-l border-[var(--dh-border)] pl-4">
                       {driver.verified && (
-                        <span className="flex items-center gap-2 text-[12.5px] font-bold text-emerald-700">
+                        <span className="flex items-center gap-2 text-[14px] font-bold text-emerald-700">
                           <ShieldCheck size={16} strokeWidth={2.3} /> Verified Driver
                         </span>
                       )}
                       {driver.badge && (
-                        <span className="flex items-center gap-2 text-[12.5px] font-bold text-[var(--dh-muted)]">
+                        <span className="flex items-center gap-2 text-[14px] font-bold text-[var(--dh-muted)]">
                           <BadgeCheck size={16} strokeWidth={2.3} /> {driver.badge}
                         </span>
                       )}
                       {Number(driver.etaMinutes) > 0 && (
-                        <span className="flex items-center gap-2 text-[12.5px] font-semibold text-[var(--dh-muted)]">
+                        <span className="flex items-center gap-2 text-[14px] font-semibold text-[var(--dh-muted)]">
                           <Clock size={15} strokeWidth={2.3} /> {driver.etaMinutes} min away
                         </span>
                       )}
@@ -337,14 +337,14 @@ const DesktopWithDriver = () => {
                       {quote ? (
                         <>
                           <span className="text-[21px] font-black leading-none text-[var(--dh-text)]">{formatMoney(quote.totalFare)}</span>
-                          <span className="text-[11px] font-semibold text-[var(--dh-muted)]">Total Fare</span>
+                          <span className="text-[13px] font-semibold text-[var(--dh-muted)]">Total Fare</span>
                         </>
                       ) : (
-                        <span className="text-[12.5px] font-bold text-[var(--dh-muted)]">Fare on request</span>
+                        <span className="text-[14px] font-bold text-[var(--dh-muted)]">Fare on request</span>
                       )}
                       <button
                         onClick={() => bookDriver(driver)}
-                        className="w-full rounded-[10px] border-2 border-[#F5B700] py-2 text-[13.5px] font-bold text-[var(--dh-text)] transition-colors hover:bg-[#F5B700] hover:text-slate-950"
+                        className="w-full rounded-[10px] border-2 border-[#F5B700] py-2 text-[15px] font-bold text-[var(--dh-text)] transition-colors hover:bg-[#F5B700] hover:text-slate-950"
                       >
                         Book Now
                       </button>
@@ -360,8 +360,8 @@ const DesktopWithDriver = () => {
               <div key={title} className="flex items-center gap-3">
                 <Icon size={22} className="shrink-0 text-[#F5B700]" strokeWidth={2} />
                 <span>
-                  <span className="block text-[12.5px] font-black text-[var(--dh-text)]">{title}</span>
-                  <span className="mt-0.5 block text-[11px] font-semibold text-[var(--dh-muted)]">{copy}</span>
+                  <span className="block text-[14px] font-black text-[var(--dh-text)]">{title}</span>
+                  <span className="mt-0.5 block text-[13px] font-semibold text-[var(--dh-muted)]">{copy}</span>
                 </span>
               </div>
             ))}
@@ -370,7 +370,7 @@ const DesktopWithDriver = () => {
 
         {/* ------------------------------------------------------- Trip summary */}
         <aside className="sticky top-[100px] h-fit rounded-[20px] bg-[var(--dh-surface)] p-5 shadow-[0_10px_30px_rgba(15,23,42,0.08)] ring-1 ring-[var(--dh-border)]">
-          <h2 className="text-[17px] font-black tracking-[-0.02em] text-[var(--dh-text)]">Your Trip Summary</h2>
+          <h2 className="text-[18px] font-black tracking-[-0.02em] text-[var(--dh-text)]">Your Trip Summary</h2>
 
           <dl className="mt-4 space-y-3.5">
             {[
@@ -380,8 +380,8 @@ const DesktopWithDriver = () => {
               <div key={label} className="flex gap-2.5">
                 <span className={`mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full ${dot}`} />
                 <span className="min-w-0">
-                  <dt className="text-[12.5px] font-bold text-[var(--dh-text)]">{label}</dt>
-                  <dd className="mt-0.5 text-[12.5px] font-semibold text-[var(--dh-muted)]">{value}</dd>
+                  <dt className="text-[14px] font-bold text-[var(--dh-text)]">{label}</dt>
+                  <dd className="mt-0.5 text-[14px] font-semibold text-[var(--dh-muted)]">{value}</dd>
                 </span>
               </div>
             ))}
@@ -392,11 +392,11 @@ const DesktopWithDriver = () => {
             ].filter(([, v]) => v).map(([Icon, value]) => (
               <div key={value} className="flex items-center gap-2.5">
                 <Icon size={16} className="shrink-0 text-[var(--dh-muted)]" strokeWidth={2.2} />
-                <span className="text-[12.5px] font-semibold text-[var(--dh-text)]">{value}</span>
+                <span className="text-[14px] font-semibold text-[var(--dh-text)]">{value}</span>
               </div>
             ))}
             {!trip.pickup && !trip.drop && (
-              <p className="rounded-[10px] bg-[var(--dh-chip)] px-3 py-3 text-[12px] font-semibold text-[var(--dh-muted)]">
+              <p className="rounded-[10px] bg-[var(--dh-chip)] px-3 py-3 text-[13.5px] font-semibold text-[var(--dh-muted)]">
                 Enter your pickup and drop to see the trip summary.
               </p>
             )}
@@ -404,38 +404,38 @@ const DesktopWithDriver = () => {
 
           {/* Fare panel - computed by the server */}
           <div className="mt-5 border-t border-[var(--dh-border)] pt-4">
-            <h3 className="text-[15px] font-black text-[var(--dh-text)]">Fare Details</h3>
+            <h3 className="text-[16.5px] font-black text-[var(--dh-text)]">Fare Details</h3>
 
             {quote ? (
               <div className="mt-3 space-y-2.5">
-                <div className="flex justify-between text-[13px] font-semibold text-[var(--dh-muted)]">
+                <div className="flex justify-between text-[14.5px] font-semibold text-[var(--dh-muted)]">
                   <span>Base Fare</span><span className="text-[var(--dh-text)]">{formatMoney(quote.baseFare)}</span>
                 </div>
                 {quote.distanceFare > 0 && (
-                  <div className="flex justify-between text-[13px] font-semibold text-[var(--dh-muted)]">
+                  <div className="flex justify-between text-[14.5px] font-semibold text-[var(--dh-muted)]">
                     <span>Distance Fare ({quote.chargeableKm} km)</span>
                     <span className="text-[var(--dh-text)]">{formatMoney(quote.distanceFare)}</span>
                   </div>
                 )}
                 {quote.timeFare > 0 && (
-                  <div className="flex justify-between text-[13px] font-semibold text-[var(--dh-muted)]">
+                  <div className="flex justify-between text-[14.5px] font-semibold text-[var(--dh-muted)]">
                     <span>Time Fare ({quote.durationMinutes} mins)</span>
                     <span className="text-[var(--dh-text)]">{formatMoney(quote.timeFare)}</span>
                   </div>
                 )}
                 {quote.taxes > 0 && (
-                  <div className="flex justify-between text-[13px] font-semibold text-[var(--dh-muted)]">
+                  <div className="flex justify-between text-[14.5px] font-semibold text-[var(--dh-muted)]">
                     <span>Taxes &amp; Fees ({quote.taxPercent}%)</span>
                     <span className="text-[var(--dh-text)]">{formatMoney(quote.taxes)}</span>
                   </div>
                 )}
                 <div className="flex items-center justify-between border-t border-[var(--dh-border)] pt-3">
-                  <span className="text-[15px] font-black text-[var(--dh-text)]">Total Amount</span>
+                  <span className="text-[16.5px] font-black text-[var(--dh-text)]">Total Amount</span>
                   <span className="text-[20px] font-black text-[var(--dh-text)]">{formatMoney(quote.totalFare)}</span>
                 </div>
               </div>
             ) : quoteError ? (
-              <p className="mt-3 rounded-[10px] bg-rose-50 px-3 py-2.5 text-[12.5px] font-bold text-rose-700">{quoteError}</p>
+              <p className="mt-3 rounded-[10px] bg-rose-50 px-3 py-2.5 text-[14px] font-bold text-rose-700">{quoteError}</p>
             ) : (
               <div className="mt-3 space-y-2">
                 <div className="skeleton h-4 rounded" />
@@ -447,7 +447,7 @@ const DesktopWithDriver = () => {
           <button
             onClick={() => sorted[0] && bookDriver(sorted[0])}
             disabled={!sorted.length || !quote}
-            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-[13px] bg-[#F5B700] py-3.5 text-[15.5px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-[13px] bg-[#F5B700] py-3.5 text-[17px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             Proceed to Book <ArrowRight size={18} strokeWidth={2.8} />
           </button>

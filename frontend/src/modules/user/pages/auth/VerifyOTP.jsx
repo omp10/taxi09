@@ -289,7 +289,7 @@ const VerifyOTP = () => {
             </AnimatePresence>
 
             <div className="flex flex-col items-center gap-4">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+              <p className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-400">
                 Didn't receive the code?
               </p>
               <button
@@ -311,7 +311,7 @@ const VerifyOTP = () => {
           <button
             onClick={handleVerify}
             disabled={loading || otp.join('').length !== 4 || success}
-            className={`w-full py-5 rounded-2xl text-[16px] font-bold transition-all flex items-center justify-center gap-3 cursor-pointer ${
+            className={`w-full py-5 rounded-2xl text-[17px] font-bold transition-all flex items-center justify-center gap-3 cursor-pointer ${
               otp.join('').length === 4 && !success
                 ? 'bg-slate-900 text-white hover:bg-slate-800 shadow-2xl'
                 : success

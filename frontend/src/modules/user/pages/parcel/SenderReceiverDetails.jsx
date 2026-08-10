@@ -296,7 +296,7 @@ const matchesDeliveryCategory = (vehicle, categoryId) => {
 
 const PhoneInput = ({ label, value, onChange, error, name, onClearError, disabled = false }) => (
   <div className="space-y-2">
-    <label className="ml-1 text-[11px] font-black uppercase tracking-widest text-slate-400">{label}</label>
+    <label className="ml-1 text-[13px] font-black uppercase tracking-widest text-slate-400">{label}</label>
     <div
       className={`flex items-center gap-3 rounded-[18px] border p-4 transition-all ${
         error
@@ -316,7 +316,7 @@ const PhoneInput = ({ label, value, onChange, error, name, onClearError, disable
         type="tel"
         maxLength={10}
         disabled={disabled}
-        className="flex-1 bg-transparent text-[15px] font-semibold text-slate-900 outline-none placeholder:text-slate-300"
+        className="flex-1 bg-transparent text-[16.5px] font-semibold text-slate-900 outline-none placeholder:text-slate-300"
         value={value}
         placeholder="10-digit mobile number"
         onChange={(event) => {
@@ -328,7 +328,7 @@ const PhoneInput = ({ label, value, onChange, error, name, onClearError, disable
       {value && PHONE_REGEX.test(value) ? <CheckCircle2 size={18} className="shrink-0 text-emerald-500" /> : null}
     </div>
     {error ? (
-      <p className="ml-2 flex items-center gap-1 text-[11px] font-black text-red-500">
+      <p className="ml-2 flex items-center gap-1 text-[13px] font-black text-red-500">
         <AlertCircle size={11} strokeWidth={3} />
         {error}
       </p>
@@ -690,7 +690,7 @@ const MapPickerSheet = ({ open, title, confirmLabel, value, initialCoords, onClo
         >
           <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Map Picker</p>
+              <p className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-400">Map Picker</p>
               <h3 className="text-lg font-black tracking-tight text-slate-900">{title}</h3>
             </div>
             <button type="button" onClick={onClose} className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-50 text-slate-500">
@@ -738,7 +738,7 @@ const MapPickerSheet = ({ open, title, confirmLabel, value, initialCoords, onClo
 
             <div className="absolute inset-x-0 top-0 px-4 pt-4">
               <div className="rounded-[22px] border border-white bg-white/92 px-4 py-4 shadow-xl backdrop-blur-md">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">
+                <p className="text-[12px] font-black uppercase tracking-[0.16em] text-slate-400">
                   {isResolvingAddress ? 'Resolving address...' : 'Set Location'}
                 </p>
                 <div className="relative mt-2">
@@ -751,7 +751,7 @@ const MapPickerSheet = ({ open, title, confirmLabel, value, initialCoords, onClo
                       setSearchQuery(event.target.value);
                     }}
                     placeholder="Search area, street or landmark..."
-                    className="w-full rounded-2xl border border-slate-200 bg-white px-10 py-3 text-[13px] font-semibold text-slate-900 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100"
+                    className="w-full rounded-2xl border border-slate-200 bg-white px-10 py-3 text-[14.5px] font-semibold text-slate-900 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100"
                   />
                   {searchQuery.length > 0 && (
                     <button 
@@ -776,9 +776,9 @@ const MapPickerSheet = ({ open, title, confirmLabel, value, initialCoords, onClo
                       >
                         <Navigation size={14} className="mt-0.5 shrink-0 text-blue-500" />
                         <div className="min-w-0 flex-1">
-                          <p className="truncate text-[12px] font-black text-slate-800">{item.label}</p>
+                          <p className="truncate text-[13.5px] font-black text-slate-800">{item.label}</p>
                           {item.secondaryText ? (
-                            <p className="mt-0.5 truncate text-[11px] font-semibold text-slate-400">{item.secondaryText}</p>
+                            <p className="mt-0.5 truncate text-[13px] font-semibold text-slate-400">{item.secondaryText}</p>
                           ) : null}
                         </div>
                       </button>
@@ -786,7 +786,7 @@ const MapPickerSheet = ({ open, title, confirmLabel, value, initialCoords, onClo
                   </div>
                 ) : null}
                 {Boolean(searchQuery) && isFetchingSuggestions ? (
-                  <p className="mt-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 animate-pulse">
+                  <p className="mt-2 text-[12px] font-black uppercase tracking-[0.16em] text-slate-400 animate-pulse">
                     Finding nearby address suggestions...
                   </p>
                 ) : null}
@@ -856,7 +856,7 @@ const ContactDetailsSheet = ({
         >
           <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Booking Details</p>
+              <p className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-400">Booking Details</p>
               <h3 className="text-lg font-black tracking-tight text-slate-900">Sender & receiver</h3>
             </div>
             <button type="button" onClick={onClose} className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-50 text-slate-500">
@@ -887,7 +887,7 @@ const ContactDetailsSheet = ({
                     className="flex-1 bg-transparent text-sm font-semibold text-slate-900 outline-none placeholder:text-slate-300"
                   />
                 </div>
-                {errors.senderName ? <p className="text-[11px] font-black text-red-500">{errors.senderName}</p> : null}
+                {errors.senderName ? <p className="text-[13px] font-black text-red-500">{errors.senderName}</p> : null}
               </div>
 
               <PhoneInput label="Mobile Number" value={senderMobile} onChange={setSenderMobile} error={errors.senderMobile} name="senderMobile" onClearError={clearError} />
@@ -912,8 +912,8 @@ const ContactDetailsSheet = ({
                   <CheckCircle2 size={12} className="absolute text-white opacity-0 peer-checked:opacity-100 pointer-events-none" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-[13px] font-black text-slate-900 group-hover:text-blue-600 transition-colors">Same as Sender</p>
-                  <p className="text-[11px] font-bold text-slate-400">Use sender's name and mobile for receiver</p>
+                  <p className="text-[14.5px] font-black text-slate-900 group-hover:text-blue-600 transition-colors">Same as Sender</p>
+                  <p className="text-[13px] font-bold text-slate-400">Use sender's name and mobile for receiver</p>
                 </div>
               </label>
 
@@ -932,7 +932,7 @@ const ContactDetailsSheet = ({
                     className="flex-1 bg-transparent text-sm font-semibold text-slate-900 outline-none placeholder:text-slate-300"
                   />
                 </div>
-                {errors.receiverName ? <p className="text-[11px] font-black text-red-500">{errors.receiverName}</p> : null}
+                {errors.receiverName ? <p className="text-[13px] font-black text-red-500">{errors.receiverName}</p> : null}
               </div>
 
               <PhoneInput label="Mobile Number" value={receiverMobile} onChange={setReceiverMobile} error={errors.receiverMobile} name="receiverMobile" onClearError={clearError} disabled={useSelfForReceiver} />
@@ -1746,8 +1746,8 @@ const SenderReceiverDetails = () => {
           <ArrowLeft size={20} className="text-slate-900" strokeWidth={2.5} />
         </button>
         <div className="min-w-0">
-          <p className="text-[10px] font-black uppercase tracking-widest text-blue-600">Parcel Delivery</p>
-          <h1 className="mt-0.5 text-[18px] font-bold text-slate-900 tracking-tight leading-none truncate">Details & Address</h1>
+          <p className="text-[12px] font-black uppercase tracking-widest text-blue-600">Parcel Delivery</p>
+          <h1 className="mt-0.5 text-[19px] font-bold text-slate-900 tracking-tight leading-none truncate">Details & Address</h1>
         </div>
       </header>
 
@@ -1772,7 +1772,7 @@ const SenderReceiverDetails = () => {
                 onClick={() => setActiveInput('pickup')}
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-[9px] font-black uppercase tracking-wider text-slate-400">Pick Up From</p>
+                  <p className="text-[11px] font-black uppercase tracking-wider text-slate-400">Pick Up From</p>
                   <input
                     type="text"
                     value={pickup}
@@ -1782,7 +1782,7 @@ const SenderReceiverDetails = () => {
                     }}
                     onFocus={() => setActiveInput('pickup')}
                     placeholder="Search pickup location..."
-                    className="w-full bg-transparent border-none text-[14px] font-bold text-slate-800 focus:outline-none placeholder:text-slate-300 mt-0.5"
+                    className="w-full bg-transparent border-none text-[15.5px] font-bold text-slate-800 focus:outline-none placeholder:text-slate-300 mt-0.5"
                   />
                 </div>
                 {pickup.length > 0 && activeInput === 'pickup' && (
@@ -1816,7 +1816,7 @@ const SenderReceiverDetails = () => {
                 onClick={() => setActiveInput('drop')}
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-[9px] font-black uppercase tracking-wider text-slate-400">Deliver To</p>
+                  <p className="text-[11px] font-black uppercase tracking-wider text-slate-400">Deliver To</p>
                   <input
                     ref={dropInputRef}
                     type="text"
@@ -1828,7 +1828,7 @@ const SenderReceiverDetails = () => {
                       clearError('drop');
                     }}
                     placeholder="Search drop location..."
-                    className="w-full bg-transparent border-none text-[14px] font-bold text-slate-800 focus:outline-none placeholder:text-slate-300 mt-0.5"
+                    className="w-full bg-transparent border-none text-[15.5px] font-bold text-slate-800 focus:outline-none placeholder:text-slate-300 mt-0.5"
                   />
                 </div>
                 {drop.length > 0 && activeInput === 'drop' && (
@@ -1851,7 +1851,7 @@ const SenderReceiverDetails = () => {
         <div className="relative z-10 flex gap-3 my-5">
           <button
             onClick={() => openSharedLocationPicker(activeInput)}
-            className="flex-1 flex items-center justify-center gap-2 bg-white border border-slate-100 rounded-2xl py-3.5 shadow-sm hover:shadow-md hover:border-slate-200 active:scale-95 transition-all text-[13px] font-bold text-slate-800 group"
+            className="flex-1 flex items-center justify-center gap-2 bg-white border border-slate-100 rounded-2xl py-3.5 shadow-sm hover:shadow-md hover:border-slate-200 active:scale-95 transition-all text-[14.5px] font-bold text-slate-800 group"
           >
             <MapPin size={16} className="text-blue-600 group-hover:scale-110 transition-transform" strokeWidth={2.5} />
             <span>Pin on map</span>
@@ -1859,7 +1859,7 @@ const SenderReceiverDetails = () => {
           
           <button
             onClick={() => setIsContactSheetOpen(true)}
-            className="flex-1 flex items-center justify-center gap-2 bg-white border border-slate-100 rounded-2xl py-3.5 shadow-sm hover:shadow-md hover:border-slate-200 active:scale-95 transition-all text-[13px] font-bold text-slate-800 group"
+            className="flex-1 flex items-center justify-center gap-2 bg-white border border-slate-100 rounded-2xl py-3.5 shadow-sm hover:shadow-md hover:border-slate-200 active:scale-95 transition-all text-[14.5px] font-bold text-slate-800 group"
           >
             <User size={16} className="text-blue-600 group-hover:scale-110 transition-transform" strokeWidth={2.5} />
             <span>Contact Details</span>
@@ -1868,26 +1868,26 @@ const SenderReceiverDetails = () => {
 
         {/* Contact details badge */}
         {(senderName || receiverName) && (
-          <div className="mx-1 mb-5 bg-gradient-to-r from-blue-50/70 to-indigo-50/30 rounded-2xl p-4 border-l-4 border-l-blue-600 border border-slate-100 flex items-center justify-between gap-3 text-[12px] shadow-sm">
+          <div className="mx-1 mb-5 bg-gradient-to-r from-blue-50/70 to-indigo-50/30 rounded-2xl p-4 border-l-4 border-l-blue-600 border border-slate-100 flex items-center justify-between gap-3 text-[13.5px] shadow-sm">
             <div className="flex-1 min-w-0 space-y-1.5">
               {senderName && (
                 <div className="flex items-center gap-2 text-slate-600">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                  <span className="font-bold text-slate-800 uppercase tracking-wider text-[10px]">Sender:</span>
+                  <span className="font-bold text-slate-800 uppercase tracking-wider text-[12px]">Sender:</span>
                   <span className="truncate font-semibold text-slate-700">{senderName} ({senderMobile})</span>
                 </div>
               )}
               {receiverName && (
                 <div className="flex items-center gap-2 text-slate-600">
                   <div className="w-1.5 h-1.5 rounded-full bg-rose-500" />
-                  <span className="font-bold text-slate-800 uppercase tracking-wider text-[10px]">Receiver:</span>
+                  <span className="font-bold text-slate-800 uppercase tracking-wider text-[12px]">Receiver:</span>
                   <span className="truncate font-semibold text-slate-700">{receiverName} ({receiverMobile})</span>
                 </div>
               )}
             </div>
             <button
               onClick={() => setIsContactSheetOpen(true)}
-              className="text-[11px] font-black text-blue-600 hover:text-blue-700 bg-white px-3 py-1.5 rounded-xl border border-slate-100 shadow-sm uppercase tracking-wider shrink-0 transition-colors"
+              className="text-[13px] font-black text-blue-600 hover:text-blue-700 bg-white px-3 py-1.5 rounded-xl border border-slate-100 shadow-sm uppercase tracking-wider shrink-0 transition-colors"
             >
               Edit
             </button>
@@ -1895,7 +1895,7 @@ const SenderReceiverDetails = () => {
         )}
 
         <div className="mt-5 space-y-5 px-2">
-          <h2 className="text-[12px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">
+          <h2 className="text-[13.5px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">
             {query.trim().length > 0 ? 'Search Results' : 'Suggestions'}
           </h2>
 
@@ -1911,9 +1911,9 @@ const SenderReceiverDetails = () => {
                     <Navigation size={14} className="text-blue-500 fill-blue-500/10" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[13px] font-black text-slate-800">{item.label}</p>
+                    <p className="truncate text-[14.5px] font-black text-slate-800">{item.label}</p>
                     {item.secondaryText ? (
-                      <p className="mt-0.5 truncate text-[11px] font-semibold text-slate-400">{item.secondaryText}</p>
+                      <p className="mt-0.5 truncate text-[13px] font-semibold text-slate-400">{item.secondaryText}</p>
                     ) : null}
                   </div>
                 </button>
@@ -1923,7 +1923,7 @@ const SenderReceiverDetails = () => {
 
           {!query.trim().length && nearbySuggestions.length > 0 ? (
             <div className="space-y-2">
-              <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.16em]">Near Current Pickup</p>
+              <p className="text-[13px] font-black text-slate-400 uppercase tracking-[0.16em]">Near Current Pickup</p>
               <div className="grid grid-cols-2 gap-2">
                 {nearbySuggestions.map((item) => (
                   <button
@@ -1932,7 +1932,7 @@ const SenderReceiverDetails = () => {
                     className="flex items-center gap-2 rounded-xl border border-slate-100 bg-white p-3 text-left shadow-sm hover:border-blue-200 transition-colors"
                   >
                     <MapPin size={12} className="shrink-0 text-emerald-500" />
-                    <span className="truncate text-[12px] font-bold text-slate-700">{item}</span>
+                    <span className="truncate text-[13.5px] font-bold text-slate-700">{item}</span>
                   </button>
                 ))}
               </div>
@@ -1941,7 +1941,7 @@ const SenderReceiverDetails = () => {
 
           {!query.trim().length && popularSuggestions.length > 0 ? (
             <div className="space-y-2">
-              <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.16em]">Popular Locations</p>
+              <p className="text-[13px] font-black text-slate-400 uppercase tracking-[0.16em]">Popular Locations</p>
               <div className="grid grid-cols-2 gap-2">
                 {popularSuggestions.map((item) => (
                   <button
@@ -1950,7 +1950,7 @@ const SenderReceiverDetails = () => {
                     className="flex items-center gap-2 rounded-xl border border-slate-100 bg-white p-3 text-left shadow-sm hover:border-blue-200 transition-colors"
                   >
                     <Navigation size={12} className="text-blue-500 shrink-0" />
-                    <span className="text-[12px] font-bold text-slate-700 truncate">{item.title || item}</span>
+                    <span className="text-[13.5px] font-bold text-slate-700 truncate">{item.title || item}</span>
                   </button>
                 ))}
               </div>
@@ -1958,7 +1958,7 @@ const SenderReceiverDetails = () => {
           ) : null}
 
           {Boolean(query) && isFetchingSuggestions ? (
-            <div className="rounded-2xl border border-slate-100 bg-white px-4 py-3 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 shadow-sm animate-pulse">
+            <div className="rounded-2xl border border-slate-100 bg-white px-4 py-3 text-[13px] font-bold uppercase tracking-[0.18em] text-slate-400 shadow-sm animate-pulse">
               Finding suggestions...
             </div>
           ) : null}
@@ -1974,24 +1974,24 @@ const SenderReceiverDetails = () => {
           <div className="absolute left-[-20px] bottom-[-20px] w-36 h-36 bg-emerald-600/10 rounded-full blur-2xl pointer-events-none" />
           <div className="relative z-10 flex items-center justify-between gap-3">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400">Approx. Delivery Fare</p>
+              <p className="text-[12px] font-black uppercase tracking-[0.2em] text-blue-400">Approx. Delivery Fare</p>
               <p className="mt-1 text-3xl font-black tracking-tight text-white">
                 {estimatedFare ? `Rs ${estimatedFare.approx ?? estimatedFare.min}` : '--'}
               </p>
-              <p className="mt-1 text-[11px] font-bold text-slate-400">
+              <p className="mt-1 text-[13px] font-bold text-slate-400">
                 {estimatedFare
                   ? `Based on ${routeEstimate.source === 'road' ? 'road' : 'approx'} travel of ${effectiveDistanceKm.toFixed(1)} km`
                   : 'Enter drop location to view live fare'}
               </p>
               {estimatedFare ? (
                 <>
-                  <p className="mt-1 text-[10px] font-semibold text-slate-500">
+                  <p className="mt-1 text-[12px] font-semibold text-slate-500">
                     Base fare covers {estimatedFare.minBaseDistance === estimatedFare.maxBaseDistance
                       ? `${estimatedFare.maxBaseDistance.toFixed(1)} km`
                       : `${estimatedFare.minBaseDistance.toFixed(1)}-${estimatedFare.maxBaseDistance.toFixed(1)} km`}
                     {' '}before extra charges.
                   </p>
-                  <p className="mt-1 text-[10px] font-semibold text-slate-500">
+                  <p className="mt-1 text-[12px] font-semibold text-slate-500">
                     Subtotal Rs {Number(estimatedFare.subtotal || 0).toFixed(2)} + service tax {Number(estimatedFare.serviceTaxPercentage || 0).toFixed(2)}% (Rs {Number(estimatedFare.serviceTaxAmount || 0).toFixed(2)})
                   </p>
                 </>
@@ -2011,7 +2011,7 @@ const SenderReceiverDetails = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={handleProceed}
-            className="relative flex h-16 w-full items-center justify-center gap-3 rounded-[24px] bg-slate-900 text-[15px] font-black text-white shadow-[0_20px_40px_rgba(15,23,42,0.2)] group overflow-hidden"
+            className="relative flex h-16 w-full items-center justify-center gap-3 rounded-[24px] bg-slate-900 text-[16.5px] font-black text-white shadow-[0_20px_40px_rgba(15,23,42,0.2)] group overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity" />
             <span className="relative z-10">

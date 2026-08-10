@@ -156,7 +156,7 @@ const Subscriptions = () => {
                     <div className="mb-2 flex items-center gap-2">
                       <h3 className="text-lg font-black text-slate-900">{plan.name}</h3>
                       {hasSameVehicleActivePlan ? (
-                        <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-black uppercase tracking-wide text-emerald-700">
+                        <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[13px] font-black uppercase tracking-wide text-emerald-700">
                           Active on this category
                         </span>
                       ) : null}

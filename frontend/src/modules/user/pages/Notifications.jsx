@@ -101,7 +101,7 @@ const Notifications = () => {
       setServerNotifications([]);
       toast.success('All notifications cleared', {
         icon: <CheckCircle2 size={18} className="text-emerald-500" />,
-        className: 'font-bold text-[13px] rounded-2xl shadow-xl border border-emerald-50 bg-white',
+        className: 'font-bold text-[14.5px] rounded-2xl shadow-xl border border-emerald-50 bg-white',
       });
     } catch (err) {
       toast.error(err?.message || 'Failed to clear notifications');
@@ -114,7 +114,7 @@ const Notifications = () => {
     if (isRealtimeNotification(id)) {
       removeRealtimeNotification(id);
       toast.success('Notification removed', {
-        className: 'font-bold text-[13px] rounded-2xl shadow-xl border border-slate-50 bg-white',
+        className: 'font-bold text-[14.5px] rounded-2xl shadow-xl border border-slate-50 bg-white',
       });
       return;
     }
@@ -123,7 +123,7 @@ const Notifications = () => {
       await userAuthService.deleteNotification(id);
       setServerNotifications((prev) => prev.filter((notification) => notification.id !== id));
       toast.success('Notification removed', {
-        className: 'font-bold text-[13px] rounded-2xl shadow-xl border border-slate-50 bg-white',
+        className: 'font-bold text-[14.5px] rounded-2xl shadow-xl border border-slate-50 bg-white',
       });
     } catch (err) {
       toast.error('Failed to remove notification');
@@ -144,10 +144,10 @@ const Notifications = () => {
             <ArrowLeft size={18} className="text-[#332000]" strokeWidth={2.5} />
           </button>
           <div className="flex-1 min-w-0">
-            <p className="text-[9px] font-black uppercase tracking-[0.26em] text-[#5c4600]">Inbox</p>
-            <h1 className="text-[19px] font-black tracking-tight text-[#332000] leading-tight">Notifications</h1>
+            <p className="text-[11px] font-black uppercase tracking-[0.26em] text-[#5c4600]">Inbox</p>
+            <h1 className="text-[20px] font-black tracking-tight text-[#332000] leading-tight">Notifications</h1>
           </div>
-          <div className="bg-[#332000] text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-sm">
+          <div className="bg-[#332000] text-white text-[12px] font-black px-2.5 py-1 rounded-full shadow-sm">
             {totalCount}
           </div>
         </div>
@@ -155,14 +155,14 @@ const Notifications = () => {
 
       <div className="px-5 pt-4 space-y-2.5">
         <div className="flex items-center justify-between px-1 mb-1">
-          <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 shrink-0">System Alerts</p>
+          <p className="text-[12px] font-black uppercase tracking-wider text-slate-400 shrink-0">System Alerts</p>
           <div className="flex items-center gap-2 shrink-0">
             {notifications.length > 0 && (
               <button
                 type="button"
                 onClick={handleClearAll}
                 disabled={clearing || loading}
-                className="flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100/80 px-2.5 py-1.5 rounded-lg active:scale-95 transition-all disabled:opacity-50 shrink-0 border border-rose-100"
+                className="flex items-center gap-1 text-[11px] font-black uppercase tracking-wider text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100/80 px-2.5 py-1.5 rounded-lg active:scale-95 transition-all disabled:opacity-50 shrink-0 border border-rose-100"
               >
                 <Trash2 size={11} strokeWidth={2.5} />
                 Clear
@@ -171,7 +171,7 @@ const Notifications = () => {
             <button
               type="button"
               onClick={fetchNotifications}
-              className="flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200/80 px-2.5 py-1.5 rounded-lg active:scale-95 transition-all shrink-0 border border-slate-200/50"
+              className="flex items-center gap-1 text-[11px] font-black uppercase tracking-wider text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200/80 px-2.5 py-1.5 rounded-lg active:scale-95 transition-all shrink-0 border border-slate-200/50"
             >
               <RefreshCw size={11} strokeWidth={2.5} className={loading ? 'animate-spin' : ''} />
               Refresh
@@ -186,9 +186,9 @@ const Notifications = () => {
             <div className="w-16 h-16 bg-[#ffc400]/10 border border-[#ffc400]/20 rounded-3xl flex items-center justify-center">
               <AlertCircle size={28} className="text-[#d48c00]" strokeWidth={2} />
             </div>
-            <p className="text-[14px] font-black text-slate-700">{error}</p>
+            <p className="text-[15.5px] font-black text-slate-700">{error}</p>
             <button onClick={fetchNotifications}
-              className="flex items-center gap-2 bg-[#ffc400] text-[#332000] px-6 py-3 rounded-full text-[12px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-md">
+              className="flex items-center gap-2 bg-[#ffc400] text-[#332000] px-6 py-3 rounded-full text-[13.5px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-md">
               <RefreshCw size={13} strokeWidth={2.5} /> Retry
             </button>
           </div>
@@ -200,8 +200,8 @@ const Notifications = () => {
               <Bell size={36} className="text-[#d48c00]" strokeWidth={1.5} />
             </div>
             <div>
-              <p className="text-[16px] font-black text-slate-700">You're all caught up</p>
-              <p className="text-[12px] font-bold text-slate-400 mt-1">No new notifications right now</p>
+              <p className="text-[17px] font-black text-slate-700">You're all caught up</p>
+              <p className="text-[13.5px] font-bold text-slate-400 mt-1">No new notifications right now</p>
             </div>
           </div>
         )}
@@ -221,9 +221,9 @@ const Notifications = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
-                    <p className="text-[13px] leading-tight font-black text-slate-900">{n.title || 'Notification'}</p>
+                    <p className="text-[14.5px] leading-tight font-black text-slate-900">{n.title || 'Notification'}</p>
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-[9px] font-bold text-slate-400 mt-0.5">
+                      <span className="text-[11px] font-bold text-slate-400 mt-0.5">
                         {formatNotificationTime(n.sentAt)}
                       </span>
                       <button
@@ -234,7 +234,7 @@ const Notifications = () => {
                       </button>
                     </div>
                   </div>
-                  <p className="text-[11px] font-bold text-slate-500 mt-1 leading-relaxed whitespace-pre-wrap">{n.body || 'No message'}</p>
+                  <p className="text-[13px] font-bold text-slate-500 mt-1 leading-relaxed whitespace-pre-wrap">{n.body || 'No message'}</p>
                   
                   {n.image && (
                     <div className="mt-3 rounded-2xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50">
@@ -247,7 +247,7 @@ const Notifications = () => {
                   )}
 
                   {n.serviceLocationName && (
-                    <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest mt-2">
+                    <p className="text-[11px] font-black text-slate-300 uppercase tracking-widest mt-2">
                       {n.serviceLocationName}
                     </p>
                   )}

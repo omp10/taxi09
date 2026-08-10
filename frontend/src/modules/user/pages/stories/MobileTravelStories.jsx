@@ -70,7 +70,7 @@ const MobileTravelStories = () => {
 
       <div className="px-4">
         <h1 className="text-[22px] font-black text-slate-900">Travel Stories</h1>
-        <p className="text-[12.5px] text-slate-500">Real journeys. Real experiences.</p>
+        <p className="text-[14px] text-slate-500">Real journeys. Real experiences.</p>
 
         <div className="relative mt-3">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -78,14 +78,14 @@ const MobileTravelStories = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search stories, places…"
-            className="w-full rounded-xl border border-slate-200 py-2.5 pl-9 pr-3 text-[13px] outline-none focus:border-[#F5B700]"
+            className="w-full rounded-xl border border-slate-200 py-2.5 pl-9 pr-3 text-[14.5px] outline-none focus:border-[#F5B700]"
           />
         </div>
 
         <div className="mt-3 flex gap-2 overflow-x-auto pb-1 no-scrollbar">
           <button
             onClick={() => setReelsOnly((current) => !current)}
-            className={`flex shrink-0 items-center gap-1 rounded-xl border px-3 py-2 text-[12px] font-bold ${
+            className={`flex shrink-0 items-center gap-1 rounded-xl border px-3 py-2 text-[13.5px] font-bold ${
               reelsOnly ? 'border-[#F5B700] bg-[#FFF9E6] text-slate-900' : 'border-slate-200 text-slate-600'
             }`}
           >
@@ -95,7 +95,7 @@ const MobileTravelStories = () => {
             <button
               key={chip}
               onClick={() => setCategory(chip)}
-              className={`shrink-0 rounded-xl border px-3 py-2 text-[12px] font-bold ${
+              className={`shrink-0 rounded-xl border px-3 py-2 text-[13.5px] font-bold ${
                 category === chip ? 'border-[#F5B700] bg-[#FFF9E6] text-slate-900' : 'border-slate-200 text-slate-600'
               }`}
             >
@@ -107,7 +107,7 @@ const MobileTravelStories = () => {
         {loading ? (
           <div className="flex justify-center py-16"><Loader2 className="animate-spin text-slate-400" /></div>
         ) : stories.length === 0 ? (
-          <p className="py-16 text-center text-[13px] text-slate-500">No stories here yet.</p>
+          <p className="py-16 text-center text-[14.5px] text-slate-500">No stories here yet.</p>
         ) : (
           <div className="mt-4 space-y-4">
             {stories.map((story) => (
@@ -120,7 +120,7 @@ const MobileTravelStories = () => {
                   {story.coverImage ? (
                     <img src={story.coverImage} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                   ) : null}
-                  <span className="absolute left-3 top-3 rounded-lg bg-white/95 px-2 py-1 text-[10px] font-black text-slate-900">
+                  <span className="absolute left-3 top-3 rounded-lg bg-white/95 px-2 py-1 text-[12px] font-black text-slate-900">
                     {story.category}
                   </span>
                   {story.videoUrl ? (
@@ -130,7 +130,7 @@ const MobileTravelStories = () => {
                           <Play size={18} className="ml-0.5 text-white" fill="currentColor" />
                         </span>
                       </span>
-                      <span className="absolute right-3 top-3 rounded-lg bg-[#F5B700] px-2 py-1 text-[10px] font-black text-slate-900">
+                      <span className="absolute right-3 top-3 rounded-lg bg-[#F5B700] px-2 py-1 text-[12px] font-black text-slate-900">
                         REEL
                       </span>
                     </>
@@ -138,17 +138,17 @@ const MobileTravelStories = () => {
                 </div>
 
                 <div className="p-3.5">
-                  <p className="text-[11px] font-semibold text-slate-500">
+                  <p className="text-[13px] font-semibold text-slate-500">
                     {story.authorName}{story.location ? ` · ${story.location}` : ''}
                   </p>
-                  <h2 className="mt-0.5 text-[14.5px] font-black leading-snug text-slate-900">{story.title}</h2>
+                  <h2 className="mt-0.5 text-[16px] font-black leading-snug text-slate-900">{story.title}</h2>
 
-                  <div className="mt-2 flex flex-wrap gap-x-3 text-[11px] text-slate-500">
+                  <div className="mt-2 flex flex-wrap gap-x-3 text-[13px] text-slate-500">
                     {story.days > 0 ? <span className="flex items-center gap-1"><Clock size={12} /> {story.days} Days</span> : null}
                     {story.distanceKm > 0 ? <span className="flex items-center gap-1"><Route size={12} /> {story.distanceKm} km</span> : null}
                   </div>
 
-                  <div className="mt-2.5 flex items-center gap-4 border-t border-slate-100 pt-2 text-[11.5px] text-slate-500">
+                  <div className="mt-2.5 flex items-center gap-4 border-t border-slate-100 pt-2 text-[13.5px] text-slate-500">
                     <button
                       onClick={(e) => { e.stopPropagation(); like(story); }}
                       className={`flex items-center gap-1 ${story.liked ? 'text-red-500' : ''}`}

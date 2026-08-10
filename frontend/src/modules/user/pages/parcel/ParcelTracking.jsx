@@ -796,7 +796,7 @@ const ParcelTracking = () => {
             <Package size={16} strokeWidth={2.5} />
           </div>
           <div className="min-w-0 flex-1 overflow-hidden">
-            <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-500">Destination</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">Destination</p>
             <p className="mt-1 truncate text-xs font-black text-gray-900">
               {state.drop || 'Drop'}
             </p>
@@ -828,7 +828,7 @@ const ParcelTracking = () => {
                 <CheckCircle2 size={22} className="text-white" />
               </div>
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-400">Parcel Delivered</p>
+                <p className="text-[12px] font-black uppercase tracking-[0.22em] text-slate-400">Parcel Delivered</p>
                 <h2 className="text-[22px] font-black text-slate-900">Delivered successfully</h2>
               </div>
             </div>
@@ -840,11 +840,11 @@ const ParcelTracking = () => {
                     <Receipt size={14} className="text-orange-300" />
                   </div>
                   <div>
-                    <p className="text-[13px] font-black text-white">Delivery Summary</p>
-                    <p className="text-[10px] font-bold text-slate-400">{completedDateLabel} · {completedTimeLabel}</p>
+                    <p className="text-[14.5px] font-black text-white">Delivery Summary</p>
+                    <p className="text-[12px] font-bold text-slate-400">{completedDateLabel} · {completedTimeLabel}</p>
                   </div>
                 </div>
-                <button type="button" onClick={handleShare} className="flex items-center gap-1 rounded-full bg-white/10 px-3 py-1.5 text-[10px] font-black text-white">
+                <button type="button" onClick={handleShare} className="flex items-center gap-1 rounded-full bg-white/10 px-3 py-1.5 text-[12px] font-black text-white">
                   <Share2 size={12} />
                   Share
                 </button>
@@ -852,13 +852,13 @@ const ParcelTracking = () => {
 
               <div className="space-y-4 px-4 py-4">
                 <div className="flex items-center gap-3 rounded-[18px] border border-slate-100 bg-slate-50/80 p-3">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-[16px] bg-slate-900 text-[18px] font-black text-white">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-[16px] bg-slate-900 text-[19px] font-black text-white">
                     {getInitials(driver.name)}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[16px] font-black text-slate-900">{driver.name}</p>
-                    <p className="truncate text-[11px] font-bold text-slate-500">{driver.plate || 'Assigned'} · {driver.vehicle || 'Delivery Agent'}</p>
-                    <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-yellow-50 px-2 py-0.5 text-[10px] font-black text-slate-800">
+                    <p className="truncate text-[17px] font-black text-slate-900">{driver.name}</p>
+                    <p className="truncate text-[13px] font-bold text-slate-500">{driver.plate || 'Assigned'} · {driver.vehicle || 'Delivery Agent'}</p>
+                    <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-yellow-50 px-2 py-0.5 text-[12px] font-black text-slate-800">
                       <Star size={10} className="fill-yellow-500 text-yellow-500" />
                       {driver.rating || '4.9'}
                     </div>
@@ -874,12 +874,12 @@ const ParcelTracking = () => {
                     </div>
                     <div className="min-w-0 flex-1 space-y-3">
                       <div>
-                        <p className="truncate text-[13px] font-black text-slate-900">{state.pickup || 'Pickup'}</p>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">Pickup</p>
+                        <p className="truncate text-[14.5px] font-black text-slate-900">{state.pickup || 'Pickup'}</p>
+                        <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-slate-400">Pickup</p>
                       </div>
                       <div>
-                        <p className="truncate text-[13px] font-black text-slate-900">{state.drop || 'Drop'}</p>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">Destination</p>
+                        <p className="truncate text-[14.5px] font-black text-slate-900">{state.drop || 'Drop'}</p>
+                        <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-slate-400">Destination</p>
                       </div>
                     </div>
                   </div>
@@ -887,16 +887,16 @@ const ParcelTracking = () => {
 
                 <div className="rounded-[18px] border border-slate-100 bg-white p-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[12px] font-bold text-slate-500">Delivery fare</span>
-                    <span className="text-[13px] font-black text-slate-900">Rs {Number(fare || 0).toFixed(2)}</span>
+                    <span className="text-[13.5px] font-bold text-slate-500">Delivery fare</span>
+                    <span className="text-[14.5px] font-black text-slate-900">Rs {Number(fare || 0).toFixed(2)}</span>
                   </div>
                   <div className="mt-2 flex items-center justify-between">
-                    <span className="text-[12px] font-bold text-slate-500">Tip</span>
-                    <span className="text-[13px] font-black text-slate-900">Rs {Number(selectedTip || 0).toFixed(2)}</span>
+                    <span className="text-[13.5px] font-bold text-slate-500">Tip</span>
+                    <span className="text-[14.5px] font-black text-slate-900">Rs {Number(selectedTip || 0).toFixed(2)}</span>
                   </div>
                   <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
-                    <span className="text-[15px] font-black text-slate-900">Total</span>
-                    <span className="text-[18px] font-black text-slate-900">Rs {totalBill.toFixed(2)}</span>
+                    <span className="text-[16.5px] font-black text-slate-900">Total</span>
+                    <span className="text-[19px] font-black text-slate-900">Rs {totalBill.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
@@ -905,18 +905,18 @@ const ParcelTracking = () => {
             <div className="rounded-[20px] border border-white/80 bg-white/95 px-4 py-4 shadow-[0_10px_24px_rgba(15,23,42,0.06)]">
               {isFeedbackSubmitted ? (
                 <div className="text-center">
-                  <p className="text-center text-[10px] font-black uppercase tracking-[0.22em] text-emerald-500">Feedback submitted</p>
-                  <p className="mt-2 text-[12px] font-bold text-slate-500">
+                  <p className="text-center text-[12px] font-black uppercase tracking-[0.22em] text-emerald-500">Feedback submitted</p>
+                  <p className="mt-2 text-[13.5px] font-bold text-slate-500">
                     Rating: {rating || 0}/5 {selectedTip > 0 ? `| Tip added: Rs ${Number(selectedTip || 0).toFixed(2)}` : '| No tip added'}
                   </p>
                 </div>
               ) : (
                 <>
-                  <p className="text-center text-[10px] font-black uppercase tracking-[0.22em] text-slate-400">
+                  <p className="text-center text-[12px] font-black uppercase tracking-[0.22em] text-slate-400">
                     {tipsEnabled ? 'Tip your delivery driver' : 'Driver tips disabled'}
                   </p>
                   {tipsEnabled && minimumTipAmount > 0 ? (
-                    <p className="mt-2 text-center text-[11px] font-bold text-slate-500">Minimum tip amount: Rs {minimumTipAmount}</p>
+                    <p className="mt-2 text-center text-[13px] font-bold text-slate-500">Minimum tip amount: Rs {minimumTipAmount}</p>
                   ) : null}
                   <div className="mt-3 flex flex-wrap justify-center gap-2">
                     {availableTipOptions.map((amount) => (
@@ -928,7 +928,7 @@ const ParcelTracking = () => {
                           setFeedbackError('');
                         }}
                         disabled={!tipsEnabled && amount > 0}
-                        className={`rounded-full border px-4 py-2 text-[11px] font-black transition-all ${
+                        className={`rounded-full border px-4 py-2 text-[13px] font-black transition-all ${
                           selectedTip === amount ? 'border-orange-500 bg-orange-500 text-white shadow-[0_8px_18px_rgba(249,115,22,0.24)]' : 'border-slate-100 bg-slate-50 text-slate-600'
                         } ${!tipsEnabled && amount > 0 ? 'cursor-not-allowed opacity-50' : ''}`}
                       >
@@ -941,7 +941,7 @@ const ParcelTracking = () => {
             </div>
 
             <div className="rounded-[20px] border border-white/80 bg-white/95 px-4 py-4 text-center shadow-[0_10px_24px_rgba(15,23,42,0.06)]">
-              <p className="text-[16px] font-black text-slate-900">How was your delivery with {driver.name?.split(' ')[0] || 'your driver'}?</p>
+              <p className="text-[17px] font-black text-slate-900">How was your delivery with {driver.name?.split(' ')[0] || 'your driver'}?</p>
               <div className="mt-4 flex justify-center gap-2">
                 {[1, 2, 3, 4, 5].map((value) => (
                   <button
@@ -969,17 +969,17 @@ const ParcelTracking = () => {
                   maxLength={500}
                   disabled={isFeedbackSubmitted}
                   placeholder="Tell us about the delivery"
-                  className="w-full resize-none rounded-[12px] border border-slate-100 bg-white px-3 py-2 text-[13px] font-bold text-slate-900 outline-none placeholder:text-slate-300"
+                  className="w-full resize-none rounded-[12px] border border-slate-100 bg-white px-3 py-2 text-[14.5px] font-bold text-slate-900 outline-none placeholder:text-slate-300"
                 />
               </div>
 
-              {feedbackError ? <p className="mt-3 text-[12px] font-black text-red-500">{feedbackError}</p> : null}
+              {feedbackError ? <p className="mt-3 text-[13.5px] font-black text-red-500">{feedbackError}</p> : null}
 
               <button
                 type="button"
                 onClick={submitParcelFeedback}
                 disabled={isSubmittingFeedback || isFeedbackSubmitted}
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-[16px] bg-slate-900 py-3.5 text-[14px] font-black text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)] disabled:opacity-60"
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-[16px] bg-slate-900 py-3.5 text-[15.5px] font-black text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)] disabled:opacity-60"
               >
                 {isSubmittingFeedback ? 'Saving your feedback...' : isFeedbackSubmitted ? 'Feedback already saved' : 'Submit rating'}
                 <ChevronRight size={16} />
@@ -991,7 +991,7 @@ const ParcelTracking = () => {
                   clearCurrentRide();
                   navigate(userHomeRoute, { replace: true });
                 }}
-                className="mt-3 text-[12px] font-black text-slate-500"
+                className="mt-3 text-[13.5px] font-black text-slate-500"
               >
                 Continue home
               </button>
@@ -1008,7 +1008,7 @@ const ParcelTracking = () => {
                 </div>
                 <div className="absolute -bottom-1 -right-1 bg-white px-2 py-0.5 rounded-full border border-gray-100 flex items-center gap-1 shadow-sm">
                   <Star size={10} className="text-amber-400 fill-amber-400" />
-                  <span className="text-[10px] font-black text-gray-900">{driver.rating}</span>
+                  <span className="text-[12px] font-black text-gray-900">{driver.rating}</span>
                 </div>
               </div>
               <div className="min-w-0">
@@ -1016,7 +1016,7 @@ const ParcelTracking = () => {
                 <p className="text-xs font-bold text-gray-400 mt-0.5 uppercase tracking-tight">{driver.plate} • {driver.vehicle || 'Delivery Agent'}</p>
                 <div className="flex items-center gap-1.5 mt-2 text-slate-900">
                   <Clock size={12} strokeWidth={3} />
-                  <span className="text-[11px] font-black uppercase tracking-wider">
+                  <span className="text-[13px] font-black uppercase tracking-wider">
                     {tripStatus === 'arrived' || tripStatus === 'arriving'
                       ? 'Driver Has Arrived'
                       : tripStatus === 'started' || tripStatus === 'ongoing'
@@ -1030,7 +1030,7 @@ const ParcelTracking = () => {
             {/* OTP Display */}
             {otp && (
               <div className="bg-slate-100 border border-slate-200 rounded-2xl px-4 py-3 flex flex-col items-center">
-                <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-0.5">OTP</span>
+                <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-0.5">OTP</span>
                 <span className="text-xl font-black text-slate-900 leading-none">{otp}</span>
               </div>
             )}
@@ -1047,10 +1047,10 @@ const ParcelTracking = () => {
           {/* Trip Footer */}
           <div className="flex items-center justify-between pt-6 border-t border-gray-50">
             <div>
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Estimated Fare</p>
+              <p className="text-[12px] font-black text-gray-400 uppercase tracking-widest mb-1">Estimated Fare</p>
               <div className="flex items-center gap-2">
                 <span className="text-xl font-black text-gray-900">₹{fare}</span>
-                <span className="px-2 py-0.5 rounded-md bg-gray-100 text-[10px] font-black text-gray-500 uppercase tracking-widest">{state.paymentMethod || 'Cash'}</span>
+                <span className="px-2 py-0.5 rounded-md bg-gray-100 text-[12px] font-black text-gray-500 uppercase tracking-widest">{state.paymentMethod || 'Cash'}</span>
               </div>
             </div>
             <motion.button
@@ -1110,7 +1110,7 @@ const ActionButton = ({ icon: Icon, label, onClick, color = 'gray' }) => (
     }`}
   >
     <Icon size={20} strokeWidth={2.5} />
-    <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>
+    <span className="text-[12px] font-black uppercase tracking-widest">{label}</span>
   </motion.button>
 );
 

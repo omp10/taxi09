@@ -32,7 +32,7 @@ const DesktopActivity = () => {
 
       <div className="mx-auto max-w-[1440px] px-8 pb-16 pt-5 xl:px-12">
         <h1 className="text-[24px] font-black text-slate-900">My Bookings</h1>
-        <p className="text-[12.5px] text-slate-500">Rides, rentals, buses and parcels in one place.</p>
+        <p className="text-[14px] text-slate-500">Rides, rentals, buses and parcels in one place.</p>
 
         <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
           <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white">
@@ -41,7 +41,7 @@ const DesktopActivity = () => {
 
           <aside className="space-y-4">
             <section className="rounded-2xl border border-slate-100 bg-white p-5">
-              <h2 className="text-[14.5px] font-black text-slate-900">Book something new</h2>
+              <h2 className="text-[16px] font-black text-slate-900">Book something new</h2>
               <div className="mt-3 space-y-1">
                 {SHORTCUTS.map((item) => (
                   <button
@@ -52,20 +52,20 @@ const DesktopActivity = () => {
                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50">
                       <item.icon size={15} className="text-amber-600" />
                     </span>
-                    <span className="text-[13px] font-bold text-slate-800">{item.label}</span>
+                    <span className="text-[14.5px] font-bold text-slate-800">{item.label}</span>
                   </button>
                 ))}
               </div>
             </section>
 
             <section className="rounded-2xl border border-slate-100 bg-white p-5">
-              <h2 className="text-[14.5px] font-black text-slate-900">Need help?</h2>
-              <p className="mt-1 text-[12px] text-slate-500">
+              <h2 className="text-[16px] font-black text-slate-900">Need help?</h2>
+              <p className="mt-1 text-[13.5px] text-slate-500">
                 Something wrong with a booking? Start a chat and we will pick it up.
               </p>
               <button
                 onClick={() => navigate('/taxi/user/support')}
-                className="mt-3 rounded-xl bg-slate-900 px-4 py-2 text-[12.5px] font-black text-white"
+                className="mt-3 rounded-xl bg-slate-900 px-4 py-2 text-[14px] font-black text-white"
               >
                 Get support
               </button>

@@ -140,7 +140,7 @@ const IntercityConfirm = () => {
         <h1 className="mt-5 text-[22px] font-black text-white">
           {status === 'scheduled' ? 'Intercity ride scheduled' : status === 'error' ? 'Scheduling failed' : 'Scheduling your ride'}
         </h1>
-        <p className="mt-2 text-[13px] font-bold text-white/55">
+        <p className="mt-2 text-[14.5px] font-bold text-white/55">
           {status === 'scheduled'
             ? 'Your booking has been saved. Drivers will be notified automatically at the scheduled time.'
             : status === 'error'
@@ -159,7 +159,7 @@ const IntercityConfirm = () => {
           </div>
         </div>
         {status === 'saving' ? (
-          <div className="mt-6 flex items-center justify-center gap-3 text-[12px] font-black uppercase tracking-[0.18em] text-blue-300">
+          <div className="mt-6 flex items-center justify-center gap-3 text-[13.5px] font-black uppercase tracking-[0.18em] text-blue-300">
             <LoaderCircle size={18} className="animate-spin" />
             Saving Schedule
           </div>

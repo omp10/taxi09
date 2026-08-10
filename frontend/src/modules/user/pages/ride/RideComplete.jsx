@@ -434,7 +434,7 @@ const RideComplete = () => {
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
-            className="fixed top-4 left-1/2 z-50 -translate-x-1/2 rounded-[14px] bg-slate-900 px-5 py-3 text-[12px] font-black text-white shadow-xl"
+            className="fixed top-4 left-1/2 z-50 -translate-x-1/2 rounded-[14px] bg-slate-900 px-5 py-3 text-[13.5px] font-black text-white shadow-xl"
           >
             Receipt copied
           </motion.div>
@@ -453,11 +453,11 @@ const RideComplete = () => {
               <CheckCircle2 size={30} className="text-white" />
             </div>
             <p className="text-[20px] font-black text-slate-900">Thanks for rating your driver</p>
-            <p className="text-[13px] font-bold text-slate-500">Your feedback has been saved successfully.</p>
+            <p className="text-[14.5px] font-bold text-slate-500">Your feedback has been saved successfully.</p>
             <button
               type="button"
               onClick={() => navigate(routeHome, { replace: true })}
-              className="mt-2 rounded-[16px] bg-slate-900 px-6 py-3 text-[13px] font-black text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)]"
+              className="mt-2 rounded-[16px] bg-slate-900 px-6 py-3 text-[14.5px] font-black text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)]"
             >
               Continue
             </button>
@@ -471,7 +471,7 @@ const RideComplete = () => {
             <CheckCircle2 size={24} className="text-white" />
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-400">
+            <p className="text-[12px] font-black uppercase tracking-[0.22em] text-slate-400">
               {isRideFinalized
                 ? (serviceType === 'parcel' ? 'Delivery Completed' : 'Ride Completed')
                 : (serviceType === 'parcel' ? 'Reached Destination' : 'Reached Destination')}
@@ -486,8 +486,8 @@ const RideComplete = () => {
 
         {!isRideFinalized ? (
           <div className="rounded-[18px] border border-amber-100 bg-amber-50/90 px-4 py-3 text-center shadow-[0_8px_20px_rgba(245,158,11,0.08)]">
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-amber-700">Finalizing trip</p>
-            <p className="mt-1 text-[12px] font-bold text-amber-900">
+            <p className="text-[12px] font-black uppercase tracking-[0.18em] text-amber-700">Finalizing trip</p>
+            <p className="mt-1 text-[13.5px] font-bold text-amber-900">
               The driver has marked destination arrival. This page will unlock rating and payment as soon as the trip is finalized.
             </p>
           </div>
@@ -500,14 +500,14 @@ const RideComplete = () => {
                 <Receipt size={14} className="text-orange-300" />
               </div>
               <div>
-                <p className="text-[13px] font-black text-white">Trip Receipt</p>
-                <p className="text-[10px] font-bold text-slate-400">{rideDate} · {rideTime}</p>
+                <p className="text-[14.5px] font-black text-white">Trip Receipt</p>
+                <p className="text-[12px] font-bold text-slate-400">{rideDate} · {rideTime}</p>
               </div>
             </div>
             <button
               type="button"
               onClick={handleShare}
-              className="flex items-center gap-1 rounded-full bg-white/10 px-3 py-1.5 text-[10px] font-black text-white"
+              className="flex items-center gap-1 rounded-full bg-white/10 px-3 py-1.5 text-[12px] font-black text-white"
             >
               <Share2 size={12} />
               Share
@@ -520,17 +520,17 @@ const RideComplete = () => {
                 {driverImage ? (
                   <img src={driverImage} alt={driver.name} className="h-full w-full object-cover" />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-slate-900 text-[18px] font-black text-white">
+                  <div className="flex h-full w-full items-center justify-center bg-slate-900 text-[19px] font-black text-white">
                     {getInitials(driver.name)}
                   </div>
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[16px] font-black text-slate-900">{driver.name}</p>
-                <p className="truncate text-[11px] font-bold text-slate-500">
+                <p className="truncate text-[17px] font-black text-slate-900">{driver.name}</p>
+                <p className="truncate text-[13px] font-bold text-slate-500">
                   {driver.vehicleNumber || driver.plate || 'Assigned'} · {vehicleLabel}
                 </p>
-                <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-yellow-50 px-2 py-0.5 text-[10px] font-black text-slate-800">
+                <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-yellow-50 px-2 py-0.5 text-[12px] font-black text-slate-800">
                   <Star size={10} className="fill-yellow-500 text-yellow-500" />
                   {driver.rating || '4.9'}
                 </div>
@@ -554,12 +554,12 @@ const RideComplete = () => {
                 </div>
                 <div className="min-w-0 flex-1 space-y-3">
                   <div>
-                    <p className="truncate text-[13px] font-black text-slate-900">{pickup}</p>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">Pickup</p>
+                    <p className="truncate text-[14.5px] font-black text-slate-900">{pickup}</p>
+                    <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-slate-400">Pickup</p>
                   </div>
                   <div>
-                    <p className="truncate text-[13px] font-black text-slate-900">{drop}</p>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">Drop</p>
+                    <p className="truncate text-[14.5px] font-black text-slate-900">{drop}</p>
+                    <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-slate-400">Drop</p>
                   </div>
                 </div>
               </div>
@@ -567,16 +567,16 @@ const RideComplete = () => {
 
             <div className="rounded-[18px] border border-slate-100 bg-white p-3">
               <div className="flex items-center justify-between">
-                <span className="text-[12px] font-bold text-slate-500">Base fare</span>
-                <span className="text-[13px] font-black text-slate-900">Rs {fare.toFixed(2)}</span>
+                <span className="text-[13.5px] font-bold text-slate-500">Base fare</span>
+                <span className="text-[14.5px] font-black text-slate-900">Rs {fare.toFixed(2)}</span>
               </div>
               <div className="mt-2 flex items-center justify-between">
-                <span className="text-[12px] font-bold text-slate-500">Tip</span>
-                <span className="text-[13px] font-black text-slate-900">Rs {Number(selectedTip || 0).toFixed(2)}</span>
+                <span className="text-[13.5px] font-bold text-slate-500">Tip</span>
+                <span className="text-[14.5px] font-black text-slate-900">Rs {Number(selectedTip || 0).toFixed(2)}</span>
               </div>
               <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
-                <span className="text-[15px] font-black text-slate-900">Total</span>
-                <span className="text-[18px] font-black text-slate-900">Rs {totalBill.toFixed(2)}</span>
+                <span className="text-[16.5px] font-black text-slate-900">Total</span>
+                <span className="text-[19px] font-black text-slate-900">Rs {totalBill.toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -585,20 +585,20 @@ const RideComplete = () => {
         <div className="rounded-[20px] border border-white/80 bg-white/95 px-4 py-4 shadow-[0_10px_24px_rgba(15,23,42,0.06)]">
           {isSubmitted ? (
             <div className="text-center">
-              <p className="text-center text-[10px] font-black uppercase tracking-[0.22em] text-emerald-500">
+              <p className="text-center text-[12px] font-black uppercase tracking-[0.22em] text-emerald-500">
                 Feedback submitted
               </p>
-              <p className="mt-2 text-[12px] font-bold text-slate-500">
+              <p className="mt-2 text-[13.5px] font-bold text-slate-500">
                 Rating: {rating || 0}/5 {selectedTip > 0 ? `| Tip added: Rs ${Number(selectedTip || 0).toFixed(2)}` : '| No tip added'}
               </p>
             </div>
           ) : (
             <>
-              <p className="text-center text-[10px] font-black uppercase tracking-[0.22em] text-slate-400">
+              <p className="text-center text-[12px] font-black uppercase tracking-[0.22em] text-slate-400">
                 {tipsEnabled ? 'Tip your driver' : 'Driver tips disabled'}
               </p>
               {tipsEnabled && minimumTipAmount > 0 ? (
-                <p className="mt-2 text-center text-[11px] font-bold text-slate-500">Minimum tip amount: Rs {minimumTipAmount}</p>
+                <p className="mt-2 text-center text-[13px] font-bold text-slate-500">Minimum tip amount: Rs {minimumTipAmount}</p>
               ) : null}
               <div className="mt-3 flex flex-wrap justify-center gap-2">
                 {availableTipOptions.map((amount) => (
@@ -610,7 +610,7 @@ const RideComplete = () => {
                       setError('');
                     }}
                     disabled={!tipsEnabled && amount > 0}
-                    className={`rounded-full border px-4 py-2 text-[11px] font-black transition-all ${
+                    className={`rounded-full border px-4 py-2 text-[13px] font-black transition-all ${
                       selectedTip === amount
                         ? 'border-orange-500 bg-orange-500 text-white shadow-[0_8px_18px_rgba(249,115,22,0.24)]'
                         : 'border-slate-100 bg-slate-50 text-slate-600'
@@ -625,7 +625,7 @@ const RideComplete = () => {
         </div>
 
         <div className="rounded-[20px] border border-white/80 bg-white/95 px-4 py-4 text-center shadow-[0_10px_24px_rgba(15,23,42,0.06)]">
-          <p className="text-[16px] font-black text-slate-900">How was your trip with {driver.name?.split(' ')[0] || 'your driver'}?</p>
+          <p className="text-[17px] font-black text-slate-900">How was your trip with {driver.name?.split(' ')[0] || 'your driver'}?</p>
           <div className="mt-4 flex justify-center gap-2">
             {[1, 2, 3, 4, 5].map((value) => (
               <button
@@ -648,7 +648,7 @@ const RideComplete = () => {
           </div>
 
           <div className="mt-4 rounded-[16px] border border-slate-100 bg-slate-50/80 px-3 py-3">
-            <div className="mb-2 flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.14em] text-slate-400">
+            <div className="mb-2 flex items-center gap-2 text-[13px] font-black uppercase tracking-[0.14em] text-slate-400">
               <MessageSquare size={14} />
               Add a note
             </div>
@@ -659,17 +659,17 @@ const RideComplete = () => {
               maxLength={500}
               disabled={isSubmitted}
               placeholder="Tell us about the trip"
-              className="w-full resize-none rounded-[12px] border border-slate-100 bg-white px-3 py-2 text-[13px] font-bold text-slate-900 outline-none placeholder:text-slate-300"
+              className="w-full resize-none rounded-[12px] border border-slate-100 bg-white px-3 py-2 text-[14.5px] font-bold text-slate-900 outline-none placeholder:text-slate-300"
             />
           </div>
 
-          {error ? <p className="mt-3 text-[12px] font-black text-red-500">{error}</p> : null}
+          {error ? <p className="mt-3 text-[13.5px] font-black text-red-500">{error}</p> : null}
 
           <button
             type="button"
             onClick={submitFeedback}
             disabled={isSubmitting || isSubmitted || !isRideFinalized}
-            className="mt-4 flex w-full items-center justify-center gap-2 rounded-[16px] bg-slate-900 py-3.5 text-[14px] font-black text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)] disabled:opacity-60"
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-[16px] bg-slate-900 py-3.5 text-[15.5px] font-black text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)] disabled:opacity-60"
           >
             {isSubmitting
               ? 'Saving your feedback...'
@@ -687,7 +687,7 @@ const RideComplete = () => {
               clearCurrentRide();
               navigate(routeHome, { replace: true });
             }}
-            className="mt-3 text-[12px] font-black text-slate-500"
+            className="mt-3 text-[13.5px] font-black text-slate-500"
           >
             Skip and go home
           </button>

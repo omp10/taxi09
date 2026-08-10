@@ -50,8 +50,8 @@ const SharedTaxiSeats = () => {
             <ArrowLeft size={18} className="text-slate-900" strokeWidth={2.5} />
           </motion.button>
           <div className="flex-1 min-w-0">
-            <p className="text-[9px] font-black uppercase tracking-[0.26em] text-slate-400">Select Seats · {date}</p>
-            <h1 className="text-[18px] font-black tracking-tight text-slate-900 leading-tight truncate">{route.from} → {route.to}</h1>
+            <p className="text-[11px] font-black uppercase tracking-[0.26em] text-slate-400">Select Seats · {date}</p>
+            <h1 className="text-[19px] font-black tracking-tight text-slate-900 leading-tight truncate">{route.from} → {route.to}</h1>
           </div>
         </div>
       </motion.header>
@@ -64,20 +64,20 @@ const SharedTaxiSeats = () => {
           <div className="space-y-1 flex-1 min-w-0">
             <div className="flex items-center gap-1.5">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-              <span className="text-[11px] font-black text-slate-700 truncate">{route.from}</span>
+              <span className="text-[13px] font-black text-slate-700 truncate">{route.from}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <div className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" />
-              <span className="text-[11px] font-black text-slate-700 truncate">{route.to}</span>
+              <span className="text-[13px] font-black text-slate-700 truncate">{route.to}</span>
             </div>
           </div>
-          <div className="flex items-center gap-3 shrink-0 text-[10px] font-bold text-slate-400">
+          <div className="flex items-center gap-3 shrink-0 text-[12px] font-bold text-slate-400">
             <div className="flex items-center gap-1"><Clock size={10} strokeWidth={2} />{route.departure}</div>
             <div className="flex items-center gap-1"><Users size={10} strokeWidth={2} />{route.duration}</div>
           </div>
           <div className="text-right shrink-0">
-            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.18em]">Per seat</p>
-            <p className="text-[18px] font-black text-slate-900 leading-tight">₹{route.price}</p>
+            <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.18em]">Per seat</p>
+            <p className="text-[19px] font-black text-slate-900 leading-tight">₹{route.price}</p>
           </div>
         </motion.div>
 
@@ -89,23 +89,23 @@ const SharedTaxiSeats = () => {
               className="w-full h-full object-cover" alt="Driver" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[13px] font-black text-slate-900 leading-tight">{route.driver}</p>
-            <p className="text-[10px] font-bold text-slate-400">{route.vehicle}</p>
+            <p className="text-[14.5px] font-black text-slate-900 leading-tight">{route.driver}</p>
+            <p className="text-[12px] font-bold text-slate-400">{route.vehicle}</p>
           </div>
           <div className="flex items-center gap-1 bg-yellow-50 border border-yellow-100 rounded-full px-2 py-0.5 shrink-0">
             <Star size={9} className="text-yellow-500 fill-yellow-500" />
-            <span className="text-[10px] font-black text-slate-800">{route.rating}</span>
+            <span className="text-[12px] font-black text-slate-800">{route.rating}</span>
           </div>
         </motion.div>
 
         {/* Seat map */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
           className="rounded-[20px] border border-white/80 bg-white/90 shadow-[0_4px_14px_rgba(15,23,42,0.05)] px-5 py-4 space-y-4">
-          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-400">Choose Your Seat</p>
+          <p className="text-[12px] font-black uppercase tracking-[0.22em] text-slate-400">Choose Your Seat</p>
 
           {/* Driver row */}
           <div className="flex items-center justify-between pb-3 border-b border-dashed border-slate-100">
-            <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Front</span>
+            <span className="text-[11px] font-black text-slate-300 uppercase tracking-widest">Front</span>
             <div className="w-9 h-9 bg-slate-100 rounded-[10px] flex items-center justify-center text-base">🧑‍✈️</div>
           </div>
 
@@ -124,7 +124,7 @@ const SharedTaxiSeats = () => {
                     <span className="text-base leading-none">
                       {seat.status === 'booked' ? '🔴' : seat.status === 'selected' ? '✓' : '💺'}
                     </span>
-                    <span className={`text-[9px] font-black leading-none ${seat.status === 'selected' ? 'text-white' : 'text-slate-400'}`}>
+                    <span className={`text-[11px] font-black leading-none ${seat.status === 'selected' ? 'text-white' : 'text-slate-400'}`}>
                       {seat.label}
                     </span>
                   </motion.button>
@@ -141,7 +141,7 @@ const SharedTaxiSeats = () => {
                     <span className="text-base leading-none">
                       {seat.status === 'booked' ? '🔴' : seat.status === 'selected' ? '✓' : '💺'}
                     </span>
-                    <span className={`text-[9px] font-black leading-none ${seat.status === 'selected' ? 'text-white' : 'text-slate-400'}`}>
+                    <span className={`text-[11px] font-black leading-none ${seat.status === 'selected' ? 'text-white' : 'text-slate-400'}`}>
                       {seat.label}
                     </span>
                   </motion.button>
@@ -155,7 +155,7 @@ const SharedTaxiSeats = () => {
             {[['bg-white border-slate-200','Available'],['bg-slate-900 border-slate-900','Selected'],['bg-red-50 border-red-200','Booked']].map(([cls,lbl]) => (
               <div key={lbl} className="flex items-center gap-1.5">
                 <div className={`w-3 h-3 rounded border-2 ${cls}`} />
-                <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">{lbl}</span>
+                <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">{lbl}</span>
               </div>
             ))}
           </div>
@@ -169,12 +169,12 @@ const SharedTaxiSeats = () => {
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }}
               className="pointer-events-auto mb-2 flex items-center justify-between rounded-[16px] border border-white/80 bg-white/90 shadow-[0_4px_14px_rgba(15,23,42,0.08)] px-4 py-3">
               <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                <p className="text-[12px] font-black text-slate-400 uppercase tracking-wider">
                   {selected.length} seat{selected.length > 1 ? 's' : ''} · {selected.map(s=>s.label).join(', ')}
                 </p>
-                <p className="text-[18px] font-black text-slate-900 leading-tight">₹{total}</p>
+                <p className="text-[19px] font-black text-slate-900 leading-tight">₹{total}</p>
               </div>
-              <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded-full">
+              <span className="text-[12px] font-black text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded-full">
                 {selected.length}x ₹{route.price}
               </span>
             </motion.div>
@@ -182,7 +182,7 @@ const SharedTaxiSeats = () => {
         </AnimatePresence>
         <motion.button whileTap={{ scale: 0.98 }} disabled={selected.length === 0}
           onClick={() => navigate(`${routePrefix}/cab/shared/confirm`, { state: { route, date, seats: selected, total } })}
-          className={`pointer-events-auto w-full py-4 rounded-[18px] text-[15px] font-black text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 transition-all ${
+          className={`pointer-events-auto w-full py-4 rounded-[18px] text-[16.5px] font-black text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 transition-all ${
             selected.length > 0 ? 'bg-slate-900' : 'bg-slate-300'
           }`}>
           Continue to Booking <ChevronRight size={17} strokeWidth={3} className="opacity-50" />

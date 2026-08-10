@@ -142,10 +142,10 @@ const DesktopRentalExtras = () => {
       <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
         <DesktopNav activePath="/taxi/user/rental" theme={theme} onToggleTheme={toggleTheme} />
         <div className="mx-auto max-w-[1440px] px-8 py-24 text-center xl:px-12">
-          <p className="text-[18px] font-black text-[var(--dh-text)]">No booking in progress</p>
+          <p className="text-[19px] font-black text-[var(--dh-text)]">No booking in progress</p>
           <button
             onClick={() => navigate('/taxi/user/rental?search=true')}
-            className="mt-5 rounded-[12px] bg-[#F5B700] px-6 py-3 text-[15px] font-bold text-slate-950"
+            className="mt-5 rounded-[12px] bg-[#F5B700] px-6 py-3 text-[16.5px] font-bold text-slate-950"
           >
             Choose a car
           </button>
@@ -253,9 +253,9 @@ const DesktopRentalExtras = () => {
                         : 'bg-[var(--dh-chip)] text-[var(--dh-muted)]'
                     }`}
                   >
-                    {isDone ? <CheckCircle2 size={20} strokeWidth={2.4} /> : <span className="text-[15px] font-black">{index + 1}</span>}
+                    {isDone ? <CheckCircle2 size={20} strokeWidth={2.4} /> : <span className="text-[16.5px] font-black">{index + 1}</span>}
                   </span>
-                  <span className={`whitespace-nowrap text-[14px] font-bold ${isCurrent ? 'text-[var(--dh-text)]' : 'text-[var(--dh-muted)]'}`}>
+                  <span className={`whitespace-nowrap text-[15.5px] font-bold ${isCurrent ? 'text-[var(--dh-text)]' : 'text-[var(--dh-muted)]'}`}>
                     {label}
                   </span>
                   {index < STEPS.length - 1 && (
@@ -269,7 +269,7 @@ const DesktopRentalExtras = () => {
           {/* ---------------------------------------------------------- Add-ons */}
           <div className="mt-8">
             <h1 className="text-[24px] font-black tracking-[-0.03em] text-[var(--dh-text)]">Enhance Your Journey</h1>
-            <p className="mt-1.5 text-[14px] font-medium text-[var(--dh-muted)]">
+            <p className="mt-1.5 text-[15.5px] font-medium text-[var(--dh-muted)]">
               Add extra options to make your trip more comfortable and worry-free.
             </p>
 
@@ -297,20 +297,20 @@ const DesktopRentalExtras = () => {
                       <Icon size={26} className="mt-0.5 shrink-0 text-[var(--dh-muted)]" strokeWidth={1.9} />
 
                       <span className="min-w-0 flex-1">
-                        <span className="block text-[14.5px] font-black text-[var(--dh-text)]">{addOn.label}</span>
+                        <span className="block text-[16px] font-black text-[var(--dh-text)]">{addOn.label}</span>
                         {addOn.description && (
-                          <span className="mt-1 block text-[12px] font-medium leading-[1.4] text-[var(--dh-muted)]">
+                          <span className="mt-1 block text-[13.5px] font-medium leading-[1.4] text-[var(--dh-muted)]">
                             {addOn.description}
                           </span>
                         )}
                         <span className="mt-2 flex flex-wrap items-baseline gap-2">
-                          <span className="text-[16px] font-black text-[var(--dh-text)]">{formatMoney(addOn.price)}</span>
+                          <span className="text-[17px] font-black text-[var(--dh-text)]">{formatMoney(addOn.price)}</span>
                           {addOn.originalPrice > addOn.price && (
                             <>
-                              <span className="text-[13px] font-bold text-[var(--dh-muted)] line-through">
+                              <span className="text-[14.5px] font-bold text-[var(--dh-muted)] line-through">
                                 {formatMoney(addOn.originalPrice)}
                               </span>
-                              <span className="rounded-full bg-[#F5B700] px-2 py-0.5 text-[10px] font-black text-slate-950">
+                              <span className="rounded-full bg-[#F5B700] px-2 py-0.5 text-[12px] font-black text-slate-950">
                                 Save {formatMoney(addOn.originalPrice - addOn.price)}
                               </span>
                             </>
@@ -322,7 +322,7 @@ const DesktopRentalExtras = () => {
                 })}
               </div>
             ) : (
-              <p className="mt-5 rounded-[14px] bg-[var(--dh-chip)] px-5 py-8 text-center text-[13.5px] font-semibold text-[var(--dh-muted)]">
+              <p className="mt-5 rounded-[14px] bg-[var(--dh-chip)] px-5 py-8 text-center text-[15px] font-semibold text-[var(--dh-muted)]">
                 No add-ons are configured for this vehicle.
               </p>
             )}
@@ -332,7 +332,7 @@ const DesktopRentalExtras = () => {
           {plans.length > 0 && (
             <div className="mt-8 border-t border-[var(--dh-border)] pt-7">
               <h2 className="text-[22px] font-black tracking-[-0.03em] text-[var(--dh-text)]">Kilometre Plan</h2>
-              <p className="mt-1.5 text-[14px] font-medium text-[var(--dh-muted)]">
+              <p className="mt-1.5 text-[15.5px] font-medium text-[var(--dh-muted)]">
                 Choose the best kilometre limit that suits your travel needs.
               </p>
 
@@ -357,19 +357,19 @@ const DesktopRentalExtras = () => {
                           {isOn && <span className="h-2.5 w-2.5 rounded-full bg-[#F5B700]" />}
                         </span>
                         <span className="min-w-0">
-                          <span className="block text-[14.5px] font-black text-[var(--dh-text)]">
+                          <span className="block text-[16px] font-black text-[var(--dh-text)]">
                             {plan.label || planLabel(plan)}
                           </span>
-                          <span className="mt-1 block text-[11.5px] font-semibold text-[var(--dh-muted)]">
+                          <span className="mt-1 block text-[13.5px] font-semibold text-[var(--dh-muted)]">
                             {plan.includedKm
                               ? `${plan.includedKm} km included${plan.extraKmPrice ? ` · Extra ${formatMoney(plan.extraKmPrice)}/km` : ''}`
                               : 'Best for long drives'}
                           </span>
                         </span>
                       </span>
-                      <span className="mt-3 block text-[19px] font-black text-[var(--dh-text)]">
+                      <span className="mt-3 block text-[20px] font-black text-[var(--dh-text)]">
                         {formatMoney(plan.price)}
-                        <span className="text-[12.5px] font-bold text-[var(--dh-muted)]">/{plan.durationHours ? `${plan.durationHours}h` : 'day'}</span>
+                        <span className="text-[14px] font-bold text-[var(--dh-muted)]">/{plan.durationHours ? `${plan.durationHours}h` : 'day'}</span>
                       </span>
                     </button>
                   );
@@ -383,7 +383,7 @@ const DesktopRentalExtras = () => {
             <div className="flex items-end justify-between gap-6">
               <div>
                 <h2 className="text-[22px] font-black tracking-[-0.03em] text-[var(--dh-text)]">Add Coupon</h2>
-                <p className="mt-1.5 text-[14px] font-medium text-[var(--dh-muted)]">
+                <p className="mt-1.5 text-[15.5px] font-medium text-[var(--dh-muted)]">
                   Apply coupon code and get exciting discounts.
                 </p>
               </div>
@@ -395,13 +395,13 @@ const DesktopRentalExtras = () => {
                     value={coupon}
                     onChange={(event) => { setCoupon(event.target.value); setCouponError(''); }}
                     placeholder="Enter coupon code"
-                    className="w-full bg-transparent text-[14px] font-semibold uppercase text-[var(--dh-text)] placeholder:normal-case placeholder:text-[var(--dh-muted)] outline-none"
+                    className="w-full bg-transparent text-[15.5px] font-semibold uppercase text-[var(--dh-text)] placeholder:normal-case placeholder:text-[var(--dh-muted)] outline-none"
                   />
                 </span>
                 <button
                   onClick={applyCoupon}
                   disabled={applyingCoupon || !coupon.trim()}
-                  className="h-[50px] rounded-[12px] bg-[#F5B700] px-8 text-[15px] font-bold text-slate-950 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="h-[50px] rounded-[12px] bg-[#F5B700] px-8 text-[16.5px] font-bold text-slate-950 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {applyingCoupon ? 'Checking…' : 'Apply'}
                 </button>
@@ -409,10 +409,10 @@ const DesktopRentalExtras = () => {
             </div>
 
             {couponError && (
-              <p className="mt-3 rounded-[10px] bg-rose-50 px-3.5 py-2.5 text-[12.5px] font-bold text-rose-700">{couponError}</p>
+              <p className="mt-3 rounded-[10px] bg-rose-50 px-3.5 py-2.5 text-[14px] font-bold text-rose-700">{couponError}</p>
             )}
             {appliedCoupon && (
-              <p className="mt-3 rounded-[10px] bg-emerald-50 px-3.5 py-2.5 text-[12.5px] font-bold text-emerald-700">
+              <p className="mt-3 rounded-[10px] bg-emerald-50 px-3.5 py-2.5 text-[14px] font-bold text-emerald-700">
                 {appliedCoupon.code} applied — discount is confirmed on the payment step.
               </p>
             )}
@@ -423,8 +423,8 @@ const DesktopRentalExtras = () => {
               <div key={title} className="flex items-center gap-3">
                 <Icon size={24} className="shrink-0 text-[#F5B700]" strokeWidth={2} />
                 <span>
-                  <span className="block text-[12.5px] font-black text-slate-900">{title}</span>
-                  <span className="mt-0.5 block text-[11px] font-semibold text-slate-600">{copy}</span>
+                  <span className="block text-[14px] font-black text-slate-900">{title}</span>
+                  <span className="mt-0.5 block text-[13px] font-semibold text-slate-600">{copy}</span>
                 </span>
               </div>
             ))}
@@ -442,21 +442,21 @@ const DesktopRentalExtras = () => {
               />
             </span>
             <span className="min-w-0">
-              <span className="block truncate text-[17px] font-black tracking-[-0.02em] text-[var(--dh-text)]">{vehicle.name}</span>
-              <span className="block text-[12.5px] font-semibold text-[var(--dh-muted)]">{category}</span>
+              <span className="block truncate text-[18px] font-black tracking-[-0.02em] text-[var(--dh-text)]">{vehicle.name}</span>
+              <span className="block text-[14px] font-semibold text-[var(--dh-muted)]">{category}</span>
               <span className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
                 {vehicle.capacity > 0 && (
-                  <span className="flex items-center gap-1 text-[11.5px] font-semibold text-[var(--dh-muted)]">
+                  <span className="flex items-center gap-1 text-[13.5px] font-semibold text-[var(--dh-muted)]">
                     <Users size={13} strokeWidth={2.2} /> {vehicle.capacity} Seats
                   </span>
                 )}
                 {specs.transmission && (
-                  <span className="flex items-center gap-1 text-[11.5px] font-semibold text-[var(--dh-muted)]">
+                  <span className="flex items-center gap-1 text-[13.5px] font-semibold text-[var(--dh-muted)]">
                     <Gauge size={13} strokeWidth={2.2} /> {specs.transmission}
                   </span>
                 )}
                 {specs.fuel && (
-                  <span className="flex items-center gap-1 text-[11.5px] font-semibold text-[var(--dh-muted)]">
+                  <span className="flex items-center gap-1 text-[13.5px] font-semibold text-[var(--dh-muted)]">
                     <Fuel size={13} strokeWidth={2.2} /> {specs.fuel}
                   </span>
                 )}
@@ -477,8 +477,8 @@ const DesktopRentalExtras = () => {
                 <div key={label} className="flex gap-2.5">
                   <Icon size={16} className="mt-0.5 shrink-0 text-[var(--dh-muted)]" strokeWidth={2.2} />
                   <span className="min-w-0">
-                    <dt className="text-[12.5px] font-bold text-[var(--dh-text)]">{label}</dt>
-                    <dd className="mt-0.5 text-[12.5px] font-semibold text-[var(--dh-muted)]">{value}</dd>
+                    <dt className="text-[14px] font-bold text-[var(--dh-text)]">{label}</dt>
+                    <dd className="mt-0.5 text-[14px] font-semibold text-[var(--dh-muted)]">{value}</dd>
                   </span>
                 </div>
               ))}
@@ -486,33 +486,33 @@ const DesktopRentalExtras = () => {
 
           {/* Price panel - entirely server-computed */}
           <div className="mt-5 border-t border-[var(--dh-border)] pt-4">
-            <h3 className="text-[15px] font-black text-[var(--dh-text)]">Price Details</h3>
+            <h3 className="text-[16.5px] font-black text-[var(--dh-text)]">Price Details</h3>
 
             {quote ? (
               <div className="mt-3 space-y-2.5">
-                <div className="flex justify-between text-[13px] font-semibold text-[var(--dh-muted)]">
+                <div className="flex justify-between text-[14.5px] font-semibold text-[var(--dh-muted)]">
                   <span>Base Fare{selectedPlan?.label ? ` (${selectedPlan.label})` : ''}</span>
                   <span className="text-[var(--dh-text)]">{formatMoney(quote.packagePrice)}</span>
                 </div>
-                <div className="flex justify-between text-[13px] font-semibold text-[var(--dh-muted)]">
+                <div className="flex justify-between text-[14.5px] font-semibold text-[var(--dh-muted)]">
                   <span>Extra Options ({quote.addOns?.length || 0})</span>
                   <span className="text-[var(--dh-text)]">{formatMoney(quote.addOnsTotal)}</span>
                 </div>
                 {quote.addOnsSavings > 0 && (
-                  <div className="flex justify-between text-[13px] font-bold text-emerald-700">
+                  <div className="flex justify-between text-[14.5px] font-bold text-emerald-700">
                     <span>You save</span>
                     <span>-{formatMoney(quote.addOnsSavings)}</span>
                   </div>
                 )}
                 {quote.extraHoursTotal > 0 && (
-                  <div className="flex justify-between text-[13px] font-semibold text-[var(--dh-muted)]">
+                  <div className="flex justify-between text-[14.5px] font-semibold text-[var(--dh-muted)]">
                     <span>Extra Hours ({quote.extraHours})</span>
                     <span className="text-[var(--dh-text)]">{formatMoney(quote.extraHoursTotal)}</span>
                   </div>
                 )}
 
                 <div className="flex items-center justify-between border-t border-[var(--dh-border)] pt-3">
-                  <span className="text-[15px] font-black text-[var(--dh-text)]">Total Amount</span>
+                  <span className="text-[16.5px] font-black text-[var(--dh-text)]">Total Amount</span>
                   <span className="text-[20px] font-black text-[var(--dh-text)]">{formatMoney(quote.totalCost)}</span>
                 </div>
 
@@ -520,10 +520,10 @@ const DesktopRentalExtras = () => {
                   <div className="flex items-start gap-2.5 rounded-[12px] bg-emerald-50 p-3.5">
                     <ShieldCheck size={19} className="mt-0.5 shrink-0 text-emerald-600" strokeWidth={2.2} />
                     <span>
-                      <span className="block text-[12.5px] font-black text-emerald-800">
+                      <span className="block text-[14px] font-black text-emerald-800">
                         {quote.advancePayment?.label || 'Advance booking payment'}
                       </span>
-                      <span className="mt-0.5 block text-[11.5px] font-semibold text-emerald-700">
+                      <span className="mt-0.5 block text-[13.5px] font-semibold text-emerald-700">
                         Pay {formatMoney(quote.payableNow)} now, {formatMoney(quote.balanceDue)} at pickup.
                       </span>
                     </span>
@@ -531,7 +531,7 @@ const DesktopRentalExtras = () => {
                 )}
               </div>
             ) : quoteError ? (
-              <p className="mt-3 rounded-[10px] bg-rose-50 px-3 py-2.5 text-[12.5px] font-bold text-rose-700">{quoteError}</p>
+              <p className="mt-3 rounded-[10px] bg-rose-50 px-3 py-2.5 text-[14px] font-bold text-rose-700">{quoteError}</p>
             ) : (
               <div className="mt-3 space-y-2">
                 <div className="skeleton h-4 rounded" />
@@ -544,14 +544,14 @@ const DesktopRentalExtras = () => {
           <button
             onClick={continueToReview}
             disabled={!quote}
-            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-[13px] bg-[#F5B700] py-3.5 text-[15.5px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)] transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-[13px] bg-[#F5B700] py-3.5 text-[17px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)] transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Continue to Review Booking <ArrowRight size={18} strokeWidth={2.8} />
           </button>
 
           <button
             onClick={() => navigate('/taxi/user/rental/vehicle', { state })}
-            className="mt-2.5 flex w-full items-center justify-center gap-2.5 rounded-[13px] border border-[var(--dh-border)] py-3 text-[14.5px] font-bold text-[var(--dh-text)] hover:bg-[var(--dh-chip)]"
+            className="mt-2.5 flex w-full items-center justify-center gap-2.5 rounded-[13px] border border-[var(--dh-border)] py-3 text-[16px] font-bold text-[var(--dh-text)] hover:bg-[var(--dh-chip)]"
           >
             <ArrowLeft size={17} strokeWidth={2.4} /> Back to Select Car
           </button>

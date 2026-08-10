@@ -875,8 +875,8 @@ const ParcelSearchingDriver = () => {
       </div>
 
       <div className="absolute top-8 left-4 right-16 z-20 bg-white/90 backdrop-blur-md rounded-2xl px-5 py-3 shadow-[0_8px_32px_rgba(15,23,42,0.12)] border border-white/80">
-        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.1em] leading-none mb-1">Parcel Route</p>
-        <p className="text-[13px] font-extrabold text-slate-900 leading-tight truncate">{routeState.pickup || 'Pickup'} to {routeState.drop || 'Drop'}</p>
+        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.1em] leading-none mb-1">Parcel Route</p>
+        <p className="text-[14.5px] font-extrabold text-slate-900 leading-tight truncate">{routeState.pickup || 'Pickup'} to {routeState.drop || 'Drop'}</p>
       </div>
 
       <AnimatePresence>
@@ -886,8 +886,8 @@ const ParcelSearchingDriver = () => {
             animate={{ scale: 1, opacity: 1, x: 0 }}
             className="absolute top-[88px] left-4 z-20 bg-white shadow-[0_4px_16px_rgba(15,23,42,0.12)] rounded-[12px] p-3 min-w-[70px] border border-slate-50"
           >
-            <p className="text-[18px] font-extrabold text-[#1d4ed8] leading-tight text-center tracking-wider">{otp}</p>
-            <p className="text-[10px] font-bold text-slate-400 mt-0.5 text-center whitespace-nowrap">Pickup OTP</p>
+            <p className="text-[19px] font-extrabold text-[#1d4ed8] leading-tight text-center tracking-wider">{otp}</p>
+            <p className="text-[12px] font-bold text-slate-400 mt-0.5 text-center whitespace-nowrap">Pickup OTP</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -916,13 +916,13 @@ const ParcelSearchingDriver = () => {
 
               <div className="text-center space-y-1.5">
                 <h1 className="text-[22px] font-extrabold text-slate-950 tracking-tight">Finding your delivery captain</h1>
-                <p className="text-[13px] font-semibold text-slate-400 max-w-[260px] mx-auto leading-normal">{searchStatus}</p>
+                <p className="text-[14.5px] font-semibold text-slate-400 max-w-[260px] mx-auto leading-normal">{searchStatus}</p>
               </div>
 
               <div className="rounded-[24px] border border-orange-100 bg-gradient-to-r from-orange-50 via-white to-amber-50 px-5 py-4 text-center">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-orange-500">Expected Price</p>
+                <p className="text-[12px] font-black uppercase tracking-[0.16em] text-orange-500">Expected Price</p>
                 <p className="mt-1 text-[24px] font-extrabold tracking-tight text-slate-950">{expectedFareLabel}</p>
-                <p className="mt-1 text-[11px] font-semibold text-slate-400">{expectedFareMeta}</p>
+                <p className="mt-1 text-[13px] font-semibold text-slate-400">{expectedFareMeta}</p>
               </div>
 
               <div className="flex justify-center gap-2.5 py-1">
@@ -945,25 +945,25 @@ const ParcelSearchingDriver = () => {
                   <div className="w-9 h-9 rounded-full bg-emerald-50 flex items-center justify-center">
                     <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
                   </div>
-                  <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Fast Dispatch</span>
+                  <span className="text-[13px] font-bold text-slate-700 uppercase tracking-wider">Fast Dispatch</span>
                 </div>
                 <div className="w-px h-8 bg-slate-200" />
                 <div className="flex items-center gap-3">
                   <ShieldCheck size={20} className="text-blue-500" strokeWidth={2.5} />
-                  <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Parcel Safety</span>
+                  <span className="text-[13px] font-bold text-slate-700 uppercase tracking-wider">Parcel Safety</span>
                 </div>
               </div>
 
               {bookingError && (
                 <div className="rounded-[22px] border border-red-100 bg-red-50 px-4 py-3 text-center">
-                  <p className="text-[12px] font-bold text-red-500">{bookingError}</p>
+                  <p className="text-[13.5px] font-bold text-red-500">{bookingError}</p>
                 </div>
               )}
 
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setShowCancelConfirm(true)}
-                className="w-full py-4.5 rounded-[22px] bg-red-50 text-[13px] font-extrabold text-red-500 uppercase tracking-[0.1em] hover:bg-red-100 transition-colors border border-red-100/50"
+                className="w-full py-4.5 rounded-[22px] bg-red-50 text-[14.5px] font-extrabold text-red-500 uppercase tracking-[0.1em] hover:bg-red-100 transition-colors border border-red-100/50"
               >
                 Cancel Search
               </motion.button>
@@ -983,17 +983,17 @@ const ParcelSearchingDriver = () => {
                   <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.3)]">
                     <CheckCircle2 size={12} className="text-white" strokeWidth={3} />
                   </div>
-                  <span className="text-[14px] font-black tracking-tight text-emerald-700 uppercase tracking-wider">Captain confirmed</span>
+                  <span className="text-[15.5px] font-black tracking-tight text-emerald-700 uppercase tracking-wider">Captain confirmed</span>
                 </div>
 
                 <div className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[14px] font-black text-slate-400 uppercase tracking-widest">{driver.name || 'Captain'}</span>
+                        <span className="text-[15.5px] font-black text-slate-400 uppercase tracking-widest">{driver.name || 'Captain'}</span>
                         <div className="flex items-center gap-1 bg-yellow-400/10 px-1.5 py-0.5 rounded-full border border-yellow-400/20">
                           <Star size={10} className="fill-yellow-500 text-yellow-500" />
-                          <span className="text-[11px] font-black text-yellow-700">{driver.rating || '4.7'}</span>
+                          <span className="text-[13px] font-black text-yellow-700">{driver.rating || '4.7'}</span>
                         </div>
                       </div>
 
@@ -1002,7 +1002,7 @@ const ParcelSearchingDriver = () => {
                       </h2>
 
                       <div className="inline-flex items-center px-3 py-1 rounded-full bg-slate-100 border border-slate-200/50">
-                        <p className="text-[12px] font-black text-slate-600">
+                        <p className="text-[13.5px] font-black text-slate-600">
                           {[driver.vehicleColor, driver.vehicleMake, driver.vehicleModel, driver.vehicleType || 'Delivery Vehicle'].filter(Boolean).join(' ') || 'Delivery Vehicle'}
                         </p>
                       </div>
@@ -1033,7 +1033,7 @@ const ParcelSearchingDriver = () => {
                       className="flex items-center justify-center gap-3 rounded-[22px] bg-slate-50 py-4.5 border border-slate-200/60 hover:bg-slate-100 transition-colors"
                     >
                       <Phone size={18} className="text-slate-900" strokeWidth={2.5} />
-                      <span className="text-[13px] font-black text-slate-900 uppercase tracking-widest leading-none">Call</span>
+                      <span className="text-[14.5px] font-black text-slate-900 uppercase tracking-widest leading-none">Call</span>
                     </motion.button>
                     <motion.button
                       whileTap={{ scale: 0.96 }}
@@ -1041,7 +1041,7 @@ const ParcelSearchingDriver = () => {
                       className="flex items-center justify-center gap-3 rounded-[22px] bg-slate-950 py-4.5 shadow-[0_12px_24px_rgba(15,23,42,0.15)] active:shadow-none"
                     >
                       <MessageCircle size={18} className="text-white" strokeWidth={2.5} />
-                      <span className="text-[13px] font-black text-white uppercase tracking-widest leading-none">Chat</span>
+                      <span className="text-[14.5px] font-black text-white uppercase tracking-widest leading-none">Chat</span>
                     </motion.button>
                   </div>
                 </div>
@@ -1052,7 +1052,7 @@ const ParcelSearchingDriver = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </div>
-                <span className="text-[12px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Captain is arriving</span>
+                <span className="text-[13.5px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Captain is arriving</span>
               </div>
             </motion.div>
           )}
@@ -1078,21 +1078,21 @@ const ParcelSearchingDriver = () => {
               <div className="w-14 h-14 bg-red-50 rounded-[18px] flex items-center justify-center mx-auto mb-4">
                 <AlertTriangle size={26} className="text-red-400" strokeWidth={2} />
               </div>
-              <h3 className="text-[18px] font-bold text-slate-900 mb-1.5">Cancel parcel search?</h3>
-              <p className="text-[13px] font-bold text-slate-400 mb-6 leading-relaxed">
+              <h3 className="text-[19px] font-bold text-slate-900 mb-1.5">Cancel parcel search?</h3>
+              <p className="text-[14.5px] font-bold text-slate-400 mb-6 leading-relaxed">
                 We&apos;re still searching nearby captains. Stop looking?
               </p>
               <div className="space-y-2.5">
                 <motion.button
                   whileTap={{ scale: 0.97 }}
                   onClick={handleCancel}
-                  className="w-full bg-slate-900 text-white py-3.5 rounded-[16px] text-[13px] font-bold uppercase tracking-widest"
+                  className="w-full bg-slate-900 text-white py-3.5 rounded-[16px] text-[14.5px] font-bold uppercase tracking-widest"
                 >
                   Yes, Cancel
                 </motion.button>
                 <button
                   onClick={() => setShowCancelConfirm(false)}
-                  className="w-full py-3.5 text-[13px] font-bold text-slate-400 uppercase tracking-widest"
+                  className="w-full py-3.5 text-[14.5px] font-bold text-slate-400 uppercase tracking-widest"
                 >
                   {isSearching ? 'Keep Searching' : 'Go Back'}
                 </button>

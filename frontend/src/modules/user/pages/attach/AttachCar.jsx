@@ -72,18 +72,18 @@ const emptyForm = {
   city: '', preferredAreas: '',
 };
 
-const field = 'w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-[13.5px] outline-none focus:border-[#F5B700]';
+const field = 'w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-[15px] outline-none focus:border-[#F5B700]';
 const money = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`;
 
 const Label = ({ children, required }) => (
-  <span className="mb-1.5 block text-[12.5px] font-bold text-slate-800">
+  <span className="mb-1.5 block text-[14px] font-bold text-slate-800">
     {children} {required ? <span className="text-red-500">*</span> : null}
   </span>
 );
 
 const Section = ({ icon: Icon, title, children }) => (
   <div className="mt-4 rounded-2xl border border-slate-100 bg-white p-4">
-    <p className="mb-3 flex items-center gap-2 text-[15px] font-black text-slate-900">
+    <p className="mb-3 flex items-center gap-2 text-[16.5px] font-black text-slate-900">
       <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FFF3CC]">
         <Icon size={16} className="text-[#C79100]" />
       </span>
@@ -136,10 +136,10 @@ const UploadSlot = ({ slot, value, onUploaded, accept = 'image/*' }) => {
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className="block text-[13px] font-bold text-slate-900">
+        <span className="block text-[14.5px] font-bold text-slate-900">
           {slot.label} {slot.required === false ? null : <span className="text-red-500">*</span>}
         </span>
-        <span className="block truncate text-[11.5px] text-slate-500">{value?.fileName || slot.hint}</span>
+        <span className="block truncate text-[13.5px] text-slate-500">{value?.fileName || slot.hint}</span>
       </span>
 
       <input ref={inputRef} type="file" accept={accept} onChange={pick} className="hidden" />
@@ -147,7 +147,7 @@ const UploadSlot = ({ slot, value, onUploaded, accept = 'image/*' }) => {
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={busy}
-        className={`flex shrink-0 items-center gap-1.5 rounded-xl border border-dashed px-3 py-2 text-[11.5px] font-bold ${
+        className={`flex shrink-0 items-center gap-1.5 rounded-xl border border-dashed px-3 py-2 text-[13.5px] font-bold ${
           value?.url ? 'border-emerald-300 bg-emerald-50 text-emerald-700' : 'border-slate-300 text-slate-600'
         }`}
       >
@@ -290,7 +290,7 @@ const AttachCar = () => {
           </button>
           <div>
             <h1 className="text-[21px] font-black leading-tight text-slate-900">Attach Your Car</h1>
-            <p className="text-[12.5px] font-semibold text-slate-700">
+            <p className="text-[14px] font-semibold text-slate-700">
               {submitted ? 'Your request has been submitted' : 'List your vehicle and start earning'}
             </p>
           </div>
@@ -319,7 +319,7 @@ const AttachCar = () => {
                     </span>
                   ) : null}
                 </span>
-                <span className={`text-center text-[9.5px] leading-tight ${current ? 'font-black text-slate-900' : 'font-semibold text-slate-500'}`}>
+                <span className={`text-center text-[11.5px] leading-tight ${current ? 'font-black text-slate-900' : 'font-semibold text-slate-500'}`}>
                   {item.label}
                 </span>
               </div>
@@ -335,8 +335,8 @@ const AttachCar = () => {
             <div className="mt-4 flex items-center gap-3 rounded-2xl bg-[#FFF9E6] p-4">
               <ShieldCheck size={20} className="shrink-0 text-[#C79100]" />
               <span>
-                <span className="block text-[13px] font-black text-slate-900">100% Safe &amp; Secure</span>
-                <span className="block text-[11.5px] text-slate-600">
+                <span className="block text-[14.5px] font-black text-slate-900">100% Safe &amp; Secure</span>
+                <span className="block text-[13.5px] text-slate-600">
                   Your vehicle is verified by our team before it goes live.
                 </span>
               </span>
@@ -378,7 +378,7 @@ const AttachCar = () => {
                     onChange={(e) => setForm({ ...form, registrationNumber: e.target.value.toUpperCase() })}
                     placeholder="MP09AB1234"
                   />
-                  <span className="mt-1 block text-[11px] text-slate-400">Example: MP09AB1234</span>
+                  <span className="mt-1 block text-[13px] text-slate-400">Example: MP09AB1234</span>
                 </label>
               </div>
             </Section>
@@ -398,7 +398,7 @@ const AttachCar = () => {
                   </select>
                 </label>
               </div>
-              <p className="mt-3 rounded-xl bg-[#FFF9E6] px-3 py-2.5 text-[11.5px] text-slate-700">
+              <p className="mt-3 rounded-xl bg-[#FFF9E6] px-3 py-2.5 text-[13.5px] text-slate-700">
                 <span className="font-bold">Tip:</span> a competitive price gets more bookings.
               </p>
             </Section>
@@ -414,7 +414,7 @@ const AttachCar = () => {
               </div>
             </Section>
 
-            <p className="mt-3 rounded-xl bg-blue-50 px-3 py-2.5 text-[11.5px] text-slate-700">
+            <p className="mt-3 rounded-xl bg-blue-50 px-3 py-2.5 text-[13.5px] text-slate-700">
               <span className="font-bold">Note:</span> your vehicle goes through verification before it goes live.
             </p>
           </>
@@ -426,8 +426,8 @@ const AttachCar = () => {
             <div className="mt-4 flex items-center gap-3 rounded-2xl bg-[#FFF9E6] p-4">
               <ShieldCheck size={20} className="shrink-0 text-[#C79100]" />
               <span>
-                <span className="block text-[13px] font-black text-slate-900">Document Verification</span>
-                <span className="block text-[11.5px] text-slate-600">
+                <span className="block text-[14.5px] font-black text-slate-900">Document Verification</span>
+                <span className="block text-[13.5px] text-slate-600">
                   Upload clear, valid documents. JPG, PNG or PDF, up to 5MB each.
                 </span>
               </span>
@@ -446,9 +446,9 @@ const AttachCar = () => {
             </div>
 
             <div className="mt-3 rounded-2xl bg-blue-50 p-4">
-              <p className="text-[12.5px] font-black text-slate-900">Tips for faster approval</p>
+              <p className="text-[14px] font-black text-slate-900">Tips for faster approval</p>
               {['Make sure documents are clear and not expired', 'RC and insurance should be in your name', 'JPG, PNG or PDF · max 5MB each'].map((tip) => (
-                <p key={tip} className="mt-1.5 flex items-start gap-1.5 text-[11.5px] text-slate-700">
+                <p key={tip} className="mt-1.5 flex items-start gap-1.5 text-[13.5px] text-slate-700">
                   <CheckCircle2 size={13} className="mt-0.5 shrink-0 text-emerald-600" /> {tip}
                 </p>
               ))}
@@ -462,19 +462,19 @@ const AttachCar = () => {
             <div className="mt-4 flex items-center gap-3 rounded-2xl bg-[#FFF9E6] p-4">
               <Camera size={20} className="shrink-0 text-[#C79100]" />
               <span>
-                <span className="block text-[13px] font-black text-slate-900">Photo Verification</span>
-                <span className="block text-[11.5px] text-slate-600">Clear photos help us verify your vehicle quickly.</span>
+                <span className="block text-[14.5px] font-black text-slate-900">Photo Verification</span>
+                <span className="block text-[13.5px] text-slate-600">Clear photos help us verify your vehicle quickly.</span>
               </span>
             </div>
 
-            <p className="mt-4 border-l-4 border-[#F5B700] pl-2 text-[14px] font-black text-slate-900">Required Photos</p>
+            <p className="mt-4 border-l-4 border-[#F5B700] pl-2 text-[15.5px] font-black text-slate-900">Required Photos</p>
             <div className="mt-2 rounded-2xl border border-slate-100 bg-white px-4">
               {PHOTOS.map((slot) => (
                 <UploadSlot key={slot.key} slot={slot} value={photos[slot.key]} onUploaded={setFile('photos')} />
               ))}
             </div>
 
-            <p className="mt-4 border-l-4 border-[#F5B700] pl-2 text-[14px] font-black text-slate-900">Fitness &amp; Permit</p>
+            <p className="mt-4 border-l-4 border-[#F5B700] pl-2 text-[15.5px] font-black text-slate-900">Fitness &amp; Permit</p>
             <div className="mt-2 rounded-2xl border border-slate-100 bg-white px-4">
               {CERTIFICATES.map((slot) => (
                 <UploadSlot key={slot.key} slot={slot} value={photos[slot.key]} onUploaded={setFile('photos')} />
@@ -489,10 +489,10 @@ const AttachCar = () => {
             <div className="mt-4 flex items-center gap-3 rounded-2xl bg-emerald-50 p-4">
               <ShieldCheck size={20} className="shrink-0 text-emerald-600" />
               <span className="flex-1">
-                <span className="block text-[13px] font-black text-slate-900">Almost there</span>
-                <span className="block text-[11.5px] text-slate-600">Check the details before submitting.</span>
+                <span className="block text-[14.5px] font-black text-slate-900">Almost there</span>
+                <span className="block text-[13.5px] text-slate-600">Check the details before submitting.</span>
               </span>
-              <button onClick={() => setStep(0)} className="rounded-xl border border-emerald-300 px-3 py-1.5 text-[12px] font-bold text-emerald-700">
+              <button onClick={() => setStep(0)} className="rounded-xl border border-emerald-300 px-3 py-1.5 text-[13.5px] font-bold text-emerald-700">
                 Edit
               </button>
             </div>
@@ -505,8 +505,8 @@ const AttachCar = () => {
                   ['Registration No.', form.registrationNumber],
                 ].map(([label, value]) => (
                   <div key={label}>
-                    <p className="text-[11px] text-slate-500">{label}</p>
-                    <p className="text-[13px] font-bold text-slate-900">{value || '—'}</p>
+                    <p className="text-[13px] text-slate-500">{label}</p>
+                    <p className="text-[14.5px] font-bold text-slate-900">{value || '—'}</p>
                   </div>
                 ))}
               </div>
@@ -515,16 +515,16 @@ const AttachCar = () => {
             <Section icon={Wallet} title="Pricing &amp; Availability">
               <div className="grid grid-cols-3">
                 <div>
-                  <p className="text-[11px] text-slate-500">Daily Fare</p>
-                  <p className="text-[13px] font-bold text-slate-900">{money(form.dailyFare)}</p>
+                  <p className="text-[13px] text-slate-500">Daily Fare</p>
+                  <p className="text-[14.5px] font-bold text-slate-900">{money(form.dailyFare)}</p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-slate-500">Security Deposit</p>
-                  <p className="text-[13px] font-bold text-slate-900">{money(form.securityDeposit)}</p>
+                  <p className="text-[13px] text-slate-500">Security Deposit</p>
+                  <p className="text-[14.5px] font-bold text-slate-900">{money(form.securityDeposit)}</p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-slate-500">Availability</p>
-                  <p className="text-[13px] font-bold text-slate-900">{form.availability || '—'}</p>
+                  <p className="text-[13px] text-slate-500">Availability</p>
+                  <p className="text-[14.5px] font-bold text-slate-900">{form.availability || '—'}</p>
                 </div>
               </div>
             </Section>
@@ -532,12 +532,12 @@ const AttachCar = () => {
             <Section icon={MapPin} title="Location Preference">
               <div className="grid grid-cols-2">
                 <div>
-                  <p className="text-[11px] text-slate-500">City</p>
-                  <p className="text-[13px] font-bold text-slate-900">{form.city || '—'}</p>
+                  <p className="text-[13px] text-slate-500">City</p>
+                  <p className="text-[14.5px] font-bold text-slate-900">{form.city || '—'}</p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-slate-500">Preferred Areas</p>
-                  <p className="text-[13px] font-bold text-slate-900">{form.preferredAreas || '—'}</p>
+                  <p className="text-[13px] text-slate-500">Preferred Areas</p>
+                  <p className="text-[14.5px] font-bold text-slate-900">{form.preferredAreas || '—'}</p>
                 </div>
               </div>
             </Section>
@@ -549,8 +549,8 @@ const AttachCar = () => {
                     <span className="flex h-14 w-[86px] items-center justify-center rounded-lg bg-slate-100">
                       <FileText size={20} className="text-slate-500" />
                     </span>
-                    <p className="mt-1 truncate text-[10.5px] font-semibold text-slate-700">{slot.label}</p>
-                    <p className="text-[10px] font-bold text-emerald-600">Uploaded</p>
+                    <p className="mt-1 truncate text-[12.5px] font-semibold text-slate-700">{slot.label}</p>
+                    <p className="text-[12px] font-bold text-emerald-600">Uploaded</p>
                   </div>
                 ))}
               </div>
@@ -561,7 +561,7 @@ const AttachCar = () => {
                 {[...PHOTOS, ...CERTIFICATES].filter((p) => photos[p.key]?.url).map((slot) => (
                   <div key={slot.key} className="w-[86px] shrink-0 text-center">
                     <img src={photos[slot.key].url} alt={slot.label} className="h-14 w-[86px] rounded-lg object-cover" />
-                    <p className="mt-1 truncate text-[10.5px] font-semibold text-slate-700">{slot.label}</p>
+                    <p className="mt-1 truncate text-[12.5px] font-semibold text-slate-700">{slot.label}</p>
                   </div>
                 ))}
               </div>
@@ -570,8 +570,8 @@ const AttachCar = () => {
             <div className="mt-3 flex items-start gap-3 rounded-2xl bg-[#FFF9E6] p-4">
               <ShieldCheck size={20} className="shrink-0 text-[#C79100]" />
               <span>
-                <span className="block text-[13px] font-black text-slate-900">What happens next?</span>
-                <span className="block text-[11.5px] text-slate-600">
+                <span className="block text-[14.5px] font-black text-slate-900">What happens next?</span>
+                <span className="block text-[13.5px] text-slate-600">
                   Our team verifies your details and documents, and you hear back within 24–48 hours.
                 </span>
               </span>
@@ -583,21 +583,21 @@ const AttachCar = () => {
         {submitted ? (
           <>
             <div className="mt-4 rounded-2xl bg-emerald-50 p-5">
-              <p className="flex items-center gap-2 text-[17px] font-black text-slate-900">
+              <p className="flex items-center gap-2 text-[18px] font-black text-slate-900">
                 <CheckCircle2 size={22} className="text-emerald-600" /> Application Submitted!
               </p>
-              <p className="mt-1 text-[12.5px] text-slate-600">
+              <p className="mt-1 text-[14px] text-slate-600">
                 Your car attachment request has been submitted successfully.
               </p>
 
               <div className="mt-4 flex gap-8 border-t border-emerald-200 pt-3">
                 <div>
-                  <p className="text-[11px] text-slate-500">Reference ID</p>
-                  <p className="text-[14px] font-black text-emerald-700">{record?.reference}</p>
+                  <p className="text-[13px] text-slate-500">Reference ID</p>
+                  <p className="text-[15.5px] font-black text-emerald-700">{record?.reference}</p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-slate-500">Submitted On</p>
-                  <p className="text-[13px] font-bold text-slate-900">
+                  <p className="text-[13px] text-slate-500">Submitted On</p>
+                  <p className="text-[14.5px] font-bold text-slate-900">
                     {record?.submittedAt
                       ? new Date(record.submittedAt).toLocaleString('en-IN', {
                           day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
@@ -607,7 +607,7 @@ const AttachCar = () => {
                 </div>
               </div>
 
-              <p className="mt-3 flex items-center gap-2 rounded-xl bg-white/70 px-3 py-2.5 text-[12px] text-slate-700">
+              <p className="mt-3 flex items-center gap-2 rounded-xl bg-white/70 px-3 py-2.5 text-[13.5px] text-slate-700">
                 <Clock size={15} className="text-slate-500" />
                 Verification usually takes 24–48 hours. You will be notified once approved.
               </p>
@@ -619,10 +619,10 @@ const AttachCar = () => {
                   <img src={photos.front.url} alt="" className="h-14 w-20 rounded-lg object-cover" />
                 ) : null}
                 <div>
-                  <p className="text-[14px] font-black text-slate-900">
+                  <p className="text-[15.5px] font-black text-slate-900">
                     {form.brand} {form.model} {form.variant} ({form.fuelType})
                   </p>
-                  <p className="text-[12px] text-slate-500">
+                  <p className="text-[13.5px] text-slate-500">
                     {form.registrationNumber} · {form.year} · {form.city}
                   </p>
                 </div>
@@ -631,7 +631,7 @@ const AttachCar = () => {
 
             <button
               onClick={() => navigate('/taxi/user')}
-              className="mt-5 w-full rounded-2xl bg-[#F5B700] py-3.5 text-[14.5px] font-black text-slate-900"
+              className="mt-5 w-full rounded-2xl bg-[#F5B700] py-3.5 text-[16px] font-black text-slate-900"
             >
               Go to Home
             </button>
@@ -645,7 +645,7 @@ const AttachCar = () => {
           {step > 0 ? (
             <button
               onClick={() => { setStep((s) => s - 1); window.scrollTo({ top: 0 }); }}
-              className="flex items-center gap-1.5 rounded-2xl border border-slate-200 px-5 py-3 text-[13.5px] font-black text-slate-700"
+              className="flex items-center gap-1.5 rounded-2xl border border-slate-200 px-5 py-3 text-[15px] font-black text-slate-700"
             >
               <ArrowLeft size={16} /> Back
             </button>
@@ -654,7 +654,7 @@ const AttachCar = () => {
           <button
             onClick={step === 3 ? submit : next}
             disabled={saving}
-            className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#F5B700] py-3 text-[14px] font-black text-slate-900 disabled:opacity-60"
+            className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#F5B700] py-3 text-[15.5px] font-black text-slate-900 disabled:opacity-60"
           >
             {saving ? <Loader2 size={16} className="animate-spin" /> : null}
             {step === 3 ? 'Looks Good, Submit' : 'Save & Continue'}

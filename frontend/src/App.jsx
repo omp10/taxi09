@@ -401,7 +401,7 @@ const AdminSectionPlaceholder = () => {
         <button
           type="button"
           onClick={() => navigate('/admin/dashboard')}
-          className="mt-8 inline-flex items-center justify-center px-6 py-3 rounded-xl bg-[#2563EB] text-white text-[12px] font-black uppercase tracking-widest shadow-lg shadow-blue-900/20"
+          className="mt-8 inline-flex items-center justify-center px-6 py-3 rounded-xl bg-[#2563EB] text-white text-[13.5px] font-black uppercase tracking-widest shadow-lg shadow-blue-900/20"
         >
           Back to Dashboard
         </button>
@@ -580,7 +580,7 @@ const UserAccountInvalidationListener = () => {
 
       toast(messageBody, {
         duration: 4500,
-        className: 'font-bold text-[13px] rounded-2xl shadow-xl border border-sky-50 bg-white',
+        className: 'font-bold text-[14.5px] rounded-2xl shadow-xl border border-sky-50 bg-white',
       });
     };
 

@@ -50,11 +50,11 @@ const DesktopSupport = () => {
           <div>
             {/* Hero */}
             <section className="overflow-hidden rounded-2xl border border-slate-100 bg-gradient-to-r from-[#FFF9E6] to-white p-8">
-              <span className="inline-flex items-center gap-1.5 rounded-lg bg-[#FFF0B8] px-2.5 py-1 text-[10.5px] font-black uppercase tracking-wider text-[#9A6B00]">
+              <span className="inline-flex items-center gap-1.5 rounded-lg bg-[#FFF0B8] px-2.5 py-1 text-[12.5px] font-black uppercase tracking-wider text-[#9A6B00]">
                 <Clock size={12} /> {SUPPORT_INFO.supportLabel}
               </span>
               <h1 className="mt-3 text-[34px] font-black leading-tight text-slate-900">Help &amp; Support</h1>
-              <p className="mt-2 max-w-2xl text-[14px] text-slate-600">
+              <p className="mt-2 max-w-2xl text-[15.5px] text-slate-600">
                 {SUPPORT_INFO.serviceArea}. {SUPPORT_INFO.responseTime}.
               </p>
 
@@ -65,8 +65,8 @@ const DesktopSupport = () => {
                 >
                   <MessageCircle size={19} className="shrink-0 text-[#F5B700]" />
                   <span>
-                    <span className="block text-[13.5px] font-black text-white">Chat with us</span>
-                    <span className="block text-[11px] text-slate-300">Usually replies fastest</span>
+                    <span className="block text-[15px] font-black text-white">Chat with us</span>
+                    <span className="block text-[13px] text-slate-300">Usually replies fastest</span>
                   </span>
                 </button>
 
@@ -76,8 +76,8 @@ const DesktopSupport = () => {
                 >
                   <Phone size={19} className="shrink-0 text-emerald-600" />
                   <span className="min-w-0">
-                    <span className="block text-[13.5px] font-black text-slate-900">Call us</span>
-                    <span className="block truncate text-[11px] text-slate-500">{SUPPORT_INFO.phone}</span>
+                    <span className="block text-[15px] font-black text-slate-900">Call us</span>
+                    <span className="block truncate text-[13px] text-slate-500">{SUPPORT_INFO.phone}</span>
                   </span>
                 </a>
 
@@ -87,16 +87,16 @@ const DesktopSupport = () => {
                 >
                   <Ticket size={19} className="shrink-0 text-[#C79100]" />
                   <span>
-                    <span className="block text-[13.5px] font-black text-slate-900">My tickets</span>
-                    <span className="block text-[11px] text-slate-500">Track a request</span>
+                    <span className="block text-[15px] font-black text-slate-900">My tickets</span>
+                    <span className="block text-[13px] text-slate-500">Track a request</span>
                   </span>
                 </button>
               </div>
             </section>
 
             {/* Topics */}
-            <h2 className="mt-8 text-[19px] font-black text-slate-900">What do you need help with?</h2>
-            <p className="text-[12.5px] text-slate-500">Pick a topic and we will start the chat for you.</p>
+            <h2 className="mt-8 text-[20px] font-black text-slate-900">What do you need help with?</h2>
+            <p className="text-[14px] text-slate-500">Pick a topic and we will start the chat for you.</p>
 
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               {HELP_TOPICS.map((topic) => (
@@ -108,7 +108,7 @@ const DesktopSupport = () => {
                   <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${topic.tone}`}>
                     <topic.icon size={18} />
                   </span>
-                  <span className="text-[14px] font-black text-slate-900">{topic.title}</span>
+                  <span className="text-[15.5px] font-black text-slate-900">{topic.title}</span>
                 </button>
               ))}
             </div>
@@ -122,8 +122,8 @@ const DesktopSupport = () => {
                 <Siren size={18} className="text-rose-600" />
               </span>
               <span>
-                <span className="block text-[14px] font-black text-rose-900">Emergency SOS</span>
-                <span className="block text-[12px] text-rose-700">Get safety help fast</span>
+                <span className="block text-[15.5px] font-black text-rose-900">Emergency SOS</span>
+                <span className="block text-[13.5px] text-rose-700">Get safety help fast</span>
               </span>
             </button>
           </div>
@@ -131,9 +131,9 @@ const DesktopSupport = () => {
           {/* Contact details */}
           <aside className="space-y-5">
             <section className="rounded-2xl border border-slate-100 bg-white p-5">
-              <h2 className="text-[15px] font-black text-slate-900">Contact</h2>
+              <h2 className="text-[16.5px] font-black text-slate-900">Contact</h2>
 
-              <dl className="mt-3 space-y-3.5 text-[12.5px]">
+              <dl className="mt-3 space-y-3.5 text-[14px]">
                 <div className="flex gap-2.5">
                   <Phone size={15} className="mt-0.5 shrink-0 text-[#C79100]" />
                   <span>
@@ -159,13 +159,13 @@ const DesktopSupport = () => {
             </section>
 
             <div className="rounded-2xl bg-gradient-to-br from-[#FFD400] to-[#F5B700] p-5">
-              <p className="text-[15px] font-black text-slate-900">Still stuck?</p>
-              <p className="mt-1 text-[12px] text-slate-800">
+              <p className="text-[16.5px] font-black text-slate-900">Still stuck?</p>
+              <p className="mt-1 text-[13.5px] text-slate-800">
                 Start a chat and a real person will pick it up.
               </p>
               <button
                 onClick={() => openChat()}
-                className="mt-3 rounded-xl bg-slate-900 px-4 py-2 text-[12.5px] font-black text-white"
+                className="mt-3 rounded-xl bg-slate-900 px-4 py-2 text-[14px] font-black text-white"
               >
                 Open chat
               </button>

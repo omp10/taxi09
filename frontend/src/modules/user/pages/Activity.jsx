@@ -90,7 +90,7 @@ const ActivityBookingCard = ({ activity, onClick }) => (
   <button type="button" onClick={onClick} className="flex w-full items-start gap-2.5 rounded-[14px] bg-white p-2.5 text-left shadow-[0_6px_16px_rgba(15,23,42,0.07)]">
     <div className="relative h-[62px] w-[62px] shrink-0 overflow-hidden rounded-[11px] bg-[#fff7d7]">
       <img src={activity.vehicleImage || '/white_sedan_banner_car.png'} alt="" className="h-full w-full object-contain p-1.5" />
-      <span className="absolute bottom-0.5 right-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-[#f5c400] text-[7.5px] font-black">
+      <span className="absolute bottom-0.5 right-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-[#f5c400] text-[9.5px] font-black">
         {String(activity.registration || activity.type || 'MP').slice(0, 2).toUpperCase()}
       </span>
     </div>
@@ -98,13 +98,13 @@ const ActivityBookingCard = ({ activity, onClick }) => (
     <div className="min-w-0 flex-1">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <h3 className="truncate text-[12.5px] font-black leading-tight tracking-[-0.02em] text-slate-950">{activity.title || 'Taxi09 booking'}</h3>
-          <p className="mt-0.5 truncate text-[8.5px] font-black uppercase tracking-[0.08em] text-slate-500">{activity.eyebrow || activity.vehicle || 'Booking'}</p>
+          <h3 className="truncate text-[14px] font-black leading-tight tracking-[-0.02em] text-slate-950">{activity.title || 'Taxi09 booking'}</h3>
+          <p className="mt-0.5 truncate text-[10.5px] font-black uppercase tracking-[0.08em] text-slate-500">{activity.eyebrow || activity.vehicle || 'Booking'}</p>
         </div>
-        <p className="shrink-0 text-[13px] font-black text-slate-950">Rs{Number(activity.price || 0).toLocaleString('en-IN')}</p>
+        <p className="shrink-0 text-[14.5px] font-black text-slate-950">Rs{Number(activity.price || 0).toLocaleString('en-IN')}</p>
       </div>
 
-      <div className="mt-1.5 grid grid-cols-[12px_1fr] gap-x-1.5 text-[9.5px] font-semibold text-slate-700">
+      <div className="mt-1.5 grid grid-cols-[12px_1fr] gap-x-1.5 text-[11.5px] font-semibold text-slate-700">
         <span className="relative mt-1 flex flex-col items-center">
           <span className="h-2 w-2 rounded-full bg-[#f5c400]" />
           <span className="h-3.5 w-px bg-slate-300" />
@@ -116,7 +116,7 @@ const ActivityBookingCard = ({ activity, onClick }) => (
         </span>
       </div>
 
-      <div className="mt-2 flex items-center gap-3 text-[8.5px] font-black uppercase tracking-[0.05em] text-slate-500">
+      <div className="mt-2 flex items-center gap-3 text-[10.5px] font-black uppercase tracking-[0.05em] text-slate-500">
         <span className="flex items-center gap-1.5">
           <CalendarDays size={11} />
           {toDisplayDate(activity.date)}
@@ -128,7 +128,7 @@ const ActivityBookingCard = ({ activity, onClick }) => (
       </div>
 
       <div className="mt-2 flex items-center justify-between">
-        <span className={`rounded-full border px-2 py-0.5 text-[8.5px] font-black uppercase ${getStatusClasses(activity.statusTone, activity.status)}`}>
+        <span className={`rounded-full border px-2 py-0.5 text-[10.5px] font-black uppercase ${getStatusClasses(activity.statusTone, activity.status)}`}>
           {activity.status || 'Completed'}
         </span>
         <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-[#f5c400]">
@@ -335,9 +335,9 @@ const Activity = ({ embedded = false }) => {
           <ArrowLeft size={16} strokeWidth={3} />
         </button>
         <div className="relative z-10 ml-[56px] pt-4">
-          <p className="text-[9px] font-black uppercase tracking-[0.18em]">My Bookings</p>
+          <p className="text-[11px] font-black uppercase tracking-[0.18em]">My Bookings</p>
           <h1 className="mt-0.5 text-[20px] font-black leading-none tracking-[-0.04em]">Recent activity</h1>
-          <p className="mt-1.5 max-w-[58%] text-[10px] font-semibold leading-tight text-slate-800">{helperText}</p>
+          <p className="mt-1.5 max-w-[58%] text-[12px] font-semibold leading-tight text-slate-800">{helperText}</p>
         </div>
       </header>
       )}
@@ -350,7 +350,7 @@ const Activity = ({ embedded = false }) => {
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className={`rounded-[12px] px-1 py-2.5 text-[9.5px] font-extrabold uppercase tracking-[0.02em] transition ${
+                className={`rounded-[12px] px-1 py-2.5 text-[11.5px] font-extrabold uppercase tracking-[0.02em] transition ${
                   activeTab === tab ? 'bg-[#f5c400] text-slate-950 shadow-[0_6px_14px_rgba(245,196,0,0.28)]' : 'text-slate-600'
                 }`}
               >

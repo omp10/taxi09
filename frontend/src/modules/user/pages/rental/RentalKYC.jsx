@@ -141,7 +141,7 @@ const RentalKYC = () => {
                 <ArrowLeft size={20} className="text-white group-hover:opacity-80 transition-opacity" strokeWidth={2.5} />
               </motion.button>
               <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500/60 leading-none mb-1.5">Step 4 of 5 · KYC Verification</p>
+                <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-slate-500/60 leading-none mb-1.5">Step 4 of 5 · KYC Verification</p>
                 <h1 className="text-[22px] font-[900] tracking-tight text-slate-950 leading-none truncate max-w-[200px]">
                   Identity Documents
                 </h1>
@@ -158,7 +158,7 @@ const RentalKYC = () => {
           <div className="w-8 h-8 rounded-[10px] bg-blue-50 flex items-center justify-center shrink-0">
             <ShieldCheck size={15} className="text-blue-500" strokeWidth={2} />
           </div>
-          <p className="text-[12px] font-bold text-slate-500 leading-relaxed">
+          <p className="text-[13.5px] font-bold text-slate-500 leading-relaxed">
             Upload clear photos of your valid Driving License and Aadhaar Card. This is a one-time verification.
           </p>
         </motion.div>
@@ -169,14 +169,14 @@ const RentalKYC = () => {
             <div className="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center">
               <CheckCircle2 size={28} className="text-emerald-500" strokeWidth={2} />
             </div>
-            <p className="text-[15px] font-bold text-slate-900">KYC Verified</p>
-            <p className="text-[12px] font-medium text-slate-400">Your documents are on file.</p>
+            <p className="text-[16.5px] font-bold text-slate-900">KYC Verified</p>
+            <p className="text-[13.5px] font-medium text-slate-400">Your documents are on file.</p>
           </motion.div>
         ) : (
           <div className="space-y-4">
             {/* DL Upload */}
             <div className="space-y-2">
-              <label className="text-[14px] font-bold text-slate-900 ml-1">1. Driving License</label>
+              <label className="text-[15.5px] font-bold text-slate-900 ml-1">1. Driving License</label>
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
                 className="rounded-[20px] border border-white/80 bg-white/90 shadow-[0_4px_14px_rgba(15,23,42,0.05)] overflow-hidden">
                 {dlPreview ? (
@@ -194,8 +194,8 @@ const RentalKYC = () => {
                       <Upload size={20} className="text-slate-400" strokeWidth={2} />
                     </div>
                     <div className="text-center">
-                      <p className="text-[13px] font-bold text-slate-700">Tap to upload DL photo</p>
-                      <p className="text-[11px] font-medium text-slate-400 mt-0.5">JPG, PNG · Max 5MB</p>
+                      <p className="text-[14.5px] font-bold text-slate-700">Tap to upload DL photo</p>
+                      <p className="text-[13px] font-medium text-slate-400 mt-0.5">JPG, PNG · Max 5MB</p>
                     </div>
                   </button>
                 )}
@@ -206,7 +206,7 @@ const RentalKYC = () => {
 
             {/* Aadhaar Upload */}
             <div className="space-y-2">
-              <label className="text-[14px] font-bold text-slate-900 ml-1">2. Aadhaar Card</label>
+              <label className="text-[15.5px] font-bold text-slate-900 ml-1">2. Aadhaar Card</label>
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
                 className="rounded-[20px] border border-white/80 bg-white/90 shadow-[0_4px_14px_rgba(15,23,42,0.05)] overflow-hidden">
                 {aadhaarPreview ? (
@@ -224,8 +224,8 @@ const RentalKYC = () => {
                       <Upload size={20} className="text-slate-400" strokeWidth={2} />
                     </div>
                     <div className="text-center">
-                      <p className="text-[13px] font-bold text-slate-700">Tap to upload Aadhaar photo</p>
-                      <p className="text-[11px] font-medium text-slate-400 mt-0.5">Front side · JPG, PNG · Max 5MB</p>
+                      <p className="text-[14.5px] font-bold text-slate-700">Tap to upload Aadhaar photo</p>
+                      <p className="text-[13px] font-medium text-slate-400 mt-0.5">Front side · JPG, PNG · Max 5MB</p>
                     </div>
                   </button>
                 )}
@@ -241,7 +241,7 @@ const RentalKYC = () => {
           {(dlPreview && aadhaarPreview && !done) || ((dlImage || aadhaarImage) && !done) ? (
             <motion.button initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
               whileTap={{ scale: 0.97 }} onClick={handleUpload} disabled={uploading}
-              className="w-full bg-blue-600 text-white py-3.5 rounded-[16px] text-[13px] font-bold flex items-center justify-center gap-2 shadow-[0_6px_16px_rgba(37,99,235,0.25)]">
+              className="w-full bg-blue-600 text-white py-3.5 rounded-[16px] text-[14.5px] font-bold flex items-center justify-center gap-2 shadow-[0_6px_16px_rgba(37,99,235,0.25)]">
               {uploading ? (
                 <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
@@ -252,7 +252,7 @@ const RentalKYC = () => {
         </AnimatePresence>
 
         {error ? (
-          <p className="text-center text-[12px] font-bold text-rose-500">{error}</p>
+          <p className="text-center text-[13.5px] font-bold text-rose-500">{error}</p>
         ) : null}
       </div>
 
@@ -275,7 +275,7 @@ const RentalKYC = () => {
 
             navigate('/taxi/user/rental/deposit');
           }}
-          className={`pointer-events-auto w-full py-4 rounded-[18px] text-[15px] font-bold text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 transition-all ${done ? 'bg-slate-900' : 'bg-slate-300'}`}>
+          className={`pointer-events-auto w-full py-4 rounded-[18px] text-[16.5px] font-bold text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 transition-all ${done ? 'bg-slate-900' : 'bg-slate-300'}`}>
           Continue to Deposit <ChevronRight size={17} strokeWidth={2.5} className="opacity-50" />
         </motion.button>
       </div>

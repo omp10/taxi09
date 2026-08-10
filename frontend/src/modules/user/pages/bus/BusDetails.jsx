@@ -70,7 +70,7 @@ const getFieldError = (field, rawValue, { isLead }) => {
 };
 
 const FieldError = ({ message }) =>
-  message ? <p className="mt-1 text-[9.5px] font-semibold text-[var(--danger)]">{message}</p> : null;
+  message ? <p className="mt-1 text-[11.5px] font-semibold text-[var(--danger)]">{message}</p> : null;
 
 const loadRazorpayScript = () =>
   new Promise((resolve) => {
@@ -89,7 +89,7 @@ const loadRazorpayScript = () =>
 
 const Field = ({ label, required, children }) => (
   <label className="block">
-    <span className="text-[10px] font-bold text-[var(--text-light)]">
+    <span className="text-[12px] font-bold text-[var(--text-light)]">
       {label} {required ? <span className="text-[var(--danger)]">*</span> : null}
     </span>
     <div className="mt-1">{children}</div>
@@ -97,7 +97,7 @@ const Field = ({ label, required, children }) => (
 );
 
 const inputClass = (hasError) =>
-  `w-full rounded-[10px] border bg-white px-3 py-2.5 text-[12.5px] font-semibold text-[var(--text)] outline-none placeholder:font-medium placeholder:text-slate-300 ${
+  `w-full rounded-[10px] border bg-white px-3 py-2.5 text-[14px] font-semibold text-[var(--text)] outline-none placeholder:font-medium placeholder:text-slate-300 ${
     hasError ? 'border-[var(--danger)] focus:border-[var(--danger)]' : 'border-[var(--border)] focus:border-[var(--primary)]'
   }`;
 
@@ -337,8 +337,8 @@ const BusDetails = () => {
               ) : null}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[15px] font-extrabold leading-tight">{bus.operator}</p>
-              <p className="mt-0.5 truncate text-[10px] font-medium text-[var(--text-light)]">
+              <p className="truncate text-[16.5px] font-extrabold leading-tight">{bus.operator}</p>
+              <p className="mt-0.5 truncate text-[12px] font-medium text-[var(--text-light)]">
                 {bus.type}
                 {bus.busName ? ` • ${bus.busName}` : ''}
               </p>
@@ -348,7 +348,7 @@ const BusDetails = () => {
                   {bus.amenities.slice(0, 6).map((amenity) => (
                     <span
                       key={amenity}
-                      className="flex items-center gap-1 text-[8.5px] font-semibold text-[var(--text-light)]"
+                      className="flex items-center gap-1 text-[10.5px] font-semibold text-[var(--text-light)]"
                     >
                       <ShieldCheck size={9} className="shrink-0 text-[var(--primary-dark)]" />
                       {amenity}
@@ -358,7 +358,7 @@ const BusDetails = () => {
               ) : null}
 
               {hasRating ? (
-                <p className="mt-1.5 flex items-center gap-1 text-[10px] font-bold">
+                <p className="mt-1.5 flex items-center gap-1 text-[12px] font-bold">
                   <Star size={11} className="fill-[var(--primary)] text-[var(--primary)]" />
                   {Number(bus.rating).toFixed(1)}
                   <span className="font-medium text-[var(--text-light)]">({bus.ratingCount} Ratings)</span>
@@ -370,7 +370,7 @@ const BusDetails = () => {
 
         {/* Selected berths */}
         <div className="flex items-center gap-3 rounded-[18px] border border-[var(--border)] bg-white p-3 shadow-[var(--shadow-sm)]">
-          <p className="shrink-0 text-[12.5px] font-extrabold leading-tight">
+          <p className="shrink-0 text-[14px] font-extrabold leading-tight">
             Selected {isSleeperBus ? 'Sleeper Berths' : 'Seats'}
           </p>
           <div className="flex flex-1 gap-2 overflow-x-auto no-scrollbar">
@@ -381,8 +381,8 @@ const BusDetails = () => {
               >
                 <BedDouble size={13} className="shrink-0 text-[var(--primary-dark)]" />
                 <span className="leading-tight">
-                  <span className="block text-[11.5px] font-extrabold">{seat.label || seat.id}</span>
-                  <span className="block text-[8px] font-medium text-[var(--text-light)]">
+                  <span className="block text-[13.5px] font-extrabold">{seat.label || seat.id}</span>
+                  <span className="block text-[10px] font-medium text-[var(--text-light)]">
                     {String(seat.id).startsWith('U') ? 'Upper Deck' : 'Lower Deck'}
                   </span>
                 </span>
@@ -398,9 +398,9 @@ const BusDetails = () => {
             className="rounded-[18px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]"
           >
             <div className="flex items-center justify-between gap-2">
-              <p className="text-[14px] font-extrabold">
+              <p className="text-[15.5px] font-extrabold">
                 Passenger {index + 1}
-                <span className="ml-1 text-[11px] font-medium text-[var(--text-light)]">
+                <span className="ml-1 text-[13px] font-medium text-[var(--text-light)]">
                   ({isSleeperBus ? 'Berth' : 'Seat'} {passenger.seatLabel})
                 </span>
               </p>
@@ -408,7 +408,7 @@ const BusDetails = () => {
                 type="button"
                 onClick={() => applyProfileTo(index)}
                 disabled={profileLoading || !profileData?.name}
-                className="flex shrink-0 items-center gap-1.5 rounded-[10px] border border-[var(--border)] px-2.5 py-1.5 text-[10px] font-bold disabled:opacity-40"
+                className="flex shrink-0 items-center gap-1.5 rounded-[10px] border border-[var(--border)] px-2.5 py-1.5 text-[12px] font-bold disabled:opacity-40"
               >
                 {profileLoading ? <Loader2 size={11} className="animate-spin" /> : <UserRound size={11} />}
                 Use Profile
@@ -454,7 +454,7 @@ const BusDetails = () => {
                       key={gender}
                       type="button"
                       onClick={() => updatePassenger(index, { gender })}
-                      className={`rounded-[10px] border py-2.5 text-[11.5px] font-bold transition-colors ${
+                      className={`rounded-[10px] border py-2.5 text-[13.5px] font-bold transition-colors ${
                         passenger.gender === gender
                           ? 'border-[var(--primary)] bg-[var(--secondary)] text-[var(--text)]'
                           : 'border-[var(--border)] bg-white text-[var(--text-light)]'
@@ -476,7 +476,7 @@ const BusDetails = () => {
                       : 'border-[var(--border)] focus-within:border-[var(--primary)]'
                   }`}
                 >
-                  <span className="shrink-0 border-r border-[var(--border)] px-2 py-2.5 text-[11.5px] font-bold text-[var(--text-light)]">
+                  <span className="shrink-0 border-r border-[var(--border)] px-2 py-2.5 text-[13.5px] font-bold text-[var(--text-light)]">
                     +91
                   </span>
                   <input
@@ -490,7 +490,7 @@ const BusDetails = () => {
                     onBlur={() => markTouched(index, 'phone')}
                     placeholder="98765 43210"
                     aria-invalid={Boolean(showError(index, 'phone'))}
-                    className="w-full min-w-0 bg-transparent px-2 py-2.5 text-[12.5px] font-semibold outline-none placeholder:font-medium placeholder:text-slate-300"
+                    className="w-full min-w-0 bg-transparent px-2 py-2.5 text-[14px] font-semibold outline-none placeholder:font-medium placeholder:text-slate-300"
                   />
                 </div>
                 <FieldError message={showError(index, 'phone')} />
@@ -513,8 +513,8 @@ const BusDetails = () => {
 
         {/* Add ons */}
         <div className="rounded-[18px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
-          <p className="text-[14px] font-extrabold">
-            Add Ons <span className="text-[11px] font-medium text-[var(--text-light)]">(Optional)</span>
+          <p className="text-[15.5px] font-extrabold">
+            Add Ons <span className="text-[13px] font-medium text-[var(--text-light)]">(Optional)</span>
           </p>
           <div className="mt-2.5 space-y-2">
             {availableAddOns.map(({ id, label, hint, price, perSeat }) => {
@@ -531,14 +531,14 @@ const BusDetails = () => {
                 >
                   <Icon size={17} className="shrink-0 text-[var(--primary-dark)]" />
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[12px] font-extrabold leading-tight">{label}</span>
-                    <span className="block text-[9.5px] font-medium text-[var(--text-light)]">{hint}</span>
+                    <span className="block text-[13.5px] font-extrabold leading-tight">{label}</span>
+                    <span className="block text-[11.5px] font-medium text-[var(--text-light)]">{hint}</span>
                   </span>
-                  <span className="shrink-0 text-right text-[12px] font-extrabold">
+                  <span className="shrink-0 text-right text-[13.5px] font-extrabold">
                     Rs{perSeat ? Number(price) * seatCount : price}
                     {/* A per-seat extra costs more with more passengers - say so. */}
                     {perSeat && seatCount > 1 ? (
-                      <span className="block text-[9px] font-medium text-[var(--text-light)]">
+                      <span className="block text-[11px] font-medium text-[var(--text-light)]">
                         Rs{price} x {seatCount}
                       </span>
                     ) : null}
@@ -562,8 +562,8 @@ const BusDetails = () => {
 
         {/* Fare breakdown */}
         <div className="rounded-[18px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
-          <p className="text-[14px] font-extrabold">Fare Summary</p>
-          <div className="mt-2.5 space-y-1.5 text-[11.5px] font-semibold">
+          <p className="text-[15.5px] font-extrabold">Fare Summary</p>
+          <div className="mt-2.5 space-y-1.5 text-[13.5px] font-semibold">
             <div className="flex items-center justify-between">
               <span className="text-[var(--text-light)]">
                 {selectedSeats.length} {isSleeperBus ? 'berth' : 'seat'}
@@ -577,7 +577,7 @@ const BusDetails = () => {
                 <span>Rs{item.price}</span>
               </div>
             ))}
-            <div className="flex items-center justify-between border-t border-[var(--border)] pt-2 text-[13px] font-extrabold">
+            <div className="flex items-center justify-between border-t border-[var(--border)] pt-2 text-[14.5px] font-extrabold">
               <span>Total</span>
               <span>Rs{payableAmount}</span>
             </div>
@@ -589,13 +589,13 @@ const BusDetails = () => {
           <div className="flex min-w-0 items-center gap-2">
             <ShieldCheck size={20} className="shrink-0 text-[var(--primary-dark)]" />
             <span className="min-w-0">
-              <span className="block text-[11.5px] font-extrabold leading-tight">100% Secure Payments</span>
-              <span className="block text-[9.5px] font-medium text-[var(--text-light)]">Your data is safe with us</span>
+              <span className="block text-[13.5px] font-extrabold leading-tight">100% Secure Payments</span>
+              <span className="block text-[11.5px] font-medium text-[var(--text-light)]">Your data is safe with us</span>
             </span>
           </div>
           <div className="shrink-0 text-right">
-            <span className="block text-[8.5px] font-medium text-[var(--text-light)]">We Accept</span>
-            <span className="mt-0.5 flex items-center gap-1.5 text-[8.5px] font-extrabold text-[var(--text-light)]">
+            <span className="block text-[10.5px] font-medium text-[var(--text-light)]">We Accept</span>
+            <span className="mt-0.5 flex items-center gap-1.5 text-[10.5px] font-extrabold text-[var(--text-light)]">
               <span>UPI</span>
               <span>VISA</span>
               <span>MC</span>
@@ -605,7 +605,7 @@ const BusDetails = () => {
         </div>
 
         {error ? (
-          <div className="rounded-[14px] border border-rose-100 bg-rose-50 px-3.5 py-3 text-[11.5px] font-bold text-[var(--danger)]">
+          <div className="rounded-[14px] border border-rose-100 bg-rose-50 px-3.5 py-3 text-[13.5px] font-bold text-[var(--danger)]">
             {error}
           </div>
         ) : null}
@@ -614,10 +614,10 @@ const BusDetails = () => {
       <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-lg -translate-x-1/2 border-t border-[var(--border)] bg-white px-4 pb-6 pt-3">
         <div className="mb-2.5 flex items-center justify-between">
           <div>
-            <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">Payable Amount</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">Payable Amount</p>
             <p className="text-[20px] font-extrabold leading-tight">Rs{payableAmount}</p>
           </div>
-          <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-[var(--success)]">
+          <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[12px] font-bold text-[var(--success)]">
             Taxes included
           </span>
         </div>
@@ -626,7 +626,7 @@ const BusDetails = () => {
           whileTap={{ scale: 0.98 }}
           onClick={handleContinue}
           disabled={isPaying}
-          className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[15px] font-extrabold text-[var(--text)] shadow-[0_8px_20px_rgba(255,193,7,.4)] disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[16.5px] font-extrabold text-[var(--text)] shadow-[0_8px_20px_rgba(255,193,7,.4)] disabled:opacity-60"
         >
           {isPaying ? <Loader2 size={18} className="animate-spin" /> : 'Pay Now'}
           {!isPaying ? <ChevronRight size={18} strokeWidth={2.8} /> : null}

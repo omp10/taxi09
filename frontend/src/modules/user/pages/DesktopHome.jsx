@@ -139,7 +139,7 @@ const DesktopHome = () => {
     navigate(`/taxi/user/rental?${params.toString()}`);
   };
 
-  const field = 'w-full bg-transparent text-[16px] font-semibold text-[var(--dh-text)] placeholder:text-[var(--dh-muted)] outline-none';
+  const field = 'w-full bg-transparent text-[17px] font-semibold text-[var(--dh-text)] placeholder:text-[var(--dh-muted)] outline-none';
 
   return (
     <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
@@ -156,8 +156,8 @@ const DesktopHome = () => {
             {!bannersLoading && heroSlides.length === 0 ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-center">
                 <ImageIcon size={26} className="text-[var(--dh-muted)]" strokeWidth={2} />
-                <p className="text-[15px] font-semibold text-[var(--dh-text)]">No banner uploaded yet</p>
-                <p className="text-[13px] text-[var(--dh-muted)]">Add one under Homepage Banners in the admin panel.</p>
+                <p className="text-[16.5px] font-semibold text-[var(--dh-text)]">No banner uploaded yet</p>
+                <p className="text-[14.5px] text-[var(--dh-muted)]">Add one under Homepage Banners in the admin panel.</p>
               </div>
             ) : null}
 
@@ -205,7 +205,7 @@ const DesktopHome = () => {
           </datalist>
 
           <label className="px-6 py-1.5">
-            <span className="block text-[14.5px] font-bold text-[var(--dh-text)]">Pickup Location</span>
+            <span className="block text-[16px] font-bold text-[var(--dh-text)]">Pickup Location</span>
             <span className="mt-1.5 flex items-center gap-2">
               <MapPin size={19} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               <input
@@ -228,7 +228,7 @@ const DesktopHome = () => {
           </button>
 
           <label className="border-l border-[var(--dh-border)] px-6 py-1.5">
-            <span className="block text-[14.5px] font-bold text-[var(--dh-text)]">Drop Location</span>
+            <span className="block text-[16px] font-bold text-[var(--dh-text)]">Drop Location</span>
             <span className="mt-1.5 flex items-center gap-2">
               <MapPin size={19} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               <input
@@ -245,7 +245,7 @@ const DesktopHome = () => {
             className="cursor-pointer border-l border-[var(--dh-border)] px-6 py-1.5"
             onClick={(event) => event.currentTarget.querySelector('input')?.showPicker?.()}
           >
-            <span className="block text-[14.5px] font-bold text-[var(--dh-text)]">Pickup Date</span>
+            <span className="block text-[16px] font-bold text-[var(--dh-text)]">Pickup Date</span>
             <span className="mt-1.5 flex items-center gap-2">
               <CalendarDays size={19} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               <input
@@ -259,7 +259,7 @@ const DesktopHome = () => {
           </label>
 
           <label className="cursor-pointer border-l border-[var(--dh-border)] px-6 py-1.5" onClick={(event) => event.currentTarget.querySelector('input')?.showPicker?.()}>
-            <span className="block text-[14.5px] font-bold text-[var(--dh-text)]">Pickup Time</span>
+            <span className="block text-[16px] font-bold text-[var(--dh-text)]">Pickup Time</span>
             <span className="mt-1.5 flex items-center gap-2">
               <Clock size={19} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               <input
@@ -273,7 +273,7 @@ const DesktopHome = () => {
 
           <button
             type="submit"
-            className="ml-3 flex h-[66px] items-center gap-3 rounded-[16px] bg-[#F5B700] px-9 text-[17.5px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.32)] transition-transform hover:-translate-y-0.5"
+            className="ml-3 flex h-[66px] items-center gap-3 rounded-[16px] bg-[#F5B700] px-9 text-[18.5px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.32)] transition-transform hover:-translate-y-0.5"
           >
             Search Vehicles
             <ArrowRight size={19} strokeWidth={2.8} />
@@ -285,13 +285,13 @@ const DesktopHome = () => {
       <section className="mx-auto mt-12 max-w-[1440px] px-8 xl:px-12">
         <div className="grid grid-cols-[300px_minmax(0,1fr)] gap-8">
           <div>
-            <p className="text-[13px] font-black uppercase tracking-[0.12em] text-[#F5B700]">Explore Our Services</p>
+            <p className="text-[14.5px] font-black uppercase tracking-[0.12em] text-[#F5B700]">Explore Our Services</p>
             <h2 className="mt-3 text-[34px] font-black leading-[1.15] tracking-[-0.035em] text-[var(--dh-text)]">
               All Your Travel Needs,
               <br />
               <span className="text-[#F5B700]">One Trusted Platform.</span>
             </h2>
-            <p className="mt-4 text-[15px] font-medium leading-[1.6] text-[var(--dh-muted)]">
+            <p className="mt-4 text-[16.5px] font-medium leading-[1.6] text-[var(--dh-muted)]">
               From self-drive cars to hotel bookings, we provide everything you need for a comfortable and memorable journey.
             </p>
           </div>
@@ -324,7 +324,7 @@ const DesktopHome = () => {
                 ) : (
                   <span className="block h-[25px] w-20 rounded-md dh-skeleton" />
                 )}
-                <p className="mt-1.5 text-[13.5px] font-semibold text-[var(--dh-muted)]">{label}</p>
+                <p className="mt-1.5 text-[15px] font-semibold text-[var(--dh-muted)]">{label}</p>
               </div>
             </div>
           ))}

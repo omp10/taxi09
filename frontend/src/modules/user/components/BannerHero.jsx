@@ -83,8 +83,8 @@ const BannerHero = ({
       {!loading && slides.length === 0 ? (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6 text-center">
           <ImageIcon size={24} className="text-slate-400" strokeWidth={2} />
-          <p className="text-[14px] font-semibold text-slate-700">No banner uploaded yet</p>
-          <p className="text-[12px] text-slate-500">Add one under Homepage Banners in the admin panel.</p>
+          <p className="text-[15.5px] font-semibold text-slate-700">No banner uploaded yet</p>
+          <p className="text-[13.5px] text-slate-500">Add one under Homepage Banners in the admin panel.</p>
         </div>
       ) : null}
 

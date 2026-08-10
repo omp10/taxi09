@@ -22,7 +22,7 @@ const AppDownloadSection = () => {
             <button className="flex items-center gap-3 bg-white/10 hover:bg-white/20 border border-white/20 transition-colors text-white px-6 py-3 rounded-lg w-[200px] justify-center">
               <Apple size={28} />
               <div className="text-left">
-                <div className="text-[10px] text-gray-300">Download on the</div>
+                <div className="text-[12px] text-gray-300">Download on the</div>
                 <div className="text-sm font-bold leading-none mt-0.5">App Store</div>
               </div>
             </button>
@@ -31,7 +31,7 @@ const AppDownloadSection = () => {
             <button className="flex items-center gap-3 bg-white/10 hover:bg-white/20 border border-white/20 transition-colors text-white px-6 py-3 rounded-lg w-[200px] justify-center">
               <Play size={28} className="fill-current" />
               <div className="text-left">
-                <div className="text-[10px] text-gray-300">GET IT ON</div>
+                <div className="text-[12px] text-gray-300">GET IT ON</div>
                 <div className="text-sm font-bold leading-none mt-0.5">Google Play</div>
               </div>
             </button>

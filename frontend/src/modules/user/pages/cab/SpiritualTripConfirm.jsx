@@ -32,8 +32,8 @@ const SpiritualTripConfirm = () => {
             <ArrowLeft size={18} className="text-slate-900" strokeWidth={2.5} />
           </button>
           <div className="flex-1">
-            <p className="text-[9px] font-black uppercase tracking-[0.26em] text-slate-400">Tour Booking</p>
-            <h1 className="text-[19px] font-black tracking-tight text-slate-900">Confirmed</h1>
+            <p className="text-[11px] font-black uppercase tracking-[0.26em] text-slate-400">Tour Booking</p>
+            <h1 className="text-[20px] font-black tracking-tight text-slate-900">Confirmed</h1>
           </div>
         </div>
       </header>
@@ -55,7 +55,7 @@ const SpiritualTripConfirm = () => {
           className="text-center mb-8"
         >
           <h2 className="text-[24px] font-black tracking-tight text-slate-900 leading-tight">Divine Journey Booked</h2>
-          <p className="text-[13px] font-bold text-slate-500 mt-2">A verified captain connects with you soon.</p>
+          <p className="text-[14.5px] font-bold text-slate-500 mt-2">A verified captain connects with you soon.</p>
         </motion.div>
 
         <motion.div
@@ -68,16 +68,16 @@ const SpiritualTripConfirm = () => {
           
           <div className="flex justify-between items-center pb-4 border-b border-slate-100">
             <div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Destination</p>
-              <h3 className="text-[18px] font-black tracking-tight text-slate-900 leading-none">
+              <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-1">Destination</p>
+              <h3 className="text-[19px] font-black tracking-tight text-slate-900 leading-none">
                 {trip.name} {trip.emoji}
               </h3>
             </div>
             <div className="text-right">
-              <span className={`text-[9px] font-black px-2 py-0.5 rounded-full border ${trip.accent.replace('bg-[linear-gradient', 'border-purple-200 bg-[linear-gradient')} text-slate-700 uppercase tracking-widest block mb-1`}>
+              <span className={`text-[11px] font-black px-2 py-0.5 rounded-full border ${trip.accent.replace('bg-[linear-gradient', 'border-purple-200 bg-[linear-gradient')} text-slate-700 uppercase tracking-widest block mb-1`}>
                 Guided Tour
               </span>
-              <p className="text-[11px] font-black text-purple-600">{trip.dist} Trip</p>
+              <p className="text-[13px] font-black text-purple-600">{trip.dist} Trip</p>
             </div>
           </div>
 
@@ -89,12 +89,12 @@ const SpiritualTripConfirm = () => {
             </div>
             <div className="flex-1 space-y-4">
               <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Pickup (Indore)</p>
-                <p className="text-[14px] font-bold text-slate-900 leading-snug">Pipaliyahana, Indore</p>
+                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-1">Pickup (Indore)</p>
+                <p className="text-[15.5px] font-bold text-slate-900 leading-snug">Pipaliyahana, Indore</p>
               </div>
               <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Destination</p>
-                <p className="text-[14px] font-bold text-slate-900 leading-snug tracking-tight">{trip.subtitle}</p>
+                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-1">Destination</p>
+                <p className="text-[15.5px] font-bold text-slate-900 leading-snug tracking-tight">{trip.subtitle}</p>
               </div>
             </div>
           </div>
@@ -103,8 +103,8 @@ const SpiritualTripConfirm = () => {
             <div className="flex items-center gap-3">
               <User size={18} className="text-purple-500" />
               <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Top Rated</p>
-                <p className="text-[13px] font-bold text-slate-900 flex items-center gap-1">Pilgrimage Drivers <Star size={11} className="fill-purple-500 text-purple-500" /></p>
+                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">Top Rated</p>
+                <p className="text-[14.5px] font-bold text-slate-900 flex items-center gap-1">Pilgrimage Drivers <Star size={11} className="fill-purple-500 text-purple-500" /></p>
               </div>
             </div>
           </div>
@@ -113,14 +113,14 @@ const SpiritualTripConfirm = () => {
             <div className="grid grid-cols-2 gap-2 mt-2 pt-3 border-t border-slate-100">
               {date && (
                 <div>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Date & Time</p>
-                  <p className="text-[12px] font-bold text-slate-900">{date} at {time}</p>
+                  <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Date & Time</p>
+                  <p className="text-[13.5px] font-bold text-slate-900">{date} at {time}</p>
                 </div>
               )}
               {vehicle && (
                 <div>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Vehicle</p>
-                  <p className="text-[12px] font-bold text-slate-900 flex items-center gap-1">{vehicle.icon} {vehicle.name} <span className="opacity-50">· {seats} Pax</span></p>
+                  <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Vehicle</p>
+                  <p className="text-[13.5px] font-bold text-slate-900 flex items-center gap-1">{vehicle.icon} {vehicle.name} <span className="opacity-50">· {seats} Pax</span></p>
                 </div>
               )}
             </div>
@@ -138,13 +138,13 @@ const SpiritualTripConfirm = () => {
       >
         <div className="pointer-events-auto bg-white/90 rounded-[20px] border border-white/80 shadow-[0_4px_14px_rgba(15,23,42,0.06)] px-5 py-4 flex items-center justify-between mb-3">
           <div>
-            <p className="text-[11px] font-black text-slate-700 tracking-tight">Estimated Fare</p>
-            <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider mt-0.5 max-w-[150px]">Based on ride time</p>
+            <p className="text-[13px] font-black text-slate-700 tracking-tight">Estimated Fare</p>
+            <p className="text-[11px] font-black text-slate-400 uppercase tracking-wider mt-0.5 max-w-[150px]">Based on ride time</p>
           </div>
           <p className="text-[22px] font-black text-slate-900 tracking-tight text-right">{trip.fare}</p>
         </div>
         <motion.button onClick={() => navigate('/taxi/user')}
-          className="pointer-events-auto w-full bg-slate-900 py-4 rounded-[18px] text-[15px] font-black text-white shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+          className="pointer-events-auto w-full bg-slate-900 py-4 rounded-[18px] text-[16.5px] font-black text-white shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
           <Home size={16} strokeWidth={2.5} /> Go to Home Dashboard
         </motion.button>
       </motion.div>

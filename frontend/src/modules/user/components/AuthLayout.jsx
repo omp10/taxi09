@@ -55,18 +55,18 @@ const AuthLayout = ({ children, title, subtitle }) => {
               
               <div className="flex gap-4">
                 <div className="px-6 py-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
-                  <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1">Global Coverage</p>
+                  <p className="text-white/40 text-[12px] font-bold uppercase tracking-widest mb-1">Global Coverage</p>
                   <p className="text-white font-bold">15,000+ Cities</p>
                 </div>
                 <div className="px-6 py-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
-                  <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1">Safe Rides</p>
+                  <p className="text-white/40 text-[12px] font-bold uppercase tracking-widest mb-1">Safe Rides</p>
                   <p className="text-white font-bold">Verified Drivers</p>
                 </div>
               </div>
             </motion.div>
           </div>
 
-          <div className="flex items-center gap-8 text-white/40 text-[11px] font-bold uppercase tracking-[0.2em]">
+          <div className="flex items-center gap-8 text-white/40 text-[13px] font-bold uppercase tracking-[0.2em]">
             <span>© {appName} 2026</span>
             <span>•</span>
             <a href="/terms" className="hover:text-white transition-colors">Terms</a>
@@ -141,7 +141,7 @@ const AuthLayout = ({ children, title, subtitle }) => {
         
         {/* Helper footer link */}
         <div className="mt-6 sm:mt-8 text-center w-full max-w-md z-20 shrink-0">
-            <p className="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em]">
+            <p className="text-gray-400 text-[12px] font-black uppercase tracking-[0.2em]">
               Need assistance? <a href="/support" className="text-black hover:text-orange-500 transition-colors ml-1">Contact Support</a>
             </p>
         </div>

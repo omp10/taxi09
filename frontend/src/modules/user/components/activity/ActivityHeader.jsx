@@ -28,11 +28,11 @@ const ActivityHeader = ({ helperText, onBack }) => {
           <ArrowLeft size={15} strokeWidth={2.8} />
         </button>
         <div className="min-w-0">
-          <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-800">My bookings</p>
-          <h1 className="mt-0.5 text-[19px] font-extrabold leading-tight tracking-[-0.02em] text-slate-950">
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-800">My bookings</p>
+          <h1 className="mt-0.5 text-[20px] font-extrabold leading-tight tracking-[-0.02em] text-slate-950">
             Recent activity
           </h1>
-          <p className="mt-0.5 max-w-[60%] text-[10px] font-medium leading-tight text-slate-800">{helperText}</p>
+          <p className="mt-0.5 max-w-[60%] text-[12px] font-medium leading-tight text-slate-800">{helperText}</p>
         </div>
       </div>
     </header>

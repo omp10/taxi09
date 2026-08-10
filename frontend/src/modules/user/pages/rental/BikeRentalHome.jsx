@@ -605,7 +605,7 @@ const BikeRentalHome = () => {
                 <div className="text-[27px] font-black italic leading-none tracking-tight">
                   TAXI<span className="text-[#f5b700]">09</span>
                 </div>
-                <div className="mt-0.5 text-[12px] font-bold uppercase tracking-[0.14em] text-slate-500">Self Drive</div>
+                <div className="mt-0.5 text-[13.5px] font-bold uppercase tracking-[0.14em] text-slate-500">Self Drive</div>
               </div>
               <button
                 type="button"
@@ -623,8 +623,8 @@ const BikeRentalHome = () => {
               <div className="flex items-start gap-2">
                 <span className="mt-5 h-3 w-3 rounded-full bg-[#22c55e]" />
                 <div>
-                  <p className="text-[11px] font-medium text-slate-500">Pick-up</p>
-                  <p className="line-clamp-2 text-[12px] font-black leading-tight">{selectedLocation}</p>
+                  <p className="text-[13px] font-medium text-slate-500">Pick-up</p>
+                  <p className="line-clamp-2 text-[13.5px] font-black leading-tight">{selectedLocation}</p>
                 </div>
               </div>
               <button className="mx-2 flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-[0_6px_16px_rgba(15,23,42,0.12)]">
@@ -633,8 +633,8 @@ const BikeRentalHome = () => {
               <div className="flex items-start gap-2 border-l border-dashed border-slate-200 pl-3">
                 <span className="mt-5 h-3 w-3 rounded-full bg-[#ff3347]" />
                 <div className="min-w-0">
-                  <p className="text-[11px] font-medium text-slate-500">Drop-off</p>
-                  <p className="line-clamp-2 text-[12px] font-black leading-tight">{selectedLocation}</p>
+                  <p className="text-[13px] font-medium text-slate-500">Drop-off</p>
+                  <p className="line-clamp-2 text-[13.5px] font-black leading-tight">{selectedLocation}</p>
                 </div>
               </div>
             </section>
@@ -676,7 +676,7 @@ const BikeRentalHome = () => {
                         }
                         setResultDropdown((current) => (current === label ? null : label));
                       }}
-                      className={`flex h-9 items-center gap-2 rounded-[9px] border px-3 text-[13px] font-semibold shadow-sm ${
+                      className={`flex h-9 items-center gap-2 rounded-[9px] border px-3 text-[14.5px] font-semibold shadow-sm ${
                         value !== 'Any' && value !== 'Filters'
                           ? 'border-[#f5b700] bg-[#fff7d6] text-black'
                           : 'border-slate-200 bg-white text-black'
@@ -700,7 +700,7 @@ const BikeRentalHome = () => {
                               if (label === 'Seats') setResultSeatsFilter(option);
                               setResultDropdown(null);
                             }}
-                            className="flex w-full items-center justify-between border-b border-slate-50 px-4 py-2.5 text-left text-[13px] font-semibold text-black last:border-b-0"
+                            className="flex w-full items-center justify-between border-b border-slate-50 px-4 py-2.5 text-left text-[14.5px] font-semibold text-black last:border-b-0"
                           >
                             {option}
                             {selectedValue === option && <Check size={15} className="text-[#f5b700]" />}
@@ -717,19 +717,19 @@ const BikeRentalHome = () => {
             <section className="mt-3 flex min-h-[78px] items-center overflow-hidden rounded-[13px] border border-amber-200 bg-gradient-to-r from-[#fff7dc] to-[#fff1b7] px-4 shadow-sm">
               <Shield size={46} className="shrink-0 text-[#f5b700]" strokeWidth={2.4} />
               <div className="ml-3 min-w-0 flex-1">
-                <h2 className="text-[15px] font-black">Drive with Confidence</h2>
-                <p className="mt-0.5 text-[11px] font-medium text-slate-700">Sanitized, insured & road-ready</p>
-                <button className="mt-1 text-[11px] font-bold text-[#f5a800]">Learn More</button>
+                <h2 className="text-[16.5px] font-black">Drive with Confidence</h2>
+                <p className="mt-0.5 text-[13px] font-medium text-slate-700">Sanitized, insured & road-ready</p>
+                <button className="mt-1 text-[13px] font-bold text-[#f5a800]">Learn More</button>
               </div>
               <img src={filteredListingCars[0]?.image || listingCars[0]?.image || rentalCarImg} alt="" className="h-16 w-24 object-contain mix-blend-multiply" />
             </section>
 
             <div className="mt-4 flex items-center justify-between">
-              <p className="text-[13px] font-semibold text-slate-700">{filteredListingCars.length} Cars available</p>
+              <p className="text-[14.5px] font-semibold text-slate-700">{filteredListingCars.length} Cars available</p>
               <button
                 type="button"
                 onClick={() => setResultDropdown((current) => (current === 'Sort' ? null : 'Sort'))}
-                className="flex items-center gap-1 text-[12px] font-semibold text-slate-700"
+                className="flex items-center gap-1 text-[13.5px] font-semibold text-slate-700"
               >
                 Sort by: <span className="font-black text-[#f5b700]">{resultSort}</span>
                 <ChevronDown size={16} />
@@ -746,7 +746,7 @@ const BikeRentalHome = () => {
                       setResultSort(option);
                       setResultDropdown(null);
                     }}
-                    className="flex w-full items-center justify-between border-b border-slate-50 px-4 py-2.5 text-left text-[13px] font-semibold text-black last:border-b-0"
+                    className="flex w-full items-center justify-between border-b border-slate-50 px-4 py-2.5 text-left text-[14.5px] font-semibold text-black last:border-b-0"
                   >
                     {option}
                     {resultSort === option && <Check size={15} className="text-[#f5b700]" />}
@@ -758,11 +758,11 @@ const BikeRentalHome = () => {
             <section className="mt-3 space-y-3 lg:grid lg:grid-cols-2 lg:gap-3 lg:space-y-0 xl:grid-cols-3 [&>*]:lg:mt-0">
               {filteredListingCars.length === 0 ? (
                 <div className="rounded-[14px] border border-slate-100 bg-white p-5 text-center shadow-[0_5px_18px_rgba(15,23,42,0.06)]">
-                  <p className="text-[14px] font-black text-slate-900">No cars match these filters</p>
+                  <p className="text-[15.5px] font-black text-slate-900">No cars match these filters</p>
                   <button
                     type="button"
                     onClick={resetResultFilters}
-                    className="mt-3 rounded-[9px] bg-[#f5b700] px-4 py-2 text-[12px] font-black text-black"
+                    className="mt-3 rounded-[9px] bg-[#f5b700] px-4 py-2 text-[13.5px] font-black text-black"
                   >
                     Clear Filters
                   </button>
@@ -775,15 +775,15 @@ const BikeRentalHome = () => {
                   <div className="grid grid-cols-[30%_1fr_auto] gap-2.5">
                     <div className="relative pt-4">
                       {car.badge && (
-                        <span className="absolute left-0 top-0 rounded-full bg-violet-100 px-2 py-1 text-[10px] font-black text-violet-700">
+                        <span className="absolute left-0 top-0 rounded-full bg-violet-100 px-2 py-1 text-[12px] font-black text-violet-700">
                           {car.badge}
                         </span>
                       )}
                       <img src={car.image} alt={`${car.brand} ${car.name}`} className="mt-4 h-20 w-full object-contain mix-blend-multiply" />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="truncate text-[15px] font-black">{car.brand} {car.name}</h3>
-                      <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10.5px] font-semibold text-slate-800">
+                      <h3 className="truncate text-[16.5px] font-black">{car.brand} {car.name}</h3>
+                      <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12.5px] font-semibold text-slate-800">
                         <span className="flex items-center gap-1"><Car size={13} />{car.body}</span>
                         <span>•</span>
                         <span>{car.capacity} Seater</span>
@@ -793,18 +793,18 @@ const BikeRentalHome = () => {
                         <span>A/C</span>
                         <span>Bluetooth</span>
                       </div>
-                      <span className="mt-2 inline-flex rounded-full bg-green-100 px-2.5 py-1 text-[10px] font-bold text-green-700">
+                      <span className="mt-2 inline-flex rounded-full bg-green-100 px-2.5 py-1 text-[12px] font-bold text-green-700">
                         Free Cancellation
                       </span>
                     </div>
                     <div className="flex flex-col items-end justify-between">
-                      <span className="flex items-center gap-1 text-[12px] font-semibold text-slate-700">
+                      <span className="flex items-center gap-1 text-[13.5px] font-semibold text-slate-700">
                         <Star size={14} fill="#f5b700" className="text-[#f5b700]" />
                         {car.rating} <span className="text-slate-500">({car.reviews})</span>
                       </span>
                       <div className="text-right">
-                        <p className="text-[17px] font-black">₹{Number(car.price || 2199).toLocaleString('en-IN')}</p>
-                        <p className="text-[10px] font-semibold">/ per day</p>
+                        <p className="text-[18px] font-black">₹{Number(car.price || 2199).toLocaleString('en-IN')}</p>
+                        <p className="text-[12px] font-semibold">/ per day</p>
                       </div>
                       <button
                         type="button"
@@ -819,7 +819,7 @@ const BikeRentalHome = () => {
                             pricing: [{ durationHours: 24, price: car.price, includedKm: 120, active: true }],
                           }));
                         }}
-                        className="rounded-[8px] bg-[#f5b700] px-3 py-2 text-[11px] font-black text-black"
+                        className="rounded-[8px] bg-[#f5b700] px-3 py-2 text-[13px] font-black text-black"
                       >
                         View Details
                       </button>
@@ -833,11 +833,11 @@ const BikeRentalHome = () => {
               <div className="flex items-center gap-3">
                 <Percent size={25} className="text-[#f5b700]" />
                 <div>
-                  <p className="text-[13px] font-black">Save more with long term rentals</p>
-                  <p className="text-[11px] font-medium text-slate-600">Weekly & monthly plans available</p>
+                  <p className="text-[14.5px] font-black">Save more with long term rentals</p>
+                  <p className="text-[13px] font-medium text-slate-600">Weekly & monthly plans available</p>
                 </div>
               </div>
-              <button className="flex items-center gap-1 text-[13px] font-black text-[#f5a800]">View Plans <ChevronRight size={16} /></button>
+              <button className="flex items-center gap-1 text-[14.5px] font-black text-[#f5a800]">View Plans <ChevronRight size={16} /></button>
             </section>
           </main>
 
@@ -863,10 +863,10 @@ const BikeRentalHome = () => {
                   setLocationSearchText('');
                   setShowLocationSuggestions(true);
                 }}>
-                  <h1 className="text-[12px] font-bold text-slate-800 tracking-tight leading-tight flex items-center gap-1 cursor-pointer">
+                  <h1 className="text-[13.5px] font-bold text-slate-800 tracking-tight leading-tight flex items-center gap-1 cursor-pointer">
                     {selectedLocation}
                   </h1>
-                  <p className="text-[11px] font-medium text-slate-400 mt-0.5 leading-none">
+                  <p className="text-[13px] font-medium text-slate-400 mt-0.5 leading-none">
                     04 Jun <span className="text-slate-500 font-semibold">08:00 am Thu</span> — 05 Jun <span className="text-slate-500 font-semibold">09:00 pm Fri</span>
                   </p>
                 </div>
@@ -878,7 +878,7 @@ const BikeRentalHome = () => {
 
             {/* Filters Row */}
             <div className="px-6 py-3 flex gap-2 overflow-x-auto no-scrollbar border-b border-slate-100 bg-white">
-              <button className="bg-[#d48c00] hover:bg-[#c98500] shadow-sm transition-colors text-white flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-semibold shrink-0">
+              <button className="bg-[#d48c00] hover:bg-[#c98500] shadow-sm transition-colors text-white flex items-center gap-1 px-3 py-1.5 rounded-lg text-[14.5px] font-semibold shrink-0">
                 <SlidersHorizontal size={14} strokeWidth={2} />
                 Filter
               </button>
@@ -887,13 +887,13 @@ const BikeRentalHome = () => {
                 <ArrowDownUp size={14} strokeWidth={2} />
               </button>
 
-              <button className="border border-slate-300 bg-white text-slate-600 px-3 py-1.5 rounded-full text-[13px] font-medium shrink-0">
+              <button className="border border-slate-300 bg-white text-slate-600 px-3 py-1.5 rounded-full text-[14.5px] font-medium shrink-0">
                 Delivery only
               </button>
-              <button className="border border-slate-300 bg-white text-slate-600 px-3 py-1.5 rounded-full text-[13px] font-medium shrink-0">
+              <button className="border border-slate-300 bg-white text-slate-600 px-3 py-1.5 rounded-full text-[14.5px] font-medium shrink-0">
                 SUV
               </button>
-              <button className="border border-slate-300 bg-white text-slate-600 px-3 py-1.5 rounded-full text-[13px] font-medium shrink-0">
+              <button className="border border-slate-300 bg-white text-slate-600 px-3 py-1.5 rounded-full text-[14.5px] font-medium shrink-0">
                 With...
               </button>
             </div>
@@ -909,7 +909,7 @@ const BikeRentalHome = () => {
                   placeholder="Search by Car Model or Brand"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-white border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-[13px] font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-slate-300 transition-colors shadow-sm"
+                  className="w-full bg-white border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-[14.5px] font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-slate-300 transition-colors shadow-sm"
                 />
               </div>
             </div>
@@ -919,10 +919,10 @@ const BikeRentalHome = () => {
           <div className="flex-1 overflow-y-auto bg-background pb-12 no-scrollbar">
             {/* Results Header */}
             <div className="flex items-center justify-between px-6 py-3.5 select-none bg-background">
-              <h3 className="text-[17px] font-bold text-slate-700">
+              <h3 className="text-[18px] font-bold text-slate-700">
                 {matchedCars.length} car{matchedCars.length === 1 ? '' : 's'} available
               </h3>
-              <span className="text-[12px] font-medium text-slate-500">Duration: 1 Day, 13 Hrs</span>
+              <span className="text-[13.5px] font-medium text-slate-500">Duration: 1 Day, 13 Hrs</span>
             </div>
 
             {/* Cars List */}
@@ -932,8 +932,8 @@ const BikeRentalHome = () => {
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[16px] bg-slate-350/10 text-slate-400">
                     <Car size={22} />
                   </div>
-                  <p className="mt-4 text-[15px] font-black text-slate-900">No cars available</p>
-                  <p className="mt-1 text-[12px] font-semibold text-slate-400">Try another search query or adjust your filters.</p>
+                  <p className="mt-4 text-[16.5px] font-black text-slate-900">No cars available</p>
+                  <p className="mt-1 text-[13.5px] font-semibold text-slate-400">Try another search query or adjust your filters.</p>
                 </div>
               ) : (
                 matchedCars.map((car) => (
@@ -968,11 +968,11 @@ const BikeRentalHome = () => {
                       {/* Right: metadata */}
                       <div className="flex-1 pl-4 flex flex-col justify-between min-h-[112px]">
                         <div>
-                          <span className="text-[10px] font-bold text-slate-400 block uppercase leading-none">{car.brand}</span>
-                          <h4 className="text-[15.5px] font-bold text-slate-800 tracking-tight leading-tight mt-1">{car.name}</h4>
+                          <span className="text-[12px] font-bold text-slate-400 block uppercase leading-none">{car.brand}</span>
+                          <h4 className="text-[17px] font-bold text-slate-800 tracking-tight leading-tight mt-1">{car.name}</h4>
 
                           {/* Details list with icons */}
-                          <div className="flex items-center gap-2 text-[10px] font-medium text-slate-400 mt-2">
+                          <div className="flex items-center gap-2 text-[12px] font-medium text-slate-400 mt-2">
                             <div className="flex items-center gap-0.5">
                               <Fuel size={11} className="text-slate-400" />
                               <span>{car.fuel.split(' ┬╖ ')[0]}</span>
@@ -997,7 +997,7 @@ const BikeRentalHome = () => {
 
                         {/* Price & arrow */}
                         <div className="mt-3 flex items-center justify-end text-slate-800 font-bold">
-                          <span className="text-[18px] leading-none">₹{car.price.toLocaleString('en-IN')}</span>
+                          <span className="text-[19px] leading-none">₹{car.price.toLocaleString('en-IN')}</span>
                           <ChevronRight size={18} strokeWidth={2.5} className="ml-0.5 opacity-80" />
                         </div>
                       </div>
@@ -1007,7 +1007,7 @@ const BikeRentalHome = () => {
                     <div className="h-px bg-slate-100 w-full" />
 
                     {/* Bottom row */}
-                    <div className="flex items-center justify-between text-[11px] font-medium text-slate-500 select-none py-0.5">
+                    <div className="flex items-center justify-between text-[13px] font-medium text-slate-500 select-none py-0.5">
                       <div className="flex items-center gap-1.5 text-slate-600">
                         <div className="w-4.5 h-4.5 rounded-full border border-[#ffc400]/20 bg-[#fffbeb] text-[#d48c00] flex items-center justify-center shrink-0">
                           <Check size={10} strokeWidth={3} />
@@ -1015,10 +1015,10 @@ const BikeRentalHome = () => {
                         <span className="font-semibold text-slate-700">Home delivery</span>
                       </div>
 
-                      <span className="text-[9.5px] font-bold text-slate-300">or</span>
+                      <span className="text-[11.5px] font-bold text-slate-300">or</span>
 
                       <div className="flex items-center gap-1.5 text-slate-600">
-                        <span className="border border-slate-200 bg-slate-50 text-[10px] font-semibold text-slate-500 px-2 py-0.5 rounded-md">
+                        <span className="border border-slate-200 bg-slate-50 text-[12px] font-semibold text-slate-500 px-2 py-0.5 rounded-md">
                           Pick from
                         </span>
                         <div className="flex items-center gap-1">
@@ -1055,10 +1055,10 @@ const BikeRentalHome = () => {
               }}
               className="flex flex-col items-center gap-1 flex-1 py-1 text-[#d48c00]"
             >
-              <div className="w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 border-[#d48c00] bg-[#ffc400]/5">
+              <div className="w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[14.5px] border-2 border-[#d48c00] bg-[#ffc400]/5">
                 R
               </div>
-              <span className="text-[9.5px] font-bold tracking-wide uppercase">Rentals</span>
+              <span className="text-[11.5px] font-bold tracking-wide uppercase">Rentals</span>
             </button>
 
             <button
@@ -1068,13 +1068,13 @@ const BikeRentalHome = () => {
               }}
               className="flex flex-col items-center gap-1 flex-1 py-1 relative text-slate-400 hover:text-slate-600"
             >
-              <span className="absolute top-[-10px] bg-rose-500 text-[6.5px] font-black text-white px-1.5 py-0.5 rounded-[4px] uppercase tracking-wide border border-white">
+              <span className="absolute top-[-10px] bg-rose-500 text-[8.5px] font-black text-white px-1.5 py-0.5 rounded-[4px] uppercase tracking-wide border border-white">
                 NEW
               </span>
-              <div className="w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 border-slate-400">
+              <div className="w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[14.5px] border-2 border-slate-400">
                 S
               </div>
-              <span className="text-[9.5px] font-bold tracking-wide uppercase">Subscriptions</span>
+              <span className="text-[11.5px] font-bold tracking-wide uppercase">Subscriptions</span>
             </button>
 
             <button
@@ -1082,7 +1082,7 @@ const BikeRentalHome = () => {
               className="flex flex-col items-center gap-1 flex-1 py-1 text-slate-400 hover:text-slate-600"
             >
               <Calendar size={20} strokeWidth={2.4} />
-              <span className="text-[9.5px] font-bold tracking-wide uppercase">Bookings</span>
+              <span className="text-[11.5px] font-bold tracking-wide uppercase">Bookings</span>
             </button>
 
             <button
@@ -1090,7 +1090,7 @@ const BikeRentalHome = () => {
               className="flex flex-col items-center gap-1 flex-1 py-1 text-slate-400 hover:text-slate-600"
             >
               <MessageSquare size={20} strokeWidth={2.4} />
-              <span className="text-[9.5px] font-bold tracking-wide uppercase">Support</span>
+              <span className="text-[11.5px] font-bold tracking-wide uppercase">Support</span>
             </button>
 
             <button
@@ -1098,7 +1098,7 @@ const BikeRentalHome = () => {
               className="flex flex-col items-center gap-1 flex-1 py-1 text-slate-400 hover:text-slate-600"
             >
               <User size={20} strokeWidth={2.4} />
-              <span className="text-[9.5px] font-bold tracking-wide uppercase">More</span>
+              <span className="text-[11.5px] font-bold tracking-wide uppercase">More</span>
             </button>
           </div>
         </div>
@@ -1172,7 +1172,7 @@ const BikeRentalHome = () => {
                     setLandingCategory(category);
                     setSubCategory(category === 'SUV' ? 'SUVs' : category === 'Sedan' ? 'Sedans' : 'Hatchbacks');
                   }}
-                  className={`flex h-[58px] flex-col items-center justify-center rounded-[10px] border text-[11px] font-semibold shadow-[0_5px_14px_rgba(15,23,42,0.07)] ${
+                  className={`flex h-[58px] flex-col items-center justify-center rounded-[10px] border text-[13px] font-semibold shadow-[0_5px_14px_rgba(15,23,42,0.07)] ${
                     landingCategory === category
                       ? 'border-[#ffc400] bg-[#ffc400] text-black'
                       : 'border-slate-100 bg-white text-black'
@@ -1192,8 +1192,8 @@ const BikeRentalHome = () => {
               >
                 <span className="h-6 w-6 rounded-full bg-[#22c55e]" />
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[12px] font-medium text-slate-500">Pick-up Location</span>
-                  <span className="block truncate text-[16px] font-semibold text-black">{bookingLocation}</span>
+                  <span className="block text-[13.5px] font-medium text-slate-500">Pick-up Location</span>
+                  <span className="block truncate text-[17px] font-semibold text-black">{bookingLocation}</span>
                 </span>
                 <ChevronDown size={21} className="text-slate-500" />
               </button>
@@ -1208,7 +1208,7 @@ const BikeRentalHome = () => {
                         setLocationSearchText(loc);
                         setShowLocationSuggestions(false);
                       }}
-                      className="flex w-full items-center gap-2 border-b border-slate-50 px-4 py-2.5 text-left text-[13px] font-semibold text-slate-700 last:border-b-0"
+                      className="flex w-full items-center gap-2 border-b border-slate-50 px-4 py-2.5 text-left text-[14.5px] font-semibold text-slate-700 last:border-b-0"
                     >
                       <MapPin size={15} className="text-[#f5b700]" />
                       <span className="truncate">{loc}</span>
@@ -1222,12 +1222,12 @@ const BikeRentalHome = () => {
               >
                 <MapPin size={28} className="text-[#ff3b4f]" strokeWidth={2.4} />
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[12px] font-medium text-slate-500">Drop-off Location</span>
+                  <span className="block text-[13.5px] font-medium text-slate-500">Drop-off Location</span>
                   <input
                     value={dropOffLocation}
                     onChange={(event) => setDropOffLocation(event.target.value)}
                     placeholder="Where to?"
-                    className="block w-full bg-transparent text-[16px] font-semibold text-black outline-none placeholder:text-black"
+                    className="block w-full bg-transparent text-[17px] font-semibold text-black outline-none placeholder:text-black"
                   />
                 </span>
                 <ChevronDown size={21} className="text-slate-500" />
@@ -1255,8 +1255,8 @@ const BikeRentalHome = () => {
                 >
                   <Icon size={23} className="text-black" strokeWidth={2.5} />
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[11px] font-medium text-slate-500">{label}</span>
-                    <span className="block truncate text-[14px] font-semibold text-black">{value}</span>
+                    <span className="block text-[13px] font-medium text-slate-500">{label}</span>
+                    <span className="block truncate text-[15.5px] font-semibold text-black">{value}</span>
                   </span>
                   <ChevronDown size={18} className="text-slate-500" />
                   <input
@@ -1294,7 +1294,7 @@ const BikeRentalHome = () => {
                   className="flex min-h-[52px] items-center gap-2 rounded-[12px] border border-slate-200 bg-white px-2.5 text-left shadow-[0_4px_14px_rgba(15,23,42,0.04)]"
                 >
                   <Icon size={20} className="shrink-0 text-black" strokeWidth={2.7} />
-                  <span className="min-w-0 flex-1 truncate text-[11px] font-semibold text-black">{value}</span>
+                  <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-black">{value}</span>
                   <ChevronDown size={17} className="shrink-0 text-slate-500" />
                 </button>
               ))}
@@ -1318,7 +1318,7 @@ const BikeRentalHome = () => {
                           setPassengerCount(count);
                           setLandingDropdown(null);
                         }}
-                        className="w-full border-b border-slate-50 px-3 py-2 text-left text-[12px] font-semibold text-black last:border-b-0"
+                        className="w-full border-b border-slate-50 px-3 py-2 text-left text-[13.5px] font-semibold text-black last:border-b-0"
                       >
                         {count} Passenger{count > 1 ? 's' : ''}
                       </button>
@@ -1333,7 +1333,7 @@ const BikeRentalHome = () => {
                           setTransmission(option);
                           setLandingDropdown(null);
                         }}
-                        className="w-full border-b border-slate-50 px-3 py-2 text-left text-[12px] font-semibold text-black last:border-b-0"
+                        className="w-full border-b border-slate-50 px-3 py-2 text-left text-[13.5px] font-semibold text-black last:border-b-0"
                       >
                         {option}
                       </button>
@@ -1352,7 +1352,7 @@ const BikeRentalHome = () => {
                           setLandingDropdown(null);
                           toast(option.value ? 'Offer applied' : 'Offer removed');
                         }}
-                        className="w-full border-b border-slate-50 px-3 py-2 text-left text-[12px] font-semibold text-black last:border-b-0"
+                        className="w-full border-b border-slate-50 px-3 py-2 text-left text-[13.5px] font-semibold text-black last:border-b-0"
                       >
                         {option.label}
                       </button>
@@ -1378,7 +1378,7 @@ const BikeRentalHome = () => {
               ].map(({ icon: Icon, label }) => (
                 <div key={label} className="flex flex-col items-center justify-center gap-2 px-2 text-center">
                   <Icon size={25} className="text-black" strokeWidth={2.1} />
-                  <span className="whitespace-pre-line text-[11px] font-medium leading-tight text-black">{label}</span>
+                  <span className="whitespace-pre-line text-[13px] font-medium leading-tight text-black">{label}</span>
                 </div>
               ))}
             </div>
@@ -1408,7 +1408,7 @@ const BikeRentalHome = () => {
             </motion.button>
             <div className="flex flex-col items-center select-none text-center">
               <span className="text-[26px] font-[900] tracking-tight leading-none text-slate-950 italic">Taxi<span className="text-[#d48c00]">09</span></span>
-              <span className="text-[8px] font-extrabold text-slate-500 tracking-widest uppercase mt-1">Premium Self-Drive</span>
+              <span className="text-[10px] font-extrabold text-slate-500 tracking-widest uppercase mt-1">Premium Self-Drive</span>
             </div>
             <div className="w-10 h-10" />
           </div>
@@ -1417,22 +1417,22 @@ const BikeRentalHome = () => {
           <div className="bg-amber-100/70 border border-amber-200/40 shadow-inner mb-6 relative p-1.5 rounded-2xl flex">
             <button
               onClick={() => setActiveSegment('rentals')}
-              className={`relative flex-1 py-2.5 rounded-[14px] text-[12px] font-extrabold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center outline-none ${activeSegment === 'rentals' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-600 hover:bg-white/40'
+              className={`relative flex-1 py-2.5 rounded-[14px] text-[13.5px] font-extrabold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center outline-none ${activeSegment === 'rentals' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-600 hover:bg-white/40'
                 }`}
             >
-              <span className="text-[13px] font-black">Rentals</span>
-              <span className={`text-[8px] font-bold mt-0.5 ${activeSegment === 'rentals' ? 'text-slate-500' : 'text-slate-400'}`}>For hours & days</span>
+              <span className="text-[14.5px] font-black">Rentals</span>
+              <span className={`text-[10px] font-bold mt-0.5 ${activeSegment === 'rentals' ? 'text-slate-500' : 'text-slate-400'}`}>For hours & days</span>
               {activeSegment === 'rentals' && (
                 <div className="absolute bottom-[-10px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-white" />
               )}
             </button>
             <button
               onClick={() => setActiveSegment('subscriptions')}
-              className={`relative flex-1 py-2.5 rounded-[14px] text-[12px] font-extrabold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center outline-none ${activeSegment === 'subscriptions' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-600 hover:bg-white/40'
+              className={`relative flex-1 py-2.5 rounded-[14px] text-[13.5px] font-extrabold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center outline-none ${activeSegment === 'subscriptions' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-600 hover:bg-white/40'
                 }`}
             >
-              <span className="text-[13px] font-black">Subscriptions</span>
-              <span className={`text-[8px] font-bold mt-0.5 ${activeSegment === 'subscriptions' ? 'text-slate-500' : 'text-slate-400'}`}>For months & years</span>
+              <span className="text-[14.5px] font-black">Subscriptions</span>
+              <span className={`text-[10px] font-bold mt-0.5 ${activeSegment === 'subscriptions' ? 'text-slate-500' : 'text-slate-400'}`}>For months & years</span>
               {activeSegment === 'subscriptions' && (
                 <div className="absolute bottom-[-10px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-white" />
               )}
@@ -1443,25 +1443,25 @@ const BikeRentalHome = () => {
           <div className="flex gap-2 overflow-x-auto no-scrollbar mb-5">
             {activeSegment === 'rentals' ? (
               <>
-                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[11px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[13px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
                   <Star size={12} className="fill-amber-600 text-amber-600" /> Brand New Cars
                 </motion.div>
-                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[11px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[13px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
                   <Info size={12} className="text-amber-600" /> 24*7 Support
                 </motion.div>
-                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[11px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[13px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
                   <Truck size={12} className="text-amber-600" /> Home Delivery
                 </motion.div>
               </>
             ) : (
               <>
-                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[11px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[13px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
                   <Compass size={12} className="text-amber-600" /> Flexible tenure
                 </motion.div>
-                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[11px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[13px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
                   <Star size={12} className="fill-amber-600 text-amber-600" /> Brand new cars
                 </motion.div>
-                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[11px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
+                <motion.div whileHover={{ scale: 1.03 }} className="border border-amber-200/50 bg-white/65 text-[13px] font-bold text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 select-none cursor-default transition-colors hover:bg-white/85 shadow-sm">
                   <Shield size={12} className="text-amber-600" /> Extended warranty
                 </motion.div>
               </>
@@ -1473,7 +1473,7 @@ const BikeRentalHome = () => {
             <div className="w-4 h-4 rounded-full bg-yellow-400 flex items-center justify-center text-slate-900 shadow-sm shrink-0">
               <Check size={10} strokeWidth={3} />
             </div>
-            <span className="text-[11px] font-extrabold text-slate-700 tracking-wide">Largest company-owned fleet in India</span>
+            <span className="text-[13px] font-extrabold text-slate-700 tracking-wide">Largest company-owned fleet in India</span>
           </div>
 
           {/* Row 5: Search Bar */}
@@ -1510,7 +1510,7 @@ const BikeRentalHome = () => {
                     navigate(`/taxi/user/rental?search=true&location=${encodeURIComponent(locationSearchText)}`, { state: location.state });
                   }
                 }}
-                className="flex-1 text-[13.5px] font-bold text-slate-800 placeholder:text-slate-400 focus:outline-none bg-transparent"
+                className="flex-1 text-[15px] font-bold text-slate-800 placeholder:text-slate-400 focus:outline-none bg-transparent"
               />
               {locationSearchText && (
                 <button
@@ -1544,7 +1544,7 @@ const BikeRentalHome = () => {
                       className="px-4 py-3 hover:bg-slate-50 flex items-center gap-3 cursor-pointer transition-colors border-b border-slate-50 last:border-b-0"
                     >
                       <MapPin size={14} className="text-[#d48c00] shrink-0" />
-                      <span className="text-[13px] font-semibold text-slate-700">{loc}</span>
+                      <span className="text-[14.5px] font-semibold text-slate-700">{loc}</span>
                     </div>
                   ))}
                 {LOCATION_SUGGESTIONS.filter(loc => !locationSearchText || loc.toLowerCase().includes(locationSearchText.toLowerCase())).length === 0 && (
@@ -1555,7 +1555,7 @@ const BikeRentalHome = () => {
                         navigate(`/taxi/user/rental?search=true&location=${encodeURIComponent(locationSearchText)}`, { state: location.state });
                       }
                     }}
-                    className="px-4 py-3 hover:bg-slate-50 flex items-center gap-3 cursor-pointer text-slate-500 font-semibold text-[13px] border-t border-slate-50"
+                    className="px-4 py-3 hover:bg-slate-50 flex items-center gap-3 cursor-pointer text-slate-500 font-semibold text-[14.5px] border-t border-slate-50"
                   >
                     <Search size={14} className="text-[#d48c00] shrink-0" />
                     <span>Search "{locationSearchText}"</span>
@@ -1664,13 +1664,13 @@ const BikeRentalHome = () => {
                       >
                         <div className="flex flex-col justify-between h-full max-w-[60%]">
                           <div className="space-y-0.5">
-                            <p className="text-[11.5px] font-bold text-slate-400 leading-none">
+                            <p className="text-[13.5px] font-bold text-slate-400 leading-none">
                               {car.name} <span className="opacity-70 font-medium">{car.year || '2024-25'}</span>
                             </p>
-                            <h4 className="text-[18px] font-black text-slate-900 tracking-tight">{car.brand}</h4>
+                            <h4 className="text-[19px] font-black text-slate-900 tracking-tight">{car.brand}</h4>
                             <div className="flex flex-wrap gap-1 mt-1">
                               {car.features.map((feature, i) => (
-                                <span key={i} className="text-[8.5px] font-bold bg-slate-50 border border-slate-100 text-slate-500 px-1.5 py-0.5 rounded">
+                                <span key={i} className="text-[10.5px] font-bold bg-slate-50 border border-slate-100 text-slate-500 px-1.5 py-0.5 rounded">
                                   {feature}
                                 </span>
                               ))}
@@ -1678,8 +1678,8 @@ const BikeRentalHome = () => {
                           </div>
                           <div className="mt-2 leading-none">
                             <div className="flex items-baseline gap-0.5">
-                              <span className="text-[18px] font-black text-slate-900">₹{car.prices.Daily}</span>
-                              <span className="text-[10px] font-bold text-slate-400 ml-0.5">per day</span>
+                              <span className="text-[19px] font-black text-slate-900">₹{car.prices.Daily}</span>
+                              <span className="text-[12px] font-bold text-slate-400 ml-0.5">per day</span>
                             </div>
                           </div>
                         </div>
@@ -1699,7 +1699,7 @@ const BikeRentalHome = () => {
 
               {/* Offers Section */}
               <div className="space-y-3 px-1 select-none">
-                <h3 className="text-[19px] font-bold text-slate-700 tracking-tight">Offers</h3>
+                <h3 className="text-[20px] font-bold text-slate-700 tracking-tight">Offers</h3>
                 <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
                   {/* Offer 1 */}
                   <motion.div
@@ -1709,19 +1709,19 @@ const BikeRentalHome = () => {
                   >
                     <div className="p-4 flex-1">
                       <div className="flex justify-between items-start">
-                        <h4 className="text-[14px] font-bold text-slate-800">Short Trip Offer</h4>
-                        <span className="text-[13px] font-bold text-[#d48c00]">5% OFF</span>
+                        <h4 className="text-[15.5px] font-bold text-slate-800">Short Trip Offer</h4>
+                        <span className="text-[14.5px] font-bold text-[#d48c00]">5% OFF</span>
                       </div>
-                      <p className="text-[11.5px] text-slate-400 mt-1.5 leading-normal font-medium">
+                      <p className="text-[13.5px] text-slate-400 mt-1.5 leading-normal font-medium">
                         Use code STMB5 and get 5% off upto ₹500
                       </p>
                     </div>
                     <div className="bg-gradient-to-r from-[#ffc400] to-[#d48c00] px-4 py-3 flex items-center justify-between relative overflow-hidden border-t border-dashed border-slate-100/20">
                       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#ffc400]/30 via-transparent to-transparent pointer-events-none" />
-                      <span className="bg-white text-slate-700 text-[11px] font-bold px-3 py-1 rounded-lg border border-slate-100 shadow-sm">
+                      <span className="bg-white text-slate-700 text-[13px] font-bold px-3 py-1 rounded-lg border border-slate-100 shadow-sm">
                         STMB5
                       </span>
-                      <span className="text-[10px] text-[#332000]/80 font-black cursor-pointer hover:underline">• T&C</span>
+                      <span className="text-[12px] text-[#332000]/80 font-black cursor-pointer hover:underline">• T&C</span>
                     </div>
                   </motion.div>
 
@@ -1733,19 +1733,19 @@ const BikeRentalHome = () => {
                   >
                     <div className="p-4 flex-1">
                       <div className="flex justify-between items-start">
-                        <h4 className="text-[14px] font-bold text-slate-800">Weekend Special</h4>
-                        <span className="text-[13px] font-bold text-[#d48c00]">10% OFF</span>
+                        <h4 className="text-[15.5px] font-bold text-slate-800">Weekend Special</h4>
+                        <span className="text-[14.5px] font-bold text-[#d48c00]">10% OFF</span>
                       </div>
-                      <p className="text-[11.5px] text-slate-400 mt-1.5 leading-normal font-medium">
+                      <p className="text-[13.5px] text-slate-400 mt-1.5 leading-normal font-medium">
                         Get 10% off up to ₹1,000 on weekend bookings
                       </p>
                     </div>
                     <div className="bg-gradient-to-r from-[#ffc400] to-[#d48c00] px-4 py-3 flex items-center justify-between relative overflow-hidden border-t border-dashed border-slate-100/20">
                       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#ffc400]/30 via-transparent to-transparent pointer-events-none" />
-                      <span className="bg-white text-slate-700 text-[11px] font-bold px-3 py-1 rounded-lg border border-slate-100 shadow-sm">
+                      <span className="bg-white text-slate-700 text-[13px] font-bold px-3 py-1 rounded-lg border border-slate-100 shadow-sm">
                         WKND10
                       </span>
-                      <span className="text-[10px] text-[#332000]/80 font-black cursor-pointer hover:underline">• T&C</span>
+                      <span className="text-[12px] text-[#332000]/80 font-black cursor-pointer hover:underline">• T&C</span>
                     </div>
                   </motion.div>
                 </div>
@@ -1753,7 +1753,7 @@ const BikeRentalHome = () => {
 
               {/* Why Taxi09? Section */}
               <div className="space-y-3 px-1 select-none">
-                <h3 className="text-[19px] font-bold text-slate-700 tracking-tight">Why Taxi09?</h3>
+                <h3 className="text-[20px] font-bold text-slate-700 tracking-tight">Why Taxi09?</h3>
                 <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
                   {/* Card 1 */}
                   <motion.div
@@ -1765,8 +1765,8 @@ const BikeRentalHome = () => {
                       <Home size={22} className="stroke-[#d48c00]" />
                     </div>
                     <div className="space-y-1 min-w-0">
-                      <h4 className="text-[13.5px] font-bold text-slate-800">Home delivery & return</h4>
-                      <p className="text-[11px] text-slate-400 leading-normal font-medium">
+                      <h4 className="text-[15px] font-bold text-slate-800">Home delivery & return</h4>
+                      <p className="text-[13px] text-slate-400 leading-normal font-medium">
                         On-time doorstep service, at your preferred location and time
                       </p>
                     </div>
@@ -1782,8 +1782,8 @@ const BikeRentalHome = () => {
                       <Shield size={22} className="stroke-amber-600" />
                     </div>
                     <div className="space-y-1 min-w-0">
-                      <h4 className="text-[13.5px] font-bold text-slate-800">Safe & sanitized</h4>
-                      <p className="text-[11px] text-slate-400 leading-normal font-medium">
+                      <h4 className="text-[15px] font-bold text-slate-800">Safe & sanitized</h4>
+                      <p className="text-[13px] text-slate-400 leading-normal font-medium">
                         Deep cleaned and sanitized vehicles before every single ride
                       </p>
                     </div>
@@ -1794,21 +1794,21 @@ const BikeRentalHome = () => {
               {/* FAQs Section */}
               <div className="space-y-3 px-1 select-none">
                 <div className="flex justify-between items-baseline">
-                  <h3 className="text-[19px] font-bold text-slate-700 tracking-tight">FAQs</h3>
-                  <span className="text-[13px] font-bold text-[#d48c00] cursor-pointer hover:underline">View all</span>
+                  <h3 className="text-[20px] font-bold text-slate-700 tracking-tight">FAQs</h3>
+                  <span className="text-[14.5px] font-bold text-[#d48c00] cursor-pointer hover:underline">View all</span>
                 </div>
                 <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-[0_4px_16px_rgba(15,23,42,0.02)] divide-y divide-slate-100">
                   {/* FAQ 1 */}
                   <div className="pb-3 pt-0.5">
                     <button
                       onClick={() => setActiveFaqIndex(activeFaqIndex === 0 ? null : 0)}
-                      className="w-full flex justify-between items-center text-left text-[13.5px] font-bold text-slate-800 outline-none"
+                      className="w-full flex justify-between items-center text-left text-[15px] font-bold text-slate-800 outline-none"
                     >
                       <span>Is there a speed limit?</span>
                       <ChevronDown size={18} className={`text-slate-400 transition-transform duration-300 ${activeFaqIndex === 0 ? 'rotate-180 text-[#d48c00]' : ''}`} />
                     </button>
                     {activeFaqIndex === 0 && (
-                      <p className="text-[12px] text-slate-500 mt-2 leading-relaxed animate-fadeIn">
+                      <p className="text-[13.5px] text-slate-500 mt-2 leading-relaxed animate-fadeIn">
                         Taxi09 allows up to 125 km/hr. However, it is always recommended to adhere to local speed limits as specified by road authorities.
                       </p>
                     )}
@@ -1818,13 +1818,13 @@ const BikeRentalHome = () => {
                   <div className="py-3">
                     <button
                       onClick={() => setActiveFaqIndex(activeFaqIndex === 1 ? null : 1)}
-                      className="w-full flex justify-between items-center text-left text-[13.5px] font-bold text-slate-800 outline-none"
+                      className="w-full flex justify-between items-center text-left text-[15px] font-bold text-slate-800 outline-none"
                     >
                       <span>Can I extend/cancel/modify?</span>
                       <ChevronDown size={18} className={`text-slate-400 transition-transform duration-300 ${activeFaqIndex === 1 ? 'rotate-180' : ''}`} />
                     </button>
                     {activeFaqIndex === 1 && (
-                      <p className="text-[12px] text-slate-500 mt-2 leading-relaxed animate-fadeIn">
+                      <p className="text-[13.5px] text-slate-500 mt-2 leading-relaxed animate-fadeIn">
                         Yes, extensions are possible subject to vehicle availability. Cancellation charges may apply depending on how close you are to the booking start time.
                       </p>
                     )}
@@ -1834,13 +1834,13 @@ const BikeRentalHome = () => {
                   <div className="pt-3 pb-0.5">
                     <button
                       onClick={() => setActiveFaqIndex(activeFaqIndex === 2 ? null : 2)}
-                      className="w-full flex justify-between items-center text-left text-[13.5px] font-bold text-slate-800 outline-none"
+                      className="w-full flex justify-between items-center text-left text-[15px] font-bold text-slate-800 outline-none"
                     >
                       <span>Booking criteria & documents?</span>
                       <ChevronDown size={18} className={`text-slate-400 transition-transform duration-300 ${activeFaqIndex === 2 ? 'rotate-180' : ''}`} />
                     </button>
                     {activeFaqIndex === 2 && (
-                      <p className="text-[12px] text-slate-500 mt-2 leading-relaxed animate-fadeIn">
+                      <p className="text-[13.5px] text-slate-500 mt-2 leading-relaxed animate-fadeIn">
                         To book a car, you need to be at least 21 years old and possess a valid driving license, Aadhaar card, or Passport.
                       </p>
                     )}
@@ -1874,8 +1874,8 @@ const BikeRentalHome = () => {
                       ₹0
                     </div>
                     <div className="space-y-0.5">
-                      <span className="text-[13.5px] font-black text-slate-900 block leading-tight">No down</span>
-                      <span className="text-[13.5px] font-black text-slate-900 block leading-tight">payment</span>
+                      <span className="text-[15px] font-black text-slate-900 block leading-tight">No down</span>
+                      <span className="text-[15px] font-black text-slate-900 block leading-tight">payment</span>
                     </div>
                   </div>
                 </div>
@@ -1890,7 +1890,7 @@ const BikeRentalHome = () => {
                       <button
                         key={cat}
                         onClick={() => setSubCategory(cat)}
-                        className={`relative pb-2 text-[15px] font-black transition-colors ${isActive ? 'text-[#d48c00]' : 'text-slate-400 hover:text-slate-600'
+                        className={`relative pb-2 text-[16.5px] font-black transition-colors ${isActive ? 'text-[#d48c00]' : 'text-slate-400 hover:text-slate-600'
                           }`}
                       >
                         {cat}
@@ -1909,8 +1909,8 @@ const BikeRentalHome = () => {
                 <div className="grid grid-cols-2 gap-3.5">
                   {displayedCars.length === 0 ? (
                     <div className="col-span-2 rounded-3xl border border-slate-100 bg-white p-5 text-center shadow-[0_6px_20px_rgba(15,23,42,0.03)]">
-                      <p className="text-[14px] font-black text-slate-800">No subscription vehicles live yet</p>
-                      <p className="mt-1 text-[11px] font-semibold text-slate-400">
+                      <p className="text-[15.5px] font-black text-slate-800">No subscription vehicles live yet</p>
+                      <p className="mt-1 text-[13px] font-semibold text-slate-400">
                         This section will show vehicles once subscription mode is enabled in admin.
                       </p>
                     </div>
@@ -1935,10 +1935,10 @@ const BikeRentalHome = () => {
                       </div>
 
                       <div className="space-y-0.5 mt-2 flex-1 flex flex-col justify-end">
-                        <h4 className="text-[13px] font-black text-slate-800 leading-tight truncate">
+                        <h4 className="text-[14.5px] font-black text-slate-800 leading-tight truncate">
                           {car.brand} {car.name}
                         </h4>
-                        <div className="flex items-center gap-1.5 text-[9px] font-bold text-slate-400 mt-1">
+                        <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-400 mt-1">
                           <span>{car.fuel?.split(' ┬╖ ')[0] || 'Petrol'}</span>
                           <span>┬╖</span>
                           <span>{car.fuel?.split(' ┬╖ ')[1] || 'Manual'}</span>
@@ -1958,23 +1958,23 @@ const BikeRentalHome = () => {
             onClick={() => setActiveSegment('rentals')}
             className={`flex flex-col items-center gap-1 flex-1 py-1 ${activeSegment === 'rentals' ? 'text-[#d48c00]' : 'text-slate-400 hover:text-slate-600'}`}
           >
-            <div className={`w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 ${activeSegment === 'rentals' ? 'border-[#d48c00] bg-[#ffc400]/5' : 'border-slate-400'}`}>
+            <div className={`w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[14.5px] border-2 ${activeSegment === 'rentals' ? 'border-[#d48c00] bg-[#ffc400]/5' : 'border-slate-400'}`}>
               R
             </div>
-            <span className="text-[9.5px] font-bold tracking-wide uppercase">Rentals</span>
+            <span className="text-[11.5px] font-bold tracking-wide uppercase">Rentals</span>
           </button>
 
           <button
             onClick={() => setActiveSegment('subscriptions')}
             className={`flex flex-col items-center gap-1 flex-1 py-1 relative ${activeSegment === 'subscriptions' ? 'text-[#d48c00]' : 'text-slate-400 hover:text-slate-600'}`}
           >
-            <span className="absolute top-[-10px] bg-rose-500 text-[6.5px] font-black text-white px-1.5 py-0.5 rounded-[4px] uppercase tracking-wide border border-white">
+            <span className="absolute top-[-10px] bg-rose-500 text-[8.5px] font-black text-white px-1.5 py-0.5 rounded-[4px] uppercase tracking-wide border border-white">
               NEW
             </span>
-            <div className={`w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[13px] border-2 ${activeSegment === 'subscriptions' ? 'border-[#d48c00] bg-[#ffc400]/5' : 'border-slate-400'}`}>
+            <div className={`w-6 h-6 rounded-md flex items-center justify-center font-[900] text-[14.5px] border-2 ${activeSegment === 'subscriptions' ? 'border-[#d48c00] bg-[#ffc400]/5' : 'border-slate-400'}`}>
               S
             </div>
-            <span className="text-[9.5px] font-bold tracking-wide uppercase">Subscriptions</span>
+            <span className="text-[11.5px] font-bold tracking-wide uppercase">Subscriptions</span>
           </button>
 
           <button
@@ -1982,7 +1982,7 @@ const BikeRentalHome = () => {
             className="flex flex-col items-center gap-1 flex-1 py-1 text-slate-400 hover:text-slate-600"
           >
             <Calendar size={20} strokeWidth={2.4} />
-            <span className="text-[9.5px] font-bold tracking-wide uppercase">Bookings</span>
+            <span className="text-[11.5px] font-bold tracking-wide uppercase">Bookings</span>
           </button>
 
           <button
@@ -1990,7 +1990,7 @@ const BikeRentalHome = () => {
             className="flex flex-col items-center gap-1 flex-1 py-1 text-slate-400 hover:text-slate-600"
           >
             <MessageSquare size={20} strokeWidth={2.4} />
-            <span className="text-[9.5px] font-bold tracking-wide uppercase">Support</span>
+            <span className="text-[11.5px] font-bold tracking-wide uppercase">Support</span>
           </button>
 
           <button
@@ -1998,7 +1998,7 @@ const BikeRentalHome = () => {
             className="flex flex-col items-center gap-1 flex-1 py-1 text-slate-400 hover:text-slate-600"
           >
             <User size={20} strokeWidth={2.4} />
-            <span className="text-[9.5px] font-bold tracking-wide uppercase">More</span>
+            <span className="text-[11.5px] font-bold tracking-wide uppercase">More</span>
           </button>
         </div>
       </div>
@@ -2032,12 +2032,12 @@ const BikeRentalHome = () => {
                 <ArrowLeft size={20} className="text-white group-hover:opacity-80 transition-opacity" strokeWidth={2.5} />
               </motion.button>
               <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500/60 leading-none mb-1.5">Self-drive rentals</p>
+                <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-slate-500/60 leading-none mb-1.5">Self-drive rentals</p>
                 <h1 className="text-[24px] font-[900] tracking-tight text-on-surface leading-none">Choose Ride</h1>
               </div>
             </div>
             <div className="flex flex-col items-end">
-              <span className="px-3 py-1 rounded-full bg-slate-900 text-[10px] font-bold text-white shadow-sm uppercase tracking-wider">
+              <span className="px-3 py-1 rounded-full bg-slate-900 text-[12px] font-bold text-white shadow-sm uppercase tracking-wider">
                 {availableCountLabel}
               </span>
             </div>
@@ -2051,7 +2051,7 @@ const BikeRentalHome = () => {
                   <button
                     key={tab}
                     onClick={() => setSelectedDuration(tab)}
-                    className="relative flex-1 py-2.5 rounded-[14px] text-[11px] font-[800] uppercase tracking-wider transition-all duration-300 outline-none"
+                    className="relative flex-1 py-2.5 rounded-[14px] text-[13px] font-[800] uppercase tracking-wider transition-all duration-300 outline-none"
                   >
                     {isActive && (
                       <motion.div
@@ -2077,7 +2077,7 @@ const BikeRentalHome = () => {
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
               placeholder="Search by vehicle, category or brand..."
-              className="w-full bg-slate-100/50 border border-slate-200/60 focus:border-slate-900/10 focus:bg-white rounded-[20px] pl-11 pr-11 py-3.5 text-[14px] font-bold text-on-surface placeholder:text-slate-400/80 focus:outline-none focus:shadow-[0_8px_24px_rgba(15,23,42,0.04)] transition-all"
+              className="w-full bg-slate-100/50 border border-slate-200/60 focus:border-slate-900/10 focus:bg-white rounded-[20px] pl-11 pr-11 py-3.5 text-[15.5px] font-bold text-on-surface placeholder:text-slate-400/80 focus:outline-none focus:shadow-[0_8px_24px_rgba(15,23,42,0.04)] transition-all"
             />
             {searchQuery && (
               <button
@@ -2103,7 +2103,7 @@ const BikeRentalHome = () => {
                   key={suggestion}
                   type="button"
                   onClick={() => setSearchQuery(suggestion)}
-                  className="shrink-0 rounded-full border border-slate-200 bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-slate-500 shadow-sm hover:border-slate-300 transition-colors"
+                  className="shrink-0 rounded-full border border-slate-200 bg-white px-4 py-2 text-[12px] font-bold uppercase tracking-wider text-slate-500 shadow-sm hover:border-slate-300 transition-colors"
                 >
                   {suggestion}
                 </button>
@@ -2126,7 +2126,7 @@ const BikeRentalHome = () => {
             <div className="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center shrink-0 shadow-sm">
               <Info size={16} className="text-amber-600" strokeWidth={2.5} />
             </div>
-            <p className="text-[13px] font-[700] text-slate-700 tracking-tight leading-tight">
+            <p className="text-[14.5px] font-[700] text-slate-700 tracking-tight leading-tight">
               {infoBanner[selectedDuration]}
             </p>
           </motion.div>
@@ -2134,12 +2134,12 @@ const BikeRentalHome = () => {
 
         <div className="relative pt-2">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-[10px] font-[800] uppercase tracking-[0.2em] text-slate-400">Available Near You</p>
+            <p className="text-[12px] font-[800] uppercase tracking-[0.2em] text-slate-400">Available Near You</p>
             {searchQuery && (
               <motion.span
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-[10px] font-[800] uppercase tracking-wider text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md"
+                className="text-[12px] font-[800] uppercase tracking-wider text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md"
               >
                 {filteredCountLabel}
               </motion.span>
@@ -2169,10 +2169,10 @@ const BikeRentalHome = () => {
                       <Icon size={15} strokeWidth={2.4} />
                     </div>
                     <div className="text-left">
-                      <p className={`text-[11px] font-black uppercase tracking-[0.16em] ${isActive ? 'text-white' : 'text-slate-500'}`}>
+                      <p className={`text-[13px] font-black uppercase tracking-[0.16em] ${isActive ? 'text-white' : 'text-slate-500'}`}>
                         {label}
                       </p>
-                      <p className={`text-[12px] font-bold ${isActive ? 'text-white/80' : 'text-slate-700'}`}>
+                      <p className={`text-[13.5px] font-bold ${isActive ? 'text-white/80' : 'text-slate-700'}`}>
                         {count} available
                       </p>
                     </div>
@@ -2184,16 +2184,16 @@ const BikeRentalHome = () => {
 
           <div className="grid grid-cols-3 gap-2">
             <div className="rounded-[18px] border border-white/80 bg-white/70 px-3 py-3 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">Fleet</p>
-              <p className="mt-1 text-[17px] font-black text-slate-900">{categoryCounts.all}</p>
+              <p className="text-[12px] font-black uppercase tracking-[0.18em] text-slate-400">Fleet</p>
+              <p className="mt-1 text-[18px] font-black text-slate-900">{categoryCounts.all}</p>
             </div>
             <div className="rounded-[18px] border border-amber-100 bg-gradient-to-br from-amber-50 to-white px-3 py-3 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-amber-600">Cars</p>
-              <p className="mt-1 text-[17px] font-black text-slate-900">{categoryCounts.car}</p>
+              <p className="text-[12px] font-black uppercase tracking-[0.18em] text-amber-600">Cars</p>
+              <p className="mt-1 text-[18px] font-black text-slate-900">{categoryCounts.car}</p>
             </div>
             <div className="rounded-[18px] border border-amber-100 bg-gradient-to-br from-sky-50 to-white px-3 py-3 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-sky-500">Bikes</p>
-              <p className="mt-1 text-[17px] font-black text-slate-900">{categoryCounts.bike}</p>
+              <p className="text-[12px] font-black uppercase tracking-[0.18em] text-sky-500">Bikes</p>
+              <p className="mt-1 text-[18px] font-black text-slate-900">{categoryCounts.bike}</p>
             </div>
           </div>
         </div>
@@ -2217,7 +2217,7 @@ const BikeRentalHome = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="rounded-[24px] border border-rose-100 bg-rose-50/90 p-5 text-[13px] font-bold text-rose-500 shadow-[0_8px_24px_rgba(15,23,42,0.04)]"
+              className="rounded-[24px] border border-rose-100 bg-rose-50/90 p-5 text-[14.5px] font-bold text-rose-500 shadow-[0_8px_24px_rgba(15,23,42,0.04)]"
             >
               {errorMessage}
             </motion.div>
@@ -2232,8 +2232,8 @@ const BikeRentalHome = () => {
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[16px] bg-slate-100 text-slate-400">
                 <Car size={22} />
               </div>
-              <p className="mt-4 text-[15px] font-black text-slate-900">No rental vehicles available</p>
-              <p className="mt-1 text-[12px] font-bold text-slate-400">Admin has not published any active rental vehicles yet.</p>
+              <p className="mt-4 text-[16.5px] font-black text-slate-900">No rental vehicles available</p>
+              <p className="mt-1 text-[13.5px] font-bold text-slate-400">Admin has not published any active rental vehicles yet.</p>
             </motion.div>
           ) : filteredVehicles.length === 0 ? (
             <motion.div
@@ -2246,8 +2246,8 @@ const BikeRentalHome = () => {
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[16px] bg-slate-100 text-slate-400">
                 <Search size={22} />
               </div>
-              <p className="mt-4 text-[15px] font-black text-slate-900">No rentals matched your search</p>
-              <p className="mt-1 text-[12px] font-bold text-slate-400">Try another vehicle name, category, amenity, or switch the car and bike filter.</p>
+              <p className="mt-4 text-[16.5px] font-black text-slate-900">No rentals matched your search</p>
+              <p className="mt-1 text-[13.5px] font-bold text-slate-400">Try another vehicle name, category, amenity, or switch the car and bike filter.</p>
             </motion.div>
           ) : (
             paginatedVehicles.map((v, idx) => (
@@ -2263,17 +2263,17 @@ const BikeRentalHome = () => {
                   style={{ background: `linear-gradient(135deg, ${v.gradientFrom} 0%, ${v.gradientTo} 100%)` }}
                 >
                   <div className="flex-1 min-w-0 pr-2 space-y-1">
-                    <span className={`inline-block text-[9px] font-bold px-2 py-0.5 rounded-full border ${v.tagBg} ${v.tagColor}`}>
+                    <span className={`inline-block text-[11px] font-bold px-2 py-0.5 rounded-full border ${v.tagBg} ${v.tagColor}`}>
                       {v.tag}
                     </span>
-                    <h3 className="text-[16.5px] font-extrabold text-on-surface leading-tight tracking-tight">{v.name}</h3>
+                    <h3 className="text-[17.5px] font-extrabold text-on-surface leading-tight tracking-tight">{v.name}</h3>
                     {v.shortDescription ? (
-                      <p className="text-[11.5px] font-medium text-slate-500/80">{v.shortDescription}</p>
+                      <p className="text-[13.5px] font-medium text-slate-500/80">{v.shortDescription}</p>
                     ) : null}
                     <div className="flex items-center gap-1">
                       <Star size={10.5} className="text-yellow-500 fill-yellow-400" />
-                      <span className="text-[11.5px] font-bold text-slate-700">{v.rating}</span>
-                      <span className="text-[10px] font-medium text-slate-400">┬╖ {v.kmLimit[selectedDuration]} limit</span>
+                      <span className="text-[13.5px] font-bold text-slate-700">{v.rating}</span>
+                      <span className="text-[12px] font-medium text-slate-400">┬╖ {v.kmLimit[selectedDuration]} limit</span>
                     </div>
                   </div>
                   {v.image ? (
@@ -2288,7 +2288,7 @@ const BikeRentalHome = () => {
                 <div className="px-4.5 pb-4.5 pt-3.5 space-y-3 border-t border-slate-50">
                   <div className="flex flex-wrap gap-1">
                     {v.features.map((feature) => (
-                      <span key={feature} className="text-[9px] font-bold bg-slate-50 text-slate-500 px-2 py-0.5 rounded-full border border-slate-100">
+                      <span key={feature} className="text-[11px] font-bold bg-slate-50 text-slate-500 px-2 py-0.5 rounded-full border border-slate-100">
                         {feature}
                       </span>
                     ))}
@@ -2296,21 +2296,21 @@ const BikeRentalHome = () => {
 
                   <div className="flex items-center gap-1.5">
                     <Fuel size={11} className="text-slate-300 shrink-0" />
-                    <span className="text-[11px] font-bold text-slate-400">{v.fuel}</span>
+                    <span className="text-[13px] font-bold text-slate-400">{v.fuel}</span>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.15em] block">Price</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] block">Price</span>
                       <div className="flex items-baseline gap-0.5">
                         <span className="text-[22px] font-extrabold text-on-surface tracking-tighter leading-none">₹{v.prices[selectedDuration]}</span>
-                        <span className="text-[11px] font-bold text-slate-400/80 ml-0.5">{durationSuffix[selectedDuration]}</span>
+                        <span className="text-[13px] font-bold text-slate-400/80 ml-0.5">{durationSuffix[selectedDuration]}</span>
                       </div>
                     </div>
                     <motion.button
                       whileTap={{ scale: 0.96 }}
                       onClick={() => openVehicleDetail(v)}
-                      className="bg-primary text-white hover:opacity-90 transition-all px-4 py-2.5 rounded-[12px] text-[11px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-[0_6px_16px_rgba(212,140,0,0.15)] active:scale-95"
+                      className="bg-primary text-white hover:opacity-90 transition-all px-4 py-2.5 rounded-[12px] text-[13px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-[0_6px_16px_rgba(212,140,0,0.15)] active:scale-95"
                     >
                       Book Now <ChevronRight size={13} strokeWidth={3} className="opacity-60" />
                     </motion.button>
@@ -2327,19 +2327,19 @@ const BikeRentalHome = () => {
               type="button"
               onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
               disabled={currentPage === 1}
-              className="rounded-[12px] border border-slate-200 bg-white px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-600 disabled:opacity-40"
+              className="rounded-[12px] border border-slate-200 bg-white px-4 py-2 text-[13px] font-black uppercase tracking-[0.16em] text-slate-600 disabled:opacity-40"
             >
               Previous
             </button>
             <div className="text-center">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Page</p>
-              <p className="mt-1 text-[13px] font-black text-slate-900">{currentPage} / {totalPages}</p>
+              <p className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-400">Page</p>
+              <p className="mt-1 text-[14.5px] font-black text-slate-900">{currentPage} / {totalPages}</p>
             </div>
             <button
               type="button"
               onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
               disabled={currentPage === totalPages}
-              className="rounded-[12px] border border-slate-200 bg-white px-4 py-2 text-[11px] font-bold uppercase tracking-widest text-slate-600 disabled:opacity-40"
+              className="rounded-[12px] border border-slate-200 bg-white px-4 py-2 text-[13px] font-bold uppercase tracking-widest text-slate-600 disabled:opacity-40"
             >
               Next
             </button>
@@ -2350,7 +2350,7 @@ const BikeRentalHome = () => {
           <div className="w-8 h-8 rounded-[10px] bg-slate-50 flex items-center justify-center shrink-0">
             <Shield size={15} className="text-slate-400" strokeWidth={2} />
           </div>
-          <p className="text-[11px] font-bold text-slate-400 leading-relaxed">
+          <p className="text-[13px] font-bold text-slate-400 leading-relaxed">
             All rental vehicles shown here come from the admin catalog. Valid driving license and verification are required before pickup.
           </p>
         </div>

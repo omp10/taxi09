@@ -74,7 +74,7 @@ const PermanentDriverSearch = () => {
           <span className="text-[21px] font-extrabold italic tracking-[-0.04em]">
             TAXI<span className="text-[#f5b700]">09</span>
           </span>
-          <span className="mt-0.5 text-[8px] font-semibold text-slate-700">Driver On Hire</span>
+          <span className="mt-0.5 text-[10px] font-semibold text-slate-700">Driver On Hire</span>
         </button>
         <button
           type="button"
@@ -88,7 +88,7 @@ const PermanentDriverSearch = () => {
 
       <main className="px-3">
         <section className="flex items-center justify-end gap-2 py-2">
-          <span className="text-[10px] font-semibold text-slate-700">Step 2 of 5</span>
+          <span className="text-[12px] font-semibold text-slate-700">Step 2 of 5</span>
           <span className="h-1.5 w-6 rounded-full bg-[#f5b700]" />
           <span className="h-1.5 w-6 rounded-full bg-[#f5b700]" />
           <span className="h-1.5 w-2 rounded-full bg-slate-200" />
@@ -117,12 +117,12 @@ const PermanentDriverSearch = () => {
             <h1 className="text-[22px] font-extrabold leading-tight">
               Finding the best <span className="text-[#f5b700]">driver for you...</span>
             </h1>
-            <p className="mt-3 text-[11px] font-medium leading-4 text-white/78">
+            <p className="mt-3 text-[13px] font-medium leading-4 text-white/78">
               Please wait while we find verified drivers near you.
             </p>
             <div className="mt-4 space-y-1.5">
               {['Searching nearby drivers', 'Checking availability', 'Matching preferences', 'Finalizing best matches'].map((text, index) => (
-                <p key={text} className="flex items-center gap-2 text-[9px] font-semibold text-white/86">
+                <p key={text} className="flex items-center gap-2 text-[11px] font-semibold text-white/86">
                   {index < 3 ? <CheckCircle2 size={12} className="text-[#f5b700]" fill="#f5b700" /> : <span className="h-3 w-3 rounded-full border-2 border-white/50 border-t-[#f5b700]" />}
                   {text}
                 </p>
@@ -136,18 +136,18 @@ const PermanentDriverSearch = () => {
             <ShieldCheck size={21} strokeWidth={2.6} />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-bold">All our drivers are Police Verified & Background Checked</p>
-            <p className="mt-0.5 text-[9px] font-medium text-slate-600">Your safety is our top priority</p>
+            <p className="text-[13px] font-bold">All our drivers are Police Verified & Background Checked</p>
+            <p className="mt-0.5 text-[11px] font-medium text-slate-600">Your safety is our top priority</p>
           </div>
           <ShieldCheck size={27} className="text-[#f5b700]" strokeWidth={2.4} />
         </section>
 
         <section className="relative mt-4 flex items-center justify-between">
-          <h2 className="text-[14px] font-bold">Top Drivers For Your Trip</h2>
+          <h2 className="text-[15.5px] font-bold">Top Drivers For Your Trip</h2>
           <button
             type="button"
             onClick={() => setShowSort((current) => !current)}
-            className="flex items-center gap-1 text-[10px] font-semibold text-slate-600"
+            className="flex items-center gap-1 text-[12px] font-semibold text-slate-600"
           >
             Sort by: <span className="text-slate-950">{sortBy}</span>
             <ChevronDown size={13} />
@@ -162,7 +162,7 @@ const PermanentDriverSearch = () => {
                     setSortBy(option);
                     setShowSort(false);
                   }}
-                  className="block w-full px-3 py-2 text-left text-[11px] font-semibold hover:bg-[#fff8df]"
+                  className="block w-full px-3 py-2 text-left text-[13px] font-semibold hover:bg-[#fff8df]"
                 >
                   {option}
                 </button>
@@ -180,27 +180,27 @@ const PermanentDriverSearch = () => {
                 </div>
                 <div className="min-w-0 py-1">
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <h3 className="text-[13px] font-bold">{driver.name}</h3>
+                    <h3 className="text-[14.5px] font-bold">{driver.name}</h3>
                     <Star size={12} className="text-[#f5b700]" fill="#f5b700" />
-                    <span className="text-[11px] font-semibold">{driver.rating}</span>
-                    <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[8px] font-bold text-emerald-700">{driver.badge}</span>
+                    <span className="text-[13px] font-semibold">{driver.rating}</span>
+                    <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">{driver.badge}</span>
                   </div>
-                  <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-1 text-[8.5px] font-semibold text-slate-600">
+                  <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-1 text-[10.5px] font-semibold text-slate-600">
                     <span className="flex items-center gap-1"><ShieldCheck size={11} />{driver.experience}</span>
                     <span className="flex items-center gap-1"><Car size={11} />{driver.trips}</span>
                     <span className="flex items-center gap-1"><Medal size={11} />Experienced</span>
                     <span className="flex items-center gap-1"><Languages size={11} />{driver.language}</span>
                   </div>
-                  <div className="mt-2 flex flex-wrap gap-1.5 text-[8.5px] font-semibold text-slate-600">
+                  <div className="mt-2 flex flex-wrap gap-1.5 text-[10.5px] font-semibold text-slate-600">
                     <span className="rounded-md bg-slate-50 px-1.5 py-1">{driver.car}</span>
                     <span className="rounded-md bg-slate-50 px-1.5 py-1">{driver.plate}</span>
                   </div>
                 </div>
                 <div className="rounded-[13px] bg-slate-50 p-2 text-center">
-                  <p className="text-[8px] font-semibold text-slate-500">ETA</p>
-                  <p className="text-[12px] font-bold">{driver.eta}</p>
-                  <p className="mt-1 text-[8px] font-semibold text-slate-500">Distance</p>
-                  <p className="text-[10px] font-semibold">{driver.distance}</p>
+                  <p className="text-[10px] font-semibold text-slate-500">ETA</p>
+                  <p className="text-[13.5px] font-bold">{driver.eta}</p>
+                  <p className="mt-1 text-[10px] font-semibold text-slate-500">Distance</p>
+                  <p className="text-[12px] font-semibold">{driver.distance}</p>
                   <button
                     type="button"
                     onClick={() => navigate('/taxi/user/with-driver/permanent/confirm', {
@@ -209,11 +209,11 @@ const PermanentDriverSearch = () => {
                         driverImage: driver.photo || driverImages[index % driverImages.length],
                       },
                     })}
-                    className="mt-2 h-8 w-full rounded-lg bg-[#f5b700] text-[10px] font-bold text-black"
+                    className="mt-2 h-8 w-full rounded-lg bg-[#f5b700] text-[12px] font-bold text-black"
                   >
                     Select Driver
                   </button>
-                  <button type="button" className="mt-1 text-[8px] font-semibold text-slate-500">
+                  <button type="button" className="mt-1 text-[10px] font-semibold text-slate-500">
                     View Profile
                   </button>
                 </div>
@@ -227,10 +227,10 @@ const PermanentDriverSearch = () => {
             <Bell size={18} strokeWidth={2.5} />
           </span>
           <div className="flex-1">
-            <p className="text-[11px] font-bold">Can't find a match?</p>
-            <p className="text-[9px] font-medium text-slate-600">We'll notify you when a driver becomes available.</p>
+            <p className="text-[13px] font-bold">Can't find a match?</p>
+            <p className="text-[11px] font-medium text-slate-600">We'll notify you when a driver becomes available.</p>
           </div>
-          <button type="button" className="rounded-lg border border-[#f5b700] bg-white px-3 py-2 text-[10px] font-bold text-slate-900">
+          <button type="button" className="rounded-lg border border-[#f5b700] bg-white px-3 py-2 text-[12px] font-bold text-slate-900">
             Notify Me
           </button>
         </section>

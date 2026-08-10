@@ -175,7 +175,7 @@ const TourDetails = () => {
         {/* stronger scrim: the title sits on bright skies otherwise */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/10" />
 
-        <span className={`absolute left-3 top-3 z-10 rounded-[8px] px-2 py-0.5 text-[9.5px] font-extrabold ${tour.tagTone}`}>
+        <span className={`absolute left-3 top-3 z-10 rounded-[8px] px-2 py-0.5 text-[11.5px] font-extrabold ${tour.tagTone}`}>
           {tour.tag}
         </span>
 
@@ -197,7 +197,7 @@ const TourDetails = () => {
             >
               <ChevronRight size={15} strokeWidth={2.8} />
             </button>
-            <span className="absolute right-3 top-3 z-10 rounded-full bg-black/55 px-2 py-0.5 text-[9px] font-bold text-white backdrop-blur-sm">
+            <span className="absolute right-3 top-3 z-10 rounded-full bg-black/55 px-2 py-0.5 text-[11px] font-bold text-white backdrop-blur-sm">
               {slide + 1}/{gallery.length}
             </span>
           </>
@@ -207,7 +207,7 @@ const TourDetails = () => {
           <h1 className="text-[20px] font-extrabold leading-tight text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)]">
             {tour.title}
           </h1>
-          <p className="mt-1 flex items-center gap-1 text-[10.5px] font-semibold text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
+          <p className="mt-1 flex items-center gap-1 text-[12.5px] font-semibold text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
             <MapPin size={11} className="shrink-0" /> {tour.state}
             <span className="opacity-60">•</span>
             <Clock3 size={11} className="shrink-0" /> {tour.days}
@@ -235,27 +235,27 @@ const TourDetails = () => {
         {/* Rating + price */}
         <section className="flex items-center justify-between gap-3 rounded-[16px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
           <div className="min-w-0">
-            <p className="flex items-center gap-1 text-[13px] font-extrabold">
+            <p className="flex items-center gap-1 text-[14.5px] font-extrabold">
               <Star size={13} className="fill-[var(--primary)] text-[var(--primary)]" />
               {tour.rating}
-              <span className="text-[10px] font-medium text-[var(--text-light)]">({tour.reviews} reviews)</span>
+              <span className="text-[12px] font-medium text-[var(--text-light)]">({tour.reviews} reviews)</span>
             </p>
-            <p className="mt-1 truncate text-[10px] font-semibold text-[var(--text-light)]">
+            <p className="mt-1 truncate text-[12px] font-semibold text-[var(--text-light)]">
               {tour.stops.join(' • ')}
             </p>
           </div>
           <div className="shrink-0 text-right">
             <p className="flex items-baseline justify-end gap-1.5">
-              <span className="text-[10px] font-medium text-slate-400 line-through">{rupees(tour.oldPrice)}</span>
-              <span className="text-[19px] font-extrabold leading-none">{rupees(tour.price)}</span>
+              <span className="text-[12px] font-medium text-slate-400 line-through">{rupees(tour.oldPrice)}</span>
+              <span className="text-[20px] font-extrabold leading-none">{rupees(tour.price)}</span>
             </p>
-            <p className="text-[9px] font-medium text-[var(--text-light)]">per person · {off}% off</p>
+            <p className="text-[11px] font-medium text-[var(--text-light)]">per person · {off}% off</p>
           </div>
         </section>
 
         {/* Day-wise itinerary */}
         <section className="rounded-[16px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
-          <h2 className="text-[14px] font-extrabold">Day-wise Itinerary</h2>
+          <h2 className="text-[15.5px] font-extrabold">Day-wise Itinerary</h2>
           <div className="mt-2.5 space-y-2">
             {itinerary.map(({ day, title, detail }) => {
               const open = openDay === day;
@@ -269,17 +269,17 @@ const TourDetails = () => {
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--primary)] text-[10px] font-extrabold">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--primary)] text-[12px] font-extrabold">
                       D{day}
                     </span>
-                    <span className="min-w-0 flex-1 truncate text-[12px] font-extrabold">{title}</span>
+                    <span className="min-w-0 flex-1 truncate text-[13.5px] font-extrabold">{title}</span>
                     <ChevronDown
                       size={14}
                       className={`shrink-0 text-[var(--text-light)] transition-transform ${open ? 'rotate-180' : ''}`}
                     />
                   </div>
                   {open ? (
-                    <p className="mt-2 pl-9 text-[10.5px] font-medium leading-[1.5] text-[var(--text-light)]">
+                    <p className="mt-2 pl-9 text-[12.5px] font-medium leading-[1.5] text-[var(--text-light)]">
                       {detail}
                     </p>
                   ) : null}
@@ -291,12 +291,12 @@ const TourDetails = () => {
 
         {/* Inclusions / exclusions */}
         <section className="rounded-[16px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
-          <h2 className="text-[14px] font-extrabold">What&apos;s Included</h2>
+          <h2 className="text-[15.5px] font-extrabold">What&apos;s Included</h2>
           <div className="mt-2.5 space-y-1.5">
             {(showAllInclusions ? inclusions : inclusions.slice(0, 3)).map((label) => {
               const Icon = inclusionIcon(label);
               return (
-              <p key={label} className="flex items-center gap-2 text-[11px] font-semibold">
+              <p key={label} className="flex items-center gap-2 text-[13px] font-semibold">
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-50">
                   <Icon size={12} className="text-[var(--success)]" />
                 </span>
@@ -309,17 +309,17 @@ const TourDetails = () => {
             <button
               type="button"
               onClick={() => setShowAllInclusions((current) => !current)}
-              className="mt-2 text-[11px] font-bold text-[var(--primary-dark)]"
+              className="mt-2 text-[13px] font-bold text-[var(--primary-dark)]"
             >
               {showAllInclusions ? 'Show less' : `+${inclusions.length - 3} more inclusions`}
             </button>
           ) : null}
 
           <div className="mt-3 border-t border-[var(--border)] pt-3">
-            <h3 className="text-[12px] font-extrabold text-[var(--text-light)]">Not included</h3>
+            <h3 className="text-[13.5px] font-extrabold text-[var(--text-light)]">Not included</h3>
             <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1">
               {exclusions.map((item) => (
-                <span key={item} className="flex items-center gap-1 text-[10px] font-medium text-[var(--text-light)]">
+                <span key={item} className="flex items-center gap-1 text-[12px] font-medium text-[var(--text-light)]">
                   <X size={10} className="shrink-0 text-[var(--danger)]" /> {item}
                 </span>
               ))}
@@ -336,8 +336,8 @@ const TourDetails = () => {
           ].map(({ icon: Icon, label, value }) => (
             <div key={label} className="rounded-[14px] border border-[var(--border)] bg-white px-2 py-2.5 text-center shadow-[var(--shadow-sm)]">
               <Icon size={15} className="mx-auto text-[var(--primary-dark)]" />
-              <p className="mt-1 text-[8.5px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">{label}</p>
-              <p className="mt-0.5 truncate text-[10.5px] font-extrabold">{value}</p>
+              <p className="mt-1 text-[10.5px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">{label}</p>
+              <p className="mt-0.5 truncate text-[12.5px] font-extrabold">{value}</p>
             </div>
           ))}
         </section>
@@ -350,8 +350,8 @@ const TourDetails = () => {
                 <Icon size={15} className="text-[var(--primary-dark)]" />
               </span>
               <span className="min-w-0">
-                <span className="block text-[11px] font-extrabold leading-tight">{title}</span>
-                <span className="block text-[9.5px] font-medium text-[var(--text-light)]">{sub}</span>
+                <span className="block text-[13px] font-extrabold leading-tight">{title}</span>
+                <span className="block text-[11.5px] font-medium text-[var(--text-light)]">{sub}</span>
               </span>
             </div>
           ))}
@@ -363,14 +363,14 @@ const TourDetails = () => {
         <div className="mb-2.5 flex items-end justify-between gap-3">
           <div className="min-w-0">
             <p className="flex items-baseline gap-1.5">
-              <span className="text-[10px] font-medium text-slate-400 line-through">{rupees(tour.oldPrice)}</span>
-              <span className="text-[19px] font-extrabold leading-none">{rupees(tour.price)}</span>
+              <span className="text-[12px] font-medium text-slate-400 line-through">{rupees(tour.oldPrice)}</span>
+              <span className="text-[20px] font-extrabold leading-none">{rupees(tour.price)}</span>
             </p>
-            <p className="truncate text-[9.5px] font-medium text-[var(--text-light)]">
+            <p className="truncate text-[11.5px] font-medium text-[var(--text-light)]">
               per person · {travellerCount} travellers = {rupees(total)}
             </p>
           </div>
-          <span className="flex shrink-0 items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-[var(--success)]">
+          <span className="flex shrink-0 items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[12px] font-bold text-[var(--success)]">
             <Check size={11} strokeWidth={3} /> {off}% off
           </span>
         </div>
@@ -378,7 +378,7 @@ const TourDetails = () => {
           type="button"
           onClick={bookPackage}
           disabled={paying}
-          className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[15px] font-extrabold shadow-[0_8px_20px_rgba(255,193,7,.4)] active:scale-[0.99] transition-transform"
+          className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[16.5px] font-extrabold shadow-[0_8px_20px_rgba(255,193,7,.4)] active:scale-[0.99] transition-transform"
         >
           {paying ? 'Processing…' : 'Book This Package'} <ChevronRight size={18} strokeWidth={2.8} />
         </button>

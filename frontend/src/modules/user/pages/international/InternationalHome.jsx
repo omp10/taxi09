@@ -85,7 +85,7 @@ const InternationalBottomNav = ({ routePrefix }) => {
             >
               <Icon size={center ? 24 : 20} strokeWidth={center ? 2.5 : 2.2} />
             </span>
-            <span className={`text-[10.5px] ${center ? 'font-extrabold text-[var(--text)]' : 'font-semibold text-[var(--text-light)]'}`}>
+            <span className={`text-[12.5px] ${center ? 'font-extrabold text-[var(--text)]' : 'font-semibold text-[var(--text-light)]'}`}>
               {label}
             </span>
           </button>
@@ -145,7 +145,7 @@ const InternationalHome = () => {
           <h1 className="text-[22px] font-extrabold leading-tight text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
             Explore the <span className="font-serif italic text-[var(--primary)]">World</span> Beyond Borders
           </h1>
-          <p className="mt-1 text-[11.5px] font-medium text-white/85">Unforgettable international escapes</p>
+          <p className="mt-1 text-[13.5px] font-medium text-white/85">Unforgettable international escapes</p>
         </div>
 
         <div className="absolute inset-x-0 bottom-4 px-4">
@@ -156,13 +156,13 @@ const InternationalHome = () => {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search country, city or trip..."
-              className="w-full min-w-0 bg-transparent text-[12.5px] font-semibold outline-none placeholder:font-medium placeholder:text-slate-400"
+              className="w-full min-w-0 bg-transparent text-[14px] font-semibold outline-none placeholder:font-medium placeholder:text-slate-400"
             />
             {query ? (
               <button
                 type="button"
                 onClick={() => setQuery('')}
-                className="shrink-0 text-[11px] font-bold text-[var(--primary-dark)]"
+                className="shrink-0 text-[13px] font-bold text-[var(--primary-dark)]"
               >
                 Clear
               </button>
@@ -175,15 +175,15 @@ const InternationalHome = () => {
         {/* Section head */}
         <div className="mt-3.5 flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h2 className="text-[17px] font-extrabold tracking-[-0.02em]">Popular Trips</h2>
-            <p className="mt-0.5 text-[10.5px] font-medium text-[var(--text-light)]">
+            <h2 className="text-[18px] font-extrabold tracking-[-0.02em]">Popular Trips</h2>
+            <p className="mt-0.5 text-[12.5px] font-medium text-[var(--text-light)]">
               Handpicked international packages for your next adventure
             </p>
           </div>
-          <span className="flex shrink-0 items-center gap-1 text-[12px] font-extrabold">
+          <span className="flex shrink-0 items-center gap-1 text-[13.5px] font-extrabold">
             <Star size={13} className="fill-[var(--primary)] text-[var(--primary)]" />
             {avgRating}
-            <span className="text-[9.5px] font-medium text-[var(--text-light)]">(3.9K)</span>
+            <span className="text-[11.5px] font-medium text-[var(--text-light)]">(3.9K)</span>
           </span>
         </div>
 
@@ -196,7 +196,7 @@ const InternationalHome = () => {
                 key={id}
                 type="button"
                 onClick={() => setFilter(id)}
-                className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3.5 py-2 text-[11px] font-extrabold transition-colors ${
+                className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3.5 py-2 text-[13px] font-extrabold transition-colors ${
                   active
                     ? 'border-[var(--primary)] bg-[var(--primary)] text-[var(--text)] shadow-[0_6px_14px_rgba(245,183,0,0.32)]'
                     : 'border-[var(--border)] bg-white text-[var(--text-light)]'
@@ -225,7 +225,7 @@ const InternationalHome = () => {
                     <img src={trip.image} alt={trip.title} className="h-full w-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
 
-                    <span className={`absolute left-2 top-2 rounded-[6px] px-1.5 py-0.5 text-[7.5px] font-extrabold tracking-wide ${trip.badgeTone}`}>
+                    <span className={`absolute left-2 top-2 rounded-[6px] px-1.5 py-0.5 text-[9.5px] font-extrabold tracking-wide ${trip.badgeTone}`}>
                       {trip.badge}
                     </span>
                     <button
@@ -237,18 +237,18 @@ const InternationalHome = () => {
                       <Heart size={13} className={liked ? 'fill-rose-500 text-rose-500' : 'text-slate-600'} />
                     </button>
 
-                    <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-[6px] bg-black/65 px-1.5 py-0.5 text-[8px] font-bold text-white backdrop-blur-sm">
+                    <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-[6px] bg-black/65 px-1.5 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
                       <Images size={9} /> {trip.photos} Photos
                     </span>
                   </div>
 
                   <div className="min-w-0 flex-1 p-3">
-                    <h3 className="text-[14px] font-extrabold leading-tight">{trip.title}</h3>
-                    <p className="mt-1 truncate text-[9px] font-semibold text-[var(--text-light)]">
+                    <h3 className="text-[15.5px] font-extrabold leading-tight">{trip.title}</h3>
+                    <p className="mt-1 truncate text-[11px] font-semibold text-[var(--text-light)]">
                       {trip.stops.join(' • ')}
                     </p>
 
-                    <div className="mt-1.5 flex flex-nowrap items-center gap-x-2 overflow-hidden whitespace-nowrap text-[8.5px] font-semibold text-[var(--text-light)]">
+                    <div className="mt-1.5 flex flex-nowrap items-center gap-x-2 overflow-hidden whitespace-nowrap text-[10.5px] font-semibold text-[var(--text-light)]">
                       <span className="flex items-center gap-1">
                         <Clock3 size={10} className="text-[var(--primary-dark)]" /> {trip.days}
                       </span>
@@ -259,19 +259,19 @@ const InternationalHome = () => {
                       ))}
                     </div>
 
-                    <p className="mt-1.5 flex items-center gap-1 text-[10px] font-extrabold">
+                    <p className="mt-1.5 flex items-center gap-1 text-[12px] font-extrabold">
                       <Star size={11} className="fill-[var(--primary)] text-[var(--primary)]" />
                       {trip.rating}
                       <span className="font-medium text-[var(--text-light)]">({trip.reviews} Reviews)</span>
                     </p>
 
                     <div className="mt-1.5 flex flex-wrap items-baseline gap-x-1.5">
-                      <span className="text-[16px] font-extrabold leading-none">{rupees(trip.price)}</span>
-                      <span className="text-[9.5px] font-medium text-slate-400 line-through">
+                      <span className="text-[17px] font-extrabold leading-none">{rupees(trip.price)}</span>
+                      <span className="text-[11.5px] font-medium text-slate-400 line-through">
                         {rupees(trip.oldPrice)}
                       </span>
-                      <span className="text-[8.5px] font-medium text-[var(--text-light)]">/ person</span>
-                      <span className="ml-auto rounded-[6px] bg-[var(--secondary)] px-1.5 py-0.5 text-[9px] font-extrabold text-[var(--primary-dark)]">
+                      <span className="text-[10.5px] font-medium text-[var(--text-light)]">/ person</span>
+                      <span className="ml-auto rounded-[6px] bg-[var(--secondary)] px-1.5 py-0.5 text-[11px] font-extrabold text-[var(--primary-dark)]">
                         {off}% OFF
                       </span>
                     </div>
@@ -285,7 +285,7 @@ const InternationalHome = () => {
                     return (
                       <span key={perk} className="flex min-w-0 flex-col items-center gap-1 text-center">
                         <Icon size={14} className="text-[var(--primary-dark)]" />
-                        <span className="text-[7.5px] font-semibold leading-tight text-[var(--text-light)]">{perk}</span>
+                        <span className="text-[9.5px] font-semibold leading-tight text-[var(--text-light)]">{perk}</span>
                       </span>
                     );
                   })}
@@ -293,7 +293,7 @@ const InternationalHome = () => {
 
                 {/* Departure footer */}
                 <div className="flex items-center justify-between gap-2 bg-[var(--secondary)] px-3 py-2">
-                  <span className="flex min-w-0 items-center gap-1.5 text-[10px] font-bold">
+                  <span className="flex min-w-0 items-center gap-1.5 text-[12px] font-bold">
                     <CalendarDays size={12} className="shrink-0 text-[var(--primary-dark)]" />
                     <span className="truncate">Next Departure: {trip.departure}</span>
                   </span>
@@ -303,7 +303,7 @@ const InternationalHome = () => {
                       rememberPackage('international', trip);
                       navigate(`${routePrefix}/international/details/${trip.slug}`, { state: { trip } });
                     }}
-                    className="flex shrink-0 items-center gap-1 rounded-[9px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] px-3 py-1.5 text-[10.5px] font-extrabold shadow-[0_6px_14px_rgba(245,183,0,0.3)]"
+                    className="flex shrink-0 items-center gap-1 rounded-[9px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] px-3 py-1.5 text-[12.5px] font-extrabold shadow-[0_6px_14px_rgba(245,183,0,0.3)]"
                   >
                     View Details <ChevronRight size={12} strokeWidth={3} />
                   </button>
@@ -315,14 +315,14 @@ const InternationalHome = () => {
           {visible.length === 0 ? (
             <div className="rounded-[16px] border border-dashed border-[var(--border)] bg-white px-4 py-10 text-center">
               <Palmtree size={26} className="mx-auto text-slate-300" />
-              <p className="mt-2 text-[13px] font-extrabold">No trips match your search</p>
+              <p className="mt-2 text-[14.5px] font-extrabold">No trips match your search</p>
               <button
                 type="button"
                 onClick={() => {
                   setQuery('');
                   setFilter('all');
                 }}
-                className="mt-3 rounded-[12px] bg-[var(--secondary)] px-4 py-2 text-[11.5px] font-extrabold text-[var(--primary-dark)]"
+                className="mt-3 rounded-[12px] bg-[var(--secondary)] px-4 py-2 text-[13.5px] font-extrabold text-[var(--primary-dark)]"
               >
                 Show all trips
               </button>
@@ -333,7 +333,7 @@ const InternationalHome = () => {
         <button
           type="button"
           onClick={() => toast('More destinations landing soon')}
-          className="mt-4 w-full rounded-[14px] border border-[var(--border)] bg-white py-3 text-[12px] font-extrabold shadow-[var(--shadow-sm)]"
+          className="mt-4 w-full rounded-[14px] border border-[var(--border)] bg-white py-3 text-[13.5px] font-extrabold shadow-[var(--shadow-sm)]"
         >
           Request a custom itinerary
         </button>

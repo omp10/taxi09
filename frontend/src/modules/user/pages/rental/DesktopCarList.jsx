@@ -99,7 +99,7 @@ const FacetGroup = ({ title, facets, selected, onToggle, suffix }) => {
   return (
     <div className="border-t border-[var(--dh-border)] px-5 py-4">
       <div className="flex items-center justify-between">
-        <p className="text-[14px] font-black text-[var(--dh-text)]">{title}</p>
+        <p className="text-[15.5px] font-black text-[var(--dh-text)]">{title}</p>
         {suffix}
       </div>
       <div className="mt-3 space-y-2.5">
@@ -111,8 +111,8 @@ const FacetGroup = ({ title, facets, selected, onToggle, suffix }) => {
               onChange={() => onToggle(label)}
               className="h-4 w-4 shrink-0 accent-[#F5B700]"
             />
-            <span className="flex-1 text-[13.5px] font-semibold text-[var(--dh-text)]">{label}</span>
-            <span className="text-[12.5px] font-bold text-[var(--dh-muted)]">{count}</span>
+            <span className="flex-1 text-[15px] font-semibold text-[var(--dh-text)]">{label}</span>
+            <span className="text-[14px] font-bold text-[var(--dh-muted)]">{count}</span>
           </label>
         ))}
       </div>
@@ -217,8 +217,8 @@ const DesktopCarList = () => {
             { label: 'Pickup Time', value: pickupTime, icon: Clock },
           ].map(({ label, value, icon: Icon }) => (
             <div key={label} className="min-w-0">
-              <p className="text-[13px] font-bold text-[var(--dh-text)]">{label}</p>
-              <p className="mt-1.5 flex items-center gap-2 text-[14px] font-semibold text-[var(--dh-muted)]">
+              <p className="text-[14.5px] font-bold text-[var(--dh-text)]">{label}</p>
+              <p className="mt-1.5 flex items-center gap-2 text-[15.5px] font-semibold text-[var(--dh-muted)]">
                 <Icon size={16} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
                 <span className="truncate">{value}</span>
               </p>
@@ -227,7 +227,7 @@ const DesktopCarList = () => {
 
           <button
             onClick={() => navigate('/taxi/user/rental')}
-            className="flex h-[54px] items-center gap-2.5 rounded-[13px] bg-[#F5B700] px-8 text-[16px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.32)] transition-transform hover:-translate-y-0.5"
+            className="flex h-[54px] items-center gap-2.5 rounded-[13px] bg-[#F5B700] px-8 text-[17px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.32)] transition-transform hover:-translate-y-0.5"
           >
             Modify Search
             <Search size={18} strokeWidth={2.8} />
@@ -243,10 +243,10 @@ const DesktopCarList = () => {
           {priceCeiling > 0 && (
             <div className="border-t border-[var(--dh-border)] px-5 py-4">
               <div className="flex items-center justify-between">
-                <p className="text-[14px] font-black text-[var(--dh-text)]">Price Range</p>
-                <span className="text-[13px] font-bold text-[var(--dh-muted)]">₹</span>
+                <p className="text-[15.5px] font-black text-[var(--dh-text)]">Price Range</p>
+                <span className="text-[14.5px] font-bold text-[var(--dh-muted)]">₹</span>
               </div>
-              <p className="mt-2 text-[13px] font-bold text-[var(--dh-muted)]">
+              <p className="mt-2 text-[14.5px] font-bold text-[var(--dh-muted)]">
                 ₹0 – ₹{(maxPrice || priceCeiling).toLocaleString('en-IN')}
               </p>
               <input
@@ -269,7 +269,7 @@ const DesktopCarList = () => {
             <div className="border-t border-[var(--dh-border)] px-5 py-4">
               <button
                 onClick={clearAll}
-                className="flex w-full items-center justify-center gap-2 rounded-[11px] border border-[var(--dh-border)] py-2.5 text-[13.5px] font-bold text-[var(--dh-text)] hover:bg-[var(--dh-chip)]"
+                className="flex w-full items-center justify-center gap-2 rounded-[11px] border border-[var(--dh-border)] py-2.5 text-[15px] font-bold text-[var(--dh-text)] hover:bg-[var(--dh-chip)]"
               >
                 <X size={15} strokeWidth={2.8} /> Clear All Filters
               </button>
@@ -285,12 +285,12 @@ const DesktopCarList = () => {
             </h1>
 
             <div className="flex items-center gap-3">
-              <span className="text-[14px] font-semibold text-[var(--dh-muted)]">Sort By:</span>
+              <span className="text-[15.5px] font-semibold text-[var(--dh-muted)]">Sort By:</span>
               <span className="relative">
                 <select
                   value={sort}
                   onChange={(event) => setSort(event.target.value)}
-                  className="h-[42px] appearance-none rounded-[11px] border border-[var(--dh-border)] bg-[var(--dh-surface)] pl-4 pr-10 text-[14px] font-bold text-[var(--dh-text)] outline-none"
+                  className="h-[42px] appearance-none rounded-[11px] border border-[var(--dh-border)] bg-[var(--dh-surface)] pl-4 pr-10 text-[15.5px] font-bold text-[var(--dh-text)] outline-none"
                 >
                   {SORTS.map(({ id, label }) => <option key={id} value={id}>{label}</option>)}
                 </select>
@@ -318,7 +318,7 @@ const DesktopCarList = () => {
               <button
                 key={id}
                 onClick={() => toggle(setQuick, id)}
-                className={`flex items-center gap-2 rounded-[11px] border px-4 py-2.5 text-[13px] font-bold transition-colors ${
+                className={`flex items-center gap-2 rounded-[11px] border px-4 py-2.5 text-[14.5px] font-bold transition-colors ${
                   quick.includes(id)
                     ? 'border-[#F5B700] bg-[#FFF7DC] text-slate-900'
                     : 'border-[var(--dh-border)] bg-[var(--dh-surface)] text-[var(--dh-text)] hover:bg-[var(--dh-chip)]'
@@ -331,7 +331,7 @@ const DesktopCarList = () => {
             {activeFilterCount > 0 && (
               <button
                 onClick={clearAll}
-                className="flex items-center gap-2 rounded-[11px] px-4 py-2.5 text-[13px] font-bold text-[var(--dh-muted)] hover:text-[var(--dh-text)]"
+                className="flex items-center gap-2 rounded-[11px] px-4 py-2.5 text-[14.5px] font-bold text-[var(--dh-muted)] hover:text-[var(--dh-text)]"
               >
                 <X size={15} strokeWidth={2.8} /> Clear All
               </button>
@@ -344,8 +344,8 @@ const DesktopCarList = () => {
             </div>
           ) : results.length === 0 ? (
             <div className="mt-5 rounded-[18px] bg-[var(--dh-surface)] p-14 text-center ring-1 ring-[var(--dh-border)]">
-              <p className="text-[16px] font-black text-[var(--dh-text)]">No cars match these filters</p>
-              <p className="mt-2 text-[14px] font-medium text-[var(--dh-muted)]">Try clearing a filter or widening the price range.</p>
+              <p className="text-[17px] font-black text-[var(--dh-text)]">No cars match these filters</p>
+              <p className="mt-2 text-[15.5px] font-medium text-[var(--dh-muted)]">Try clearing a filter or widening the price range.</p>
             </div>
           ) : (
             <div className={`mt-5 ${view === 'grid' ? 'space-y-3' : 'grid grid-cols-2 gap-3'}`}>
@@ -385,22 +385,22 @@ const DesktopCarList = () => {
                     </div>
 
                     <div className="flex min-w-0 flex-col justify-center px-5 py-4">
-                      <h2 className="text-[19px] font-black tracking-[-0.02em] text-[var(--dh-text)]">{vehicle.name}</h2>
-                      <p className="mt-0.5 text-[13.5px] font-semibold text-[var(--dh-muted)]">{bucketOf(vehicle)}</p>
+                      <h2 className="text-[20px] font-black tracking-[-0.02em] text-[var(--dh-text)]">{vehicle.name}</h2>
+                      <p className="mt-0.5 text-[15px] font-semibold text-[var(--dh-muted)]">{bucketOf(vehicle)}</p>
 
                       <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2">
                         {vehicle.capacity > 0 && (
-                          <span className="flex items-center gap-1.5 text-[13.5px] font-semibold text-[var(--dh-text)]">
+                          <span className="flex items-center gap-1.5 text-[15px] font-semibold text-[var(--dh-text)]">
                             <Users size={15} className="text-[var(--dh-muted)]" strokeWidth={2.2} /> {vehicle.capacity} Seats
                           </span>
                         )}
                         {specs.transmission && (
-                          <span className="flex items-center gap-1.5 text-[13.5px] font-semibold text-[var(--dh-text)]">
+                          <span className="flex items-center gap-1.5 text-[15px] font-semibold text-[var(--dh-text)]">
                             <Gauge size={15} className="text-[var(--dh-muted)]" strokeWidth={2.2} /> {specs.transmission}
                           </span>
                         )}
                         {specs.fuel && (
-                          <span className="flex items-center gap-1.5 text-[13.5px] font-semibold text-[var(--dh-text)]">
+                          <span className="flex items-center gap-1.5 text-[15px] font-semibold text-[var(--dh-text)]">
                             <Fuel size={15} className="text-[var(--dh-muted)]" strokeWidth={2.2} /> {specs.fuel}
                           </span>
                         )}
@@ -411,7 +411,7 @@ const DesktopCarList = () => {
                           {amenities.map((amenity) => {
                             const Icon = AMENITY_ICONS[String(amenity).toLowerCase()] || Sparkles;
                             return (
-                              <span key={amenity} className="flex items-center gap-1.5 text-[12.5px] font-semibold text-[var(--dh-muted)]">
+                              <span key={amenity} className="flex items-center gap-1.5 text-[14px] font-semibold text-[var(--dh-muted)]">
                                 <Icon size={14} strokeWidth={2.2} /> {titleCase(amenity)}
                               </span>
                             );
@@ -423,7 +423,7 @@ const DesktopCarList = () => {
                           advance offer still line up. */}
                       <div className="mt-3 h-[30px]">
                         {vehicle.advancePayment?.enabled && (
-                          <span className="inline-flex rounded-[8px] bg-emerald-50 px-3 py-1.5 text-[12.5px] font-bold text-emerald-700">
+                          <span className="inline-flex rounded-[8px] bg-emerald-50 px-3 py-1.5 text-[14px] font-bold text-emerald-700">
                             Book with {vehicle.advancePayment.paymentMode === 'percentage'
                               ? `${vehicle.advancePayment.amount}% advance`
                               : `₹${Number(vehicle.advancePayment.amount).toLocaleString('en-IN')} advance`}
@@ -437,21 +437,21 @@ const DesktopCarList = () => {
                         <>
                           <p className="text-[24px] font-black leading-none tracking-[-0.03em] text-[var(--dh-text)]">
                             ₹{price.toLocaleString('en-IN')}
-                            <span className="text-[14px] font-bold text-[var(--dh-muted)]">/day</span>
+                            <span className="text-[15.5px] font-bold text-[var(--dh-muted)]">/day</span>
                           </p>
-                          <p className="text-[11.5px] font-semibold text-[var(--dh-muted)]">Excl. of taxes</p>
+                          <p className="text-[13.5px] font-semibold text-[var(--dh-muted)]">Excl. of taxes</p>
                         </>
                       ) : (
-                        <p className="text-[14px] font-bold text-[var(--dh-muted)]">Price on request</p>
+                        <p className="text-[15.5px] font-bold text-[var(--dh-muted)]">Price on request</p>
                       )}
 
                       {vehicle.available === false ? (
                         <>
-                          <span className="mt-1 w-full rounded-[11px] bg-[var(--dh-chip)] py-2.5 text-center text-[13px] font-bold text-[var(--dh-muted)]">
+                          <span className="mt-1 w-full rounded-[11px] bg-[var(--dh-chip)] py-2.5 text-center text-[14.5px] font-bold text-[var(--dh-muted)]">
                             Booked
                           </span>
                           {vehicle.availableFrom && (
-                            <span className="text-[11px] font-semibold text-rose-600">
+                            <span className="text-[13px] font-semibold text-rose-600">
                               Free from {formatWhen(vehicle.availableFrom)}
                             </span>
                           )}
@@ -459,14 +459,14 @@ const DesktopCarList = () => {
                       ) : (
                         <button
                           onClick={() => openRentalVehicle(navigate, vehicle)}
-                          className="mt-1 w-full rounded-[11px] bg-[#F5B700] py-2.5 text-[14px] font-bold text-slate-950 transition-transform hover:-translate-y-0.5"
+                          className="mt-1 w-full rounded-[11px] bg-[#F5B700] py-2.5 text-[15.5px] font-bold text-slate-950 transition-transform hover:-translate-y-0.5"
                         >
                           View Details
                         </button>
                       )}
 
                       {(vehicle.addOns || []).length > 0 && (
-                        <p className="text-[12px] font-bold text-[var(--dh-muted)]">
+                        <p className="text-[13.5px] font-bold text-[var(--dh-muted)]">
                           +{vehicle.addOns.filter((a) => a.active !== false).length} add-ons
                         </p>
                       )}

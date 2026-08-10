@@ -75,8 +75,8 @@ const ExplorerSection = () => {
         {/* Explore India Section */}
         <div>
         <div className="mb-3 ml-1">
-          <h2 className="text-[19px] font-black text-gray-900 tracking-tight">Explore India</h2>
-          <p className="mt-1 text-[11px] font-black uppercase tracking-[0.18em] text-gray-400">
+          <h2 className="text-[20px] font-black text-gray-900 tracking-tight">Explore India</h2>
+          <p className="mt-1 text-[13px] font-black uppercase tracking-[0.18em] text-gray-400">
             Top tourist destinations across the country
           </p>
         </div>
@@ -97,17 +97,17 @@ const ExplorerSection = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 to-transparent"></div>
                 <div className="absolute top-4 right-4 bg-white/92 backdrop-blur-md px-2.5 py-1 rounded-full shadow-sm border border-white/60 z-10">
-                  <p className="text-[9px] font-black text-primary tracking-widest uppercase">{city.code}</p>
+                  <p className="text-[11px] font-black text-primary tracking-widest uppercase">{city.code}</p>
                 </div>
               </div>
               <div className="mt-3 px-2">
-                <h4 className="text-[15px] font-black text-gray-900 leading-tight tracking-tight flex items-center justify-between">
+                <h4 className="text-[16.5px] font-black text-gray-900 leading-tight tracking-tight flex items-center justify-between">
                   {city.title}
                   <div className="w-7 h-7 rounded-full bg-slate-50 flex items-center justify-center text-slate-400">
                     <ArrowRight size={14} strokeWidth={2.5} />
                   </div>
                 </h4>
-                <p className="text-[11px] text-gray-400 font-bold mt-1 tracking-tight">
+                <p className="text-[13px] text-gray-400 font-bold mt-1 tracking-tight">
                   Located in {city.label}
                 </p>
               </div>
@@ -122,7 +122,7 @@ const ExplorerSection = () => {
             <div className="w-10 h-10 rounded-full bg-slate-50 border border-white/80 shadow-sm flex items-center justify-center">
               <ArrowRight size={18} strokeWidth={2.5} className="text-slate-300" />
             </div>
-            <span className="text-[11px] uppercase tracking-[0.14em]">View All</span>
+            <span className="text-[13px] uppercase tracking-[0.14em]">View All</span>
           </button>
         </div>
         </div>

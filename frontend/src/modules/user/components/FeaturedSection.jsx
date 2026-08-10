@@ -56,9 +56,9 @@ const FeaturedSection = () => {
             <div className="relative z-10 p-6 flex flex-col h-full justify-between w-[60%] text-white">
               <div>
                 <h3 className="text-2xl font-bold">Rental pass</h3>
-                <p className="text-[10px] text-white/70 mt-2 font-medium">Get Rental Pass and</p>
+                <p className="text-[12px] text-white/70 mt-2 font-medium">Get Rental Pass and</p>
                 <p className="text-2xl font-extrabold text-[#FFC107] mt-0.5">Save 25%</p>
-                <p className="text-[10px] text-white/70 font-medium">on bookings</p>
+                <p className="text-[12px] text-white/70 font-medium">on bookings</p>
               </div>
             </div>
             <div className="relative z-10 w-[40%] flex flex-col items-end justify-between p-4">
@@ -67,7 +67,7 @@ const FeaturedSection = () => {
                   <path d="M5 16L3 5L8.5 10L12 4L15.5 10L21 5L19 16H5M19 19C19 19.55 18.55 20 18 20H6C5.45 20 5 19.55 5 19V18H19V19Z" />
                 </svg>
               </div>
-              <button className="bg-[#FFC107] hover:bg-amber-400 transition-colors text-slate-900 text-[10px] font-bold px-3 py-1.5 rounded-md flex items-center gap-1 shadow-md">
+              <button className="bg-[#FFC107] hover:bg-amber-400 transition-colors text-slate-900 text-[12px] font-bold px-3 py-1.5 rounded-md flex items-center gap-1 shadow-md">
                 See Benefits <ArrowRight size={12} />
               </button>
             </div>

@@ -83,7 +83,7 @@ const FeaturedVehiclesSection = () => {
           {vehicles.map((v) => (
             <div key={v.id} className="min-w-[260px] sm:min-w-[280px] bg-white rounded-xl p-4 shadow-sm border border-gray-100 snap-start flex flex-col group hover:shadow-md transition-shadow">
               <div className="flex justify-end mb-2">
-                <span className="bg-black text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">{v.badge}</span>
+                <span className="bg-black text-white text-[12px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">{v.badge}</span>
               </div>
               <div className="h-40 flex items-center justify-center mb-4">
                 <img src={v.image} alt={v.name} className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" />

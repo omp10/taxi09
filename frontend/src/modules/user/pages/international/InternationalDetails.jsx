@@ -39,7 +39,7 @@ const Row = ({ label, value, tone = '', hint = '' }) => (
   <div className="flex items-start justify-between gap-3">
     <span className="min-w-0">
       <span className="block text-[var(--text-light)]">{label}</span>
-      {hint ? <span className="block text-[9px] font-medium text-slate-400">{hint}</span> : null}
+      {hint ? <span className="block text-[11px] font-medium text-slate-400">{hint}</span> : null}
     </span>
     <span className={`shrink-0 ${tone}`}>{value}</span>
   </div>
@@ -224,7 +224,7 @@ const InternationalDetails = () => {
         ))}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/10" />
 
-        <span className={`absolute left-3 top-3 z-10 rounded-[6px] px-2 py-0.5 text-[8px] font-extrabold tracking-wide ${trip.badgeTone}`}>
+        <span className={`absolute left-3 top-3 z-10 rounded-[6px] px-2 py-0.5 text-[10px] font-extrabold tracking-wide ${trip.badgeTone}`}>
           {trip.badge}
         </span>
 
@@ -246,7 +246,7 @@ const InternationalDetails = () => {
             >
               <ChevronRight size={15} strokeWidth={2.8} />
             </button>
-            <span className="absolute right-3 top-3 z-10 rounded-full bg-black/55 px-2 py-0.5 text-[9px] font-bold text-white backdrop-blur-sm">
+            <span className="absolute right-3 top-3 z-10 rounded-full bg-black/55 px-2 py-0.5 text-[11px] font-bold text-white backdrop-blur-sm">
               {slide + 1}/{gallery.length}
             </span>
           </>
@@ -256,7 +256,7 @@ const InternationalDetails = () => {
           <h1 className="text-[20px] font-extrabold leading-tight text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)]">
             {trip.title}
           </h1>
-          <p className="mt-1 flex items-center gap-1 text-[10.5px] font-semibold text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
+          <p className="mt-1 flex items-center gap-1 text-[12.5px] font-semibold text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
             <MapPin size={11} className="shrink-0" /> {trip.country}
             <span className="opacity-60">•</span>
             <Clock3 size={11} className="shrink-0" /> {trip.days}
@@ -268,19 +268,19 @@ const InternationalDetails = () => {
         {/* Rating + price */}
         <section className="flex items-center justify-between gap-3 rounded-[16px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
           <div className="min-w-0">
-            <p className="flex items-center gap-1 text-[13px] font-extrabold">
+            <p className="flex items-center gap-1 text-[14.5px] font-extrabold">
               <Star size={13} className="fill-[var(--primary)] text-[var(--primary)]" />
               {trip.rating}
-              <span className="text-[10px] font-medium text-[var(--text-light)]">({trip.reviews} reviews)</span>
+              <span className="text-[12px] font-medium text-[var(--text-light)]">({trip.reviews} reviews)</span>
             </p>
-            <p className="mt-1 truncate text-[10px] font-semibold text-[var(--text-light)]">{trip.stops.join(' • ')}</p>
+            <p className="mt-1 truncate text-[12px] font-semibold text-[var(--text-light)]">{trip.stops.join(' • ')}</p>
           </div>
           <div className="shrink-0 text-right">
             <p className="flex items-baseline justify-end gap-1.5">
-              <span className="text-[10px] font-medium text-slate-400 line-through">{rupees(trip.oldPrice)}</span>
-              <span className="text-[18px] font-extrabold leading-none">{rupees(trip.price)}</span>
+              <span className="text-[12px] font-medium text-slate-400 line-through">{rupees(trip.oldPrice)}</span>
+              <span className="text-[19px] font-extrabold leading-none">{rupees(trip.price)}</span>
             </p>
-            <p className="text-[9px] font-medium text-[var(--text-light)]">per person · {off}% off</p>
+            <p className="text-[11px] font-medium text-[var(--text-light)]">per person · {off}% off</p>
           </div>
         </section>
 
@@ -293,15 +293,15 @@ const InternationalDetails = () => {
           ].map(({ icon: Icon, label, value }) => (
             <div key={label} className="rounded-[14px] border border-[var(--border)] bg-white px-2 py-2.5 text-center shadow-[var(--shadow-sm)]">
               <Icon size={15} className="mx-auto text-[var(--primary-dark)]" />
-              <p className="mt-1 text-[8.5px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">{label}</p>
-              <p className="mt-0.5 truncate text-[10px] font-extrabold">{value}</p>
+              <p className="mt-1 text-[10.5px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">{label}</p>
+              <p className="mt-0.5 truncate text-[12px] font-extrabold">{value}</p>
             </div>
           ))}
         </section>
 
         {/* Itinerary */}
         <section className="rounded-[16px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
-          <h2 className="text-[14px] font-extrabold">Day-wise Itinerary</h2>
+          <h2 className="text-[15.5px] font-extrabold">Day-wise Itinerary</h2>
           <div className="mt-2.5 space-y-2">
             {itinerary.map(({ day, title, detail }) => {
               const open = openDay === day;
@@ -315,14 +315,14 @@ const InternationalDetails = () => {
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--primary)] text-[10px] font-extrabold">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--primary)] text-[12px] font-extrabold">
                       D{day}
                     </span>
-                    <span className="min-w-0 flex-1 truncate text-[12px] font-extrabold">{title}</span>
+                    <span className="min-w-0 flex-1 truncate text-[13.5px] font-extrabold">{title}</span>
                     <ChevronDown size={14} className={`shrink-0 text-[var(--text-light)] transition-transform ${open ? 'rotate-180' : ''}`} />
                   </div>
                   {open ? (
-                    <p className="mt-2 pl-9 text-[10.5px] font-medium leading-[1.5] text-[var(--text-light)]">{detail}</p>
+                    <p className="mt-2 pl-9 text-[12.5px] font-medium leading-[1.5] text-[var(--text-light)]">{detail}</p>
                   ) : null}
                 </button>
               );
@@ -332,12 +332,12 @@ const InternationalDetails = () => {
 
         {/* Inclusions */}
         <section className="rounded-[16px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
-          <h2 className="text-[14px] font-extrabold">What&apos;s Included</h2>
+          <h2 className="text-[15.5px] font-extrabold">What&apos;s Included</h2>
           <div className="mt-2.5 grid grid-cols-2 gap-2">
             {trip.perks.map((perk) => {
               const Icon = PERK_ICONS[perk] || CircleCheck;
               return (
-                <span key={perk} className="flex items-center gap-2 rounded-[10px] bg-[var(--secondary)] px-2.5 py-2 text-[10.5px] font-semibold">
+                <span key={perk} className="flex items-center gap-2 rounded-[10px] bg-[var(--secondary)] px-2.5 py-2 text-[12.5px] font-semibold">
                   <Icon size={13} className="shrink-0 text-[var(--primary-dark)]" />
                   <span className="truncate">{perk}</span>
                 </span>
@@ -346,10 +346,10 @@ const InternationalDetails = () => {
           </div>
 
           <div className="mt-3 border-t border-[var(--border)] pt-3">
-            <h3 className="text-[12px] font-extrabold text-[var(--text-light)]">Not included</h3>
+            <h3 className="text-[13.5px] font-extrabold text-[var(--text-light)]">Not included</h3>
             <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1">
               {EXCLUSIONS.map((item) => (
-                <span key={item} className="flex items-center gap-1 text-[10px] font-medium text-[var(--text-light)]">
+                <span key={item} className="flex items-center gap-1 text-[12px] font-medium text-[var(--text-light)]">
                   <X size={10} className="shrink-0 text-[var(--danger)]" /> {item}
                 </span>
               ))}
@@ -360,26 +360,26 @@ const InternationalDetails = () => {
         {/* Travellers */}
         <section className="flex items-center justify-between rounded-[16px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
           <div>
-            <p className="flex items-center gap-1.5 text-[13px] font-extrabold">
+            <p className="flex items-center gap-1.5 text-[14.5px] font-extrabold">
               <Users size={14} className="text-[var(--primary-dark)]" /> Travellers
             </p>
-            <p className="mt-0.5 text-[9.5px] font-medium text-[var(--text-light)]">Price scales per person</p>
+            <p className="mt-0.5 text-[11.5px] font-medium text-[var(--text-light)]">Price scales per person</p>
           </div>
           <div className="flex items-center gap-3">
             <button
               type="button"
               disabled={travellers <= 1}
               onClick={() => setTravellers((n) => Math.max(1, n - 1))}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border)] text-[16px] font-extrabold disabled:opacity-30"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border)] text-[17px] font-extrabold disabled:opacity-30"
             >
               −
             </button>
-            <span className="w-5 text-center text-[14px] font-extrabold">{travellers}</span>
+            <span className="w-5 text-center text-[15.5px] font-extrabold">{travellers}</span>
             <button
               type="button"
               disabled={travellers >= 12}
               onClick={() => setTravellers((n) => Math.min(12, n + 1))}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--primary)] bg-[var(--secondary)] text-[16px] font-extrabold text-[var(--primary-dark)] disabled:opacity-30"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--primary)] bg-[var(--secondary)] text-[17px] font-extrabold text-[var(--primary-dark)] disabled:opacity-30"
             >
               +
             </button>
@@ -394,8 +394,8 @@ const InternationalDetails = () => {
                 <Icon size={15} className="text-[var(--primary-dark)]" />
               </span>
               <span className="min-w-0">
-                <span className="block text-[11px] font-extrabold leading-tight">{title}</span>
-                <span className="block text-[9.5px] font-medium text-[var(--text-light)]">{sub}</span>
+                <span className="block text-[13px] font-extrabold leading-tight">{title}</span>
+                <span className="block text-[11.5px] font-medium text-[var(--text-light)]">{sub}</span>
               </span>
             </div>
           ))}
@@ -406,19 +406,19 @@ const InternationalDetails = () => {
       <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-lg -translate-x-1/2 border-t border-[var(--border)] bg-white px-4 pb-6 pt-3">
         <div className="mb-2.5 flex items-end justify-between gap-3">
           <div className="min-w-0">
-            <p className="text-[19px] font-extrabold leading-none">{rupees(total)}</p>
-            <p className="truncate text-[9.5px] font-medium text-[var(--text-light)]">
+            <p className="text-[20px] font-extrabold leading-none">{rupees(total)}</p>
+            <p className="truncate text-[11.5px] font-medium text-[var(--text-light)]">
               {travellers} traveller{travellers > 1 ? 's' : ''} × {rupees(trip.price)} · incl. taxes
             </p>
           </div>
-          <span className="flex shrink-0 items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-[var(--success)]">
+          <span className="flex shrink-0 items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[12px] font-bold text-[var(--success)]">
             <Check size={11} strokeWidth={3} /> {off}% off
           </span>
         </div>
         <button
           type="button"
           onClick={() => setSheetOpen(true)}
-          className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[15px] font-extrabold shadow-[0_8px_20px_rgba(255,193,7,.4)] active:scale-[0.99] transition-transform"
+          className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[16.5px] font-extrabold shadow-[0_8px_20px_rgba(255,193,7,.4)] active:scale-[0.99] transition-transform"
         >
           Book This Trip <ChevronRight size={18} strokeWidth={2.8} />
         </button>
@@ -429,8 +429,8 @@ const InternationalDetails = () => {
           <div className="max-h-[86vh] w-full max-w-lg overflow-y-auto rounded-t-[24px] bg-white pb-6">
             <div className="sticky top-0 flex items-center justify-between border-b border-[var(--border)] bg-white px-4 py-3">
               <div className="min-w-0">
-                <p className="text-[14px] font-extrabold">Fare Breakdown</p>
-                <p className="truncate text-[10px] font-medium text-[var(--text-light)]">{trip.title}</p>
+                <p className="text-[15.5px] font-extrabold">Fare Breakdown</p>
+                <p className="truncate text-[12px] font-medium text-[var(--text-light)]">{trip.title}</p>
               </div>
               <button
                 type="button"
@@ -444,7 +444,7 @@ const InternationalDetails = () => {
 
             <div className="space-y-3 px-4 pt-3">
               <section className="rounded-[14px] border border-[var(--border)] p-3">
-                <div className="space-y-1.5 text-[11.5px] font-semibold">
+                <div className="space-y-1.5 text-[13.5px] font-semibold">
                   <Row label={`Package (${travellers} × ${rupees(trip.price)})`} value={rupees(baseFare)} />
                   {visaTotal > 0 ? (
                     <Row label={`Visa fees (${travellers} × ${rupees(VISA_FEE_PER_PERSON)})`} value={rupees(visaTotal)} />
@@ -469,17 +469,17 @@ const InternationalDetails = () => {
                 </div>
 
                 <div className="mt-2.5 flex items-center justify-between border-t border-[var(--border)] pt-2.5">
-                  <span className="text-[13px] font-extrabold">Total Payable</span>
-                  <span className="text-[19px] font-extrabold">{rupees(grandTotal)}</span>
+                  <span className="text-[14.5px] font-extrabold">Total Payable</span>
+                  <span className="text-[20px] font-extrabold">{rupees(grandTotal)}</span>
                 </div>
-                <p className="mt-0.5 text-[9px] font-medium text-[var(--text-light)]">
+                <p className="mt-0.5 text-[11px] font-medium text-[var(--text-light)]">
                   Inclusive of all taxes and levies
                 </p>
               </section>
 
               {/* Optional add-ons */}
               <section className="rounded-[14px] border border-[var(--border)] p-3">
-                <p className="text-[12.5px] font-extrabold">Add-ons</p>
+                <p className="text-[14px] font-extrabold">Add-ons</p>
                 <label className="mt-2 flex items-center gap-2.5">
                   <input
                     type="checkbox"
@@ -488,8 +488,8 @@ const InternationalDetails = () => {
                     className="h-4 w-4 accent-[var(--primary)]"
                   />
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[11.5px] font-bold leading-tight">Visa processing</span>
-                    <span className="block text-[9.5px] font-medium text-[var(--text-light)]">
+                    <span className="block text-[13.5px] font-bold leading-tight">Visa processing</span>
+                    <span className="block text-[11.5px] font-medium text-[var(--text-light)]">
                       {rupees(VISA_FEE_PER_PERSON)} per person
                     </span>
                   </span>
@@ -502,8 +502,8 @@ const InternationalDetails = () => {
                     className="h-4 w-4 accent-[var(--primary)]"
                   />
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[11.5px] font-bold leading-tight">Travel insurance</span>
-                    <span className="block text-[9.5px] font-medium text-[var(--text-light)]">
+                    <span className="block text-[13.5px] font-bold leading-tight">Travel insurance</span>
+                    <span className="block text-[11.5px] font-medium text-[var(--text-light)]">
                       {rupees(INSURANCE_PER_PERSON)} per person
                     </span>
                   </span>
@@ -512,41 +512,41 @@ const InternationalDetails = () => {
 
               {/* Coupon */}
               <section className="rounded-[14px] border border-[var(--border)] p-3">
-                <p className="text-[12.5px] font-extrabold">Have a coupon?</p>
+                <p className="text-[14px] font-extrabold">Have a coupon?</p>
                 <div className="mt-2 flex gap-2">
                   <input
                     type="text"
                     value={couponInput}
                     onChange={(event) => setCouponInput(event.target.value.toUpperCase())}
                     placeholder="Enter code"
-                    className="min-w-0 flex-1 rounded-[10px] border border-[var(--border)] px-3 py-2.5 text-[12px] font-semibold uppercase outline-none placeholder:font-medium placeholder:normal-case placeholder:text-slate-300 focus:border-[var(--primary)]"
+                    className="min-w-0 flex-1 rounded-[10px] border border-[var(--border)] px-3 py-2.5 text-[13.5px] font-semibold uppercase outline-none placeholder:font-medium placeholder:normal-case placeholder:text-slate-300 focus:border-[var(--primary)]"
                   />
                   <button
                     type="button"
                     onClick={applyCoupon}
-                    className="shrink-0 rounded-[10px] border-2 border-[var(--primary)] px-4 text-[12px] font-extrabold"
+                    className="shrink-0 rounded-[10px] border-2 border-[var(--primary)] px-4 text-[13.5px] font-extrabold"
                   >
                     Apply
                   </button>
                 </div>
                 {coupon && discount > 0 ? (
-                  <p className="mt-2 flex items-center gap-1.5 text-[10.5px] font-bold text-[var(--success)]">
+                  <p className="mt-2 flex items-center gap-1.5 text-[12.5px] font-bold text-[var(--success)]">
                     <CircleCheck size={12} /> {coupon} applied
                     <button
                       type="button"
                       onClick={() => setCoupon('')}
-                      className="ml-auto text-[10px] font-bold text-[var(--text-light)] underline"
+                      className="ml-auto text-[12px] font-bold text-[var(--text-light)] underline"
                     >
                       Remove
                     </button>
                   </p>
                 ) : coupon ? (
-                  <p className="mt-2 flex items-center gap-1.5 text-[10.5px] font-bold text-[var(--danger,#e11d48)]">
+                  <p className="mt-2 flex items-center gap-1.5 text-[12.5px] font-bold text-[var(--danger,#e11d48)]">
                     {coupon} is not valid for this package
                     <button
                       type="button"
                       onClick={() => setCoupon('')}
-                      className="ml-auto text-[10px] font-bold text-[var(--text-light)] underline"
+                      className="ml-auto text-[12px] font-bold text-[var(--text-light)] underline"
                     >
                       Remove
                     </button>
@@ -554,7 +554,7 @@ const InternationalDetails = () => {
                 ) : null}
               </section>
 
-              <p className="flex items-start gap-1.5 px-1 text-[9.5px] font-medium text-[var(--text-light)]">
+              <p className="flex items-start gap-1.5 px-1 text-[11.5px] font-medium text-[var(--text-light)]">
                 <ShieldCheck size={12} className="mt-[1px] shrink-0 text-[var(--primary-dark)]" />
                 Pay 25% now ({rupees(Math.round(grandTotal * 0.25))}) and the balance 21 days before departure.
               </p>
@@ -563,7 +563,7 @@ const InternationalDetails = () => {
                 type="button"
                 onClick={confirmAndPay}
                 disabled={paying || !quote}
-                className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[15px] font-extrabold shadow-[0_8px_20px_rgba(255,193,7,.4)]"
+                className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[16.5px] font-extrabold shadow-[0_8px_20px_rgba(255,193,7,.4)]"
               >
                 {paying ? 'Processing…' : `Confirm & Pay ${rupees(grandTotal)}`}
               </button>

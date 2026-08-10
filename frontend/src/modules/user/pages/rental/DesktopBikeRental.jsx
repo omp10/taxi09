@@ -79,20 +79,20 @@ const BikeCard = ({ bike, selected, onSelect }) => {
           <img src={bike.image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-contain p-3" />
         ) : null}
         {bike.rating ? (
-          <span className="absolute bottom-2 right-2 flex items-center gap-1 rounded-lg bg-[#F5B700] px-1.5 py-0.5 text-[11px] font-black text-slate-900">
+          <span className="absolute bottom-2 right-2 flex items-center gap-1 rounded-lg bg-[#F5B700] px-1.5 py-0.5 text-[13px] font-black text-slate-900">
             {bike.rating} <Star size={10} fill="currentColor" />
           </span>
         ) : null}
         {bike.available === false ? (
-          <span className="absolute left-2 top-2 rounded-lg bg-slate-900/85 px-2 py-1 text-[10.5px] font-bold text-white">
+          <span className="absolute left-2 top-2 rounded-lg bg-slate-900/85 px-2 py-1 text-[12.5px] font-bold text-white">
             Booked
           </span>
         ) : null}
       </div>
 
       <div className="p-3.5">
-        <p className="truncate text-[14px] font-black text-slate-900">{bike.name}</p>
-        <p className="text-[11.5px] text-slate-500">
+        <p className="truncate text-[15.5px] font-black text-slate-900">{bike.name}</p>
+        <p className="text-[13.5px] text-slate-500">
           {[bike.engineCapacity && `${bike.engineCapacity}cc`, bike.subcategoryName || bike.vehicleCategory]
             .filter(Boolean)
             .join(' • ')}
@@ -100,16 +100,16 @@ const BikeCard = ({ bike, selected, onSelect }) => {
 
         <div className="mt-2.5 flex items-end justify-between">
           <span>
-            <span className="text-[15px] font-black text-slate-900">{money(price?.price)}</span>
-            <span className="text-[11px] text-slate-500"> / {price?.label || 'package'}</span>
+            <span className="text-[16.5px] font-black text-slate-900">{money(price?.price)}</span>
+            <span className="text-[13px] text-slate-500"> / {price?.label || 'package'}</span>
           </span>
           {price?.extraKmPrice > 0 ? (
-            <span className="text-[11px] text-slate-500">₹{price.extraKmPrice} / km</span>
+            <span className="text-[13px] text-slate-500">₹{price.extraKmPrice} / km</span>
           ) : null}
         </div>
 
         {bike.storeName ? (
-          <p className="mt-1.5 flex items-center gap-1 text-[11px] text-slate-500">
+          <p className="mt-1.5 flex items-center gap-1 text-[13px] text-slate-500">
             <MapPin size={11} /> {bike.storeName}
           </p>
         ) : null}
@@ -220,36 +220,36 @@ const DesktopBikeRental = () => {
               {/* Search */}
               <div className="mt-6 grid gap-3 rounded-2xl bg-white p-4 shadow-sm md:grid-cols-[1.3fr_1fr_1fr_auto]">
                 <label className="block">
-                  <span className="mb-1 block text-[11px] font-bold text-slate-500">Pick-up Location</span>
+                  <span className="mb-1 block text-[13px] font-bold text-slate-500">Pick-up Location</span>
                   <input
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     placeholder="Any location"
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-[13px] outline-none focus:border-[#F5B700]"
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-[14.5px] outline-none focus:border-[#F5B700]"
                   />
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-[11px] font-bold text-slate-500">Pick-up</span>
+                  <span className="mb-1 block text-[13px] font-bold text-slate-500">Pick-up</span>
                   <input
                     type="datetime-local"
                     value={pickup}
                     onChange={(e) => setPickup(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-[13px] outline-none focus:border-[#F5B700]"
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-[14.5px] outline-none focus:border-[#F5B700]"
                   />
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-[11px] font-bold text-slate-500">Return</span>
+                  <span className="mb-1 block text-[13px] font-bold text-slate-500">Return</span>
                   <input
                     type="datetime-local"
                     value={dropoff}
                     min={pickup}
                     onChange={(e) => setDropoff(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-[13px] outline-none focus:border-[#F5B700]"
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-[14.5px] outline-none focus:border-[#F5B700]"
                   />
                 </label>
                 <button
                   onClick={load}
-                  className="mt-auto flex items-center justify-center gap-2 rounded-xl bg-[#F5B700] px-6 py-2.5 text-[13.5px] font-black text-slate-900"
+                  className="mt-auto flex items-center justify-center gap-2 rounded-xl bg-[#F5B700] px-6 py-2.5 text-[15px] font-black text-slate-900"
                 >
                   <Search size={15} /> Search Bikes
                 </button>
@@ -273,20 +273,20 @@ const DesktopBikeRental = () => {
                         category === name ? 'border-[#F5B700] bg-[#FFF9E6]' : 'border-slate-200 bg-white hover:border-slate-300'
                       }`}
                     >
-                      <span className="block text-[13px] font-black text-slate-900">{name}</span>
-                      <span className="block text-[11px] text-slate-500">{count} {count === 1 ? 'bike' : 'bikes'}</span>
+                      <span className="block text-[14.5px] font-black text-slate-900">{name}</span>
+                      <span className="block text-[13px] text-slate-500">{count} {count === 1 ? 'bike' : 'bikes'}</span>
                     </button>
                   );
                 })}
               </div>
             ) : null}
 
-            <h2 className="mt-7 text-[18px] font-black text-slate-900">Popular Bikes for You</h2>
+            <h2 className="mt-7 text-[19px] font-black text-slate-900">Popular Bikes for You</h2>
 
             {loading ? (
               <div className="flex justify-center py-16"><Loader2 className="animate-spin text-slate-400" /></div>
             ) : visible.length === 0 ? (
-              <p className="mt-4 rounded-2xl border border-dashed border-slate-200 py-16 text-center text-[13.5px] text-slate-500">
+              <p className="mt-4 rounded-2xl border border-dashed border-slate-200 py-16 text-center text-[15px] text-slate-500">
                 No bikes available for these dates. Try another window or location.
               </p>
             ) : (
@@ -300,8 +300,8 @@ const DesktopBikeRental = () => {
             <div className="mt-8 grid grid-cols-2 gap-4 rounded-2xl border border-slate-100 bg-[#FFFCF2] p-5 md:grid-cols-3 lg:grid-cols-6">
               {FOOTER_POINTS.map(([title, sub]) => (
                 <div key={title}>
-                  <p className="text-[12.5px] font-black text-slate-900">{title}</p>
-                  <p className="text-[11px] text-slate-500">{sub}</p>
+                  <p className="text-[14px] font-black text-slate-900">{title}</p>
+                  <p className="text-[13px] text-slate-500">{sub}</p>
                 </div>
               ))}
             </div>
@@ -311,16 +311,16 @@ const DesktopBikeRental = () => {
           <aside className="space-y-4">
             <section className="rounded-2xl border border-slate-100 bg-white p-5">
               <div className="flex items-center justify-between">
-                <h2 className="text-[15px] font-black text-slate-900">Your Rental Plan</h2>
+                <h2 className="text-[16.5px] font-black text-slate-900">Your Rental Plan</h2>
                 {selected ? (
-                  <button onClick={() => setSelected(null)} className="text-[12px] font-bold text-[#C79100]">
+                  <button onClick={() => setSelected(null)} className="text-[13.5px] font-bold text-[#C79100]">
                     Change Bike
                   </button>
                 ) : null}
               </div>
 
               {!selected ? (
-                <p className="mt-4 text-[12.5px] text-slate-500">Pick a bike to see the price.</p>
+                <p className="mt-4 text-[14px] text-slate-500">Pick a bike to see the price.</p>
               ) : (
                 <>
                   <div className="mt-4 flex items-center gap-3">
@@ -328,14 +328,14 @@ const DesktopBikeRental = () => {
                       <img src={selected.image} alt="" className="h-12 w-16 object-contain" />
                     ) : null}
                     <span>
-                      <span className="block text-[13.5px] font-black text-slate-900">{selected.name}</span>
-                      <span className="block text-[11.5px] text-slate-500">
+                      <span className="block text-[15px] font-black text-slate-900">{selected.name}</span>
+                      <span className="block text-[13.5px] text-slate-500">
                         {selected.subcategoryName || selected.vehicleCategory}
                       </span>
                     </span>
                   </div>
 
-                  <dl className="mt-4 space-y-2 border-t border-slate-100 pt-3 text-[12.5px]">
+                  <dl className="mt-4 space-y-2 border-t border-slate-100 pt-3 text-[14px]">
                     <div className="flex justify-between">
                       <dt className="text-slate-500">Pick-up</dt>
                       <dd className="font-semibold text-slate-800">
@@ -355,7 +355,7 @@ const DesktopBikeRental = () => {
                   </dl>
 
                   {activeQuote ? (
-                    <dl className="mt-3 space-y-2 border-t border-slate-100 pt-3 text-[12.5px]">
+                    <dl className="mt-3 space-y-2 border-t border-slate-100 pt-3 text-[14px]">
                       <div className="flex justify-between">
                         <dt className="text-slate-500">{activeQuote.packageLabel || 'Rental charge'}</dt>
                         <dd className="font-semibold text-slate-800">{money(activeQuote.packagePrice)}</dd>
@@ -374,17 +374,17 @@ const DesktopBikeRental = () => {
                       ) : null}
 
                       <div className="flex justify-between border-t border-dashed border-slate-200 pt-2">
-                        <dt className="text-[14px] font-black text-slate-900">Total Amount</dt>
-                        <dd className="text-[16px] font-black text-slate-900">{money(activeQuote.totalCost)}</dd>
+                        <dt className="text-[15.5px] font-black text-slate-900">Total Amount</dt>
+                        <dd className="text-[17px] font-black text-slate-900">{money(activeQuote.totalCost)}</dd>
                       </div>
                       {activeQuote.payableNow > 0 && activeQuote.payableNow < activeQuote.totalCost ? (
-                        <p className="text-[11px] text-slate-500">
+                        <p className="text-[13px] text-slate-500">
                           {money(activeQuote.payableNow)} payable now, {money(activeQuote.balanceDue)} at pick-up
                         </p>
                       ) : null}
                     </dl>
                   ) : (
-                    <p className="mt-3 border-t border-slate-100 pt-3 text-[12px] text-slate-500">
+                    <p className="mt-3 border-t border-slate-100 pt-3 text-[13.5px] text-slate-500">
                       Pricing for this bike is not set up yet.
                     </p>
                   )}
@@ -392,13 +392,13 @@ const DesktopBikeRental = () => {
                   <button
                     onClick={() => openRentalVehicle(navigate, selected)}
                     disabled={selected.available === false}
-                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#F5B700] py-3 text-[14px] font-black text-slate-900 disabled:opacity-60"
+                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#F5B700] py-3 text-[15.5px] font-black text-slate-900 disabled:opacity-60"
                   >
                     {selected.available === false ? 'Booked for these dates' : 'Continue to Book'}
                     <ArrowRight size={16} />
                   </button>
 
-                  <p className="mt-2 flex items-center justify-center gap-1.5 text-[11px] text-slate-500">
+                  <p className="mt-2 flex items-center justify-center gap-1.5 text-[13px] text-slate-500">
                     <ShieldCheck size={12} className="text-emerald-600" /> Free cancellation up to 24 hrs before pick-up
                   </p>
                 </>
@@ -409,22 +409,22 @@ const DesktopBikeRental = () => {
               {PLAN_POINTS.map((point) => (
                 <div key={point.title} className="rounded-2xl border border-slate-100 bg-white p-3.5">
                   <point.icon size={17} className="text-[#C79100]" />
-                  <p className="mt-1.5 text-[12.5px] font-black text-slate-900">{point.title}</p>
-                  <p className="text-[11px] text-slate-500">{point.sub}</p>
+                  <p className="mt-1.5 text-[14px] font-black text-slate-900">{point.title}</p>
+                  <p className="text-[13px] text-slate-500">{point.sub}</p>
                 </div>
               ))}
             </div>
 
             <div className="rounded-2xl bg-gradient-to-br from-[#FFD400] to-[#F5B700] p-5">
-              <p className="flex items-center gap-2 text-[15px] font-black text-slate-900">
+              <p className="flex items-center gap-2 text-[16.5px] font-black text-slate-900">
                 <Sparkles size={16} /> Ride more, pay less
               </p>
-              <p className="mt-1 text-[12px] text-slate-800">
+              <p className="mt-1 text-[13.5px] text-slate-800">
                 Members save on every booking, bikes included.
               </p>
               <button
                 onClick={() => navigate('/taxi/user/membership')}
-                className="mt-3 flex items-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2 text-[12.5px] font-black text-white"
+                className="mt-3 flex items-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2 text-[14px] font-black text-white"
               >
                 <Gauge size={14} /> See membership
               </button>

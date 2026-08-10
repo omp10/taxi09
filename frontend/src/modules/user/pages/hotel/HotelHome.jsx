@@ -143,12 +143,12 @@ const rupees = (value) => `₹${Number(value).toLocaleString('en-IN')}`;
 
 const SectionTitle = ({ title, actionLabel, onAction }) => (
   <div className="mb-2.5 mt-5 flex items-center justify-between px-1">
-    <h2 className="text-[17px] font-extrabold tracking-[-0.02em] text-[var(--text)]">{title}</h2>
+    <h2 className="text-[18px] font-extrabold tracking-[-0.02em] text-[var(--text)]">{title}</h2>
     {actionLabel ? (
       <button
         type="button"
         onClick={onAction}
-        className="flex items-center gap-1 text-[11.5px] font-bold text-[var(--primary-dark)]"
+        className="flex items-center gap-1 text-[13.5px] font-bold text-[var(--primary-dark)]"
       >
         {actionLabel} <ChevronRight size={13} strokeWidth={2.8} />
       </button>
@@ -186,7 +186,7 @@ const HotelBottomNav = ({ routePrefix }) => {
               <Icon size={center ? 25 : 21} strokeWidth={center ? 2.5 : 2.2} />
             </span>
             <span
-              className={`text-[10.5px] ${center ? 'font-extrabold text-[var(--text)]' : 'font-semibold text-[var(--text-light)]'}`}
+              className={`text-[12.5px] ${center ? 'font-extrabold text-[var(--text)]' : 'font-semibold text-[var(--text-light)]'}`}
             >
               {label}
             </span>
@@ -299,7 +299,7 @@ const HotelHome = () => {
         <div className="relative z-10 flex h-full flex-col justify-center px-4">
           <div className="max-w-[56%]">
             <h1 className="text-[21px] font-extrabold leading-[1.12] tracking-[-0.03em]">{activeHero.title}</h1>
-            <p className="mt-2 text-[11px] font-medium leading-[1.45] text-[var(--text-light)]">
+            <p className="mt-2 text-[13px] font-medium leading-[1.45] text-[var(--text-light)]">
               {activeHero.subtitle}
             </p>
             <span className="mt-3 block h-1 w-12 rounded-full bg-[var(--primary)]" />
@@ -333,7 +333,7 @@ const HotelHome = () => {
                 key={id}
                 type="button"
                 onClick={() => setMode(id)}
-                className={`flex items-center justify-center gap-1.5 rounded-[12px] px-3 py-2.5 text-[12px] font-extrabold transition-colors ${
+                className={`flex items-center justify-center gap-1.5 rounded-[12px] px-3 py-2.5 text-[13.5px] font-extrabold transition-colors ${
                   mode === id ? 'bg-[var(--secondary)] text-[var(--primary-dark)]' : 'bg-slate-50 text-[var(--text-light)]'
                 }`}
               >
@@ -344,13 +344,13 @@ const HotelHome = () => {
           </div>
 
           <div className="mt-3 rounded-[13px] border border-[var(--border)] px-3 py-2.5">
-            <p className="text-[8.5px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">Destination</p>
+            <p className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">Destination</p>
             <div className="mt-1 flex items-center gap-1.5">
               <MapPin size={14} className="shrink-0 text-[var(--primary-dark)]" />
               <select
                 value={destination}
                 onChange={(event) => setDestination(event.target.value)}
-                className="min-w-0 flex-1 appearance-none bg-transparent text-[13px] font-extrabold outline-none"
+                className="min-w-0 flex-1 appearance-none bg-transparent text-[14.5px] font-extrabold outline-none"
               >
                 {cities.map((city) => (
                   <option key={city} value={city}>
@@ -364,7 +364,7 @@ const HotelHome = () => {
 
           <div className="mt-2 grid grid-cols-2 gap-2">
             <label className="rounded-[13px] border border-[var(--border)] px-3 py-2.5">
-              <span className="block text-[8.5px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">
+              <span className="block text-[10.5px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">
                 Check-in
               </span>
               <input
@@ -377,11 +377,11 @@ const HotelHome = () => {
                   // Keep the stay at least one night long.
                   if (checkOut <= nextCheckIn) setCheckOut(addDays(nextCheckIn, 1));
                 }}
-                className="mt-1 w-full bg-transparent text-[12px] font-extrabold outline-none"
+                className="mt-1 w-full bg-transparent text-[13.5px] font-extrabold outline-none"
               />
             </label>
             <label className="rounded-[13px] border border-[var(--border)] px-3 py-2.5">
-              <span className="block text-[8.5px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">
+              <span className="block text-[10.5px] font-bold uppercase tracking-[0.12em] text-[var(--text-light)]">
                 Check-out
               </span>
               <input
@@ -389,12 +389,12 @@ const HotelHome = () => {
                 min={addDays(checkIn, 1)}
                 value={checkOut}
                 onChange={(event) => setCheckOut(event.target.value)}
-                className="mt-1 w-full bg-transparent text-[12px] font-extrabold outline-none"
+                className="mt-1 w-full bg-transparent text-[13.5px] font-extrabold outline-none"
               />
             </label>
           </div>
 
-          <p className="mt-1.5 px-1 text-[10px] font-semibold text-[var(--text-light)]">
+          <p className="mt-1.5 px-1 text-[12px] font-semibold text-[var(--text-light)]">
             {nights} night{nights > 1 ? 's' : ''} · {formatShortDate(checkIn)} — {formatShortDate(checkOut)}
           </p>
 
@@ -404,7 +404,7 @@ const HotelHome = () => {
               onClick={() => setGuestPickerOpen((current) => !current)}
               className="flex items-center justify-between rounded-[13px] border border-[var(--border)] px-3 py-3 text-left"
             >
-              <span className="flex items-center gap-2 text-[12px] font-extrabold">
+              <span className="flex items-center gap-2 text-[13.5px] font-extrabold">
                 <Users size={15} className="text-[var(--primary-dark)]" />
                 {rooms} Room{rooms > 1 ? 's' : ''}, {guests} Guest{guests > 1 ? 's' : ''}
               </span>
@@ -416,7 +416,7 @@ const HotelHome = () => {
             <button
               type="button"
               onClick={handleSearch}
-              className="flex items-center justify-center gap-1.5 rounded-[13px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] text-[12.5px] font-extrabold text-[var(--text)] shadow-[0_8px_18px_rgba(245,183,0,0.35)] active:scale-[0.98] transition-transform"
+              className="flex items-center justify-center gap-1.5 rounded-[13px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] text-[14px] font-extrabold text-[var(--text)] shadow-[0_8px_18px_rgba(245,183,0,0.35)] active:scale-[0.98] transition-transform"
             >
               <Search size={15} strokeWidth={2.8} />
               Search
@@ -429,7 +429,7 @@ const HotelHome = () => {
                   { label: 'Guests', value: guests, set: setGuests, min: 1, max: 20 },
                 ].map(({ label, value, set, min, max }) => (
                   <div key={label} className="flex items-center justify-between py-2">
-                    <span className="text-[12px] font-extrabold">{label}</span>
+                    <span className="text-[13.5px] font-extrabold">{label}</span>
                     <div className="flex items-center gap-3">
                       <button
                         type="button"
@@ -439,7 +439,7 @@ const HotelHome = () => {
                       >
                         <Minus size={13} strokeWidth={3} />
                       </button>
-                      <span className="w-5 text-center text-[13px] font-extrabold">{value}</span>
+                      <span className="w-5 text-center text-[14.5px] font-extrabold">{value}</span>
                       <button
                         type="button"
                         disabled={value >= max}
@@ -454,7 +454,7 @@ const HotelHome = () => {
                 <button
                   type="button"
                   onClick={() => setGuestPickerOpen(false)}
-                  className="mt-1 w-full rounded-[12px] bg-[var(--secondary)] py-2.5 text-[12px] font-extrabold text-[var(--primary-dark)]"
+                  className="mt-1 w-full rounded-[12px] bg-[var(--secondary)] py-2.5 text-[13.5px] font-extrabold text-[var(--primary-dark)]"
                 >
                   Done
                 </button>
@@ -486,8 +486,8 @@ const HotelHome = () => {
               <div className="absolute inset-x-2 bottom-2">
                 <div className="flex items-end justify-between gap-1">
                   <div className="min-w-0">
-                    <p className="truncate text-[12px] font-extrabold leading-none text-white">{city}</p>
-                    <p className="mt-1 text-[9px] font-semibold leading-none text-white/80">From {rupees(price)}</p>
+                    <p className="truncate text-[13.5px] font-extrabold leading-none text-white">{city}</p>
+                    <p className="mt-1 text-[11px] font-semibold leading-none text-white/80">From {rupees(price)}</p>
                   </div>
                   <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--primary)]">
                     <ChevronRight size={12} strokeWidth={3} className="text-slate-950" />
@@ -499,9 +499,9 @@ const HotelHome = () => {
         </div>
 
         <div className="mb-2.5 mt-5 flex items-center justify-between px-1">
-          <h2 className="text-[17px] font-extrabold tracking-[-0.02em]">
+          <h2 className="text-[18px] font-extrabold tracking-[-0.02em]">
             {searchedFor ? `Stays in ${searchedFor}` : 'Recommended Hotels'}
-            <span className="ml-1.5 text-[11px] font-semibold text-[var(--text-light)]">
+            <span className="ml-1.5 text-[13px] font-semibold text-[var(--text-light)]">
               ({visibleHotels.length})
             </span>
           </h2>
@@ -509,7 +509,7 @@ const HotelHome = () => {
             <button
               type="button"
               onClick={() => setSortOpen((current) => !current)}
-              className="flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-white px-3 py-1.5 text-[11px] font-bold"
+              className="flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-white px-3 py-1.5 text-[13px] font-bold"
             >
               <SlidersHorizontal size={12} />
               {SORTS.find((item) => item.id === sortBy)?.label.split(':')[0]}
@@ -524,7 +524,7 @@ const HotelHome = () => {
                       setSortBy(option.id);
                       setSortOpen(false);
                     }}
-                    className={`w-full rounded-[10px] px-3 py-2 text-left text-[11.5px] font-bold ${
+                    className={`w-full rounded-[10px] px-3 py-2 text-left text-[13.5px] font-bold ${
                       sortBy === option.id ? 'bg-[var(--secondary)] text-[var(--primary-dark)]' : ''
                     }`}
                   >
@@ -547,7 +547,7 @@ const HotelHome = () => {
               >
                 <div className="relative h-[124px] w-[108px] shrink-0 overflow-hidden rounded-[14px] bg-slate-200">
                   <img src={hotel.image} alt={hotel.name} className="h-full w-full object-cover" />
-                  <span className="absolute left-1.5 top-1.5 rounded-full bg-[var(--primary)] px-2 py-0.5 text-[8.5px] font-extrabold">
+                  <span className="absolute left-1.5 top-1.5 rounded-full bg-[var(--primary)] px-2 py-0.5 text-[10.5px] font-extrabold">
                     {hotel.badge}
                   </span>
                   <button
@@ -565,19 +565,19 @@ const HotelHome = () => {
 
                 <div className="flex min-w-0 flex-1 flex-col">
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className="min-w-0 flex-1 text-[14px] font-extrabold leading-tight">{hotel.name}</h3>
-                    <span className="shrink-0 rounded-[6px] bg-emerald-50 px-1.5 py-0.5 text-[9px] font-extrabold text-[var(--success)]">
+                    <h3 className="min-w-0 flex-1 text-[15.5px] font-extrabold leading-tight">{hotel.name}</h3>
+                    <span className="shrink-0 rounded-[6px] bg-emerald-50 px-1.5 py-0.5 text-[11px] font-extrabold text-[var(--success)]">
                       {off}% OFF
                     </span>
                   </div>
 
                   <div className="mt-1 flex items-center gap-1.5">
                     <StarRating value={hotel.rating} />
-                    <span className="text-[11px] font-extrabold">{hotel.rating}</span>
-                    <span className="text-[10px] font-medium text-[var(--text-light)]">({hotel.reviews} reviews)</span>
+                    <span className="text-[13px] font-extrabold">{hotel.rating}</span>
+                    <span className="text-[12px] font-medium text-[var(--text-light)]">({hotel.reviews} reviews)</span>
                   </div>
 
-                  <p className="mt-1.5 flex items-start gap-1 text-[10px] font-medium leading-[1.35] text-[var(--text-light)]">
+                  <p className="mt-1.5 flex items-start gap-1 text-[12px] font-medium leading-[1.35] text-[var(--text-light)]">
                     <MapPin size={11} className="mt-[1px] shrink-0" />
                     <span className="min-w-0">
                       {hotel.area} <span className="text-slate-300">•</span> {hotel.distance}
@@ -590,7 +590,7 @@ const HotelHome = () => {
                       return (
                         <span
                           key={amenity}
-                          className="flex items-center gap-1 text-[9px] font-semibold text-[var(--text-light)]"
+                          className="flex items-center gap-1 text-[11px] font-semibold text-[var(--text-light)]"
                         >
                           <Icon size={10} className="shrink-0 text-[var(--primary-dark)]" />
                           {amenity}
@@ -601,11 +601,11 @@ const HotelHome = () => {
 
                   <div className="mt-auto pt-2">
                     <p className="flex flex-wrap items-baseline gap-x-1.5">
-                      <span className="text-[10px] font-medium text-slate-400 line-through">
+                      <span className="text-[12px] font-medium text-slate-400 line-through">
                         {rupees(hotel.oldPrice)}
                       </span>
-                      <span className="text-[17px] font-extrabold leading-none">{rupees(hotel.price)}</span>
-                      <span className="text-[9px] font-medium text-[var(--text-light)]">
+                      <span className="text-[18px] font-extrabold leading-none">{rupees(hotel.price)}</span>
+                      <span className="text-[11px] font-medium text-[var(--text-light)]">
                         / night{nights > 1 ? ` · ${rupees(hotel.price * nights)} total` : ''}
                       </span>
                     </p>
@@ -616,7 +616,7 @@ const HotelHome = () => {
                           state: { hotel, checkIn, checkOut, rooms, guests },
                         })
                       }
-                      className="mt-2 w-full rounded-[10px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-2.5 text-[11.5px] font-extrabold shadow-[0_6px_14px_rgba(245,183,0,0.32)] active:scale-[0.98] transition-transform"
+                      className="mt-2 w-full rounded-[10px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-2.5 text-[13.5px] font-extrabold shadow-[0_6px_14px_rgba(245,183,0,0.32)] active:scale-[0.98] transition-transform"
                     >
                       View Rooms
                     </button>
@@ -629,14 +629,14 @@ const HotelHome = () => {
           {visibleHotels.length === 0 ? (
             <div className="rounded-[16px] border border-dashed border-[var(--border)] bg-white px-4 py-10 text-center">
               <BedDouble size={26} className="mx-auto text-slate-300" />
-              <p className="mt-2 text-[13px] font-extrabold">No stays in {searchedFor}</p>
-              <p className="mt-1 text-[11px] font-medium text-[var(--text-light)]">
+              <p className="mt-2 text-[14.5px] font-extrabold">No stays in {searchedFor}</p>
+              <p className="mt-1 text-[13px] font-medium text-[var(--text-light)]">
                 Try another destination or clear the filter.
               </p>
               <button
                 type="button"
                 onClick={() => setSearchedFor('')}
-                className="mt-3 rounded-[12px] bg-[var(--secondary)] px-4 py-2 text-[11.5px] font-extrabold text-[var(--primary-dark)]"
+                className="mt-3 rounded-[12px] bg-[var(--secondary)] px-4 py-2 text-[13.5px] font-extrabold text-[var(--primary-dark)]"
               >
                 Show all hotels
               </button>
@@ -647,7 +647,7 @@ const HotelHome = () => {
             <button
               type="button"
               onClick={() => setShowAll(true)}
-              className="w-full rounded-[14px] border border-[var(--border)] bg-white py-3 text-[12px] font-extrabold shadow-[var(--shadow-sm)]"
+              className="w-full rounded-[14px] border border-[var(--border)] bg-white py-3 text-[13.5px] font-extrabold shadow-[var(--shadow-sm)]"
             >
               Show all {visibleHotels.length} hotels
             </button>

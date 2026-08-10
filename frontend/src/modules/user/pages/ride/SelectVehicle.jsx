@@ -221,8 +221,8 @@ const VehicleMapPreview = React.memo(({ center, dropPosition, stops = [], driver
     return (
       <div className="flex h-full w-full items-center justify-center bg-slate-200 px-6 text-center">
         <div className="rounded-[18px] bg-white/90 px-4 py-4 shadow-sm">
-          <p className="text-[12px] font-bold text-slate-900">Google Maps key missing</p>
-          <p className="mt-1 text-[11px] font-bold text-slate-500">Set `VITE_GOOGLE_MAPS_API_KEY` in `frontend/.env`.</p>
+          <p className="text-[13.5px] font-bold text-slate-900">Google Maps key missing</p>
+          <p className="mt-1 text-[13px] font-bold text-slate-500">Set `VITE_GOOGLE_MAPS_API_KEY` in `frontend/.env`.</p>
         </div>
       </div>
     );
@@ -232,8 +232,8 @@ const VehicleMapPreview = React.memo(({ center, dropPosition, stops = [], driver
     return (
       <div className="flex h-full w-full items-center justify-center bg-slate-200 px-6 text-center">
         <div className="rounded-[18px] bg-white/90 px-4 py-4 shadow-sm">
-          <p className="text-[12px] font-bold text-slate-900">Google Maps failed to load</p>
-          <p className="mt-1 text-[11px] font-bold text-slate-500">Check the browser key restrictions and reload.</p>
+          <p className="text-[13.5px] font-bold text-slate-900">Google Maps failed to load</p>
+          <p className="mt-1 text-[13px] font-bold text-slate-500">Check the browser key restrictions and reload.</p>
         </div>
       </div>
     );
@@ -244,7 +244,7 @@ const VehicleMapPreview = React.memo(({ center, dropPosition, stops = [], driver
       <div className="flex h-full w-full items-center justify-center bg-slate-200">
         <div className="flex items-center gap-2 rounded-[16px] bg-white/90 px-4 py-3 shadow-sm">
           <LoaderCircle size={18} className="animate-spin text-slate-500" />
-          <span className="text-[12px] font-bold text-slate-700">Loading map</span>
+          <span className="text-[13.5px] font-bold text-slate-700">Loading map</span>
         </div>
       </div>
     );
@@ -319,13 +319,13 @@ const VehicleMapPreview = React.memo(({ center, dropPosition, stops = [], driver
       </GoogleMap>
 
       <div className="pointer-events-none absolute bottom-24 left-4 rounded-[12px] border border-white/70 bg-white/90 px-3 py-2 shadow-sm">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Pickup</p>
-        <p className="text-[11px] font-bold text-slate-800">{center.lat.toFixed(4)}, {center.lng.toFixed(4)}</p>
+        <p className="text-[12px] font-bold uppercase tracking-widest text-slate-400">Pickup</p>
+        <p className="text-[13px] font-bold text-slate-800">{center.lat.toFixed(4)}, {center.lng.toFixed(4)}</p>
       </div>
       {routeError && (
         <div className="pointer-events-none absolute bottom-10 left-4 rounded-[12px] border border-amber-100 bg-white/90 px-3 py-2 shadow-sm">
-          <p className="text-[10px] font-black uppercase tracking-widest text-amber-500">Route</p>
-          <p className="text-[11px] font-bold text-slate-700">Using fallback path while directions load.</p>
+          <p className="text-[12px] font-black uppercase tracking-widest text-amber-500">Route</p>
+          <p className="text-[13px] font-bold text-slate-700">Using fallback path while directions load.</p>
         </div>
       )}
     </div>
@@ -2037,7 +2037,7 @@ const SelectVehicle = () => {
                 ? 'bg-emerald-50 border-emerald-100 text-emerald-600' 
                 : 'bg-blue-50 border-blue-100 text-blue-600';
             return (
-              <div className={`mb-2 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider select-none ${bgClass}`}>
+              <div className={`mb-2 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider select-none ${bgClass}`}>
                 <span className="relative flex h-1.5 w-1.5">
                   <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${cat === 'bike' ? 'bg-orange-400' : cat === 'auto' ? 'bg-emerald-400' : 'bg-blue-400'}`}></span>
                   <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${cat === 'bike' ? 'bg-orange-500' : cat === 'auto' ? 'bg-emerald-500' : 'bg-blue-500'}`}></span>
@@ -2055,26 +2055,26 @@ const SelectVehicle = () => {
                   <span className="h-2.5 w-2.5 rounded-full bg-[#d95c6a]" />
                 </div>
                 <div className="min-w-0 flex-1 space-y-3">
-                  <p className="pt-0.5 truncate text-[13px] font-medium text-slate-700">{pickup}</p>
+                  <p className="pt-0.5 truncate text-[14.5px] font-medium text-slate-700">{pickup}</p>
                   <button
                     type="button"
                     onClick={openLocationEditor}
                     className="flex w-full items-start rounded-[12px] -mx-1 px-1 py-1 text-left transition hover:bg-slate-50"
                   >
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-[13px] font-medium text-slate-700">{drop}</p>
+                      <p className="truncate text-[14.5px] font-medium text-slate-700">{drop}</p>
                       {tripMetrics.distanceMeters > 0 && (
                         <div className="mt-1.5 flex items-center gap-2 select-none">
-                          <span className="inline-flex items-center bg-[#eff6ff] border border-[#dbeafe] px-2 py-0.5 rounded-lg text-[10px] font-bold text-blue-600">
+                          <span className="inline-flex items-center bg-[#eff6ff] border border-[#dbeafe] px-2 py-0.5 rounded-lg text-[12px] font-bold text-blue-600">
                             {(tripMetrics.distanceMeters / 1000).toFixed(1)} km
                           </span>
-                          <span className="inline-flex items-center bg-[#f0fdf4] border border-[#dcfce7] px-2 py-0.5 rounded-lg text-[10px] font-bold text-emerald-600">
+                          <span className="inline-flex items-center bg-[#f0fdf4] border border-[#dcfce7] px-2 py-0.5 rounded-lg text-[12px] font-bold text-emerald-600">
                             {tripMetrics.durationMinutes} mins
                           </span>
                         </div>
                       )}
                     </div>
-                    <span className="shrink-0 text-[11px] font-semibold text-slate-400 mt-0.5">Edit</span>
+                    <span className="shrink-0 text-[13px] font-semibold text-slate-400 mt-0.5">Edit</span>
                   </button>
                 </div>
               </div>
@@ -2082,7 +2082,7 @@ const SelectVehicle = () => {
             <button
               type="button"
               onClick={() => openPicker(scheduledAtInputRef)}
-              className={`flex w-[42px] shrink-0 flex-col items-center justify-center rounded-[12px] border px-1 py-2 text-[10px] font-medium ${
+              className={`flex w-[42px] shrink-0 flex-col items-center justify-center rounded-[12px] border px-1 py-2 text-[12px] font-medium ${
                 rideMode === 'schedule'
                   ? 'border-slate-900 bg-slate-900 text-white'
                   : 'border-slate-200 bg-white text-slate-600'
@@ -2103,21 +2103,21 @@ const SelectVehicle = () => {
             {isInitialVehicleResultsLoading && (
               <div className="min-h-[180px] flex flex-col items-center justify-center gap-3 text-slate-400">
                 <LoaderCircle size={26} className="animate-spin" />
-                <p className="text-[11px] font-bold uppercase tracking-widest">Finding available rides</p>
+                <p className="text-[13px] font-bold uppercase tracking-widest">Finding available rides</p>
               </div>
             )}
 
             {!isInitialVehicleResultsLoading && vehicleLoadError && (
               <div className="rounded-[18px] border border-red-50 bg-white px-4 py-5 text-center">
-                <p className="text-[12px] font-black text-red-500">{vehicleLoadError}</p>
-                <p className="mt-1 text-[10px] font-bold text-slate-400">Please try again later.</p>
+                <p className="text-[13.5px] font-black text-red-500">{vehicleLoadError}</p>
+                <p className="mt-1 text-[12px] font-bold text-slate-400">Please try again later.</p>
               </div>
             )}
 
             {!isInitialVehicleResultsLoading && !vehicleLoadError && displayedVehicles.length === 0 && (
               <div className="rounded-[18px] border border-slate-100 bg-white px-4 py-5 text-center">
-                <p className="text-[13px] font-bold text-slate-900">No vehicles available</p>
-                <p className="mt-1 text-[11px] font-bold text-slate-400">Try changing your location or method.</p>
+                <p className="text-[14.5px] font-bold text-slate-900">No vehicles available</p>
+                <p className="mt-1 text-[13px] font-bold text-slate-400">Try changing your location or method.</p>
               </div>
             )}
 
@@ -2174,16 +2174,16 @@ const SelectVehicle = () => {
                       <div className="flex h-9 w-full items-center justify-center">
                         <img src={v.icon} alt={v.name} className="h-8 w-12 object-contain" draggable={false} />
                       </div>
-                      <span className="mt-1 text-[10px] font-medium text-slate-500">{compactEta} min</span>
+                      <span className="mt-1 text-[12px] font-medium text-slate-500">{compactEta} min</span>
                     </div>
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <span className="block truncate text-[14px] font-semibold leading-tight text-slate-900">
+                          <span className="block truncate text-[15.5px] font-semibold leading-tight text-slate-900">
                             {v.name}
                           </span>
-                          <p className="mt-0.5 truncate text-[11px] font-medium text-slate-400">
+                          <p className="mt-0.5 truncate text-[13px] font-medium text-slate-400">
                             {v.sublabel}
                           </p>
                         </div>
@@ -2213,7 +2213,7 @@ const SelectVehicle = () => {
                       {isSelected && (
                         <div className="mt-2">
                           <div className="min-w-0">
-                            <p className="truncate text-[11px] font-medium text-slate-500">
+                            <p className="truncate text-[13px] font-medium text-slate-500">
                               {rideMode === 'schedule'
                                 ? `Scheduled for ${formatScheduledDisplay(scheduledAt)}`
                                 : isUnavailable
@@ -2221,7 +2221,7 @@ const SelectVehicle = () => {
                                   : formatAvailabilityLine(availability)}
                             </p>
                             {driverLoadError && (
-                              <p className="mt-1 text-[10px] font-medium text-rose-500">{driverLoadError}</p>
+                              <p className="mt-1 text-[12px] font-medium text-rose-500">{driverLoadError}</p>
                             )}
                           </div>
                         </div>
@@ -2258,7 +2258,7 @@ const SelectVehicle = () => {
             <button
               type="button"
               onClick={() => setShowPaymentModal(true)}
-              className="flex items-center justify-center gap-2 border-r border-slate-200 px-3 py-2.5 text-[12px] font-medium text-slate-700"
+              className="flex items-center justify-center gap-2 border-r border-slate-200 px-3 py-2.5 text-[13.5px] font-medium text-slate-700"
             >
               <Banknote size={15} strokeWidth={2.2} className="text-green-600" />
               <span>{paymentMethod === 'Cash' ? 'Cash' : 'Online'}</span>
@@ -2266,7 +2266,7 @@ const SelectVehicle = () => {
             <button
               type="button"
               onClick={() => setShowCouponModal(true)}
-              className={`flex items-center justify-center gap-2 border-r border-slate-200 px-3 py-2.5 text-[12px] font-medium ${
+              className={`flex items-center justify-center gap-2 border-r border-slate-200 px-3 py-2.5 text-[13.5px] font-medium ${
                 appliedPromo ? 'text-emerald-700' : 'text-slate-700'
               }`}
             >
@@ -2275,9 +2275,9 @@ const SelectVehicle = () => {
             </button>
             <button
               type="button"
-              className="flex items-center justify-center gap-2 px-3 py-2.5 text-[12px] font-medium text-slate-700"
+              className="flex items-center justify-center gap-2 px-3 py-2.5 text-[13.5px] font-medium text-slate-700"
             >
-              <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-slate-100 text-[10px] text-slate-600">•</span>
+              <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-slate-100 text-[12px] text-slate-600">•</span>
               <span>Myself</span>
             </button>
           </div>
@@ -2289,23 +2289,23 @@ const SelectVehicle = () => {
               {appliedPromo && !promoError ? (
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="truncate text-[11px] font-semibold text-emerald-700">
+                    <p className="truncate text-[13px] font-semibold text-emerald-700">
                       {appliedPromo.promo?.code} applied for this zone
                     </p>
-                    <p className="mt-0.5 text-[10px] font-medium text-emerald-700/80">
+                    <p className="mt-0.5 text-[12px] font-medium text-emerald-700/80">
                       Save {formatCurrency(appliedPromoDiscount)}. Fare now {formatCurrency(discountedSelectedFare)}.
                     </p>
                   </div>
                   <button
                     type="button"
                     onClick={() => clearAppliedPromo('Coupon removed.')}
-                    className="shrink-0 text-[10px] font-semibold uppercase tracking-wide text-emerald-700"
+                    className="shrink-0 text-[12px] font-semibold uppercase tracking-wide text-emerald-700"
                   >
                     Remove
                   </button>
                 </div>
               ) : (
-                <p className={`text-[10px] font-medium ${promoError ? 'text-rose-600' : 'text-emerald-700'}`}>
+                <p className={`text-[12px] font-medium ${promoError ? 'text-rose-600' : 'text-emerald-700'}`}>
                   {promoError || promoFeedback}
                 </p>
               )}
@@ -2317,7 +2317,7 @@ const SelectVehicle = () => {
             whileTap={canProceed ? { scale: 0.98 } : undefined}
             disabled={!canProceed}
             onClick={handleBook}
-            className={`mt-3 flex w-full items-center justify-center rounded-[8px] px-4 py-3.5 text-[16px] font-medium transition ${
+            className={`mt-3 flex w-full items-center justify-center rounded-[8px] px-4 py-3.5 text-[17px] font-medium transition ${
               canProceed
                 ? 'bg-[#1f1f1f] text-white'
                 : 'bg-slate-200 text-slate-400'
@@ -2340,9 +2340,9 @@ const SelectVehicle = () => {
 
           {rideMode === 'schedule' ? (
             scheduleError ? (
-              <p className="mt-2 text-[11px] font-medium text-rose-500">{scheduleError}</p>
+              <p className="mt-2 text-[13px] font-medium text-rose-500">{scheduleError}</p>
             ) : (
-              <p className="mt-2 text-[11px] font-medium text-slate-500">
+              <p className="mt-2 text-[13px] font-medium text-slate-500">
                 Scheduled for {formatScheduledDisplay(scheduledAt)}.
               </p>
             )
@@ -2370,9 +2370,9 @@ const SelectVehicle = () => {
               <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-5" />
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-orange-500 mb-1">Vehicle details</p>
+                  <p className="text-[12px] font-bold uppercase tracking-wider text-orange-500 mb-1">Vehicle details</p>
                   <h3 className="text-[20px] font-extrabold text-slate-900">{previewVehicle.name}</h3>
-                  <p className="mt-1 text-[12px] font-bold text-slate-500">
+                  <p className="mt-1 text-[13.5px] font-bold text-slate-500">
                     {previewVehicle.sublabel || 'Comfortable ride option for this route.'}
                   </p>
                 </div>
@@ -2383,22 +2383,22 @@ const SelectVehicle = () => {
 
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <div className="rounded-[18px] border border-slate-100 bg-slate-50/70 px-4 py-3">
-                  <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">Estimated fare</p>
-                  <p className="mt-1 text-[17px] font-extrabold text-slate-900">
+                  <p className="text-[12px] font-black uppercase tracking-[0.14em] text-slate-400">Estimated fare</p>
+                  <p className="mt-1 text-[18px] font-extrabold text-slate-900">
                     {isFarePending ? 'Calculating...' : formatVehicleFare(previewVehicle)}
                   </p>
                 </div>
                 <div className="rounded-[18px] border border-slate-100 bg-slate-50/70 px-4 py-3">
-                  <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">Seats</p>
-                  <p className="mt-1 text-[17px] font-extrabold text-slate-900">{previewVehicle.capacity}</p>
+                  <p className="text-[12px] font-black uppercase tracking-[0.14em] text-slate-400">Seats</p>
+                  <p className="mt-1 text-[18px] font-extrabold text-slate-900">{previewVehicle.capacity}</p>
                 </div>
                 <div className="rounded-[18px] border border-slate-100 bg-slate-50/70 px-4 py-3">
-                  <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">Booking type</p>
-                  <p className="mt-1 text-[14px] font-extrabold text-slate-900">{formatDispatchLabel(previewVehicle)}</p>
+                  <p className="text-[12px] font-black uppercase tracking-[0.14em] text-slate-400">Booking type</p>
+                  <p className="mt-1 text-[15.5px] font-extrabold text-slate-900">{formatDispatchLabel(previewVehicle)}</p>
                 </div>
                 <div className="rounded-[18px] border border-slate-100 bg-slate-50/70 px-4 py-3">
-                  <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">Availability</p>
-                  <p className="mt-1 text-[14px] font-extrabold text-slate-900">
+                  <p className="text-[12px] font-black uppercase tracking-[0.14em] text-slate-400">Availability</p>
+                  <p className="mt-1 text-[15.5px] font-extrabold text-slate-900">
                     {rideMode === 'schedule'
                       ? 'Can be scheduled'
                       : previewAvailability.totalDrivers
@@ -2409,8 +2409,8 @@ const SelectVehicle = () => {
               </div>
 
               <div className="mt-4 rounded-[20px] border border-orange-100 bg-orange-50/60 px-4 py-4">
-                <p className="text-[10px] font-black uppercase tracking-[0.14em] text-orange-500">Trip snapshot</p>
-                <p className="mt-2 text-[12px] font-bold leading-5 text-slate-700">
+                <p className="text-[12px] font-black uppercase tracking-[0.14em] text-orange-500">Trip snapshot</p>
+                <p className="mt-2 text-[13.5px] font-bold leading-5 text-slate-700">
                   {rideMode === 'schedule'
                     ? 'This vehicle can be reserved for a later trip at your chosen time.'
                     : previewAvailability.totalDrivers
@@ -2422,7 +2422,7 @@ const SelectVehicle = () => {
               <button
                 type="button"
                 onClick={() => setPreviewVehicleId('')}
-                className="mt-5 w-full rounded-[18px] border border-slate-200 bg-white px-4 py-3 text-[13px] font-black uppercase tracking-[0.14em] text-slate-700"
+                className="mt-5 w-full rounded-[18px] border border-slate-200 bg-white px-4 py-3 text-[14.5px] font-black uppercase tracking-[0.14em] text-slate-700"
               >
                 Close
               </button>
@@ -2447,20 +2447,20 @@ const SelectVehicle = () => {
               className="fixed bottom-0 left-0 right-0 max-w-lg mx-auto bg-white rounded-t-[28px] px-5 pt-4 pb-10 z-[101]"
             >
               <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-5" />
-              <p className="text-[10px] font-bold uppercase tracking-wider text-orange-500 mb-1">Bid fare</p>
-              <h3 className="text-[18px] font-bold text-slate-900">Choose your max fare</h3>
-              <p className="mt-1 text-[12px] font-bold text-slate-500">
+              <p className="text-[12px] font-bold uppercase tracking-wider text-orange-500 mb-1">Bid fare</p>
+              <h3 className="text-[19px] font-bold text-slate-900">Choose your max fare</h3>
+              <p className="mt-1 text-[13.5px] font-bold text-slate-500">
                 Drivers can send offers up to this amount for {selectedVehicle.name}.
               </p>
 
               <div className="mt-5 rounded-[20px] border border-orange-100 bg-orange-50/60 px-4 py-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-orange-500">Bid Range</p>
-                    <p className="mt-1 text-[13px] font-bold text-slate-900">Adjust the fare ceiling inside the admin-configured bidding range.</p>
+                    <p className="text-[12px] font-black uppercase tracking-[0.14em] text-orange-500">Bid Range</p>
+                    <p className="mt-1 text-[14.5px] font-bold text-slate-900">Adjust the fare ceiling inside the admin-configured bidding range.</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">Max fare</p>
+                    <p className="text-[12px] font-black uppercase tracking-[0.14em] text-slate-400">Max fare</p>
                     <p className="mt-1 text-[20px] font-black text-slate-900">{formatCurrency(selectedBidCeiling)}</p>
                   </div>
                 </div>
@@ -2475,7 +2475,7 @@ const SelectVehicle = () => {
                   className="mt-4 h-2 w-full cursor-pointer accent-orange-500"
                 />
 
-                <div className="mt-3 flex items-center justify-between text-[11px] font-bold text-slate-500">
+                <div className="mt-3 flex items-center justify-between text-[13px] font-bold text-slate-500">
                   <span>Floor {formatCurrency(selectedBidFloorFare)}</span>
                   <span>Ceiling {formatCurrency(selectedBidCeilingMaxFare)}</span>
                 </div>
@@ -2485,14 +2485,14 @@ const SelectVehicle = () => {
                 <button
                   type="button"
                   onClick={() => setShowBidModal(false)}
-                  className="flex-1 rounded-[18px] border border-slate-200 bg-white px-4 py-3 text-[13px] font-black uppercase tracking-[0.14em] text-slate-600"
+                  className="flex-1 rounded-[18px] border border-slate-200 bg-white px-4 py-3 text-[14.5px] font-black uppercase tracking-[0.14em] text-slate-600"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={proceedToBooking}
-                  className="flex-1 rounded-[18px] bg-[#f8e001] px-4 py-3 text-[13px] font-black uppercase tracking-[0.14em] text-slate-900 shadow-[0_12px_28px_-4px_rgba(248,224,1,0.4)]"
+                  className="flex-1 rounded-[18px] bg-[#f8e001] px-4 py-3 text-[14.5px] font-black uppercase tracking-[0.14em] text-slate-900 shadow-[0_12px_28px_-4px_rgba(248,224,1,0.4)]"
                 >
                   Send Bid
                 </button>
@@ -2519,9 +2519,9 @@ const SelectVehicle = () => {
               className="fixed bottom-0 left-0 right-0 max-w-lg mx-auto bg-white rounded-t-[28px] px-5 pt-4 pb-8 z-[101]"
             >
               <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-5" />
-              <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-500 mb-1">Coupons</p>
-              <h3 className="text-[18px] font-bold text-slate-900">Apply for this zone</h3>
-              <p className="mt-1 text-[12px] font-bold text-slate-500">
+              <p className="text-[12px] font-bold uppercase tracking-wider text-emerald-500 mb-1">Coupons</p>
+              <h3 className="text-[19px] font-bold text-slate-900">Apply for this zone</h3>
+              <p className="mt-1 text-[13.5px] font-bold text-slate-500">
                 Only coupons created for this service location show here.
               </p>
 
@@ -2535,7 +2535,7 @@ const SelectVehicle = () => {
                     setPromoFeedback('');
                   }}
                   placeholder="Enter coupon code"
-                  className="min-w-0 flex-1 rounded-[16px] border border-slate-200 px-4 py-3 text-[13px] font-semibold text-slate-900 outline-none transition focus:border-emerald-300"
+                  className="min-w-0 flex-1 rounded-[16px] border border-slate-200 px-4 py-3 text-[14.5px] font-semibold text-slate-900 outline-none transition focus:border-emerald-300"
                 />
                 <button
                   type="button"
@@ -2546,14 +2546,14 @@ const SelectVehicle = () => {
                       setShowCouponModal(false);
                     }
                   }}
-                  className="rounded-[16px] bg-slate-950 px-4 py-3 text-[12px] font-black uppercase tracking-[0.14em] text-white disabled:opacity-60"
+                  className="rounded-[16px] bg-slate-950 px-4 py-3 text-[13.5px] font-black uppercase tracking-[0.14em] text-white disabled:opacity-60"
                 >
                   {applyingPromoCode ? 'Applying' : 'Apply'}
                 </button>
               </div>
 
               {(promoError || promoFeedback) && (
-                <p className={`mt-3 text-[11px] font-semibold ${promoError ? 'text-rose-500' : 'text-emerald-600'}`}>
+                <p className={`mt-3 text-[13px] font-semibold ${promoError ? 'text-rose-500' : 'text-emerald-600'}`}>
                   {promoError || promoFeedback}
                 </p>
               )}
@@ -2562,7 +2562,7 @@ const SelectVehicle = () => {
                 {isLoadingPromos ? (
                   <div className="flex items-center gap-2 rounded-[18px] border border-slate-100 bg-slate-50 px-4 py-4">
                     <LoaderCircle size={16} className="animate-spin text-slate-500" />
-                    <span className="text-[12px] font-semibold text-slate-600">Loading available coupons</span>
+                    <span className="text-[13.5px] font-semibold text-slate-600">Loading available coupons</span>
                   </div>
                 ) : availablePromos.length ? (
                   availablePromos.map((promo) => {
@@ -2578,10 +2578,10 @@ const SelectVehicle = () => {
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
                             <div className="flex items-center gap-2">
-                              <p className="truncate text-[14px] font-black text-slate-900">{promo?.code}</p>
+                              <p className="truncate text-[15.5px] font-black text-slate-900">{promo?.code}</p>
                               {isApplied && <CheckCircle2 size={14} className="text-emerald-600" strokeWidth={2.6} />}
                             </div>
-                            <p className="mt-1 text-[11px] font-medium text-slate-600">{formatPromoSummary(promo)}</p>
+                            <p className="mt-1 text-[13px] font-medium text-slate-600">{formatPromoSummary(promo)}</p>
                           </div>
                           <button
                             type="button"
@@ -2592,7 +2592,7 @@ const SelectVehicle = () => {
                                 setShowCouponModal(false);
                               }
                             }}
-                            className={`shrink-0 rounded-full px-3 py-2 text-[10px] font-black uppercase tracking-[0.14em] ${
+                            className={`shrink-0 rounded-full px-3 py-2 text-[12px] font-black uppercase tracking-[0.14em] ${
                               isApplied ? 'bg-emerald-600 text-white' : 'bg-white text-slate-800 border border-slate-200'
                             } disabled:opacity-60`}
                           >
@@ -2604,7 +2604,7 @@ const SelectVehicle = () => {
                   })
                 ) : (
                   <div className="rounded-[18px] border border-slate-100 bg-slate-50 px-4 py-4">
-                    <p className="text-[12px] font-semibold text-slate-600">
+                    <p className="text-[13.5px] font-semibold text-slate-600">
                       No coupons are active for this zone right now.
                     </p>
                   </div>
@@ -2630,8 +2630,8 @@ const SelectVehicle = () => {
               className="fixed bottom-0 left-0 right-0 max-w-lg mx-auto bg-white rounded-t-[28px] px-5 pt-4 pb-10 z-[101]"
             >
               <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-5" />
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Payment</p>
-              <h3 className="text-[18px] font-bold text-slate-900 mb-5">Select Method</h3>
+              <p className="text-[12px] font-bold uppercase tracking-wider text-slate-400 mb-1">Payment</p>
+              <h3 className="text-[19px] font-bold text-slate-900 mb-5">Select Method</h3>
               <div className="space-y-2.5">
                 {paymentOptions.map(({ id, stateValue, label, sub, Icon, bg, color }) => (
                   <motion.button
@@ -2649,8 +2649,8 @@ const SelectVehicle = () => {
                       <Icon size={18} className={color} strokeWidth={2} />
                     </div>
                     <div className="flex-1 text-left">
-                      <p className="text-[14px] font-bold text-slate-900">{label}</p>
-                      <p className="text-[11px] font-bold text-slate-400">{sub}</p>
+                      <p className="text-[15.5px] font-bold text-slate-900">{label}</p>
+                      <p className="text-[13px] font-bold text-slate-400">{sub}</p>
                     </div>
                     {paymentMethod === stateValue && (
                       <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center shrink-0">

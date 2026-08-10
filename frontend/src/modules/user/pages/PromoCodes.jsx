@@ -120,8 +120,8 @@ const PromoCodes = () => {
             <ArrowLeft size={18} className="text-slate-900" strokeWidth={2.5} />
           </button>
           <div className="flex-1">
-            <p className="text-[9px] font-black uppercase tracking-[0.26em] text-slate-400">Discounts</p>
-            <h1 className="text-[19px] font-black tracking-tight text-slate-900">Promo Codes</h1>
+            <p className="text-[11px] font-black uppercase tracking-[0.26em] text-slate-400">Discounts</p>
+            <h1 className="text-[20px] font-black tracking-tight text-slate-900">Promo Codes</h1>
           </div>
           <Tag size={20} className="text-yellow-500" strokeWidth={2} />
         </div>
@@ -134,7 +134,7 @@ const PromoCodes = () => {
             <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
               className="flex items-center gap-3 bg-red-50 border border-red-100 rounded-[16px] px-4 py-3">
               <X size={14} className="text-red-500 shrink-0" strokeWidth={2.5} />
-              <p className="text-[12px] font-black text-red-600 flex-1">{errorBanner}</p>
+              <p className="text-[13.5px] font-black text-red-600 flex-1">{errorBanner}</p>
               <button onClick={() => setErrorBanner(null)}>
                 <X size={13} className="text-red-400" />
               </button>
@@ -144,7 +144,7 @@ const PromoCodes = () => {
 
         {/* Manual entry */}
         <div className="rounded-[20px] border border-white/80 bg-white/90 shadow-[0_4px_14px_rgba(15,23,42,0.06)] p-4">
-          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-400 mb-2">Enter Code Manually</p>
+          <p className="text-[12px] font-black uppercase tracking-[0.22em] text-slate-400 mb-2">Enter Code Manually</p>
           <div className="flex gap-2">
             <input
               type="text"
@@ -152,10 +152,10 @@ const PromoCodes = () => {
               onChange={e => setManualCode(e.target.value.toUpperCase())}
               onKeyDown={e => e.key === 'Enter' && handleManualApply()}
               placeholder="e.g. RYDON50"
-              className="flex-1 bg-slate-50 border border-slate-100 rounded-[12px] px-4 py-2.5 text-[14px] font-black text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-200"
+              className="flex-1 bg-slate-50 border border-slate-100 rounded-[12px] px-4 py-2.5 text-[15.5px] font-black text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-200"
             />
             <motion.button whileTap={{ scale: 0.96 }} onClick={handleManualApply}
-              className="bg-slate-900 text-white px-4 py-2.5 rounded-[12px] text-[12px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-sm">
+              className="bg-slate-900 text-white px-4 py-2.5 rounded-[12px] text-[13.5px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-sm">
               Apply <ChevronRight size={13} strokeWidth={3} />
             </motion.button>
           </div>
@@ -163,8 +163,8 @@ const PromoCodes = () => {
 
         {/* Section label */}
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.26em] text-slate-400">Available Offers</p>
-          <h2 className="mt-0.5 text-[16px] font-black tracking-tight text-slate-900">Pick a promo</h2>
+          <p className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-400">Available Offers</p>
+          <h2 className="mt-0.5 text-[17px] font-black tracking-tight text-slate-900">Pick a promo</h2>
         </div>
 
         {/* Promo cards */}
@@ -175,7 +175,7 @@ const PromoCodes = () => {
             <div className="w-16 h-16 bg-white/80 border border-white/80 rounded-3xl flex items-center justify-center">
               <Ticket size={28} className="text-slate-300" strokeWidth={1.5} />
             </div>
-            <p className="text-[14px] font-black text-slate-500">No promo codes available right now</p>
+            <p className="text-[15.5px] font-black text-slate-500">No promo codes available right now</p>
           </div>
         )}
 
@@ -192,23 +192,23 @@ const PromoCodes = () => {
               <div className="flex items-start justify-between gap-3 mb-2">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[16px] font-black text-slate-900 tracking-wider">{promo.code}</span>
+                    <span className="text-[17px] font-black text-slate-900 tracking-wider">{promo.code}</span>
                     {isApplied && <CheckCircle2 size={16} className="text-emerald-500" strokeWidth={2.5} />}
                   </div>
-                  <p className="text-[11px] font-bold text-slate-400 mt-0.5">{promo.service} · Min fare ₹{promo.minFare}</p>
+                  <p className="text-[13px] font-bold text-slate-400 mt-0.5">{promo.service} · Min fare ₹{promo.minFare}</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="text-[18px] font-black text-slate-900">
+                  <p className="text-[19px] font-black text-slate-900">
                     {promo.type === 'flat' ? `₹${promo.discount}` : `${promo.discount}%`}
-                    <span className="text-[11px] font-bold text-slate-400 ml-1">off</span>
+                    <span className="text-[13px] font-bold text-slate-400 ml-1">off</span>
                   </p>
-                  <p className="text-[9px] font-bold text-slate-400">Expires {promo.expiry}</p>
+                  <p className="text-[11px] font-bold text-slate-400">Expires {promo.expiry}</p>
                 </div>
               </div>
               <motion.button whileTap={{ scale: 0.97 }}
                 onClick={() => applyCode(promo.code)}
                 disabled={isApplied || isApplying}
-                className={`w-full py-2.5 rounded-[12px] text-[12px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${
+                className={`w-full py-2.5 rounded-[12px] text-[13.5px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${
                   isApplied
                     ? 'bg-emerald-100 text-emerald-700 cursor-default'
                     : 'bg-slate-900 text-white shadow-sm active:bg-black'
@@ -228,7 +228,7 @@ const PromoCodes = () => {
       <AnimatePresence>
         {toast && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-            className={`fixed bottom-24 left-1/2 -translate-x-1/2 px-5 py-3 rounded-2xl text-[12px] font-black shadow-2xl z-50 whitespace-nowrap ${
+            className={`fixed bottom-24 left-1/2 -translate-x-1/2 px-5 py-3 rounded-2xl text-[13.5px] font-black shadow-2xl z-50 whitespace-nowrap ${
               toast.type === 'success' ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'
             }`}>
             {toast.type === 'success' ? '✓ ' : '✗ '}{toast.msg}

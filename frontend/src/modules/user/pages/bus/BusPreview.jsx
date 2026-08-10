@@ -54,14 +54,14 @@ const getStopName = (bus, stopType) => {
 };
 
 const SectionTitle = ({ children }) => (
-  <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--text-light)]">{children}</p>
+  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--text-light)]">{children}</p>
 );
 
 const Stat = ({ icon: Icon, label, value, tone = '' }) => (
   <div className="min-w-0 rounded-[12px] bg-slate-50 px-2 py-2 text-center">
     <Icon size={13} className="mx-auto text-[var(--text-light)]" />
-    <p className="mt-1 text-[8px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">{label}</p>
-    <p className={`mt-0.5 truncate text-[11px] font-extrabold ${tone}`}>{value}</p>
+    <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">{label}</p>
+    <p className={`mt-0.5 truncate text-[13px] font-extrabold ${tone}`}>{value}</p>
   </div>
 );
 
@@ -126,29 +126,29 @@ const BusPreview = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/35 to-transparent" />
 
             {hasRating ? (
-              <span className="absolute left-3 top-3 flex items-center gap-1 rounded-[10px] bg-[var(--success)] px-2 py-1 text-[10px] font-bold text-white">
+              <span className="absolute left-3 top-3 flex items-center gap-1 rounded-[10px] bg-[var(--success)] px-2 py-1 text-[12px] font-bold text-white">
                 <Star size={10} className="fill-current" />
                 {Number(bus.rating).toFixed(1)}
                 {bus.ratingCount ? <span className="font-medium opacity-80">({bus.ratingCount})</span> : null}
               </span>
             ) : null}
-            <span className="absolute right-3 top-3 rounded-[10px] bg-black/60 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
+            <span className="absolute right-3 top-3 rounded-[10px] bg-black/60 px-2 py-1 text-[12px] font-semibold text-white backdrop-blur-sm">
               {bus.type || 'Coach'}
             </span>
 
             <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-3.5 text-white">
               <div className="min-w-0">
-                <p className="truncate text-[9px] font-bold uppercase tracking-[0.16em] text-white/70">
+                <p className="truncate text-[11px] font-bold uppercase tracking-[0.16em] text-white/70">
                   {bus.busName || 'Coach Service'}
                 </p>
-                <h2 className="mt-0.5 truncate text-[19px] font-extrabold leading-tight">{bus.operator}</h2>
-                <p className="mt-0.5 truncate text-[10px] font-medium text-white/75">
+                <h2 className="mt-0.5 truncate text-[20px] font-extrabold leading-tight">{bus.operator}</h2>
+                <p className="mt-0.5 truncate text-[12px] font-medium text-white/75">
                   {bus.routeName || `${fromCity} to ${toCity}`}
                 </p>
               </div>
               <div className="shrink-0 rounded-[12px] bg-white/15 px-2.5 py-1.5 text-right backdrop-blur-md">
-                <p className="text-[8px] font-bold uppercase tracking-[0.14em] text-white/70">Starts at</p>
-                <p className="text-[19px] font-extrabold leading-tight">Rs{Number(bus.price || 0)}</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-white/70">Starts at</p>
+                <p className="text-[20px] font-extrabold leading-tight">Rs{Number(bus.price || 0)}</p>
               </div>
             </div>
           </div>
@@ -176,13 +176,13 @@ const BusPreview = () => {
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
             <div className="min-w-0">
               <p className="text-[20px] font-extrabold leading-none">{bus.departure || '--:--'}</p>
-              <p className="mt-1 truncate text-[10px] font-bold text-[var(--text-light)]">{splitCity(fromCity)}</p>
+              <p className="mt-1 truncate text-[12px] font-bold text-[var(--text-light)]">{splitCity(fromCity)}</p>
               {boardingPoint ? (
-                <p className="truncate text-[9px] font-medium text-[var(--text-light)]">{boardingPoint}</p>
+                <p className="truncate text-[11px] font-medium text-[var(--text-light)]">{boardingPoint}</p>
               ) : null}
             </div>
             <div className="flex flex-col items-center px-2">
-              <span className="text-[9px] font-bold text-[var(--text-light)]">{formatDurationBrief(bus.duration)}</span>
+              <span className="text-[11px] font-bold text-[var(--text-light)]">{formatDurationBrief(bus.duration)}</span>
               <div className="my-1 flex w-16 items-center gap-1">
                 <span className="h-1.5 w-1.5 rounded-full bg-[var(--primary)]" />
                 <span className="h-px flex-1 bg-[var(--border)]" />
@@ -190,13 +190,13 @@ const BusPreview = () => {
                 <span className="h-px flex-1 bg-[var(--border)]" />
                 <span className="h-1.5 w-1.5 rounded-full bg-[var(--primary)]" />
               </div>
-              <span className="text-[9px] font-medium text-[var(--text-light)]">Direct</span>
+              <span className="text-[11px] font-medium text-[var(--text-light)]">Direct</span>
             </div>
             <div className="min-w-0 text-right">
               <p className="text-[20px] font-extrabold leading-none">{bus.arrival || '--:--'}</p>
-              <p className="mt-1 truncate text-[10px] font-bold text-[var(--text-light)]">{splitCity(toCity)}</p>
+              <p className="mt-1 truncate text-[12px] font-bold text-[var(--text-light)]">{splitCity(toCity)}</p>
               {droppingPoint ? (
-                <p className="truncate text-[9px] font-medium text-[var(--text-light)]">{droppingPoint}</p>
+                <p className="truncate text-[11px] font-medium text-[var(--text-light)]">{droppingPoint}</p>
               ) : null}
             </div>
           </div>
@@ -216,7 +216,7 @@ const BusPreview = () => {
               {bus.amenities.map((amenity) => (
                 <div
                   key={amenity}
-                  className="flex items-center gap-2 rounded-[12px] bg-[var(--secondary)] px-2.5 py-2 text-[10.5px] font-semibold"
+                  className="flex items-center gap-2 rounded-[12px] bg-[var(--secondary)] px-2.5 py-2 text-[12.5px] font-semibold"
                 >
                   <ShieldCheck size={12} className="shrink-0 text-[var(--primary-dark)]" />
                   <span className="truncate">{amenity}</span>
@@ -242,22 +242,22 @@ const BusPreview = () => {
                     />
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="truncate text-[12px] font-extrabold">
+                        <p className="truncate text-[13.5px] font-extrabold">
                           {stop.city || stop.pointName || `Stop ${index + 1}`}
                         </p>
-                        <p className="mt-0.5 truncate text-[10px] font-medium text-[var(--text-light)]">
+                        <p className="mt-0.5 truncate text-[12px] font-medium text-[var(--text-light)]">
                           {stop.pointName || 'Point not set'}
                         </p>
                       </div>
                       <div className="shrink-0 text-right">
                         <span
-                          className={`inline-flex rounded-full border px-1.5 py-0.5 text-[8px] font-bold uppercase ${
+                          className={`inline-flex rounded-full border px-1.5 py-0.5 text-[10px] font-bold uppercase ${
                             stopBadgeTone[stop.stopType] || stopBadgeTone.both
                           }`}
                         >
                           {stop.stopType === 'both' ? 'BP + DP' : stop.stopType === 'drop' ? 'DP' : 'BP'}
                         </span>
-                        <p className="mt-0.5 text-[10px] font-bold text-[var(--text-light)]">
+                        <p className="mt-0.5 text-[12px] font-bold text-[var(--text-light)]">
                           {stop.arrivalTime || stop.departureTime || '--:--'}
                         </p>
                       </div>
@@ -266,7 +266,7 @@ const BusPreview = () => {
                 ))}
               </div>
             ) : (
-              <p className="rounded-[14px] border border-dashed border-[var(--border)] bg-slate-50 px-3 py-5 text-center text-[11px] font-semibold text-[var(--text-light)]">
+              <p className="rounded-[14px] border border-dashed border-[var(--border)] bg-slate-50 px-3 py-5 text-center text-[13px] font-semibold text-[var(--text-light)]">
                 No stop details added for this bus yet.
               </p>
             )}
@@ -286,7 +286,7 @@ const BusPreview = () => {
                   className="w-full rounded-[14px] bg-slate-50 px-3 py-2.5 text-left"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-[11px] font-extrabold">{label}</span>
+                    <span className="text-[13px] font-extrabold">{label}</span>
                     <ChevronRight
                       size={14}
                       className={`shrink-0 text-[var(--text-light)] transition-transform ${
@@ -295,7 +295,7 @@ const BusPreview = () => {
                     />
                   </div>
                   {openPolicy === key ? (
-                    <p className="mt-1.5 text-[10.5px] font-medium leading-[1.6] text-[var(--text-light)]">{text}</p>
+                    <p className="mt-1.5 text-[12.5px] font-medium leading-[1.6] text-[var(--text-light)]">{text}</p>
                   ) : null}
                 </button>
               ))}
@@ -306,13 +306,13 @@ const BusPreview = () => {
         {(bus.driverName || bus.driverPhone) ? (
           <div className="flex items-center justify-between rounded-[20px] border border-[var(--border)] bg-white p-3.5 shadow-[var(--shadow-sm)]">
             <div className="min-w-0">
-              <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[var(--text-light)]">Bus Staff</p>
-              <p className="mt-0.5 truncate text-[12px] font-extrabold">{bus.driverName || 'Assigned crew'}</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--text-light)]">Bus Staff</p>
+              <p className="mt-0.5 truncate text-[13.5px] font-extrabold">{bus.driverName || 'Assigned crew'}</p>
             </div>
             {bus.driverPhone ? (
               <a
                 href={`tel:${bus.driverPhone}`}
-                className="flex shrink-0 items-center gap-1.5 rounded-[12px] border border-[var(--border)] px-3 py-2 text-[11px] font-bold"
+                className="flex shrink-0 items-center gap-1.5 rounded-[12px] border border-[var(--border)] px-3 py-2 text-[13px] font-bold"
               >
                 <Phone size={12} className="text-[var(--primary-dark)]" />
                 Call
@@ -325,20 +325,20 @@ const BusPreview = () => {
       <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-lg -translate-x-1/2 border-t border-[var(--border)] bg-white/95 px-4 pb-6 pt-3 backdrop-blur-md">
         <div className="mb-2 flex items-center justify-between">
           <div>
-            <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[var(--text-light)]">Starting from</p>
-            <p className="text-[18px] font-extrabold leading-tight">
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--text-light)]">Starting from</p>
+            <p className="text-[19px] font-extrabold leading-tight">
               Rs{Number(bus.price || 0)}
-              <span className="ml-1 text-[10px] font-medium text-[var(--text-light)]">per seat</span>
+              <span className="ml-1 text-[12px] font-medium text-[var(--text-light)]">per seat</span>
             </p>
           </div>
-          <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-[var(--success)]">
+          <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[12px] font-bold text-[var(--success)]">
             {bus.availableSeats || 0} seats left
           </span>
         </div>
         <button
           type="button"
           onClick={() => navigate(`${routePrefix}/bus/seats`, { state: buildBusRouteState(state) })}
-          className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[15px] font-extrabold text-[var(--text)] shadow-[0_8px_20px_rgba(255,193,7,.4)] active:scale-[0.99] transition-transform"
+          className="flex w-full items-center justify-center gap-2 rounded-[16px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-3.5 text-[16.5px] font-extrabold text-[var(--text)] shadow-[0_8px_20px_rgba(255,193,7,.4)] active:scale-[0.99] transition-transform"
         >
           Select Seats <ChevronRight size={18} strokeWidth={2.8} />
         </button>

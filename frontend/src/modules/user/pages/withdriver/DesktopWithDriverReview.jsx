@@ -142,10 +142,10 @@ const DesktopWithDriverReview = () => {
       <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
         <DesktopNav activePath="/taxi/user/with-driver" theme={theme} onToggleTheme={toggleTheme} />
         <div className="mx-auto max-w-[1440px] px-8 py-24 text-center xl:px-12">
-          <p className="text-[18px] font-black text-[var(--dh-text)]">No driver selected</p>
+          <p className="text-[19px] font-black text-[var(--dh-text)]">No driver selected</p>
           <button
             onClick={() => navigate('/taxi/user/with-driver')}
-            className="mt-5 rounded-[12px] bg-[#F5B700] px-6 py-3 text-[15px] font-bold text-slate-950"
+            className="mt-5 rounded-[12px] bg-[#F5B700] px-6 py-3 text-[16.5px] font-bold text-slate-950"
           >
             Choose a driver
           </button>
@@ -182,9 +182,9 @@ const DesktopWithDriverReview = () => {
                         : 'bg-[var(--dh-chip)] text-[var(--dh-muted)]'
                     }`}
                   >
-                    {isDone ? <CheckCircle2 size={18} strokeWidth={2.4} /> : <span className="text-[14px] font-black">{index + 1}</span>}
+                    {isDone ? <CheckCircle2 size={18} strokeWidth={2.4} /> : <span className="text-[15.5px] font-black">{index + 1}</span>}
                   </span>
-                  <span className={`whitespace-nowrap text-[13.5px] font-bold ${isCurrent ? 'text-[var(--dh-text)]' : 'text-[var(--dh-muted)]'}`}>
+                  <span className={`whitespace-nowrap text-[15px] font-bold ${isCurrent ? 'text-[var(--dh-text)]' : 'text-[var(--dh-muted)]'}`}>
                     {label}
                   </span>
                   {index < STEPS.length - 1 && (
@@ -198,15 +198,15 @@ const DesktopWithDriverReview = () => {
           <div className="mt-8 flex items-start justify-between gap-6">
             <div>
               <h1 className="text-[28px] font-black tracking-[-0.035em] text-[var(--dh-text)]">Review Your Ride</h1>
-              <p className="mt-1.5 text-[14px] font-medium text-[var(--dh-muted)]">
+              <p className="mt-1.5 text-[15.5px] font-medium text-[var(--dh-muted)]">
                 Please review the trip details and driver information before confirming your booking.
               </p>
             </div>
             <span className="flex shrink-0 items-center gap-2.5 rounded-[12px] bg-[#FFFBEC] px-4 py-3">
               <ShieldCheck size={22} className="text-[#F5B700]" strokeWidth={2.1} />
               <span>
-                <span className="block text-[13px] font-black text-slate-900">Secure Booking</span>
-                <span className="block text-[11px] font-semibold text-slate-600">Your data is safe with us</span>
+                <span className="block text-[14.5px] font-black text-slate-900">Secure Booking</span>
+                <span className="block text-[13px] font-semibold text-slate-600">Your data is safe with us</span>
               </span>
             </span>
           </div>
@@ -216,10 +216,10 @@ const DesktopWithDriverReview = () => {
             <div className="mt-6 grid grid-cols-5 divide-x divide-[var(--dh-border)] rounded-[16px] border border-[var(--dh-border)] py-4">
               {tripFacts.map(([label, value, Icon]) => (
                 <div key={label} className="px-4">
-                  <span className="flex items-center gap-1.5 text-[12px] font-bold text-[var(--dh-muted)]">
+                  <span className="flex items-center gap-1.5 text-[13.5px] font-bold text-[var(--dh-muted)]">
                     <Icon size={14} className="text-[#F5B700]" strokeWidth={2.4} /> {label}
                   </span>
-                  <p className="mt-1.5 text-[13.5px] font-bold leading-snug text-[var(--dh-text)]">{value}</p>
+                  <p className="mt-1.5 text-[15px] font-bold leading-snug text-[var(--dh-text)]">{value}</p>
                 </div>
               ))}
             </div>
@@ -227,7 +227,7 @@ const DesktopWithDriverReview = () => {
 
           {/* ----------------------------------------------------------- Driver */}
           <div className="mt-4 rounded-[16px] border border-[var(--dh-border)] p-5">
-            <h2 className="text-[17px] font-black text-[var(--dh-text)]">Your Driver</h2>
+            <h2 className="text-[18px] font-black text-[var(--dh-text)]">Your Driver</h2>
 
             <div className="mt-4 grid grid-cols-[220px_minmax(0,1fr)_minmax(0,1fr)] items-center gap-5">
               <div className="flex items-center gap-3.5">
@@ -239,16 +239,16 @@ const DesktopWithDriverReview = () => {
                   )}
                 </span>
                 <span className="min-w-0">
-                  <span className="block truncate text-[18px] font-black text-[var(--dh-text)]">{driver.name}</span>
+                  <span className="block truncate text-[19px] font-black text-[var(--dh-text)]">{driver.name}</span>
                   {Number(driver.rating) > 0 && (
                     <span className="mt-1 flex items-center gap-1.5">
                       <Star size={14} className="fill-[#F5B700] text-[#F5B700]" />
-                      <span className="text-[13px] font-black text-[var(--dh-text)]">{driver.rating}</span>
-                      {driver.trips && <span className="text-[12px] font-semibold text-[var(--dh-muted)]">({driver.trips} trips)</span>}
+                      <span className="text-[14.5px] font-black text-[var(--dh-text)]">{driver.rating}</span>
+                      {driver.trips && <span className="text-[13.5px] font-semibold text-[var(--dh-muted)]">({driver.trips} trips)</span>}
                     </span>
                   )}
                   {driver.verified && (
-                    <span className="mt-1.5 flex items-center gap-1.5 text-[12px] font-bold text-emerald-700">
+                    <span className="mt-1.5 flex items-center gap-1.5 text-[13.5px] font-bold text-emerald-700">
                       <ShieldCheck size={14} strokeWidth={2.3} /> Verified Driver
                     </span>
                   )}
@@ -263,28 +263,28 @@ const DesktopWithDriverReview = () => {
                 )}
                 <span className="min-w-0">
                   <span className="flex items-center gap-2">
-                    <span className="truncate text-[15px] font-black text-[var(--dh-text)]">{driver.vehicleName || 'Vehicle on assignment'}</span>
+                    <span className="truncate text-[16.5px] font-black text-[var(--dh-text)]">{driver.vehicleName || 'Vehicle on assignment'}</span>
                     {driver.vehicleClass && (
-                      <span className="shrink-0 rounded-[7px] bg-[var(--dh-chip)] px-2 py-0.5 text-[11px] font-bold text-[var(--dh-muted)]">
+                      <span className="shrink-0 rounded-[7px] bg-[var(--dh-chip)] px-2 py-0.5 text-[13px] font-bold text-[var(--dh-muted)]">
                         {driver.vehicleClass}
                       </span>
                     )}
                   </span>
                   {driver.vehiclePlate && (
-                    <span className="mt-1.5 flex items-center gap-1.5 text-[12.5px] font-semibold text-[var(--dh-muted)]">
+                    <span className="mt-1.5 flex items-center gap-1.5 text-[14px] font-semibold text-[var(--dh-muted)]">
                       <Car size={13} strokeWidth={2.2} /> {driver.vehiclePlate}
                     </span>
                   )}
                   {driver.vehicleColor && (
-                    <span className="mt-1 flex items-center gap-1.5 text-[12.5px] font-semibold text-[var(--dh-muted)]">
+                    <span className="mt-1 flex items-center gap-1.5 text-[14px] font-semibold text-[var(--dh-muted)]">
                       <Palette size={13} strokeWidth={2.2} /> {driver.vehicleColor}
                     </span>
                   )}
                   {driver.experience && (
-                    <span className="mt-1 block text-[12.5px] font-semibold text-[var(--dh-muted)]">{driver.experience} Experience</span>
+                    <span className="mt-1 block text-[14px] font-semibold text-[var(--dh-muted)]">{driver.experience} Experience</span>
                   )}
                   {driver.languages?.length > 0 && (
-                    <span className="mt-1 flex items-center gap-1.5 text-[12px] font-semibold text-[var(--dh-muted)]">
+                    <span className="mt-1 flex items-center gap-1.5 text-[13.5px] font-semibold text-[var(--dh-muted)]">
                       <Languages size={13} strokeWidth={2.2} /> {driver.languages.join(', ')}
                     </span>
                   )}
@@ -293,12 +293,12 @@ const DesktopWithDriverReview = () => {
 
               <div className="grid grid-cols-2 gap-2.5 border-l border-[var(--dh-border)] pl-5">
                 {(driver.amenities?.length ? driver.amenities : []).map((amenity) => (
-                  <span key={amenity} className="flex items-center gap-2 text-[12.5px] font-semibold text-[var(--dh-text)]">
+                  <span key={amenity} className="flex items-center gap-2 text-[14px] font-semibold text-[var(--dh-text)]">
                     <Sparkles size={14} className="shrink-0 text-[#F5B700]" strokeWidth={2.2} /> {amenity}
                   </span>
                 ))}
                 {!driver.amenities?.length && (
-                  <span className="col-span-2 text-[12px] font-semibold text-[var(--dh-muted)]">
+                  <span className="col-span-2 text-[13.5px] font-semibold text-[var(--dh-muted)]">
                     No vehicle features listed.
                   </span>
                 )}
@@ -309,7 +309,7 @@ const DesktopWithDriverReview = () => {
           {/* ---------------------------------------------------- Fare breakdown */}
           {quote && (
             <div className="mt-4 rounded-[16px] border border-[var(--dh-border)] p-5">
-              <h2 className="text-[17px] font-black text-[var(--dh-text)]">Fare Breakdown</h2>
+              <h2 className="text-[18px] font-black text-[var(--dh-text)]">Fare Breakdown</h2>
 
               <div className="mt-4 grid grid-cols-[repeat(4,minmax(0,1fr))_260px] items-center gap-4">
                 {[
@@ -319,17 +319,17 @@ const DesktopWithDriverReview = () => {
                   ['Taxes & Fees', quote.taxPercent ? `(${quote.taxPercent}%)` : '', quote.taxes],
                 ].map(([label, note, value]) => (
                   <div key={label} className="border-r border-[var(--dh-border)] pr-4 last:border-0">
-                    <p className="text-[13px] font-semibold text-[var(--dh-muted)]">
-                      {label} {note && <span className="block text-[11.5px]">{note}</span>}
+                    <p className="text-[14.5px] font-semibold text-[var(--dh-muted)]">
+                      {label} {note && <span className="block text-[13.5px]">{note}</span>}
                     </p>
-                    <p className="mt-2 text-[17px] font-black text-[var(--dh-text)]">{formatMoney(value)}</p>
+                    <p className="mt-2 text-[18px] font-black text-[var(--dh-text)]">{formatMoney(value)}</p>
                   </div>
                 ))}
 
                 <div className="rounded-[13px] bg-[#FFFBEC] px-5 py-4">
-                  <p className="text-[13px] font-bold text-slate-700">Total Amount</p>
+                  <p className="text-[14.5px] font-bold text-slate-700">Total Amount</p>
                   <p className="mt-1 text-[26px] font-black leading-none text-slate-950">{formatMoney(quote.totalFare)}</p>
-                  <p className="mt-1.5 text-[11px] font-semibold text-slate-600">
+                  <p className="mt-1.5 text-[13px] font-semibold text-slate-600">
                     {quote.taxes > 0 ? 'Inclusive of all taxes' : 'Taxes not configured'}
                   </p>
                 </div>
@@ -339,14 +339,14 @@ const DesktopWithDriverReview = () => {
 
           <div className="mt-4 grid grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] gap-4">
             <div className="rounded-[16px] border border-[var(--dh-border)] p-5">
-              <h3 className="text-[15px] font-black text-[var(--dh-text)]">Best Price Benefits</h3>
+              <h3 className="text-[16.5px] font-black text-[var(--dh-text)]">Best Price Benefits</h3>
               <div className="mt-3.5 space-y-3">
                 {BENEFITS.map(({ icon: Icon, title, copy }) => (
                   <span key={title} className="flex items-center gap-3">
                     <Icon size={20} className="shrink-0 text-[#F5B700]" strokeWidth={2.1} />
                     <span>
-                      <span className="block text-[12.5px] font-black text-[var(--dh-text)]">{title}</span>
-                      <span className="block text-[11px] font-semibold text-[var(--dh-muted)]">{copy}</span>
+                      <span className="block text-[14px] font-black text-[var(--dh-text)]">{title}</span>
+                      <span className="block text-[13px] font-semibold text-[var(--dh-muted)]">{copy}</span>
                     </span>
                   </span>
                 ))}
@@ -354,7 +354,7 @@ const DesktopWithDriverReview = () => {
             </div>
 
             <div className="rounded-[16px] border border-[var(--dh-border)] p-5">
-              <h3 className="text-[15px] font-black text-[var(--dh-text)]">Payment Options</h3>
+              <h3 className="text-[16.5px] font-black text-[var(--dh-text)]">Payment Options</h3>
               <div className="mt-3.5 grid grid-cols-4 gap-2.5">
                 {PAYMENT_METHODS.map(({ id, label, icon: Icon }) => (
                   <button
@@ -366,7 +366,7 @@ const DesktopWithDriverReview = () => {
                     }`}
                   >
                     <Icon size={20} className="text-[var(--dh-muted)]" strokeWidth={2} />
-                    <span className="text-[12px] font-bold text-[var(--dh-text)]">{label}</span>
+                    <span className="text-[13.5px] font-bold text-[var(--dh-text)]">{label}</span>
                   </button>
                 ))}
               </div>
@@ -378,8 +378,8 @@ const DesktopWithDriverReview = () => {
               <div key={title} className="flex items-center gap-3">
                 <Icon size={22} className="shrink-0 text-[#F5B700]" strokeWidth={2} />
                 <span>
-                  <span className="block text-[12.5px] font-black text-slate-900">{title}</span>
-                  <span className="mt-0.5 block text-[11px] font-semibold text-slate-600">{copy}</span>
+                  <span className="block text-[14px] font-black text-slate-900">{title}</span>
+                  <span className="mt-0.5 block text-[13px] font-semibold text-slate-600">{copy}</span>
                 </span>
               </div>
             ))}
@@ -389,8 +389,8 @@ const DesktopWithDriverReview = () => {
         {/* ------------------------------------------------------------ Sidebar */}
         <aside className="sticky top-[100px] h-fit rounded-[20px] bg-[var(--dh-surface)] p-5 shadow-[0_10px_30px_rgba(15,23,42,0.08)] ring-1 ring-[var(--dh-border)]">
           <div className="flex items-center justify-between">
-            <h2 className="text-[17px] font-black tracking-[-0.02em] text-[var(--dh-text)]">Your Trip Summary</h2>
-            <button onClick={() => navigate('/taxi/user/with-driver')} className="text-[13px] font-bold text-[#F5B700]">
+            <h2 className="text-[18px] font-black tracking-[-0.02em] text-[var(--dh-text)]">Your Trip Summary</h2>
+            <button onClick={() => navigate('/taxi/user/with-driver')} className="text-[14.5px] font-bold text-[#F5B700]">
               Edit
             </button>
           </div>
@@ -400,8 +400,8 @@ const DesktopWithDriverReview = () => {
               <div key={label} className="flex gap-2.5">
                 <Icon size={16} className="mt-0.5 shrink-0 text-[var(--dh-muted)]" strokeWidth={2.2} />
                 <span className="min-w-0">
-                  <dt className="text-[12.5px] font-bold text-[var(--dh-text)]">{label}</dt>
-                  <dd className="mt-0.5 text-[12.5px] font-semibold text-[var(--dh-muted)]">{value}</dd>
+                  <dt className="text-[14px] font-bold text-[var(--dh-text)]">{label}</dt>
+                  <dd className="mt-0.5 text-[14px] font-semibold text-[var(--dh-muted)]">{value}</dd>
                 </span>
               </div>
             ))}
@@ -409,30 +409,30 @@ const DesktopWithDriverReview = () => {
 
           {quote && (
             <div className="mt-5 border-t border-[var(--dh-border)] pt-4">
-              <h3 className="text-[15px] font-black text-[var(--dh-text)]">Fare Details</h3>
+              <h3 className="text-[16.5px] font-black text-[var(--dh-text)]">Fare Details</h3>
               <div className="mt-3 space-y-2.5">
-                <div className="flex justify-between text-[13px] font-semibold text-[var(--dh-muted)]">
+                <div className="flex justify-between text-[14.5px] font-semibold text-[var(--dh-muted)]">
                   <span>Base Fare</span><span className="text-[var(--dh-text)]">{formatMoney(quote.baseFare)}</span>
                 </div>
                 {quote.distanceFare > 0 && (
-                  <div className="flex justify-between text-[13px] font-semibold text-[var(--dh-muted)]">
+                  <div className="flex justify-between text-[14.5px] font-semibold text-[var(--dh-muted)]">
                     <span>Distance Fare ({quote.chargeableKm} km)</span>
                     <span className="text-[var(--dh-text)]">{formatMoney(quote.distanceFare)}</span>
                   </div>
                 )}
                 {quote.timeFare > 0 && (
-                  <div className="flex justify-between text-[13px] font-semibold text-[var(--dh-muted)]">
+                  <div className="flex justify-between text-[14.5px] font-semibold text-[var(--dh-muted)]">
                     <span>Time Fare ({quote.durationMinutes} mins)</span>
                     <span className="text-[var(--dh-text)]">{formatMoney(quote.timeFare)}</span>
                   </div>
                 )}
                 {quote.taxes > 0 && (
-                  <div className="flex justify-between text-[13px] font-semibold text-[var(--dh-muted)]">
+                  <div className="flex justify-between text-[14.5px] font-semibold text-[var(--dh-muted)]">
                     <span>Taxes &amp; Fees</span><span className="text-[var(--dh-text)]">{formatMoney(quote.taxes)}</span>
                   </div>
                 )}
                 <div className="flex items-center justify-between border-t border-[var(--dh-border)] pt-3">
-                  <span className="text-[15px] font-black text-[var(--dh-text)]">Total Amount</span>
+                  <span className="text-[16.5px] font-black text-[var(--dh-text)]">Total Amount</span>
                   <span className="text-[20px] font-black text-[var(--dh-text)]">{formatMoney(quote.totalFare)}</span>
                 </div>
               </div>
@@ -442,14 +442,14 @@ const DesktopWithDriverReview = () => {
           <button
             onClick={confirmAndPay}
             disabled={!quote || confirming}
-            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-[13px] bg-[#F5B700] py-3.5 text-[15.5px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-[13px] bg-[#F5B700] py-3.5 text-[17px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             Confirm &amp; Pay <ArrowRight size={18} strokeWidth={2.8} />
           </button>
 
           <button
             onClick={() => navigate('/taxi/user/with-driver')}
-            className="mt-2.5 flex w-full items-center justify-center gap-2.5 rounded-[13px] border border-[var(--dh-border)] py-3 text-[14.5px] font-bold text-[var(--dh-text)] hover:bg-[var(--dh-chip)]"
+            className="mt-2.5 flex w-full items-center justify-center gap-2.5 rounded-[13px] border border-[var(--dh-border)] py-3 text-[16px] font-bold text-[var(--dh-text)] hover:bg-[var(--dh-chip)]"
           >
             <ArrowLeft size={17} strokeWidth={2.4} /> Back to Select Driver
           </button>

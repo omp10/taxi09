@@ -231,7 +231,7 @@ const Wallet = () => {
 
               <div className="text-center space-y-2">
                 <h3 className="text-xl font-bold text-slate-900 font-outfit">Add Money</h3>
-                <p className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">
+                <p className="text-[12px] font-bold text-slate-400 tracking-wider uppercase">
                   {activePaymentGateway ? `Top-up via ${walletTopUpGatewayLabel}` : 'Select amount to top-up'}
                 </p>
               </div>
@@ -310,7 +310,7 @@ const Wallet = () => {
         >
           <div className="relative z-10 flex flex-col gap-8">
             <div className="space-y-1">
-              <p className="text-slate-950/60 font-black uppercase tracking-wider text-[10px] font-outfit">Available Balance</p>
+              <p className="text-slate-950/60 font-black uppercase tracking-wider text-[12px] font-outfit">Available Balance</p>
               <h2 className="text-4xl font-bold tracking-tight font-outfit">
                 {walletLoading ? (
                   <>₹ 0<span className="text-slate-950/60 text-2xl font-outfit">.00</span></>
@@ -354,7 +354,7 @@ const Wallet = () => {
           </div>
           <div className="flex-1 text-left">
             <h4 className="text-sm font-bold text-slate-900 font-outfit">Refer & Earn ₹50</h4>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">Invite friends to {appName}</p>
+            <p className="text-[12px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">Invite friends to {appName}</p>
           </div>
           <ArrowLeft size={18} className="text-slate-300 rotate-180 group-hover:text-slate-900 transition-colors" />
         </button>
@@ -362,8 +362,8 @@ const Wallet = () => {
 
       <div className="px-5 mt-10">
         <div className="flex items-center justify-between mb-4 px-1">
-          <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-outfit">Transaction History</h3>
-          <button onClick={() => navigate(`${basePath}/activity`)} className="text-[10px] font-bold text-slate-900 uppercase tracking-wider font-outfit">View All</button>
+          <h3 className="text-[12px] font-bold text-slate-400 uppercase tracking-wider font-outfit">Transaction History</h3>
+          <button onClick={() => navigate(`${basePath}/activity`)} className="text-[12px] font-bold text-slate-900 uppercase tracking-wider font-outfit">View All</button>
         </div>
         
         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-50">
@@ -388,13 +388,13 @@ const Wallet = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-bold text-slate-900 truncate font-outfit">{title}</h4>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">{whenText}</p>
+                    <p className="text-[12px] font-bold text-slate-400 uppercase mt-0.5">{whenText}</p>
                   </div>
                   <div className="text-right shrink-0">
                     <h4 className={`text-base font-bold font-outfit ${isDebit ? 'text-slate-900' : 'text-emerald-600'}`}>
                       {sign}₹{amountText}
                     </h4>
-                    <span className={`text-[8px] font-bold uppercase tracking-wider ${isDebit ? 'text-slate-400' : 'text-emerald-400'}`}>
+                    <span className={`text-[10px] font-bold uppercase tracking-wider ${isDebit ? 'text-slate-400' : 'text-emerald-400'}`}>
                       {isDebit ? 'Debit' : 'Credit'}
                     </span>
                   </div>

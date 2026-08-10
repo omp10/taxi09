@@ -441,15 +441,14 @@ const normalizeBannerPayload = async (payload, existing = null) => {
     throw new ApiError(400, 'Link type must be external_link or deep_link');
   }
 
-  // Mirror a single upload across both fields so no consumer has to special
-  // case a missing one.
-  const resolvedImage = image || desktopImage;
-  const resolvedDesktopImage = desktopImage || image;
-
+  // The two slots are kept independent. Mirroring a single upload across both
+  // meant a desktop-only banner also went out to phones, where wide artwork
+  // is cropped past the point of being readable. An empty slot means "do not
+  // show this banner on that surface", which is what each side now honours.
   return {
     title,
-    image: resolvedImage,
-    desktopImage: resolvedDesktopImage,
+    image,
+    desktopImage,
     link_type: linkType,
     external_link: linkType === 'external_link' ? redirectUrl : '',
     deep_link: linkType === 'deep_link' ? redirectUrl : '',

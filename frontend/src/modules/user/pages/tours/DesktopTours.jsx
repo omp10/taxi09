@@ -86,7 +86,7 @@ const CheckList = ({ title, facets, selected, onToggle }) => {
   if (!facets.length) return null;
   return (
     <div className="border-t border-[var(--dh-border)] px-5 py-4">
-      <p className="text-[13.5px] font-black text-[var(--dh-text)]">{title}</p>
+      <p className="text-[15px] font-black text-[var(--dh-text)]">{title}</p>
       <div className="mt-3 space-y-2.5">
         {facets.map(([label, count]) => (
           <label key={label} className="flex cursor-pointer items-center gap-2.5">
@@ -96,8 +96,8 @@ const CheckList = ({ title, facets, selected, onToggle }) => {
               onChange={() => onToggle(label)}
               className="h-4 w-4 shrink-0 accent-[#F5B700]"
             />
-            <span className="flex-1 truncate text-[13px] font-semibold text-[var(--dh-text)]">{label}</span>
-            <span className="text-[12px] font-bold text-[var(--dh-muted)]">{count}</span>
+            <span className="flex-1 truncate text-[14.5px] font-semibold text-[var(--dh-text)]">{label}</span>
+            <span className="text-[13.5px] font-bold text-[var(--dh-muted)]">{count}</span>
           </label>
         ))}
       </div>
@@ -223,8 +223,8 @@ const DesktopTours = () => {
                 <div key={item.title} className="flex items-center gap-2.5">
                   <Icon size={22} className="shrink-0 text-[#F5B700]" strokeWidth={2} />
                   <span>
-                    <span className="block text-[12.5px] font-black text-[var(--dh-text)]">{item.title}</span>
-                    <span className="mt-0.5 block text-[11px] font-semibold text-[var(--dh-muted)]">{item.sub}</span>
+                    <span className="block text-[14px] font-black text-[var(--dh-text)]">{item.title}</span>
+                    <span className="mt-0.5 block text-[13px] font-semibold text-[var(--dh-muted)]">{item.sub}</span>
                   </span>
                 </div>
               );
@@ -243,7 +243,7 @@ const DesktopTours = () => {
                   key={chip.label}
                   onClick={() => setCategory(chip.label)}
                   aria-pressed={isActive}
-                  className={`flex items-center gap-2 rounded-[12px] border px-4 py-2.5 text-[13.5px] font-bold transition-colors ${
+                  className={`flex items-center gap-2 rounded-[12px] border px-4 py-2.5 text-[15px] font-bold transition-colors ${
                     isActive
                       ? 'border-[#F5B700] bg-[#FFF7DC] text-slate-900'
                       : 'border-[var(--dh-border)] bg-[var(--dh-surface)] text-[var(--dh-text)] hover:bg-[var(--dh-chip)]'
@@ -261,16 +261,16 @@ const DesktopTours = () => {
           {/* ----------------------------------------------------------- Filters */}
           <aside className="h-fit rounded-[18px] bg-[var(--dh-surface)] py-1 ring-1 ring-[var(--dh-border)]">
             <div className="flex items-center justify-between px-5 pb-3 pt-4">
-              <p className="text-[14.5px] font-black text-[var(--dh-text)]">Filter Packages</p>
+              <p className="text-[16px] font-black text-[var(--dh-text)]">Filter Packages</p>
               {activeFilters > 0 && (
-                <button onClick={clearAll} className="text-[12px] font-bold text-[#F5B700]">Clear All</button>
+                <button onClick={clearAll} className="text-[13.5px] font-bold text-[#F5B700]">Clear All</button>
               )}
             </div>
 
             {priceCeiling > 0 && (
               <div className="border-t border-[var(--dh-border)] px-5 py-4">
-                <p className="text-[13.5px] font-black text-[var(--dh-text)]">Budget (Per Person)</p>
-                <p className="mt-2 text-[12.5px] font-bold text-[var(--dh-muted)]">
+                <p className="text-[15px] font-black text-[var(--dh-text)]">Budget (Per Person)</p>
+                <p className="mt-2 text-[14px] font-bold text-[var(--dh-muted)]">
                   Up to {formatMoney(maxPrice || priceCeiling)}
                 </p>
                 <input
@@ -290,17 +290,17 @@ const DesktopTours = () => {
           {/* ----------------------------------------------------------- Results */}
           <div>
             <div className="flex items-center justify-between">
-              <p className="text-[17px] font-black tracking-[-0.02em] text-[var(--dh-text)]">
+              <p className="text-[18px] font-black tracking-[-0.02em] text-[var(--dh-text)]">
                 {loading ? 'Loading packages…' : `${results.length} Tour Package${results.length === 1 ? '' : 's'} Found`}
               </p>
 
               <div className="flex items-center gap-2.5">
-                <span className="text-[13px] font-semibold text-[var(--dh-muted)]">Sort by:</span>
+                <span className="text-[14.5px] font-semibold text-[var(--dh-muted)]">Sort by:</span>
                 <span className="relative">
                   <select
                     value={sort}
                     onChange={(e) => setSort(e.target.value)}
-                    className="h-[40px] appearance-none rounded-[10px] border border-[var(--dh-border)] bg-[var(--dh-surface)] pl-3.5 pr-9 text-[13.5px] font-bold text-[var(--dh-text)] outline-none"
+                    className="h-[40px] appearance-none rounded-[10px] border border-[var(--dh-border)] bg-[var(--dh-surface)] pl-3.5 pr-9 text-[15px] font-bold text-[var(--dh-text)] outline-none"
                   >
                     {SORTS.map(({ id, label }) => <option key={id} value={id}>{label}</option>)}
                   </select>
@@ -315,8 +315,8 @@ const DesktopTours = () => {
               </div>
             ) : results.length === 0 ? (
               <div className="mt-4 rounded-[16px] bg-[var(--dh-surface)] p-14 text-center ring-1 ring-[var(--dh-border)]">
-                <p className="text-[16px] font-black text-[var(--dh-text)]">No packages match these filters</p>
-                <p className="mt-2 text-[14px] font-medium text-[var(--dh-muted)]">Try another category or widen the budget.</p>
+                <p className="text-[17px] font-black text-[var(--dh-text)]">No packages match these filters</p>
+                <p className="mt-2 text-[15.5px] font-medium text-[var(--dh-muted)]">Try another category or widen the budget.</p>
               </div>
             ) : (
               <>
@@ -337,7 +337,7 @@ const DesktopTours = () => {
                             className="absolute inset-0 h-full w-full object-cover"
                           />
                           {pkg.badge && (
-                            <span className="absolute left-3 top-3 rounded-[8px] bg-[#F5B700] px-2.5 py-1 text-[10.5px] font-black text-slate-950">
+                            <span className="absolute left-3 top-3 rounded-[8px] bg-[#F5B700] px-2.5 py-1 text-[12.5px] font-black text-slate-950">
                               {pkg.badge}
                             </span>
                           )}
@@ -353,16 +353,16 @@ const DesktopTours = () => {
 
                         <div className="flex min-w-0 flex-col justify-center px-5 py-4">
                           <span className="flex items-center gap-2">
-                            <h2 className="truncate text-[19px] font-black tracking-[-0.02em] text-[var(--dh-text)]">{titleOf(pkg)}</h2>
+                            <h2 className="truncate text-[20px] font-black tracking-[-0.02em] text-[var(--dh-text)]">{titleOf(pkg)}</h2>
                             {pkg.category && (
-                              <span className="shrink-0 rounded-[6px] bg-[var(--dh-chip)] px-2 py-0.5 text-[10.5px] font-black uppercase tracking-[0.05em] text-[var(--dh-muted)]">
+                              <span className="shrink-0 rounded-[6px] bg-[var(--dh-chip)] px-2 py-0.5 text-[12.5px] font-black uppercase tracking-[0.05em] text-[var(--dh-muted)]">
                                 {pkg.category}
                               </span>
                             )}
                           </span>
 
                           {(pkg.state || pkg.stops?.length > 0) && (
-                            <p className="mt-1 flex items-center gap-1.5 truncate text-[12.5px] font-semibold text-[var(--dh-muted)]">
+                            <p className="mt-1 flex items-center gap-1.5 truncate text-[14px] font-semibold text-[var(--dh-muted)]">
                               <MapPin size={13} className="shrink-0" strokeWidth={2.2} />
                               <span className="truncate">{pkg.stops?.length ? pkg.stops.join(' • ') : pkg.state}</span>
                             </p>
@@ -370,12 +370,12 @@ const DesktopTours = () => {
 
                           <div className="mt-2.5 flex flex-wrap items-center gap-x-5 gap-y-1.5">
                             {durationLabel(pkg) && (
-                              <span className="flex items-center gap-1.5 text-[12.5px] font-semibold text-[var(--dh-text)]">
+                              <span className="flex items-center gap-1.5 text-[14px] font-semibold text-[var(--dh-text)]">
                                 <CalendarDays size={13} className="text-[var(--dh-muted)]" strokeWidth={2.2} /> {durationLabel(pkg)}
                               </span>
                             )}
                             {(pkg.includes || []).slice(0, 2).map((item) => (
-                              <span key={item} className="flex items-center gap-1.5 text-[12.5px] font-semibold text-[var(--dh-text)]">
+                              <span key={item} className="flex items-center gap-1.5 text-[14px] font-semibold text-[var(--dh-text)]">
                                 <UtensilsCrossed size={13} className="text-[var(--dh-muted)]" strokeWidth={2.2} /> {item}
                               </span>
                             ))}
@@ -383,11 +383,11 @@ const DesktopTours = () => {
 
                           {Number(pkg.rating) > 0 && (
                             <p className="mt-2.5 flex items-center gap-2">
-                              <span className="flex items-center gap-1 rounded-[6px] bg-emerald-600 px-1.5 py-0.5 text-[11.5px] font-black text-white">
+                              <span className="flex items-center gap-1 rounded-[6px] bg-emerald-600 px-1.5 py-0.5 text-[13.5px] font-black text-white">
                                 <Star size={11} className="fill-white" /> {pkg.rating}
                               </span>
                               {pkg.reviews && (
-                                <span className="text-[12px] font-semibold text-[var(--dh-muted)]">({pkg.reviews} reviews)</span>
+                                <span className="text-[13.5px] font-semibold text-[var(--dh-muted)]">({pkg.reviews} reviews)</span>
                               )}
                             </p>
                           )}
@@ -395,15 +395,15 @@ const DesktopTours = () => {
 
                         <div className="flex flex-col items-end justify-center gap-1 border-l border-[var(--dh-border)] px-5 py-4">
                           {Number(pkg.oldPrice) > Number(pkg.price) && (
-                            <span className="text-[12.5px] font-bold text-[var(--dh-muted)] line-through">{formatMoney(pkg.oldPrice)}</span>
+                            <span className="text-[14px] font-bold text-[var(--dh-muted)] line-through">{formatMoney(pkg.oldPrice)}</span>
                           )}
                           <span className="text-[23px] font-black leading-none tracking-[-0.03em] text-[var(--dh-text)]">
                             {formatMoney(pkg.price)}
                           </span>
-                          <span className="text-[11.5px] font-semibold text-[var(--dh-muted)]">Per Person</span>
+                          <span className="text-[13.5px] font-semibold text-[var(--dh-muted)]">Per Person</span>
                           <button
                             onClick={() => openPackage(pkg)}
-                            className="mt-2 w-full rounded-[10px] bg-[#F5B700] py-2.5 text-[13.5px] font-bold text-slate-950 transition-transform hover:-translate-y-0.5"
+                            className="mt-2 w-full rounded-[10px] bg-[#F5B700] py-2.5 text-[15px] font-bold text-slate-950 transition-transform hover:-translate-y-0.5"
                           >
                             View Details
                           </button>
@@ -416,7 +416,7 @@ const DesktopTours = () => {
                 {visible < results.length && (
                   <button
                     onClick={() => setVisible((v) => v + 6)}
-                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-[13px] border border-[var(--dh-border)] bg-[var(--dh-surface)] py-3.5 text-[14.5px] font-bold text-[var(--dh-text)] hover:bg-[var(--dh-chip)]"
+                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-[13px] border border-[var(--dh-border)] bg-[var(--dh-surface)] py-3.5 text-[16px] font-bold text-[var(--dh-text)] hover:bg-[var(--dh-chip)]"
                   >
                     Load More Packages <ChevronDown size={17} strokeWidth={2.6} />
                   </button>
@@ -431,8 +431,8 @@ const DesktopTours = () => {
             <div key={title} className="flex items-center gap-2.5">
               <Icon size={22} className="shrink-0 text-[#F5B700]" strokeWidth={2} />
               <span>
-                <span className="block text-[12px] font-black text-[var(--dh-text)]">{title}</span>
-                <span className="mt-0.5 block text-[10.5px] font-semibold text-[var(--dh-muted)]">{copy}</span>
+                <span className="block text-[13.5px] font-black text-[var(--dh-text)]">{title}</span>
+                <span className="mt-0.5 block text-[12.5px] font-semibold text-[var(--dh-muted)]">{copy}</span>
               </span>
             </div>
           ))}
@@ -442,7 +442,7 @@ const DesktopTours = () => {
         {/* --------------------------------------------------------- Right rail */}
         <aside className="sticky top-[100px] h-fit space-y-4">
           <div className="rounded-[18px] bg-[var(--dh-surface)] p-5 ring-1 ring-[var(--dh-border)]">
-            <p className="text-[15px] font-black leading-tight text-[var(--dh-text)]">
+            <p className="text-[16.5px] font-black leading-tight text-[var(--dh-text)]">
               Why Book Tour Packages with Taxi09?
             </p>
             <div className="mt-4 space-y-3.5">
@@ -450,8 +450,8 @@ const DesktopTours = () => {
                 <div key={title} className="flex gap-2.5">
                   <Icon size={19} className="mt-0.5 shrink-0 text-[#F5B700]" strokeWidth={2.1} />
                   <span>
-                    <span className="block text-[12.5px] font-black text-[var(--dh-text)]">{title}</span>
-                    <span className="mt-0.5 block text-[11.5px] font-semibold text-[var(--dh-muted)]">{copy}</span>
+                    <span className="block text-[14px] font-black text-[var(--dh-text)]">{title}</span>
+                    <span className="mt-0.5 block text-[13.5px] font-semibold text-[var(--dh-muted)]">{copy}</span>
                   </span>
                 </div>
               ))}
@@ -460,13 +460,13 @@ const DesktopTours = () => {
 
           {hero.offerTitle && (
             <div className="rounded-[18px] bg-[#FFF6DE] p-5">
-              <p className="text-[17px] font-black leading-tight text-slate-950">{hero.offerTitle}</p>
+              <p className="text-[18px] font-black leading-tight text-slate-950">{hero.offerTitle}</p>
               {hero.offerSubtitle && (
-                <p className="mt-1.5 text-[12.5px] font-semibold text-slate-700">{hero.offerSubtitle}</p>
+                <p className="mt-1.5 text-[14px] font-semibold text-slate-700">{hero.offerSubtitle}</p>
               )}
               <button
                 onClick={() => { clearAll(); setVisible(packages.length || 6); }}
-                className="mt-3.5 rounded-[10px] bg-[#F5B700] px-4 py-2.5 text-[13px] font-bold text-slate-950"
+                className="mt-3.5 rounded-[10px] bg-[#F5B700] px-4 py-2.5 text-[14.5px] font-bold text-slate-950"
               >
                 Show All Packages
               </button>
@@ -475,7 +475,7 @@ const DesktopTours = () => {
 
           {topDestinations.length > 0 && (
             <div className="rounded-[18px] bg-[var(--dh-surface)] p-5 ring-1 ring-[var(--dh-border)]">
-              <p className="text-[15px] font-black text-[var(--dh-text)]">Top Destinations</p>
+              <p className="text-[16.5px] font-black text-[var(--dh-text)]">Top Destinations</p>
               <div className="mt-4 grid grid-cols-4 gap-3">
                 {topDestinations.map(([name, image]) => (
                   <button
@@ -486,7 +486,7 @@ const DesktopTours = () => {
                     <span className="h-[52px] w-[52px] overflow-hidden rounded-full ring-2 ring-[var(--dh-border)]">
                       <img src={image || '/taxi09_tours_hero_mountain.png'} alt="" className="h-full w-full object-cover" />
                     </span>
-                    <span className="w-full truncate text-center text-[11px] font-bold text-[var(--dh-text)]">{name}</span>
+                    <span className="w-full truncate text-center text-[13px] font-bold text-[var(--dh-text)]">{name}</span>
                   </button>
                 ))}
               </div>

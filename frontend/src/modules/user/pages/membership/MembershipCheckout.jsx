@@ -40,8 +40,8 @@ const money = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`;
 
 const Row = ({ label, value, tone = '' }) => (
   <div className="flex items-center justify-between py-2">
-    <span className={`text-[13px] ${tone || 'text-slate-700'}`}>{label}</span>
-    <span className={`text-[13px] font-bold ${tone || 'text-slate-900'}`}>{value}</span>
+    <span className={`text-[14.5px] ${tone || 'text-slate-700'}`}>{label}</span>
+    <span className={`text-[14.5px] font-bold ${tone || 'text-slate-900'}`}>{value}</span>
   </div>
 );
 
@@ -92,7 +92,7 @@ const MembershipCheckout = () => {
           </button>
           <div>
             <h1 className="text-[21px] font-black leading-tight text-slate-900">Membership Checkout</h1>
-            <p className="text-[12px] font-semibold text-slate-700">
+            <p className="text-[13.5px] font-semibold text-slate-700">
               Secure your membership and enjoy exclusive benefits
             </p>
           </div>
@@ -108,11 +108,11 @@ const MembershipCheckout = () => {
                 <Crown size={22} className="text-[#F5B700]" fill="currentColor" />
               </span>
               <div>
-                <span className="inline-block rounded-lg bg-[#F5B700] px-2 py-0.5 text-[10.5px] font-black text-slate-900">
+                <span className="inline-block rounded-lg bg-[#F5B700] px-2 py-0.5 text-[12.5px] font-black text-slate-900">
                   {membership.planName} Member
                 </span>
-                <p className="mt-1.5 text-[18px] font-black text-white">{membership.planName} Membership</p>
-                <p className="text-[12.5px] text-slate-300">{membership.durationMonths} Months Plan</p>
+                <p className="mt-1.5 text-[19px] font-black text-white">{membership.planName} Membership</p>
+                <p className="text-[14px] text-slate-300">{membership.durationMonths} Months Plan</p>
               </div>
             </div>
 
@@ -120,8 +120,8 @@ const MembershipCheckout = () => {
               <p className="text-[22px] font-black text-[#F5B700]">{money(quote?.totalAmount ?? membership.totalAmount)}</p>
               {quote?.discount > 0 ? (
                 <>
-                  <p className="text-[12px] text-slate-400 line-through">{money(quote.listPrice)}</p>
-                  <span className="mt-1 inline-block rounded-lg bg-[#F5B700] px-2 py-0.5 text-[10.5px] font-black text-slate-900">
+                  <p className="text-[13.5px] text-slate-400 line-through">{money(quote.listPrice)}</p>
+                  <span className="mt-1 inline-block rounded-lg bg-[#F5B700] px-2 py-0.5 text-[12.5px] font-black text-slate-900">
                     Save {money(quote.discount)}
                   </span>
                 </>
@@ -135,8 +135,8 @@ const MembershipCheckout = () => {
                 <div className="flex shrink-0 items-start gap-1.5">
                   <Tag size={14} className="mt-0.5 text-[#F5B700]" />
                   <span>
-                    <span className="block text-[12px] font-bold text-white">{membership.discountPercent}% OFF</span>
-                    <span className="block text-[10.5px] text-slate-400">on all bookings</span>
+                    <span className="block text-[13.5px] font-bold text-white">{membership.discountPercent}% OFF</span>
+                    <span className="block text-[12.5px] text-slate-400">on all bookings</span>
                   </span>
                 </div>
               ) : null}
@@ -147,8 +147,8 @@ const MembershipCheckout = () => {
                   <div key={benefit.title} className="flex shrink-0 items-start gap-1.5">
                     <Icon size={14} className="mt-0.5 text-[#F5B700]" />
                     <span>
-                      <span className="block text-[12px] font-bold text-white">{benefit.title}</span>
-                      <span className="block text-[10.5px] text-slate-400">{benefit.subtitle}</span>
+                      <span className="block text-[13.5px] font-bold text-white">{benefit.title}</span>
+                      <span className="block text-[12.5px] text-slate-400">{benefit.subtitle}</span>
                     </span>
                   </div>
                 );
@@ -160,7 +160,7 @@ const MembershipCheckout = () => {
 
       {/* Price details */}
       <div className="mx-4 mt-4 rounded-2xl border border-slate-100 bg-white p-4">
-        <p className="flex items-center gap-2 text-[15px] font-black text-slate-900">
+        <p className="flex items-center gap-2 text-[16.5px] font-black text-slate-900">
           <Receipt size={17} className="text-[#F5B700]" /> Price Details
         </p>
 
@@ -182,15 +182,15 @@ const MembershipCheckout = () => {
         </div>
 
         <div className="mt-1 flex items-center justify-between border-t border-dashed border-slate-200 pt-3">
-          <span className="text-[15px] font-black text-slate-900">Total Amount</span>
-          <span className="text-[18px] font-black text-slate-900">
+          <span className="text-[16.5px] font-black text-slate-900">Total Amount</span>
+          <span className="text-[19px] font-black text-slate-900">
             {money(quote?.totalAmount ?? membership.totalAmount)}
           </span>
         </div>
 
         <div className="mt-3 flex items-center gap-2 rounded-xl bg-[#FFF9E6] px-3 py-2.5">
           <ShieldCheck size={16} className="text-[#C79100]" />
-          <span className="text-[12.5px] font-semibold text-slate-800">
+          <span className="text-[14px] font-semibold text-slate-800">
             Your membership will be activated as soon as the payment succeeds
           </span>
         </div>
@@ -199,23 +199,23 @@ const MembershipCheckout = () => {
       {/* Payment. Razorpay presents UPI, cards, net banking and wallets in its
           own sheet, so listing them again here would be a menu that does nothing. */}
       <div className="mx-4 mt-4 rounded-2xl border border-slate-100 bg-white p-4">
-        <p className="text-[15px] font-black text-slate-900">Payment</p>
-        <p className="mt-1 text-[12.5px] text-slate-500">
+        <p className="text-[16.5px] font-black text-slate-900">Payment</p>
+        <p className="mt-1 text-[14px] text-slate-500">
           UPI, credit and debit cards, net banking and wallets are all available on the next screen.
         </p>
       </div>
 
       <div className="fixed inset-x-0 bottom-0 z-40 mx-auto flex max-w-lg items-center gap-3 border-t border-slate-100 bg-white px-4 py-3">
         <div className="flex-1">
-          <p className="flex items-center gap-1.5 text-[12px] font-black text-slate-900">
+          <p className="flex items-center gap-1.5 text-[13.5px] font-black text-slate-900">
             <ShieldCheck size={14} className="text-emerald-600" /> Safe & Secure Payment
           </p>
-          <p className="text-[11px] text-slate-500">Your payment information is encrypted</p>
+          <p className="text-[13px] text-slate-500">Your payment information is encrypted</p>
         </div>
         <button
           onClick={pay}
           disabled={paying}
-          className="flex items-center gap-2 rounded-2xl bg-[#F5B700] px-5 py-3 text-[14px] font-black text-slate-900 disabled:opacity-60"
+          className="flex items-center gap-2 rounded-2xl bg-[#F5B700] px-5 py-3 text-[15.5px] font-black text-slate-900 disabled:opacity-60"
         >
           {paying ? <Loader2 size={16} className="animate-spin" /> : <Lock size={15} />}
           Pay {money(quote?.totalAmount ?? membership.totalAmount)}

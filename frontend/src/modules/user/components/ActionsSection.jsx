@@ -40,10 +40,10 @@ const ActionCard = ({
         
         {/* Text Container */}
         <div className="relative z-10 pr-[20px]">
-          <h3 className="text-[15px] font-bold tracking-tight text-slate-900 leading-none mb-1.5">
+          <h3 className="text-[16.5px] font-bold tracking-tight text-slate-900 leading-none mb-1.5">
             {title}
           </h3>
-          <p className="text-[10.5px] font-medium text-slate-500 leading-snug pr-2 line-clamp-2">
+          <p className="text-[12.5px] font-medium text-slate-500 leading-snug pr-2 line-clamp-2">
             {description}
           </p>
         </div>
@@ -82,7 +82,7 @@ const ActionsSection = () => {
       >
         <div className="flex items-center gap-2 ml-1">
           <Sparkles size={18} fill="#FFC400" className="text-[#FFC400]" />
-          <h2 className="text-[18px] font-bold text-slate-900 tracking-tight">Recommended for you</h2>
+          <h2 className="text-[19px] font-bold text-slate-900 tracking-tight">Recommended for you</h2>
         </div>
         <div className="flex gap-3">
         <ActionCard

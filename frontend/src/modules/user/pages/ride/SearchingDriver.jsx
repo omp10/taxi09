@@ -856,7 +856,7 @@ const SearchingDriver = () => {
           <h1 className="mt-5 text-[22px] font-black text-white">
             {scheduledStatus === 'scheduled' ? 'Ride scheduled' : scheduledStatus === 'error' ? 'Scheduling failed' : 'Scheduling your ride'}
           </h1>
-          <p className="mt-2 text-[13px] font-bold text-white/55">
+          <p className="mt-2 text-[14.5px] font-bold text-white/55">
             {scheduledStatus === 'scheduled'
               ? 'Your booking has been saved. Drivers will be notified automatically at the scheduled time.'
               : scheduledStatus === 'error'
@@ -998,8 +998,8 @@ const SearchingDriver = () => {
       </div>
 
       <div className="absolute top-8 left-4 right-16 z-20 bg-white/90 backdrop-blur-md rounded-2xl px-5 py-3 shadow-[0_8px_32px_rgba(15,23,42,0.12)] border border-white/80">
-        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.1em] leading-none mb-1">Current Route</p>
-        <p className="text-[13px] font-extrabold text-slate-900 leading-tight truncate">{routeState.pickup || 'Pickup'} → {routeState.drop || 'Drop'}</p>
+        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.1em] leading-none mb-1">Current Route</p>
+        <p className="text-[14.5px] font-extrabold text-slate-900 leading-tight truncate">{routeState.pickup || 'Pickup'} → {routeState.drop || 'Drop'}</p>
       </div>
 
       <AnimatePresence>
@@ -1009,8 +1009,8 @@ const SearchingDriver = () => {
             animate={{ scale: 1, opacity: 1, x: 0 }}
             className="absolute top-[88px] left-4 z-20 bg-white shadow-[0_4px_16px_rgba(15,23,42,0.12)] rounded-[12px] p-3 min-w-[70px] border border-slate-50"
           >
-            <p className="text-[18px] font-extrabold text-[#1d4ed8] leading-tight text-center tracking-wider">{rideOtp}</p>
-            <p className="text-[10px] font-bold text-slate-400 mt-0.5 text-center whitespace-nowrap">Start OTP</p>
+            <p className="text-[19px] font-extrabold text-[#1d4ed8] leading-tight text-center tracking-wider">{rideOtp}</p>
+            <p className="text-[12px] font-bold text-slate-400 mt-0.5 text-center whitespace-nowrap">Start OTP</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1035,7 +1035,7 @@ const SearchingDriver = () => {
 
               <div className="text-center space-y-1.5">
                 <h1 className="text-[22px] font-extrabold text-slate-950 tracking-tight">Finding your ride</h1>
-                <p className="text-[13px] font-semibold text-slate-400 max-w-[260px] mx-auto leading-normal">{searchStatus}</p>
+                <p className="text-[14.5px] font-semibold text-slate-400 max-w-[260px] mx-auto leading-normal">{searchStatus}</p>
               </div>
 
               <div className="flex justify-center gap-2.5 py-1">
@@ -1053,14 +1053,14 @@ const SearchingDriver = () => {
                 <div className="rounded-[24px] border border-orange-100 bg-orange-50/70 p-4 space-y-3">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-[0.16em] text-orange-500">Bid Mode</p>
-                      <p className="mt-1 text-[13px] font-bold text-slate-900">Drivers can bid from {formatCurrency(biddingSummary.bidFloorFare || biddingSummary.baseFare)} up to {formatCurrency(biddingSummary.userMaxBidFare)}.</p>
+                      <p className="text-[12px] font-black uppercase tracking-[0.16em] text-orange-500">Bid Mode</p>
+                      <p className="mt-1 text-[14.5px] font-bold text-slate-900">Drivers can bid from {formatCurrency(biddingSummary.bidFloorFare || biddingSummary.baseFare)} up to {formatCurrency(biddingSummary.userMaxBidFare)}.</p>
                     </div>
                     <button
                       type="button"
                       disabled={bidActionLoading}
                       onClick={handleIncreaseBid}
-                      className="shrink-0 rounded-full bg-slate-950 px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-white disabled:opacity-60"
+                      className="shrink-0 rounded-full bg-slate-950 px-3 py-2 text-[12px] font-black uppercase tracking-[0.16em] text-white disabled:opacity-60"
                     >
                       +{formatCurrency(biddingSummary.bidStepAmount)}
                     </button>
@@ -1069,16 +1069,16 @@ const SearchingDriver = () => {
                     {rideBids.length ? rideBids.map((bid) => (
                       <div key={bid.id} className="flex items-center justify-between gap-3 rounded-[18px] bg-white px-3 py-3 border border-orange-100">
                         <div className="min-w-0">
-                          <p className="truncate text-[13px] font-black text-slate-900">{bid.driver?.name || 'Driver'}</p>
-                          <p className="truncate text-[11px] font-bold text-slate-500">{bid.driver?.vehicleNumber || bid.driver?.vehicleType || 'Ride offer'}</p>
+                          <p className="truncate text-[14.5px] font-black text-slate-900">{bid.driver?.name || 'Driver'}</p>
+                          <p className="truncate text-[13px] font-bold text-slate-500">{bid.driver?.vehicleNumber || bid.driver?.vehicleType || 'Ride offer'}</p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-[15px] font-black text-slate-900">{formatCurrency(bid.bidFare)}</span>
+                          <span className="text-[16.5px] font-black text-slate-900">{formatCurrency(bid.bidFare)}</span>
                           <button
                             type="button"
                             disabled={bidActionLoading}
                             onClick={() => handleAcceptBid(bid.id)}
-                            className="rounded-full bg-emerald-500 px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-white disabled:opacity-60"
+                            className="rounded-full bg-emerald-500 px-3 py-2 text-[12px] font-black uppercase tracking-[0.16em] text-white disabled:opacity-60"
                           >
                             Accept
                           </button>
@@ -1086,7 +1086,7 @@ const SearchingDriver = () => {
                       </div>
                     )) : (
                       <div className="rounded-[18px] bg-white px-3 py-3 border border-orange-100">
-                        <p className="text-[12px] font-bold text-slate-600">No bids yet. We&apos;re still reaching nearby drivers.</p>
+                        <p className="text-[13.5px] font-bold text-slate-600">No bids yet. We&apos;re still reaching nearby drivers.</p>
                       </div>
                     )}
                   </div>
@@ -1097,28 +1097,28 @@ const SearchingDriver = () => {
                 <div className="rounded-[24px] border border-blue-100 bg-blue-50/70 p-4 space-y-3">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-[0.16em] text-blue-600">Current Offer</p>
-                      <p className="mt-1 text-[18px] font-black text-slate-900">{formatCurrency(biddingSummary.userMaxBidFare)}</p>
+                      <p className="text-[12px] font-black uppercase tracking-[0.16em] text-blue-600">Current Offer</p>
+                      <p className="mt-1 text-[19px] font-black text-slate-900">{formatCurrency(biddingSummary.userMaxBidFare)}</p>
                    
                     </div>
                     <button
                       type="button"
                       disabled={bidActionLoading || !canIncreaseFare}
                       onClick={handleIncreaseBid}
-                      className="shrink-0 rounded-full bg-slate-950 px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-white disabled:opacity-60"
+                      className="shrink-0 rounded-full bg-slate-950 px-3 py-2 text-[12px] font-black uppercase tracking-[0.16em] text-white disabled:opacity-60"
                     >
                       +{formatCurrency(biddingSummary.bidStepAmount)}
                     </button>
                   </div>
                   <div className="rounded-[18px] border border-blue-100 bg-white px-3 py-3">
-                    <p className="text-[11px] font-black text-slate-700">
+                    <p className="text-[13px] font-black text-slate-700">
                       {canIncreaseFare ? 'You can increase the fare now and rebroadcast the request.' : fareIncreaseCountdownLabel}
                     </p>
                   </div>
                   {fareHistory.length > 0 && (
                     <div className="rounded-[18px] border border-blue-100/80 bg-white px-3 py-3">
-                      <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">Fare History</p>
-                      <p className="mt-2 text-[12px] font-black text-slate-800">
+                      <p className="text-[12px] font-black uppercase tracking-[0.16em] text-slate-400">Fare History</p>
+                      <p className="mt-2 text-[13.5px] font-black text-slate-800">
                         {fareHistory.map((fare) => formatCurrency(fare)).join(' -> ')}
                       </p>
                     </div>
@@ -1127,14 +1127,14 @@ const SearchingDriver = () => {
                     <button
                       type="button"
                       onClick={() => navigateAfterCancel()}
-                      className="rounded-[16px] border border-slate-200 bg-white px-3 py-3 text-[11px] font-black uppercase tracking-[0.12em] text-slate-700"
+                      className="rounded-[16px] border border-slate-200 bg-white px-3 py-3 text-[13px] font-black uppercase tracking-[0.12em] text-slate-700"
                     >
                       Try Another Vehicle
                     </button>
                     <button
                       type="button"
                       onClick={() => navigateAfterCancel({ rideMode: 'schedule' })}
-                      className="rounded-[16px] border border-blue-200 bg-blue-100/70 px-3 py-3 text-[11px] font-black uppercase tracking-[0.12em] text-blue-700"
+                      className="rounded-[16px] border border-blue-200 bg-blue-100/70 px-3 py-3 text-[13px] font-black uppercase tracking-[0.12em] text-blue-700"
                     >
                       Schedule Instead
                     </button>
@@ -1147,19 +1147,19 @@ const SearchingDriver = () => {
                   <div className="w-9 h-9 rounded-full bg-emerald-50 flex items-center justify-center">
                     <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
                   </div>
-                  <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Fast Matching</span>
+                  <span className="text-[13px] font-bold text-slate-700 uppercase tracking-wider">Fast Matching</span>
                 </div>
                 <div className="w-px h-8 bg-slate-200" />
                 <div className="flex items-center gap-3">
                    <ShieldCheck size={20} className="text-blue-500" strokeWidth={2.5} />
-                   <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Top Safety</span>
+                   <span className="text-[13px] font-bold text-slate-700 uppercase tracking-wider">Top Safety</span>
                 </div>
               </div>
 
               <motion.button 
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setShowCancelConfirm(true)}
-                className="w-full py-4.5 rounded-[22px] bg-red-50 text-[13px] font-extrabold text-red-500 uppercase tracking-[0.1em] hover:bg-red-100 transition-colors border border-red-100/50"
+                className="w-full py-4.5 rounded-[22px] bg-red-50 text-[14.5px] font-extrabold text-red-500 uppercase tracking-[0.1em] hover:bg-red-100 transition-colors border border-red-100/50"
               >
                 Cancel Search
               </motion.button>
@@ -1181,7 +1181,7 @@ const SearchingDriver = () => {
                   <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.3)]">
                     <CheckCircle2 size={12} className="text-white" strokeWidth={3} />
                   </div>
-                  <span className="text-[14px] font-black tracking-tight text-emerald-700 uppercase tracking-wider">Captain confirmed</span>
+                  <span className="text-[15.5px] font-black tracking-tight text-emerald-700 uppercase tracking-wider">Captain confirmed</span>
                 </div>
 
                 <div className="p-6">
@@ -1189,10 +1189,10 @@ const SearchingDriver = () => {
                     <div className="space-y-1">
                       {/* Driver Name and Rating */}
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[14px] font-black text-slate-400 uppercase tracking-widest">{driver.name || "Vishal K."}</span>
+                        <span className="text-[15.5px] font-black text-slate-400 uppercase tracking-widest">{driver.name || "Vishal K."}</span>
                         <div className="flex items-center gap-1 bg-yellow-400/10 px-1.5 py-0.5 rounded-full border border-yellow-400/20">
                           <Star size={10} className="fill-yellow-500 text-yellow-500" />
-                          <span className="text-[11px] font-black text-yellow-700">{driver.rating || "4.7"}</span>
+                          <span className="text-[13px] font-black text-yellow-700">{driver.rating || "4.7"}</span>
                         </div>
                       </div>
                       
@@ -1203,7 +1203,7 @@ const SearchingDriver = () => {
 
                       {/* Vehicle Details Pill */}
                       <div className="inline-flex items-center px-3 py-1 rounded-full bg-slate-100 border border-slate-200/50">
-                        <p className="text-[12px] font-black text-slate-600">
+                        <p className="text-[13.5px] font-black text-slate-600">
                           {[driver.vehicleColor, driver.vehicleMake, driver.vehicleModel, driver.vehicleType || "Taxi"].filter(Boolean).join(' ') || "White Dzire Taxi"}
                         </p>
                       </div>
@@ -1236,7 +1236,7 @@ const SearchingDriver = () => {
                       className="flex items-center justify-center gap-3 rounded-[22px] bg-slate-50 py-4.5 border border-slate-200/60 hover:bg-slate-100 transition-colors"
                     >
                       <Phone size={18} className="text-slate-900" strokeWidth={2.5} />
-                      <span className="text-[13px] font-black text-slate-900 uppercase tracking-widest leading-none">Call</span>
+                      <span className="text-[14.5px] font-black text-slate-900 uppercase tracking-widest leading-none">Call</span>
                     </motion.button>
                      <motion.button
                       whileTap={{ scale: 0.96 }}
@@ -1244,7 +1244,7 @@ const SearchingDriver = () => {
                       className="flex items-center justify-center gap-3 rounded-[22px] bg-slate-950 py-4.5 shadow-[0_12px_24px_rgba(15,23,42,0.15)] active:shadow-none"
                     >
                       <MessageCircle size={18} className="text-white" strokeWidth={2.5} />
-                      <span className="text-[13px] font-black text-white uppercase tracking-widest leading-none">Chat</span>
+                      <span className="text-[14.5px] font-black text-white uppercase tracking-widest leading-none">Chat</span>
                     </motion.button>
                   </div>
                 </div>
@@ -1256,7 +1256,7 @@ const SearchingDriver = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </div>
-                <span className="text-[12px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Captain is arriving</span>
+                <span className="text-[13.5px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Captain is arriving</span>
               </div>
             </motion.div>
           )}
@@ -1275,17 +1275,17 @@ const SearchingDriver = () => {
               <div className="w-14 h-14 bg-red-50 rounded-[18px] flex items-center justify-center mx-auto mb-4">
                 <AlertTriangle size={26} className="text-red-400" strokeWidth={2} />
               </div>
-              <h3 className="text-[18px] font-bold text-slate-900 mb-1.5">Cancel ride?</h3>
-              <p className="text-[13px] font-bold text-slate-400 mb-6 leading-relaxed">
+              <h3 className="text-[19px] font-bold text-slate-900 mb-1.5">Cancel ride?</h3>
+              <p className="text-[14.5px] font-bold text-slate-400 mb-6 leading-relaxed">
                 {"We're still searching. Stop looking?"}
               </p>
               <div className="space-y-2.5">
                 <motion.button whileTap={{ scale: 0.97 }} onClick={handleCancel}
-                  className="w-full bg-slate-900 text-white py-3.5 rounded-[16px] text-[13px] font-bold uppercase tracking-widest">
+                  className="w-full bg-slate-900 text-white py-3.5 rounded-[16px] text-[14.5px] font-bold uppercase tracking-widest">
                   Yes, Cancel
                 </motion.button>
                 <button onClick={() => setShowCancelConfirm(false)}
-                  className="w-full py-3.5 text-[13px] font-bold text-slate-400 uppercase tracking-widest">
+                  className="w-full py-3.5 text-[14.5px] font-bold text-slate-400 uppercase tracking-widest">
                   {isSearching ? 'Keep Searching' : 'Go Back'}
                 </button>
               </div>

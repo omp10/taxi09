@@ -56,7 +56,7 @@ const PaymentSettings = () => {
     <div className="min-h-screen bg-[#FDFDFD] max-w-lg mx-auto flex flex-col font-sans">
       <header className="bg-white p-5 flex items-center gap-6 border-b border-gray-50 sticky top-0 z-20">
         <button onClick={() => navigate('/taxi/user/profile')} className="p-2 active:scale-95"><ArrowLeft size={24} /></button>
-        <h1 className="text-[18px] font-black">Payments</h1>
+        <h1 className="text-[19px] font-black">Payments</h1>
       </header>
 
       <div className="p-5 space-y-4">
@@ -106,7 +106,7 @@ const PaymentSettings = () => {
 
               <div className="text-center space-y-1">
                 <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">Add Payment Method</h3>
-                <p className="text-[11px] font-bold text-gray-400 tracking-widest uppercase">Choose a method to add</p>
+                <p className="text-[13px] font-bold text-gray-400 tracking-widest uppercase">Choose a method to add</p>
               </div>
 
               {isSuccess ? (
@@ -135,7 +135,7 @@ const PaymentSettings = () => {
                         }`}>
                           <Icon size={22} strokeWidth={2} />
                         </div>
-                        <span className="text-[12px] font-black text-gray-700 text-center leading-tight">{label}</span>
+                        <span className="text-[13.5px] font-black text-gray-700 text-center leading-tight">{label}</span>
                       </button>
                     ))}
                   </div>
@@ -147,7 +147,7 @@ const PaymentSettings = () => {
                       value={upiId}
                       onChange={e => setUpiId(e.target.value)}
                       placeholder="Enter UPI ID (e.g. name@upi)"
-                      className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[14px] font-bold text-gray-900 focus:outline-none focus:border-purple-300 transition-all placeholder:text-gray-300"
+                      className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[15.5px] font-bold text-gray-900 focus:outline-none focus:border-purple-300 transition-all placeholder:text-gray-300"
                     />
                   )}
 
@@ -159,21 +159,21 @@ const PaymentSettings = () => {
                         value={cardNumber}
                         onChange={e => setCardNumber(e.target.value.replace(/\D/g, '').slice(0, 16))}
                         placeholder="Card number"
-                        className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[14px] font-bold text-gray-900 focus:outline-none focus:border-blue-300 transition-all placeholder:text-gray-300"
+                        className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[15.5px] font-bold text-gray-900 focus:outline-none focus:border-blue-300 transition-all placeholder:text-gray-300"
                       />
                       <input
                         type="text"
                         value={cardName}
                         onChange={e => setCardName(e.target.value)}
                         placeholder="Name on card"
-                        className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[14px] font-bold text-gray-900 focus:outline-none focus:border-blue-300 transition-all placeholder:text-gray-300"
+                        className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[15.5px] font-bold text-gray-900 focus:outline-none focus:border-blue-300 transition-all placeholder:text-gray-300"
                       />
                       <input
                         type="text"
                         value={cardExpiry}
                         onChange={e => setCardExpiry(e.target.value)}
                         placeholder="MM / YY"
-                        className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[14px] font-bold text-gray-900 focus:outline-none focus:border-blue-300 transition-all placeholder:text-gray-300"
+                        className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[15.5px] font-bold text-gray-900 focus:outline-none focus:border-blue-300 transition-all placeholder:text-gray-300"
                       />
                     </div>
                   )}
@@ -182,7 +182,7 @@ const PaymentSettings = () => {
                     <button
                       onClick={handleAdd}
                       disabled={isSubmitting || !canSubmit}
-                      className={`w-full h-14 rounded-[22px] font-black text-[14px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 active:scale-95 ${
+                      className={`w-full h-14 rounded-[22px] font-black text-[15.5px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 active:scale-95 ${
                         isSubmitting || !canSubmit ? 'bg-gray-100 text-gray-300' : 'bg-gray-900 text-white shadow-xl'
                       }`}
                     >

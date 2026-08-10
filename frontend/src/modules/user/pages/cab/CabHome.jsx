@@ -91,8 +91,8 @@ const CabHome = () => {
             <ArrowLeft size={18} className="text-slate-900" strokeWidth={2.5} />
           </motion.button>
           <div className="flex-1 min-w-0">
-            <p className="text-[9px] font-black uppercase tracking-[0.26em] text-slate-400">Auto & Cab</p>
-            <h1 className="text-[19px] font-black tracking-tight text-slate-900 leading-tight">Choose a Service</h1>
+            <p className="text-[11px] font-black uppercase tracking-[0.26em] text-slate-400">Auto & Cab</p>
+            <h1 className="text-[20px] font-black tracking-tight text-slate-900 leading-tight">Choose a Service</h1>
           </div>
           <img src="/4_Taxi.png" alt="cab" className="h-10 w-10 object-contain drop-shadow-md shrink-0" />
         </div>
@@ -100,8 +100,8 @@ const CabHome = () => {
 
       <div className="px-5 pt-5 space-y-3">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.26em] text-slate-400">{visibleServices.length} services available</p>
-          <h2 className="mt-0.5 text-[16px] font-black tracking-tight text-slate-900">What do you need?</h2>
+          <p className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-400">{visibleServices.length} services available</p>
+          <h2 className="mt-0.5 text-[17px] font-black tracking-tight text-slate-900">What do you need?</h2>
         </div>
 
         {visibleServices.map((s, i) => (
@@ -116,10 +116,10 @@ const CabHome = () => {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[15px] font-black text-slate-900 leading-tight">{s.title}</span>
-                <span className={`text-[9px] font-black px-2 py-0.5 rounded-full border ${s.tagColor}`}>{s.tag}</span>
+                <span className="text-[16.5px] font-black text-slate-900 leading-tight">{s.title}</span>
+                <span className={`text-[11px] font-black px-2 py-0.5 rounded-full border ${s.tagColor}`}>{s.tag}</span>
               </div>
-              <p className="text-[11px] font-bold text-slate-400 mt-0.5">{s.sub}</p>
+              <p className="text-[13px] font-bold text-slate-400 mt-0.5">{s.sub}</p>
             </div>
             <ArrowRight size={16} className="text-slate-300 shrink-0" strokeWidth={2.5} />
           </motion.button>

@@ -46,14 +46,14 @@ const DEPARTURE_WINDOWS = [
 ];
 
 const MenuLabel = ({ children }) => (
-  <p className="px-3 pb-1 pt-2 text-[9px] font-bold uppercase tracking-[0.16em] text-[var(--text-light)]">{children}</p>
+  <p className="px-3 pb-1 pt-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--text-light)]">{children}</p>
 );
 
 const MenuRow = ({ active, onClick, children }) => (
   <button
     type="button"
     onClick={onClick}
-    className={`flex w-full items-center justify-between gap-2 rounded-[12px] px-3 py-2.5 text-left text-[12px] font-bold transition-colors ${
+    className={`flex w-full items-center justify-between gap-2 rounded-[12px] px-3 py-2.5 text-left text-[13.5px] font-bold transition-colors ${
       active ? 'bg-[#FFF7DB] text-[var(--text)]' : 'text-[var(--text)] hover:bg-slate-50'
     }`}
   >
@@ -155,11 +155,11 @@ const BusThumb = ({ index, bus }) => {
     <div className="relative h-[76px] w-[92px] shrink-0 overflow-hidden rounded-[12px] bg-slate-900">
       <img src={images[index % images.length]} alt="" className="h-full w-full object-cover object-right" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-      <span className="absolute left-1.5 top-1.5 flex items-center gap-1 rounded-[10px] bg-[var(--success)] px-1.5 py-0.5 text-[9px] font-bold text-white">
+      <span className="absolute left-1.5 top-1.5 flex items-center gap-1 rounded-[10px] bg-[var(--success)] px-1.5 py-0.5 text-[11px] font-bold text-white">
         <Star size={8} className="fill-current" />
         {hasBusRating(bus) ? getBusRating(bus).toFixed(1) : '4.4'}
       </span>
-      <span className="absolute bottom-1.5 left-1.5 rounded-[10px] bg-black/[.72] px-1.5 py-0.5 text-[8.5px] font-semibold text-white">
+      <span className="absolute bottom-1.5 left-1.5 rounded-[10px] bg-black/[.72] px-1.5 py-0.5 text-[10.5px] font-semibold text-white">
         {bus?.type || 'AC Sleeper'}
       </span>
     </div>
@@ -170,7 +170,7 @@ const FilterChip = ({ active, children, onClick }) => (
   <button
     type="button"
     onClick={onClick}
-    className={`flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-[11px] font-bold transition-colors ${
+    className={`flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-[13px] font-bold transition-colors ${
       active
         ? 'border-[#FFD54F] bg-[#fff8df] text-[var(--text)]'
         : 'border-[var(--border)] bg-white text-[var(--text)]'
@@ -456,11 +456,11 @@ const BusList = () => {
               <div className="flex gap-2">
                 <span className="mt-2 h-2 w-2 shrink-0 rounded-full border-[2.5px] border-[var(--primary)]" />
                 <div className="min-w-0 flex-1">
-                  <p className="text-[8px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">From</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">From</p>
                   <select
                     value={fromCity}
                     onChange={(event) => setFromCity(event.target.value)}
-                    className="-ml-0.5 w-full min-w-0 appearance-none truncate bg-transparent text-[14px] font-extrabold leading-tight text-[var(--text)] outline-none"
+                    className="-ml-0.5 w-full min-w-0 appearance-none truncate bg-transparent text-[15.5px] font-extrabold leading-tight text-[var(--text)] outline-none"
                   >
                     {!originOptions.includes(fromCity) && <option value={fromCity}>{fromCity}</option>}
                     {originOptions.map((city) => (
@@ -468,7 +468,7 @@ const BusList = () => {
                     ))}
                   </select>
                   {originStopName ? (
-                    <p className="truncate text-[9px] font-medium text-[var(--text-light)]">{originStopName}</p>
+                    <p className="truncate text-[11px] font-medium text-[var(--text-light)]">{originStopName}</p>
                   ) : null}
                 </div>
               </div>
@@ -476,11 +476,11 @@ const BusList = () => {
               <div className="flex gap-2">
                 <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[var(--primary)]" />
                 <div className="min-w-0 flex-1">
-                  <p className="text-[8px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">To</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">To</p>
                   <select
                     value={toCity}
                     onChange={(event) => setToCity(event.target.value)}
-                    className="-ml-0.5 w-full min-w-0 appearance-none truncate bg-transparent text-[14px] font-extrabold leading-tight text-[var(--text)] outline-none"
+                    className="-ml-0.5 w-full min-w-0 appearance-none truncate bg-transparent text-[15.5px] font-extrabold leading-tight text-[var(--text)] outline-none"
                   >
                     {!destinationOptions.includes(toCity) && <option value={toCity}>{toCity}</option>}
                     {destinationOptions.map((city) => (
@@ -488,7 +488,7 @@ const BusList = () => {
                     ))}
                   </select>
                   {destinationStopName ? (
-                    <p className="truncate text-[9px] font-medium text-[var(--text-light)]">{destinationStopName}</p>
+                    <p className="truncate text-[11px] font-medium text-[var(--text-light)]">{destinationStopName}</p>
                   ) : null}
                 </div>
               </div>
@@ -510,29 +510,29 @@ const BusList = () => {
 
             <div className="w-[100px] shrink-0 space-y-2.5">
               <div>
-                <p className="text-[8px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">Date</p>
-                <p className="mt-0.5 flex items-center gap-1 text-[10.5px] font-extrabold text-[var(--text)]">
+                <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">Date</p>
+                <p className="mt-0.5 flex items-center gap-1 text-[12.5px] font-extrabold text-[var(--text)]">
                   <CalendarDays size={11} className="shrink-0 text-[var(--text-light)]" strokeWidth={2.5} />
                   {formatDateParts(date).label}
                 </p>
                 <button
                   type="button"
                   onClick={() => navigate(`${routePrefix}/bus`)}
-                  className="mt-0.5 text-[9.5px] font-bold text-[var(--primary-dark)]"
+                  className="mt-0.5 text-[11.5px] font-bold text-[var(--primary-dark)]"
                 >
                   Change
                 </button>
               </div>
               <div>
-                <p className="text-[8px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">Passengers</p>
-                <p className="mt-0.5 flex items-center gap-1 text-[10.5px] font-extrabold text-[var(--text)]">
+                <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--text-light)]">Passengers</p>
+                <p className="mt-0.5 flex items-center gap-1 text-[12.5px] font-extrabold text-[var(--text)]">
                   <Users size={11} className="shrink-0 text-[var(--text-light)]" strokeWidth={2.5} />
                   {passengers} Passenger{passengers === 1 ? '' : 's'}
                 </p>
                 <button
                   type="button"
                   onClick={() => navigate(`${routePrefix}/bus`)}
-                  className="mt-0.5 text-[9.5px] font-bold text-[var(--primary-dark)]"
+                  className="mt-0.5 text-[11.5px] font-bold text-[var(--primary-dark)]"
                 >
                   Change
                 </button>
@@ -606,9 +606,9 @@ const BusList = () => {
                         : 'bg-white text-[var(--text-light)]'
                   }`}
                 >
-                  <p className="text-[8px] font-bold">{parts.weekday}</p>
-                  <p className="text-[17px] font-extrabold leading-tight">{parts.day}</p>
-                  <p className="text-[8px] font-semibold">{parts.month}</p>
+                  <p className="text-[10px] font-bold">{parts.weekday}</p>
+                  <p className="text-[18px] font-extrabold leading-tight">{parts.day}</p>
+                  <p className="text-[10px] font-semibold">{parts.month}</p>
                 </button>
               );
             })}
@@ -640,7 +640,7 @@ const BusList = () => {
             <FilterChip active={openMenu === 'amenities' || selectedAmenities.length > 0} onClick={() => toggleMenu('amenities')}>
               <Wifi size={13} /> Amenities
               {selectedAmenities.length > 0 ? (
-                <span className="rounded-full bg-[var(--primary)] px-1.5 text-[9px]">{selectedAmenities.length}</span>
+                <span className="rounded-full bg-[var(--primary)] px-1.5 text-[11px]">{selectedAmenities.length}</span>
               ) : (
                 <ChevronDown size={12} className={openMenu === 'amenities' ? 'rotate-180 transition-transform' : 'transition-transform'} />
               )}
@@ -648,7 +648,7 @@ const BusList = () => {
             <FilterChip active={openMenu === 'filters' || activeFilterCount > 0} onClick={() => toggleMenu('filters')}>
               <Filter size={13} /> Filters
               {activeFilterCount > 0 ? (
-                <span className="rounded-full bg-[var(--primary)] px-1.5 text-[9px]">{activeFilterCount}</span>
+                <span className="rounded-full bg-[var(--primary)] px-1.5 text-[11px]">{activeFilterCount}</span>
               ) : null}
             </FilterChip>
           </div>
@@ -704,7 +704,7 @@ const BusList = () => {
                     All types
                   </MenuRow>
                   {busTypeOptions.length === 0 ? (
-                    <p className="px-3 py-2 text-[11px] font-semibold text-[var(--text-light)]">
+                    <p className="px-3 py-2 text-[13px] font-semibold text-[var(--text-light)]">
                       No bus types on this route yet.
                     </p>
                   ) : null}
@@ -727,7 +727,7 @@ const BusList = () => {
                 <>
                   <MenuLabel>Amenities</MenuLabel>
                   {amenityOptions.length === 0 ? (
-                    <p className="px-3 py-2 text-[11px] font-semibold text-[var(--text-light)]">
+                    <p className="px-3 py-2 text-[13px] font-semibold text-[var(--text-light)]">
                       No amenities listed on this route.
                     </p>
                   ) : null}
@@ -746,7 +746,7 @@ const BusList = () => {
                     <button
                       type="button"
                       onClick={() => setSelectedAmenities([])}
-                      className="mt-1 w-full rounded-[12px] py-2 text-[11px] font-bold text-[var(--primary-dark)]"
+                      className="mt-1 w-full rounded-[12px] py-2 text-[13px] font-bold text-[var(--primary-dark)]"
                     >
                       Clear amenities
                     </button>
@@ -784,14 +784,14 @@ const BusList = () => {
                     <button
                       type="button"
                       onClick={resetFilters}
-                      className="flex-1 rounded-[12px] border border-[var(--border)] py-2.5 text-[11px] font-bold text-[var(--text)]"
+                      className="flex-1 rounded-[12px] border border-[var(--border)] py-2.5 text-[13px] font-bold text-[var(--text)]"
                     >
                       Reset all
                     </button>
                     <button
                       type="button"
                       onClick={() => setOpenMenu(null)}
-                      className="flex-1 rounded-[12px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-2.5 text-[11px] font-extrabold text-[var(--text)]"
+                      className="flex-1 rounded-[12px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] py-2.5 text-[13px] font-extrabold text-[var(--text)]"
                     >
                       Show {visibleBuses.length} buses
                     </button>
@@ -816,11 +816,11 @@ const BusList = () => {
         {!loading && !error && buses.length > 0 ? (
           <section className="mt-2 rounded-[var(--radius-sm)] bg-[linear-gradient(90deg,#FFF7DB,#fff)] px-4 py-3 shadow-[var(--shadow-sm)]">
             <div className="flex items-center justify-between">
-              <p className="flex items-center gap-1.5 text-[10px] font-black text-slate-800">
+              <p className="flex items-center gap-1.5 text-[12px] font-black text-slate-800">
                 <TicketPercent size={13} className="text-[#d08a00]" />
                 {visibleBuses.length} Buses Found
               </p>
-              <p className="flex items-center gap-1 text-[9px] font-bold text-slate-600">
+              <p className="flex items-center gap-1 text-[11px] font-bold text-slate-600">
                 Showing lowest price first <ArrowUpDown size={11} />
               </p>
             </div>
@@ -860,10 +860,10 @@ const BusList = () => {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
-                            <h3 className="truncate text-[13.5px] font-extrabold leading-tight text-[var(--text)]">
+                            <h3 className="truncate text-[15px] font-extrabold leading-tight text-[var(--text)]">
                               {getBusCompany(bus) || 'Bus Service'}
                             </h3>
-                            <p className="mt-0.5 truncate text-[9px] font-medium text-[var(--text-light)]">
+                            <p className="mt-0.5 truncate text-[11px] font-medium text-[var(--text-light)]">
                               {bus?.type || 'AC Sleeper'}
                               {bus?.busName && bus.busName !== getBusCompany(bus) ? ` · ${bus.busName}` : ''}
                             </p>
@@ -873,22 +873,22 @@ const BusList = () => {
 
                         <div className="mt-2 grid grid-cols-[1fr_50px_1fr] items-start gap-1">
                           <div className="min-w-0">
-                            <p className="text-[14px] font-extrabold leading-none text-[var(--text)]">{bus.departure || '--:--'}</p>
-                            <p className="mt-0.5 truncate text-[9px] font-bold text-slate-600">{splitCityName(fromCity)}</p>
+                            <p className="text-[15.5px] font-extrabold leading-none text-[var(--text)]">{bus.departure || '--:--'}</p>
+                            <p className="mt-0.5 truncate text-[11px] font-bold text-slate-600">{splitCityName(fromCity)}</p>
                             {boardingPoint ? (
-                              <p className="truncate text-[8px] font-medium text-slate-400">{boardingPoint}</p>
+                              <p className="truncate text-[10px] font-medium text-slate-400">{boardingPoint}</p>
                             ) : null}
                           </div>
                           <div className="text-center">
-                            <p className="text-[8.5px] font-semibold text-[var(--text-light)]">{formatDurationBrief(bus.duration)}</p>
+                            <p className="text-[10.5px] font-semibold text-[var(--text-light)]">{formatDurationBrief(bus.duration)}</p>
                             <div className="my-1 h-px bg-slate-200" />
                             <BusFront size={11} className="mx-auto text-slate-400" />
                           </div>
                           <div className="min-w-0 text-right">
-                            <p className="text-[14px] font-extrabold leading-none text-[var(--text)]">{bus.arrival || '--:--'}</p>
-                            <p className="mt-0.5 truncate text-[9px] font-bold text-slate-600">{splitCityName(toCity)}</p>
+                            <p className="text-[15.5px] font-extrabold leading-none text-[var(--text)]">{bus.arrival || '--:--'}</p>
+                            <p className="mt-0.5 truncate text-[11px] font-bold text-slate-600">{splitCityName(toCity)}</p>
                             {droppingPoint ? (
-                              <p className="truncate text-[8px] font-medium text-slate-400">{droppingPoint}</p>
+                              <p className="truncate text-[10px] font-medium text-slate-400">{droppingPoint}</p>
                             ) : null}
                           </div>
                         </div>
@@ -896,7 +896,7 @@ const BusList = () => {
                     </div>
 
                     {topAmenities.length ? (
-                      <div className="mt-2 flex flex-wrap gap-x-2.5 gap-y-1 text-[8.5px] font-medium text-[var(--text-light)]">
+                      <div className="mt-2 flex flex-wrap gap-x-2.5 gap-y-1 text-[10.5px] font-medium text-[var(--text-light)]">
                         {topAmenities.map((amenity) => (
                           <span key={amenity} className="flex items-center gap-1">
                             <ShieldCheck size={9} className="shrink-0 text-slate-400" />
@@ -908,11 +908,11 @@ const BusList = () => {
 
                     <div className="mt-2.5 flex flex-wrap items-center justify-between gap-y-1.5 border-t border-[var(--border)] pt-2">
                       <div className="flex items-center gap-1.5">
-                        <span className="rounded-full bg-emerald-50 px-1.5 py-0.5 text-[8.5px] font-bold text-[var(--success)]">
+                        <span className="rounded-full bg-emerald-50 px-1.5 py-0.5 text-[10.5px] font-bold text-[var(--success)]">
                           {getSeatLabel(bus)}
                         </span>
                         {rated ? (
-                          <span className="flex items-center gap-1 rounded-full bg-amber-50 px-1.5 py-0.5 text-[8.5px] font-bold text-amber-700">
+                          <span className="flex items-center gap-1 rounded-full bg-amber-50 px-1.5 py-0.5 text-[10.5px] font-bold text-amber-700">
                             <Star size={10} className="fill-current" />
                             {getBusRating(bus).toFixed(1)}
                           </span>
@@ -920,10 +920,10 @@ const BusList = () => {
                       </div>
                       <div className="flex items-center gap-2.5">
                         <div className="text-right">
-                          <p className="text-[17px] font-extrabold leading-none text-[var(--text)]">Rs{price}</p>
-                          <p className="text-[8px] font-medium text-[var(--text-light)]">per seat</p>
+                          <p className="text-[18px] font-extrabold leading-none text-[var(--text)]">Rs{price}</p>
+                          <p className="text-[10px] font-medium text-[var(--text-light)]">per seat</p>
                         </div>
-                        <span className="rounded-[11px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] px-3 py-2 text-[10px] font-extrabold text-[var(--text)] shadow-[0_6px_14px_rgba(255,193,7,.35)]">
+                        <span className="rounded-[11px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] px-3 py-2 text-[12px] font-extrabold text-[var(--text)] shadow-[0_6px_14px_rgba(255,193,7,.35)]">
                           View Seats
                         </span>
                       </div>
@@ -941,22 +941,22 @@ const BusList = () => {
         <div className="flex items-center gap-2 rounded-[var(--radius)] bg-white px-4 py-3 shadow-[var(--shadow-lg)]">
           <div className="grid min-w-0 flex-1 grid-cols-3 gap-2">
             <div className="min-w-0">
-              <p className="text-[8px] font-black uppercase tracking-[0.1em] text-slate-400">From</p>
-              <p className="truncate text-[10.5px] font-black text-slate-950">{splitCityName(fromCity)}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">From</p>
+              <p className="truncate text-[12.5px] font-black text-slate-950">{splitCityName(fromCity)}</p>
             </div>
             <div className="min-w-0">
-              <p className="text-[8px] font-black uppercase tracking-[0.1em] text-slate-400">To</p>
-              <p className="truncate text-[10.5px] font-black text-slate-950">{splitCityName(toCity)}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">To</p>
+              <p className="truncate text-[12.5px] font-black text-slate-950">{splitCityName(toCity)}</p>
             </div>
             <div className="min-w-0">
-              <p className="text-[8px] font-black uppercase tracking-[0.1em] text-slate-400">Date</p>
-              <p className="truncate text-[10.5px] font-black text-slate-950">{formatDateParts(date).label}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Date</p>
+              <p className="truncate text-[12.5px] font-black text-slate-950">{formatDateParts(date).label}</p>
             </div>
           </div>
           <button
             type="button"
             onClick={() => navigate(`${routePrefix}/bus`)}
-            className="flex shrink-0 items-center gap-1.5 rounded-[16px] border-2 border-[var(--primary)] bg-white px-3 py-2.5 text-[11px] font-semibold text-[var(--text)] active:bg-[#FFF7DB] transition-colors"
+            className="flex shrink-0 items-center gap-1.5 rounded-[16px] border-2 border-[var(--primary)] bg-white px-3 py-2.5 text-[13px] font-semibold text-[var(--text)] active:bg-[#FFF7DB] transition-colors"
           >
             <SlidersHorizontal size={12} strokeWidth={2.8} />
             Modify

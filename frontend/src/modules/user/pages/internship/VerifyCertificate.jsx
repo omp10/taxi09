@@ -47,7 +47,7 @@ const VerifyCertificate = () => {
           </button>
           <div>
             <h1 className="text-[24px] font-black leading-tight text-slate-900">Verify a Certificate</h1>
-            <p className="text-[12.5px] font-semibold text-slate-700">
+            <p className="text-[14px] font-semibold text-slate-700">
               Check that a Taxi09 certificate is genuine
             </p>
           </div>
@@ -57,18 +57,18 @@ const VerifyCertificate = () => {
       <div className="mx-auto -mt-5 max-w-2xl px-6">
         <form onSubmit={check} className="rounded-2xl border border-slate-100 bg-white p-5">
           <label className="block">
-            <span className="mb-1.5 block text-[12.5px] font-bold text-slate-800">Certificate number</span>
+            <span className="mb-1.5 block text-[14px] font-bold text-slate-800">Certificate number</span>
             <div className="flex gap-2">
               <input
                 value={number}
                 onChange={(e) => setNumber(e.target.value)}
                 placeholder="TAXI09-CERT-2026-00001"
-                className="w-full rounded-xl border border-slate-200 px-3 py-2.5 font-mono text-[13.5px] uppercase outline-none focus:border-[#F5B700]"
+                className="w-full rounded-xl border border-slate-200 px-3 py-2.5 font-mono text-[15px] uppercase outline-none focus:border-[#F5B700]"
               />
               <button
                 type="submit"
                 disabled={checking || !number.trim()}
-                className="flex shrink-0 items-center gap-1.5 rounded-xl bg-slate-900 px-4 text-[13px] font-black text-white disabled:opacity-50"
+                className="flex shrink-0 items-center gap-1.5 rounded-xl bg-slate-900 px-4 text-[14.5px] font-black text-white disabled:opacity-50"
               >
                 {checking ? <Loader2 size={15} className="animate-spin" /> : <Search size={15} />} Check
               </button>
@@ -82,16 +82,16 @@ const VerifyCertificate = () => {
               }`}
             >
               {result.revoked ? (
-                <p className="flex items-center gap-2 text-[14px] font-black text-red-700">
+                <p className="flex items-center gap-2 text-[15.5px] font-black text-red-700">
                   <ShieldAlert size={17} /> This certificate has been revoked
                 </p>
               ) : (
-                <p className="flex items-center gap-2 text-[14px] font-black text-emerald-800">
+                <p className="flex items-center gap-2 text-[15.5px] font-black text-emerald-800">
                   <BadgeCheck size={17} /> Genuine certificate
                 </p>
               )}
 
-              <dl className="mt-3 space-y-1.5 text-[12.5px]">
+              <dl className="mt-3 space-y-1.5 text-[14px]">
                 <div className="flex justify-between gap-4">
                   <dt className="text-slate-600">Awarded to</dt>
                   <dd className="font-bold text-slate-900">{result.recipientName}</dd>
@@ -121,13 +121,13 @@ const VerifyCertificate = () => {
           ) : null}
 
           {error ? (
-            <p className="mt-5 flex items-center gap-2 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-[13px] font-semibold text-amber-800">
+            <p className="mt-5 flex items-center gap-2 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-[14.5px] font-semibold text-amber-800">
               <ShieldAlert size={16} className="shrink-0" /> {error}
             </p>
           ) : null}
         </form>
 
-        <p className="mt-4 text-center text-[11.5px] text-slate-500">
+        <p className="mt-4 text-center text-[13.5px] text-slate-500">
           The number is printed on every certificate Taxi09 issues.
         </p>
       </div>

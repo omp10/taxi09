@@ -40,7 +40,7 @@ const RentalHero = () => {
                 }`}
               >
                 <div className="font-bold">Rental</div>
-                <div className="text-[10px] opacity-80">For hours & days</div>
+                <div className="text-[12px] opacity-80">For hours & days</div>
                 {activeTab === 'rental' && (
                   <div className="absolute -bottom-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 bg-white" />
                 )}
@@ -52,7 +52,7 @@ const RentalHero = () => {
                 }`}
               >
                 <div className="font-bold">Subscriptions</div>
-                <div className="text-[10px] opacity-80">For more than 7 days</div>
+                <div className="text-[12px] opacity-80">For more than 7 days</div>
                 {activeTab === 'subscriptions' && (
                   <div className="absolute -bottom-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 bg-white" />
                 )}

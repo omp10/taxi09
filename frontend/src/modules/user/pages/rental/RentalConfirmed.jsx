@@ -341,13 +341,13 @@ const RentalConfirmed = () => {
               <CheckCircle2 size={32} className={isCompletedRentalRide ? 'text-emerald-500' : 'text-orange-500'} strokeWidth={2} />
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
+              <p className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
                 {isCompletedRentalRide ? 'Ride Completed' : isEndRequestPending ? 'End Review Pending' : 'Rental In Progress'}
               </p>
               <h1 className="text-[22px] font-extrabold text-slate-950 tracking-tight mt-0.5">
                 {isCompletedRentalRide ? 'Final rental total' : isEndRequestPending ? 'Awaiting admin confirmation' : 'Vehicle assigned'}
               </h1>
-              <p className="text-[12px] font-bold text-slate-400 mt-1">
+              <p className="text-[13.5px] font-bold text-slate-400 mt-1">
                 Booking ID: <span className="text-slate-700 font-bold">{activeRentalRide.bookingReference || bookingId}</span>
               </p>
             </div>
@@ -366,43 +366,43 @@ const RentalConfirmed = () => {
                 <div className="h-16 w-20 rounded-2xl bg-white/70 shrink-0" />
               )}
               <div>
-                <p className="text-[15px] font-bold text-slate-950">{activeVehicleName}</p>
-                <p className="text-[11px] font-medium text-slate-500/80 mt-0.5">{activeVehicleCategory}</p>
+                <p className="text-[16.5px] font-bold text-slate-950">{activeVehicleName}</p>
+                <p className="text-[13px] font-medium text-slate-500/80 mt-0.5">{activeVehicleCategory}</p>
               </div>
             </div>
             <div className="px-5 py-4 space-y-3 border-t border-slate-50">
               <div className="flex items-center justify-between rounded-[14px] bg-slate-50 px-4 py-3">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500/80">Time Elapsed</p>
-                  <p className="mt-1 text-[18px] font-extrabold text-slate-950">{liveElapsedLabel}</p>
+                  <p className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-500/80">Time Elapsed</p>
+                  <p className="mt-1 text-[19px] font-extrabold text-slate-950">{liveElapsedLabel}</p>
                 </div>
                 <Clock size={18} className="text-orange-500" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-[14px] bg-slate-50 px-4 py-3">
-                  <p className="text-[10px] font-bold text-slate-400">Advance paid</p>
-                  <p className="mt-1 text-[16px] font-black text-emerald-600">Rs.{Number(activeRentalRide.advancePaid || activeRentalRide.payableNow || 0).toFixed(0)}</p>
+                  <p className="text-[12px] font-bold text-slate-400">Advance paid</p>
+                  <p className="mt-1 text-[17px] font-black text-emerald-600">Rs.{Number(activeRentalRide.advancePaid || activeRentalRide.payableNow || 0).toFixed(0)}</p>
                 </div>
                 <div className="rounded-[14px] bg-slate-50 px-4 py-3">
-                  <p className="text-[10px] font-medium text-slate-400">{isCompletedRentalRide ? 'Final total' : isEndRequestPending ? 'Frozen total for review' : 'Charge till now'}</p>
-                  <p className="mt-1 text-[16px] font-bold text-slate-900">Rs.{finalTotal.toFixed(0)}</p>
+                  <p className="text-[12px] font-medium text-slate-400">{isCompletedRentalRide ? 'Final total' : isEndRequestPending ? 'Frozen total for review' : 'Charge till now'}</p>
+                  <p className="mt-1 text-[17px] font-bold text-slate-900">Rs.{finalTotal.toFixed(0)}</p>
                 </div>
               </div>
               <div className="rounded-[14px] bg-slate-50 px-4 py-3">
-                <p className="text-[10px] font-bold text-slate-400">{isCompletedRentalRide ? 'Final payable balance' : isEndRequestPending ? 'Pending settlement after review' : 'Current remaining due'}</p>
-                <p className="mt-1 text-[16px] font-black text-slate-900">
+                <p className="text-[12px] font-bold text-slate-400">{isCompletedRentalRide ? 'Final payable balance' : isEndRequestPending ? 'Pending settlement after review' : 'Current remaining due'}</p>
+                <p className="mt-1 text-[17px] font-black text-slate-900">
                   Rs.{Math.max(0, finalTotal - Number(activeRentalRide.advancePaid || activeRentalRide.payableNow || 0)).toFixed(0)}
                 </p>
               </div>
               <div className="rounded-[14px] bg-slate-50 px-4 py-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500/80">Pricing Plan</p>
-                    <p className="mt-1 text-[14px] font-bold text-slate-950">
+                    <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-slate-500/80">Pricing Plan</p>
+                    <p className="mt-1 text-[15.5px] font-bold text-slate-950">
                       {activePricingSummary.label} - Rs.{Number(activePricingSummary.basePrice || 0).toFixed(0)}
-                      <span className="ml-1 text-[11px] font-medium text-slate-400">{activePricingSummary.suffix}</span>
+                      <span className="ml-1 text-[13px] font-medium text-slate-400">{activePricingSummary.suffix}</span>
                     </p>
-                    <p className="mt-1 text-[11px] font-bold text-slate-500">
+                    <p className="mt-1 text-[13px] font-bold text-slate-500">
                       Includes {Number(activePricingSummary.includedHours || 0)} hr
                       {Number(activePricingSummary.includedHours || 0) === 1 ? '' : 's'}
                       {Number(activePricingSummary.extraHourRate || 0) > 0
@@ -411,14 +411,14 @@ const RentalConfirmed = () => {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[10px] font-bold text-slate-400">Live billed</p>
-                    <p className="mt-1 text-[16px] font-black text-slate-900">Rs.{liveCharge.toFixed(0)}</p>
+                    <p className="text-[12px] font-bold text-slate-400">Live billed</p>
+                    <p className="mt-1 text-[17px] font-black text-slate-900">Rs.{liveCharge.toFixed(0)}</p>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-2.5">
                 <MapPin size={13} className="text-orange-400 shrink-0" />
-                <p className="text-[11px] font-black text-slate-700">
+                <p className="text-[13px] font-black text-slate-700">
                   {activeRentalRide.serviceLocation?.name || `${appName} Hub`}
                 </p>
               </div>
@@ -434,7 +434,7 @@ const RentalConfirmed = () => {
             <div className="w-8 h-8 rounded-[10px] bg-emerald-50 flex items-center justify-center shrink-0">
               <CheckCircle2 size={15} className="text-emerald-500" strokeWidth={2} />
             </div>
-            <p className="text-[12px] font-bold text-slate-500 leading-relaxed">
+            <p className="text-[13.5px] font-bold text-slate-500 leading-relaxed">
               {isCompletedRentalRide
                 ? `Your rental ride has ended. Final total is Rs.${finalTotal.toFixed(0)} and the remaining amount is payable at drop-off.`
                 : isEndRequestPending
@@ -449,7 +449,7 @@ const RentalConfirmed = () => {
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate('/taxi/user')}
-              className="pointer-events-auto w-full bg-slate-900 py-4 rounded-[18px] text-[15px] font-black text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2"
+              className="pointer-events-auto w-full bg-slate-900 py-4 rounded-[18px] text-[16.5px] font-black text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2"
             >
               <Home size={16} strokeWidth={2.5} /> {isCompletedRentalRide ? 'Back to Home' : 'Track from Home'}
             </motion.button>
@@ -457,7 +457,7 @@ const RentalConfirmed = () => {
             <div className="pointer-events-auto w-full space-y-3">
               {!isWithinHubRange && !locationError && (
                 <div className="bg-orange-50 border border-orange-100 rounded-[14px] px-4 py-2 text-center">
-                  <p className="text-[11px] font-black text-orange-600">
+                  <p className="text-[13px] font-black text-orange-600">
                     {distanceToHub !== null 
                       ? `Return to hub to end ride (${Math.round(distanceToHub)}m away)` 
                       : 'Calculating distance to hub...'}
@@ -466,14 +466,14 @@ const RentalConfirmed = () => {
               )}
               {locationError && (
                 <div className="bg-rose-50 border border-rose-100 rounded-[14px] px-4 py-2 text-center">
-                  <p className="text-[11px] font-black text-rose-600">{locationError}</p>
+                  <p className="text-[13px] font-black text-rose-600">{locationError}</p>
                 </div>
               )}
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 onClick={handleEndRide}
                 disabled={endingRide || !isWithinHubRange}
-                className="w-full bg-slate-900 py-4 rounded-[18px] text-[15px] font-black text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 disabled:opacity-50 disabled:grayscale-[0.5]"
+                className="w-full bg-slate-900 py-4 rounded-[18px] text-[16.5px] font-black text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2 disabled:opacity-50 disabled:grayscale-[0.5]"
               >
                 <CheckCircle2 size={16} strokeWidth={2.5} /> {endingRide ? 'Sending end request...' : 'Request End Ride'}
               </motion.button>
@@ -499,13 +499,13 @@ const RentalConfirmed = () => {
             <CheckCircle2 size={32} className="text-emerald-500" strokeWidth={2} />
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
+            <p className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-500/80">
               Booking Confirmed
             </p>
             <h1 className="text-[22px] font-extrabold text-slate-950 tracking-tight mt-0.5">
               You're all set!
             </h1>
-            <p className="text-[12px] font-bold text-slate-400 mt-1">
+            <p className="text-[13.5px] font-bold text-slate-400 mt-1">
               Booking ID: <span className="text-slate-700 font-black">{bookingId}</span>
             </p>
           </div>
@@ -523,8 +523,8 @@ const RentalConfirmed = () => {
           >
             <img src={vehicle.image} alt={vehicle.name} className="h-16 w-20 object-contain drop-shadow-lg shrink-0" />
             <div>
-              <p className="text-[15px] font-black text-slate-900">{vehicle.name}</p>
-              <p className="text-[11px] font-bold text-slate-500 mt-0.5">
+              <p className="text-[16.5px] font-black text-slate-900">{vehicle.name}</p>
+              <p className="text-[13px] font-bold text-slate-500 mt-0.5">
                 {selectedPackage?.label || duration}
               </p>
             </div>
@@ -533,34 +533,34 @@ const RentalConfirmed = () => {
             <div className="flex items-center gap-2.5">
               <Clock size={13} className="text-slate-400 shrink-0" />
               <div>
-                <p className="text-[11px] font-black text-slate-700">
+                <p className="text-[13px] font-black text-slate-700">
                   Pickup: {pickup?.slice(0, 16).replace('T', ' ')}
                 </p>
-                <p className="text-[11px] font-bold text-slate-400">
+                <p className="text-[13px] font-bold text-slate-400">
                   Return: {returnTime?.slice(0, 16).replace('T', ' ')}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-2.5">
               <MapPin size={13} className="text-orange-400 shrink-0" />
-              <p className="text-[11px] font-black text-slate-700">
+              <p className="text-[13px] font-black text-slate-700">
                 {serviceLocation?.name || `${appName} Hub`}
               </p>
             </div>
             <div className="border-t border-slate-50 pt-2.5 flex justify-between">
               <div>
-                <p className="text-[10px] font-bold text-slate-400">Rental cost (at pickup)</p>
-                <p className="text-[15px] font-black text-slate-900">Rs.{totalCost}</p>
-                <p className="mt-0.5 text-[10px] font-bold text-slate-400">
+                <p className="text-[12px] font-bold text-slate-400">Rental cost (at pickup)</p>
+                <p className="text-[16.5px] font-black text-slate-900">Rs.{totalCost}</p>
+                <p className="mt-0.5 text-[12px] font-bold text-slate-400">
                   {bookingPricingSummary.label} - Rs.{Number(bookingPricingSummary.basePrice || 0).toFixed(0)}
                   {bookingPricingSummary.suffix}
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-[10px] font-bold text-slate-400">Advance paid</p>
-                <p className="text-[15px] font-black text-emerald-600">Rs.{deposit}</p>
+                <p className="text-[12px] font-bold text-slate-400">Advance paid</p>
+                <p className="text-[16.5px] font-black text-emerald-600">Rs.{deposit}</p>
                 {paymentMethodLabel ? (
-                  <p className="text-[10px] font-bold text-slate-400 mt-0.5">{paymentMethodLabel} via Razorpay</p>
+                  <p className="text-[12px] font-bold text-slate-400 mt-0.5">{paymentMethodLabel} via Razorpay</p>
                 ) : null}
               </div>
             </div>
@@ -577,11 +577,11 @@ const RentalConfirmed = () => {
             <div className="w-7 h-7 rounded-[9px] bg-orange-50 flex items-center justify-center">
               <Camera size={13} className="text-orange-500" strokeWidth={2.5} />
             </div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500/80">
+            <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-slate-500/80">
               Condition Photo at Pickup
             </p>
           </div>
-          <p className="text-[12px] font-bold text-slate-400">
+          <p className="text-[13.5px] font-bold text-slate-400">
             Capture the vehicle condition before you ride. This protects you during return inspection.
           </p>
           {conditionPhoto ? (
@@ -594,7 +594,7 @@ const RentalConfirmed = () => {
           ) : (
             <button
               onClick={() => inputRef.current?.click()}
-              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-[14px] border-2 border-dashed border-slate-200 text-[12px] font-black text-slate-500 active:bg-slate-50 transition-all"
+              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-[14px] border-2 border-dashed border-slate-200 text-[13.5px] font-black text-slate-500 active:bg-slate-50 transition-all"
             >
               <Upload size={14} strokeWidth={2.5} /> Upload Condition Photo
             </button>
@@ -617,7 +617,7 @@ const RentalConfirmed = () => {
           <div className="w-8 h-8 rounded-[10px] bg-emerald-50 flex items-center justify-center shrink-0">
             <CheckCircle2 size={15} className="text-emerald-500" strokeWidth={2} />
           </div>
-          <p className="text-[12px] font-bold text-slate-500 leading-relaxed">
+          <p className="text-[13.5px] font-bold text-slate-500 leading-relaxed">
             Your booking advance of Rs.{deposit} has been received. The remaining rental cost is payable at pickup.
           </p>
         </motion.div>
@@ -627,7 +627,7 @@ const RentalConfirmed = () => {
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={() => navigate('/taxi/user')}
-          className="pointer-events-auto w-full bg-slate-950 py-4 rounded-[18px] text-[15px] font-bold text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2"
+          className="pointer-events-auto w-full bg-slate-950 py-4 rounded-[18px] text-[16.5px] font-bold text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2"
         >
           <Home size={16} strokeWidth={2} /> Go to Home Dashboard
         </motion.button>

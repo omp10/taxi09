@@ -929,8 +929,8 @@ const SelectLocation = () => {
                     <ArrowLeft size={20} className="text-slate-900" strokeWidth={2.5} />
                   </button>
                   <div className="min-w-0 flex-1 bg-white rounded-2xl shadow-lg border border-slate-100 px-4 py-3">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Select Point</p>
-                    <p className="block w-full text-[14px] font-semibold text-slate-900 truncate leading-tight">
+                    <p className="text-[12px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Select Point</p>
+                    <p className="block w-full text-[15.5px] font-semibold text-slate-900 truncate leading-tight">
                       {isGeocoding ? 'Locating...' : pickedAddress}
                     </p>
                   </div>
@@ -945,8 +945,8 @@ const SelectLocation = () => {
                     <div className="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-4">
                       <X size={32} className="text-rose-400" />
                     </div>
-                    <p className="text-[16px] font-bold text-slate-900">Config Error</p>
-                    <p className="mt-2 text-[13px] font-medium text-slate-500">
+                    <p className="text-[17px] font-bold text-slate-900">Config Error</p>
+                    <p className="mt-2 text-[14.5px] font-medium text-slate-500">
                       Google Maps API Key is missing.
                     </p>
                   </div>
@@ -957,8 +957,8 @@ const SelectLocation = () => {
                     <div className="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-4">
                       <AlertTriangle size={32} className="text-rose-400" />
                     </div>
-                    <p className="text-[16px] font-bold text-slate-900">Load Failed</p>
-                    <p className="mt-2 text-[13px] font-medium text-slate-500">
+                    <p className="text-[17px] font-bold text-slate-900">Load Failed</p>
+                    <p className="mt-2 text-[14.5px] font-medium text-slate-500">
                       Map could not be loaded. Please check your browser console or network.
                     </p>
                   </div>
@@ -985,7 +985,7 @@ const SelectLocation = () => {
                       <MapIcon size={18} className="text-slate-200" />
                     </div>
                   </div>
-                  <p className="text-[12px] font-bold uppercase tracking-[0.2em] text-slate-400 animate-pulse">Initializing Maps</p>
+                  <p className="text-[13.5px] font-bold uppercase tracking-[0.2em] text-slate-400 animate-pulse">Initializing Maps</p>
                 </div>
               )}
 
@@ -1031,14 +1031,14 @@ const SelectLocation = () => {
                     <MapPin size={20} className="text-slate-400" />
                  </div>
                  <div className="min-w-0 flex-1">
-                    <h4 className="text-[15px] font-bold text-slate-900 leading-none">Confirm Spot</h4>
-                    <p className="text-[12px] font-medium text-slate-400 mt-1 line-clamp-1">{pickedAddress}</p>
+                    <h4 className="text-[16.5px] font-bold text-slate-900 leading-none">Confirm Spot</h4>
+                    <p className="text-[13.5px] font-medium text-slate-400 mt-1 line-clamp-1">{pickedAddress}</p>
                  </div>
               </div>
               <button
                 onClick={handleConfirmMapLocation}
                 disabled={isGeocoding}
-                className="w-full bg-slate-900 py-4 rounded-3xl text-white font-bold text-[15px] shadow-xl shadow-slate-200 flex items-center justify-center gap-2 active:scale-[0.98] transition-all disabled:opacity-50"
+                className="w-full bg-slate-900 py-4 rounded-3xl text-white font-bold text-[16.5px] shadow-xl shadow-slate-200 flex items-center justify-center gap-2 active:scale-[0.98] transition-all disabled:opacity-50"
               >
                 <Check size={18} strokeWidth={3} />
                 Confirm Location
@@ -1056,7 +1056,7 @@ const SelectLocation = () => {
               <ArrowLeft size={22} className="text-slate-900" strokeWidth={3} />
             </button>
             <div className="min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Ride</p>
+              <p className="text-[12px] font-bold uppercase tracking-wider text-slate-400">Ride</p>
               <h1 className="mt-0.5 text-[20px] font-bold text-slate-900 tracking-tight leading-none truncate">Where to?</h1>
             </div>
           </div>
@@ -1085,7 +1085,7 @@ const SelectLocation = () => {
                   onChange={(e) => setPickup(sanitizeLocationInput(e.target.value))}
                   onFocus={() => setActiveInput('pickup')}
                   placeholder="Your pickup location"
-                  className="w-full bg-transparent border-none text-[15px] font-medium text-slate-900 focus:outline-none placeholder:text-slate-300"
+                  className="w-full bg-transparent border-none text-[16.5px] font-medium text-slate-900 focus:outline-none placeholder:text-slate-300"
                 />
                 {pickup.length > 0 && (
                   <button onClick={() => setPickup('')} className="ml-2 shrink-0">
@@ -1129,7 +1129,7 @@ const SelectLocation = () => {
                         placeholder={`Stop ${idx + 1} location...`}
                         onFocus={() => setActiveInput(idx)}
                         onChange={(e) => updateStop(idx, sanitizeLocationInput(e.target.value))}
-                        className={`w-full bg-transparent border-none text-[15px] font-medium text-slate-900 focus:outline-none ${
+                        className={`w-full bg-transparent border-none text-[16.5px] font-medium text-slate-900 focus:outline-none ${
                           stop.trim().length > 0 ? 'placeholder:text-slate-300' : 'placeholder:text-indigo-300'
                         }`}
                       />
@@ -1170,7 +1170,7 @@ const SelectLocation = () => {
                   placeholder="Enter drop location..."
                   onFocus={() => setActiveInput('drop')}
                   onChange={(e) => setDrop(sanitizeLocationInput(e.target.value))}
-                  className="w-full bg-transparent border-none text-[15px] font-medium text-slate-900 focus:outline-none placeholder:text-slate-300"
+                  className="w-full bg-transparent border-none text-[16.5px] font-medium text-slate-900 focus:outline-none placeholder:text-slate-300"
                 />
                 {drop.length > 0 && (
                   <button onClick={() => setDrop('')} className="ml-2 shrink-0">
@@ -1188,14 +1188,14 @@ const SelectLocation = () => {
       <div className="relative z-10 flex gap-3 px-5 my-4">
         <button
           onClick={showMapToast}
-          className="flex-1 flex items-center justify-center gap-2 bg-white/75 backdrop-blur-md border border-white/80 rounded-full py-2.5 shadow-[0_12px_26px_rgba(15,23,42,0.06)] active:scale-95 transition-all text-[13px] font-bold text-slate-800"
+          className="flex-1 flex items-center justify-center gap-2 bg-white/75 backdrop-blur-md border border-white/80 rounded-full py-2.5 shadow-[0_12px_26px_rgba(15,23,42,0.06)] active:scale-95 transition-all text-[14.5px] font-bold text-slate-800"
         >
           <MapPin size={16} className="text-slate-900" />
           <span>Select on map</span>
         </button>
         <button
           onClick={addStop}
-          className="flex-1 flex items-center justify-center gap-2 rounded-full py-2.5 shadow-[0_12px_26px_rgba(15,23,42,0.06)] active:scale-95 transition-all text-[13px] font-bold bg-white/75 backdrop-blur-md border border-white/80 text-slate-800"
+          className="flex-1 flex items-center justify-center gap-2 rounded-full py-2.5 shadow-[0_12px_26px_rgba(15,23,42,0.06)] active:scale-95 transition-all text-[14.5px] font-bold bg-white/75 backdrop-blur-md border border-white/80 text-slate-800"
         >
           <div className="w-4 h-4 rounded bg-indigo-500 flex items-center justify-center">
             <Plus size={12} className="text-white" strokeWidth={3} />
@@ -1211,7 +1211,7 @@ const SelectLocation = () => {
             {stops.map((s, idx) => (
               <div key={idx} className="flex items-center gap-1.5 bg-white/75 backdrop-blur-md border border-white/80 rounded-full px-3 py-1 shadow-sm">
                 <div className="w-2 h-2 rounded-full bg-indigo-400" />
-                <span className="text-[12px] font-bold text-slate-700 truncate max-w-[110px]">
+                <span className="text-[13.5px] font-bold text-slate-700 truncate max-w-[110px]">
                   {s.trim() || `Stop ${idx + 1}`}
                 </span>
                 <button onClick={() => removeStop(idx)}>
@@ -1225,7 +1225,7 @@ const SelectLocation = () => {
 
       {/* Search Results */}
       <div className="relative z-10 px-5 mb-4">
-        <h2 className="text-[14px] font-bold text-slate-400 mb-3 ml-1 uppercase tracking-widest">
+        <h2 className="text-[15.5px] font-bold text-slate-400 mb-3 ml-1 uppercase tracking-widest">
           {query.trim().length > 0 ? 'Search Results' : currentZone?.name ? `${currentZone.name} Suggestions` : 'Popular Locations'}
         </h2>
 
@@ -1245,8 +1245,8 @@ const SelectLocation = () => {
                   )}
                </div>
                <div className="flex-1">
-                  <h4 className="text-[15px] font-bold text-slate-900 leading-tight group-hover:text-emerald-600 transition-colors">Use Current Location</h4>
-                  <p className="text-[12px] text-slate-400 font-medium mt-0.5">Perfect for accurate pickup</p>
+                  <h4 className="text-[16.5px] font-bold text-slate-900 leading-tight group-hover:text-emerald-600 transition-colors">Use Current Location</h4>
+                  <p className="text-[13.5px] text-slate-400 font-medium mt-0.5">Perfect for accurate pickup</p>
                </div>
                <ChevronRight size={16} className="text-slate-300" />
             </motion.button>
@@ -1263,8 +1263,8 @@ const SelectLocation = () => {
                   <MapPin size={18} strokeWidth={2.6} />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-[15px] font-semibold text-slate-900 leading-tight">{result.title}</h4>
-                  <p className="text-[13px] text-slate-500 font-medium mt-1 line-clamp-1">{result.address}</p>
+                  <h4 className="text-[16.5px] font-semibold text-slate-900 leading-tight">{result.title}</h4>
+                  <p className="text-[14.5px] text-slate-500 font-medium mt-1 line-clamp-1">{result.address}</p>
                 </div>
               </motion.button>
             ))}
@@ -1274,15 +1274,15 @@ const SelectLocation = () => {
             <div className="w-14 h-14 rounded-3xl bg-white/80 border border-white/80 shadow-sm flex items-center justify-center mx-auto text-slate-400 text-[22px] font-bold">
               —
             </div>
-            <p className="mt-3 text-[15px] font-semibold text-slate-600">
+            <p className="mt-3 text-[16.5px] font-semibold text-slate-600">
               No results for <span className="text-slate-900">"{query}"</span>
             </p>
-            <p className="text-[13px] font-medium text-slate-400 mt-1">Try a different search term</p>
+            <p className="text-[14.5px] font-medium text-slate-400 mt-1">Try a different search term</p>
           </div>
         )}
         {query.trim().length >= 3 && (
           <div className="mt-3 px-1">
-            <p className="text-[11px] font-bold text-slate-400">
+            <p className="text-[13px] font-bold text-slate-400">
               {isSearchingLocations
                 ? 'Searching locations inside your service zone...'
                 : zonePaths.length
@@ -1293,7 +1293,7 @@ const SelectLocation = () => {
         )}
         {!query.trim().length && currentZone?.name && (
           <div className="mt-3 px-1">
-            <p className="text-[11px] font-bold text-slate-400">
+            <p className="text-[13px] font-bold text-slate-400">
               Popular suggestions are pulled from the admin-created stores in the <span className="text-slate-600">{currentZone.name}</span> zone.
             </p>
           </div>
@@ -1311,7 +1311,7 @@ const SelectLocation = () => {
           >
             <button
               onClick={() => handleConfirmNavigate()}
-              className="w-full bg-[#f8e001] py-4 rounded-3xl text-slate-900 font-bold text-[16px] shadow-[0_8px_30px_rgba(248,224,1,0.3)] flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
+              className="w-full bg-[#f8e001] py-4 rounded-3xl text-slate-900 font-bold text-[17px] shadow-[0_8px_30px_rgba(248,224,1,0.3)] flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
             >
               Confirm & Proceed
               <ChevronRight size={18} strokeWidth={3} className="opacity-60" />

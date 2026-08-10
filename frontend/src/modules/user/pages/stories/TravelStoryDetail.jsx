@@ -48,8 +48,8 @@ const TravelStoryDetail = () => {
   if (!story) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#fffdf8] px-6 text-center">
-        <p className="text-[15px] font-black text-slate-900">That story is no longer available.</p>
-        <button onClick={() => navigate('/taxi/user/stories')} className="rounded-xl bg-[#F5B700] px-4 py-2.5 text-[13px] font-black text-slate-900">
+        <p className="text-[16.5px] font-black text-slate-900">That story is no longer available.</p>
+        <button onClick={() => navigate('/taxi/user/stories')} className="rounded-xl bg-[#F5B700] px-4 py-2.5 text-[14.5px] font-black text-slate-900">
           Back to stories
         </button>
       </div>
@@ -73,11 +73,11 @@ const TravelStoryDetail = () => {
         </button>
 
         <div className="absolute inset-x-0 bottom-0 mx-auto max-w-3xl px-6 pb-6">
-          <span className="rounded-lg bg-[#F5B700] px-2 py-1 text-[11px] font-black text-slate-900">
+          <span className="rounded-lg bg-[#F5B700] px-2 py-1 text-[13px] font-black text-slate-900">
             {story.category}
           </span>
           <h1 className="mt-3 text-[28px] font-black leading-tight text-white">{story.title}</h1>
-          <p className="mt-1.5 flex items-center gap-1.5 text-[12.5px] text-white/85">
+          <p className="mt-1.5 flex items-center gap-1.5 text-[14px] text-white/85">
             <MapPin size={13} /> {story.location}{story.state ? `, ${story.state}` : ''} · by {story.authorName}
           </p>
         </div>
@@ -86,21 +86,21 @@ const TravelStoryDetail = () => {
       <div className="mx-auto max-w-3xl px-6">
         <div className="-mt-6 flex flex-wrap gap-5 rounded-2xl border border-slate-100 bg-white px-5 py-4 shadow-sm">
           {story.days > 0 ? (
-            <span className="flex items-center gap-1.5 text-[12.5px] font-semibold text-slate-700">
+            <span className="flex items-center gap-1.5 text-[14px] font-semibold text-slate-700">
               <Clock size={14} className="text-[#C79100]" /> {story.days} Days
             </span>
           ) : null}
           {story.distanceKm > 0 ? (
-            <span className="flex items-center gap-1.5 text-[12.5px] font-semibold text-slate-700">
+            <span className="flex items-center gap-1.5 text-[14px] font-semibold text-slate-700">
               <Route size={14} className="text-[#C79100]" /> {story.distanceKm} km
             </span>
           ) : null}
           {story.cost > 0 ? (
-            <span className="flex items-center gap-1.5 text-[12.5px] font-semibold text-slate-700">
+            <span className="flex items-center gap-1.5 text-[14px] font-semibold text-slate-700">
               <IndianRupee size={14} className="text-[#C79100]" /> {money(story.cost).slice(1)}
             </span>
           ) : null}
-          <span className="ml-auto flex items-center gap-4 text-[12.5px] text-slate-500">
+          <span className="ml-auto flex items-center gap-4 text-[14px] text-slate-500">
             <button onClick={like} className={`flex items-center gap-1 ${story.liked ? 'text-red-500' : ''}`}>
               <Heart size={14} fill={story.liked ? 'currentColor' : 'none'} /> {story.likes}
             </button>
@@ -109,13 +109,13 @@ const TravelStoryDetail = () => {
         </div>
 
         {story.excerpt ? (
-          <p className="mt-6 text-[15px] font-semibold leading-relaxed text-slate-800">{story.excerpt}</p>
+          <p className="mt-6 text-[16.5px] font-semibold leading-relaxed text-slate-800">{story.excerpt}</p>
         ) : null}
 
         {story.body
           ? story.body.split('\n').filter(Boolean).map((paragraph, index) => (
               // Paragraphs have no ids of their own, so position is the key.
-              <p key={index} className="mt-4 text-[14.5px] leading-relaxed text-slate-700">
+              <p key={index} className="mt-4 text-[16px] leading-relaxed text-slate-700">
                 {paragraph}
               </p>
             ))
@@ -124,7 +124,7 @@ const TravelStoryDetail = () => {
         {(story.hashtags || []).length > 0 ? (
           <div className="mt-6 flex flex-wrap gap-2">
             {story.hashtags.map((tag) => (
-              <span key={tag} className="rounded-lg bg-[#FFF9E6] px-2.5 py-1 text-[12px] font-bold text-[#9A6B00]">
+              <span key={tag} className="rounded-lg bg-[#FFF9E6] px-2.5 py-1 text-[13.5px] font-bold text-[#9A6B00]">
                 #{tag}
               </span>
             ))}

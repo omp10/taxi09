@@ -118,7 +118,7 @@ const ToursBottomNav = ({ routePrefix }) => {
               <Icon size={center ? 24 : 20} strokeWidth={center ? 2.5 : 2.2} />
             </span>
             <span
-              className={`text-[10.5px] ${center ? 'font-extrabold text-[var(--text)]' : 'font-semibold text-[var(--text-light)]'}`}
+              className={`text-[12.5px] ${center ? 'font-extrabold text-[var(--text)]' : 'font-semibold text-[var(--text-light)]'}`}
             >
               {label}
             </span>
@@ -212,15 +212,15 @@ const ToursHome = () => {
             <h1 className="mt-2 max-w-[72%] text-[30px] font-black leading-[1.06] tracking-[-0.04em]">
               Amazing Places with Perfect Plans
             </h1>
-            <p className="mt-2.5 max-w-[62%] text-[12.5px] font-semibold leading-[1.4] text-slate-900">
+            <p className="mt-2.5 max-w-[62%] text-[14px] font-semibold leading-[1.4] text-slate-900">
               Curated tour packages for every kind of traveler.
             </p>
 
             <div className="mt-3.5 inline-flex items-center gap-2.5 rounded-[13px] bg-[#ffdb4d] px-3.5 py-2.5 shadow-[0_6px_14px_rgba(0,0,0,0.12)] ring-1 ring-black/10">
               <Gift size={23} className="shrink-0 text-slate-900" />
               <span className="leading-tight">
-                <span className="block text-[13.5px] font-extrabold">Up to 30% OFF</span>
-                <span className="block text-[9.5px] font-semibold text-slate-700">on selected packages</span>
+                <span className="block text-[15px] font-extrabold">Up to 30% OFF</span>
+                <span className="block text-[11.5px] font-semibold text-slate-700">on selected packages</span>
               </span>
             </div>
           </div>
@@ -237,14 +237,14 @@ const ToursHome = () => {
 
           <div className="relative grid grid-cols-3 divide-x divide-[#FFD54F]/25 border-b border-[#FFD54F]/25 pb-3">
             <div className="min-w-0 px-1.5">
-              <p className="text-[9.5px] font-semibold text-[#ffe9a8]">Where to?</p>
+              <p className="text-[11.5px] font-semibold text-[#ffe9a8]">Where to?</p>
               <div className="mt-1 flex items-center gap-1">
                 <MapPin size={13} className="shrink-0 text-[var(--primary)]" />
                 <div className="relative min-w-0 flex-1">
                   <select
                     value={destination}
                     onChange={(event) => setDestination(event.target.value)}
-                    className="w-full min-w-0 appearance-none truncate bg-transparent pr-3.5 text-[10.5px] font-bold text-white outline-none"
+                    className="w-full min-w-0 appearance-none truncate bg-transparent pr-3.5 text-[12.5px] font-bold text-white outline-none"
                   >
                     {destinations.map((option) => (
                       <option key={option} value={option} className="text-slate-900">
@@ -259,14 +259,14 @@ const ToursHome = () => {
 
             {/* Dates stay compact: the range lives in a popover */}
             <div className="min-w-0 px-1.5">
-              <p className="text-[9.5px] font-semibold text-[#ffe9a8]">Dates</p>
+              <p className="text-[11.5px] font-semibold text-[#ffe9a8]">Dates</p>
               <button
                 type="button"
                 onClick={() => setDatePickerOpen((current) => !current)}
                 className="mt-1 flex w-full items-center gap-1"
               >
                 <CalendarDays size={13} className="shrink-0 text-[var(--primary)]" />
-                <span className="min-w-0 flex-1 truncate text-left text-[10.5px] font-bold text-white">
+                <span className="min-w-0 flex-1 truncate text-left text-[12.5px] font-bold text-white">
                   {startDate && endDate
                     ? `${formatPickedDate(startDate)} - ${formatPickedDate(endDate)}`
                     : 'Select Dates'}
@@ -279,14 +279,14 @@ const ToursHome = () => {
             </div>
 
             <div className="min-w-0 px-1.5">
-              <p className="text-[9.5px] font-semibold text-[#ffe9a8]">Travelers</p>
+              <p className="text-[11.5px] font-semibold text-[#ffe9a8]">Travelers</p>
               <div className="mt-1 flex items-center gap-1">
                 <User size={13} className="shrink-0 text-[var(--primary)]" />
                 <div className="relative min-w-0 flex-1">
                   <select
                     value={travelers}
                     onChange={(event) => setTravelers(event.target.value)}
-                    className="w-full min-w-0 appearance-none truncate bg-transparent pr-3.5 text-[10.5px] font-bold text-white outline-none"
+                    className="w-full min-w-0 appearance-none truncate bg-transparent pr-3.5 text-[12.5px] font-bold text-white outline-none"
                   >
                     {TRAVELERS.map((option) => (
                       <option key={option} value={option} className="text-slate-900">
@@ -304,7 +304,7 @@ const ToursHome = () => {
             <div className="relative mt-2.5 rounded-[12px] border border-[#FFD54F]/30 bg-black/35 p-2.5">
               <div className="grid grid-cols-2 gap-2">
                 <label className="block">
-                  <span className="block text-[9.5px] font-semibold text-[#ffe9a8]">From</span>
+                  <span className="block text-[11.5px] font-semibold text-[#ffe9a8]">From</span>
                   <input
                     type="date"
                     min={todayKey}
@@ -314,22 +314,22 @@ const ToursHome = () => {
                       setStartDate(next);
                       if (endDate && endDate < next) setEndDate(next);
                     }}
-                    className="mt-1 w-full bg-transparent text-[11px] font-bold text-white outline-none [color-scheme:dark]"
+                    className="mt-1 w-full bg-transparent text-[13px] font-bold text-white outline-none [color-scheme:dark]"
                   />
                 </label>
                 <label className="block">
-                  <span className="block text-[9.5px] font-semibold text-[#ffe9a8]">To</span>
+                  <span className="block text-[11.5px] font-semibold text-[#ffe9a8]">To</span>
                   <input
                     type="date"
                     min={startDate || todayKey}
                     value={endDate}
                     onChange={(event) => setEndDate(event.target.value)}
-                    className="mt-1 w-full bg-transparent text-[11px] font-bold text-white outline-none [color-scheme:dark]"
+                    className="mt-1 w-full bg-transparent text-[13px] font-bold text-white outline-none [color-scheme:dark]"
                   />
                 </label>
               </div>
               <div className="mt-2 flex items-center justify-between">
-                <span className="text-[9.5px] font-semibold text-white/70">
+                <span className="text-[11.5px] font-semibold text-white/70">
                   {tripDays ? `${tripDays} day window` : 'Pick both dates'}
                 </span>
                 <span className="flex gap-2">
@@ -339,14 +339,14 @@ const ToursHome = () => {
                       setStartDate('');
                       setEndDate('');
                     }}
-                    className="text-[10px] font-bold text-white/70 underline"
+                    className="text-[12px] font-bold text-white/70 underline"
                   >
                     Clear
                   </button>
                   <button
                     type="button"
                     onClick={() => setDatePickerOpen(false)}
-                    className="rounded-[8px] bg-[var(--primary)] px-2.5 py-1 text-[10px] font-extrabold text-[var(--text)]"
+                    className="rounded-[8px] bg-[var(--primary)] px-2.5 py-1 text-[12px] font-extrabold text-[var(--text)]"
                   >
                     Done
                   </button>
@@ -357,14 +357,14 @@ const ToursHome = () => {
 
           <div className="relative mt-3 grid grid-cols-[1fr_auto] items-end gap-2">
             <div className="min-w-0 px-1.5">
-              <p className="text-[9.5px] font-semibold text-[#ffe9a8]">Budget (Optional)</p>
+              <p className="text-[11.5px] font-semibold text-[#ffe9a8]">Budget (Optional)</p>
               <div className="mt-1 flex items-center gap-1">
                 <IndianRupee size={13} className="shrink-0 text-[var(--primary)]" />
                 <div className="relative min-w-0 flex-1">
                   <select
                     value={budgetId}
                     onChange={(event) => setBudgetId(event.target.value)}
-                    className="w-full min-w-0 appearance-none truncate bg-transparent pr-3.5 text-[11px] font-bold text-white outline-none"
+                    className="w-full min-w-0 appearance-none truncate bg-transparent pr-3.5 text-[13px] font-bold text-white outline-none"
                   >
                     {BUDGETS.map((item) => (
                       <option key={item.id} value={item.id} className="text-slate-900">
@@ -379,7 +379,7 @@ const ToursHome = () => {
             <button
               type="button"
               onClick={handleSearch}
-              className="flex h-[42px] shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-[11px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] px-3 text-[11.5px] font-extrabold text-[var(--text)] shadow-[0_10px_20px_rgba(245,183,0,0.32)] active:scale-[0.98] transition-transform"
+              className="flex h-[42px] shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-[11px] bg-[linear-gradient(180deg,#FFD54F,#FFC107)] px-3 text-[13.5px] font-extrabold text-[var(--text)] shadow-[0_10px_20px_rgba(245,183,0,0.32)] active:scale-[0.98] transition-transform"
             >
               <Search size={14} strokeWidth={3} /> Search Packages
             </button>
@@ -395,7 +395,7 @@ const ToursHome = () => {
                 key={label}
                 type="button"
                 onClick={() => setCategory(label)}
-                className={`flex h-[54px] w-[76px] shrink-0 flex-col items-center justify-center gap-1 rounded-[12px] border px-1 text-[6px] font-extrabold leading-none transition-colors ${
+                className={`flex h-[54px] w-[76px] shrink-0 flex-col items-center justify-center gap-1 rounded-[12px] border px-1 text-[8px] font-extrabold leading-none transition-colors ${
                   active
                     ? 'border-[var(--primary)] bg-[var(--primary)] text-[var(--text)] shadow-[0_8px_16px_rgba(245,183,0,0.3)]'
                     : 'border-[var(--border)] bg-white text-[var(--text)] shadow-[var(--shadow-sm)]'
@@ -410,7 +410,7 @@ const ToursHome = () => {
 
         {/* Packages */}
         <div className="mb-2.5 mt-4 flex items-center justify-between px-1">
-          <h2 className="text-[17px] font-extrabold tracking-[-0.02em]">
+          <h2 className="text-[18px] font-extrabold tracking-[-0.02em]">
             {category === 'All Packages' ? 'Popular Packages' : category}
           </h2>
           <button
@@ -422,7 +422,7 @@ const ToursHome = () => {
               setStartDate('');
               setEndDate('');
             }}
-            className="flex items-center gap-1 text-[11.5px] font-bold text-[var(--primary-dark)]"
+            className="flex items-center gap-1 text-[13.5px] font-bold text-[var(--primary-dark)]"
           >
             View All <ChevronRight size={13} strokeWidth={2.8} />
           </button>
@@ -440,11 +440,11 @@ const ToursHome = () => {
                   <img src={tour.image} alt={tour.title} className="h-full w-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
                   <span
-                    className={`absolute left-2 top-2 rounded-[8px] px-2 py-0.5 text-[9px] font-extrabold ${tour.tagTone}`}
+                    className={`absolute left-2 top-2 rounded-[8px] px-2 py-0.5 text-[11px] font-extrabold ${tour.tagTone}`}
                   >
                     {tour.tag}
                   </span>
-                  <p className="absolute bottom-2 left-2 right-2 flex items-center gap-1 rounded-full bg-black/55 px-1.5 py-0.5 text-[8.5px] font-bold text-white backdrop-blur-sm">
+                  <p className="absolute bottom-2 left-2 right-2 flex items-center gap-1 rounded-full bg-black/55 px-1.5 py-0.5 text-[10.5px] font-bold text-white backdrop-blur-sm">
                     <MapPin size={9} className="shrink-0" />
                     <span className="truncate">{tour.state}</span>
                   </p>
@@ -452,13 +452,13 @@ const ToursHome = () => {
 
                 <div className="min-w-0 flex-1 p-3">
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className="min-w-0 flex-1 text-[14px] font-extrabold leading-tight">{tour.title}</h3>
-                    <span className="shrink-0 rounded-[7px] bg-[var(--secondary)] px-1.5 py-0.5 text-[9px] font-extrabold text-[var(--primary-dark)]">
+                    <h3 className="min-w-0 flex-1 text-[15.5px] font-extrabold leading-tight">{tour.title}</h3>
+                    <span className="shrink-0 rounded-[7px] bg-[var(--secondary)] px-1.5 py-0.5 text-[11px] font-extrabold text-[var(--primary-dark)]">
                       {off}% OFF
                     </span>
                   </div>
 
-                  <p className="mt-1 truncate text-[9px] font-semibold text-[var(--text-light)]">
+                  <p className="mt-1 truncate text-[11px] font-semibold text-[var(--text-light)]">
                     {tour.stops.map((stop, index) => (
                       <React.Fragment key={stop}>
                         {index > 0 ? <span className="text-slate-300"> • </span> : null}
@@ -467,7 +467,7 @@ const ToursHome = () => {
                     ))}
                   </p>
 
-                  <div className="mt-1.5 flex flex-nowrap items-center gap-x-2 overflow-hidden whitespace-nowrap text-[8.5px] font-semibold text-[var(--text-light)]">
+                  <div className="mt-1.5 flex flex-nowrap items-center gap-x-2 overflow-hidden whitespace-nowrap text-[10.5px] font-semibold text-[var(--text-light)]">
                     <span className="flex items-center gap-1">
                       <Clock3 size={10} className="text-[var(--primary-dark)]" /> {tour.days}
                     </span>
@@ -481,7 +481,7 @@ const ToursHome = () => {
                     })}
                   </div>
 
-                  <p className="mt-1.5 flex items-center gap-1 text-[10px] font-extrabold">
+                  <p className="mt-1.5 flex items-center gap-1 text-[12px] font-extrabold">
                     <Star size={11} className="fill-[var(--primary)] text-[var(--primary)]" />
                     {tour.rating}
                     <span className="font-medium text-[var(--text-light)]">({tour.reviews} Reviews)</span>
@@ -489,11 +489,11 @@ const ToursHome = () => {
 
                   <div className="mt-2 flex items-end justify-between gap-2">
                     <p className="flex flex-wrap items-baseline gap-x-1.5">
-                      <span className="text-[10px] font-medium text-slate-400 line-through">
+                      <span className="text-[12px] font-medium text-slate-400 line-through">
                         {rupees(tour.oldPrice)}
                       </span>
-                      <span className="text-[17px] font-extrabold leading-none">{rupees(tour.price)}</span>
-                      <span className="text-[9px] font-medium text-[var(--text-light)]">/ person</span>
+                      <span className="text-[18px] font-extrabold leading-none">{rupees(tour.price)}</span>
+                      <span className="text-[11px] font-medium text-[var(--text-light)]">/ person</span>
                     </p>
                     <button
                       type="button"
@@ -503,7 +503,7 @@ const ToursHome = () => {
                           state: { tour, travelers, startDate },
                         });
                       }}
-                      className="shrink-0 rounded-[10px] border-2 border-[var(--primary)] px-3 py-1.5 text-[10.5px] font-extrabold active:bg-[var(--secondary)] transition-colors"
+                      className="shrink-0 rounded-[10px] border-2 border-[var(--primary)] px-3 py-1.5 text-[12.5px] font-extrabold active:bg-[var(--secondary)] transition-colors"
                     >
                       View Details
                     </button>
@@ -516,7 +516,7 @@ const ToursHome = () => {
           {visiblePackages.length === 0 ? (
             <div className="rounded-[16px] border border-dashed border-[var(--border)] bg-white px-4 py-10 text-center">
               <Luggage size={26} className="mx-auto text-slate-300" />
-              <p className="mt-2 text-[13px] font-extrabold">No packages match your filters</p>
+              <p className="mt-2 text-[14.5px] font-extrabold">No packages match your filters</p>
               <button
                 type="button"
                 onClick={() => {
@@ -526,7 +526,7 @@ const ToursHome = () => {
                   setStartDate('');
                   setEndDate('');
                 }}
-                className="mt-3 rounded-[12px] bg-[var(--secondary)] px-4 py-2 text-[11.5px] font-extrabold text-[var(--primary-dark)]"
+                className="mt-3 rounded-[12px] bg-[var(--secondary)] px-4 py-2 text-[13.5px] font-extrabold text-[var(--primary-dark)]"
               >
                 Clear filters
               </button>
@@ -542,8 +542,8 @@ const ToursHome = () => {
                 <Icon size={16} className="text-[var(--primary-dark)]" />
               </span>
               <span className="min-w-0">
-                <span className="block text-[10.5px] font-extrabold leading-tight">{title}</span>
-                <span className="block text-[9px] font-medium text-[var(--text-light)]">{sub}</span>
+                <span className="block text-[12.5px] font-extrabold leading-tight">{title}</span>
+                <span className="block text-[11px] font-medium text-[var(--text-light)]">{sub}</span>
               </span>
             </div>
           ))}

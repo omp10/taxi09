@@ -77,7 +77,7 @@ const PermanentDriverConfirm = () => {
           <span className="text-[21px] font-extrabold italic tracking-[-0.04em]">
             TAXI<span className="text-[#f5b700]">09</span>
           </span>
-          <span className="mt-0.5 text-[8px] font-semibold text-slate-700">Driver On Hire</span>
+          <span className="mt-0.5 text-[10px] font-semibold text-slate-700">Driver On Hire</span>
         </button>
         <button
           type="button"
@@ -91,7 +91,7 @@ const PermanentDriverConfirm = () => {
 
       <main className="space-y-3 px-3">
         <section className="flex items-center justify-end gap-2 py-1">
-          <span className="text-[10px] font-semibold text-slate-700">Step 3 of 5</span>
+          <span className="text-[12px] font-semibold text-slate-700">Step 3 of 5</span>
           <span className="h-1.5 w-6 rounded-full bg-[#f5b700]" />
           <span className="h-1.5 w-6 rounded-full bg-[#f5b700]" />
           <span className="h-1.5 w-6 rounded-full bg-[#f5b700]" />
@@ -103,26 +103,26 @@ const PermanentDriverConfirm = () => {
           <div className="grid grid-cols-[88px_1fr] gap-3">
             <div className="relative overflow-hidden rounded-[14px] bg-slate-100">
               <img src={driverImage} alt={driver.name} className="h-[120px] w-full object-cover object-top" />
-              <span className="absolute bottom-2 left-2 rounded-md bg-[#f5b700] px-2 py-1 text-[8px] font-bold text-black">Top Rated Driver</span>
+              <span className="absolute bottom-2 left-2 rounded-md bg-[#f5b700] px-2 py-1 text-[10px] font-bold text-black">Top Rated Driver</span>
             </div>
             <div className="min-w-0">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <h1 className="text-[17px] font-bold">{driver.name}</h1>
-                  <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[10px] font-semibold text-slate-600">
+                  <h1 className="text-[18px] font-bold">{driver.name}</h1>
+                  <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[12px] font-semibold text-slate-600">
                     <Star size={12} className="text-[#f5b700]" fill="#f5b700" />
                     {driver.rating}
                     <span>{driver.trips}</span>
                     <span className="text-emerald-600">98%</span>
                   </p>
                 </div>
-                <button type="button" className="text-[9px] font-bold text-[#d99c00]">View Profile</button>
+                <button type="button" className="text-[11px] font-bold text-[#d99c00]">View Profile</button>
               </div>
               <div className="mt-2 grid grid-cols-2 gap-1.5">
-                <span className="rounded-lg bg-[#fff8df] px-2 py-1.5 text-[9px] font-bold text-slate-800">Police Verified</span>
-                <span className="rounded-lg bg-emerald-50 px-2 py-1.5 text-[9px] font-bold text-emerald-700">Background Verified</span>
+                <span className="rounded-lg bg-[#fff8df] px-2 py-1.5 text-[11px] font-bold text-slate-800">Police Verified</span>
+                <span className="rounded-lg bg-emerald-50 px-2 py-1.5 text-[11px] font-bold text-emerald-700">Background Verified</span>
               </div>
-              <div className="mt-3 grid grid-cols-3 gap-1.5 text-center text-[8px] font-semibold text-slate-600">
+              <div className="mt-3 grid grid-cols-3 gap-1.5 text-center text-[10px] font-semibold text-slate-600">
                 <span><ShieldCheck size={13} className="mx-auto mb-0.5" />{driver.experience}</span>
                 <span><Car size={13} className="mx-auto mb-0.5" />{driver.car.split(' ')[0]}</span>
                 <span><Languages size={13} className="mx-auto mb-0.5" />{driver.language}</span>
@@ -133,8 +133,8 @@ const PermanentDriverConfirm = () => {
 
         <section className="rounded-[16px] border border-slate-100 bg-white p-3 shadow-[0_8px_22px_rgba(15,23,42,0.06)]">
           <div className="flex items-center justify-between">
-            <h2 className="text-[14px] font-bold">Driver Details</h2>
-            <button type="button" className="text-[9px] font-bold text-[#d99c00]">View Profile</button>
+            <h2 className="text-[15.5px] font-bold">Driver Details</h2>
+            <button type="button" className="text-[11px] font-bold text-[#d99c00]">View Profile</button>
           </div>
           <div className="mt-3 grid grid-cols-6 gap-2">
             {detailItems.map(({ icon: Icon, title, sub }) => (
@@ -142,15 +142,15 @@ const PermanentDriverConfirm = () => {
                 <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-[#fff8df] text-[#d99c00]">
                   <Icon size={17} strokeWidth={2.4} />
                 </span>
-                <p className="mt-1 text-[7.5px] font-semibold leading-3">{title}<br />{sub}</p>
+                <p className="mt-1 text-[9.5px] font-semibold leading-3">{title}<br />{sub}</p>
               </div>
             ))}
           </div>
         </section>
 
         <section className="rounded-[16px] border border-slate-100 bg-white p-3 shadow-[0_8px_22px_rgba(15,23,42,0.06)]">
-          <h2 className="text-[14px] font-bold">Trip Summary</h2>
-          <div className="mt-3 grid grid-cols-2 gap-3 text-[10px]">
+          <h2 className="text-[15.5px] font-bold">Trip Summary</h2>
+          <div className="mt-3 grid grid-cols-2 gap-3 text-[12px]">
             {[
               ['Pickup Location', 'Indore, Madhya Pradesh', MapPin],
               ['Journey Date', '30 Jul 2026', CalendarDays],
@@ -171,29 +171,29 @@ const PermanentDriverConfirm = () => {
         </section>
 
         <section className="rounded-[16px] border border-slate-100 bg-white p-3 shadow-[0_8px_22px_rgba(15,23,42,0.06)]">
-          <h2 className="text-[14px] font-bold">Fare Summary</h2>
+          <h2 className="text-[15.5px] font-bold">Fare Summary</h2>
           <div className="mt-2 grid grid-cols-[1fr_118px] gap-4">
-            <div className="space-y-1.5 text-[10px] font-semibold text-slate-600">
+            <div className="space-y-1.5 text-[12px] font-semibold text-slate-600">
               <div className="flex justify-between"><span>Driver Charges</span><span className="text-slate-950">₹2,500</span></div>
               <div className="flex justify-between"><span>Night Allowance</span><span className="text-slate-950">₹500</span></div>
               <div className="flex justify-between"><span>Toll & Parking</span><span className="text-slate-950">Actual</span></div>
               <div className="flex justify-between"><span>GST (0%)</span><span className="text-slate-950">Included</span></div>
             </div>
             <div className="rounded-[14px] bg-[#fff8df] p-3 text-center">
-              <p className="text-[9px] font-semibold text-slate-600">Estimated Total</p>
+              <p className="text-[11px] font-semibold text-slate-600">Estimated Total</p>
               <p className="text-[25px] font-extrabold">₹3,000</p>
-              <p className="mt-1 rounded-full bg-emerald-50 px-2 py-1 text-[8px] font-bold text-emerald-700">All inclusive of taxes</p>
+              <p className="mt-1 rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-bold text-emerald-700">All inclusive of taxes</p>
             </div>
           </div>
         </section>
 
         <section className="rounded-[16px] border border-slate-100 bg-white p-3 shadow-[0_8px_22px_rgba(15,23,42,0.06)]">
-          <h2 className="text-[14px] font-bold">Your Safety, Our Priority</h2>
+          <h2 className="text-[15.5px] font-bold">Your Safety, Our Priority</h2>
           <div className="mt-3 grid grid-cols-6 gap-1.5">
             {safetyItems.map(({ icon: Icon, label }) => (
               <div key={label} className="rounded-xl bg-[#fff8df] px-1 py-2 text-center">
                 <Icon size={15} className="mx-auto text-[#d99c00]" strokeWidth={2.4} />
-                <p className="mt-1 whitespace-pre-line text-[7px] font-semibold leading-3">{label}</p>
+                <p className="mt-1 whitespace-pre-line text-[9px] font-semibold leading-3">{label}</p>
               </div>
             ))}
           </div>
@@ -201,16 +201,16 @@ const PermanentDriverConfirm = () => {
 
         <section className="rounded-[16px] border border-slate-100 bg-white p-3 shadow-[0_8px_22px_rgba(15,23,42,0.06)]">
           <div className="flex items-center justify-between">
-            <h2 className="text-[14px] font-bold">Instructions for Driver <span className="font-medium text-slate-500">(Optional)</span></h2>
-            <span className="text-[9px] font-semibold text-slate-500">{instructions.length}/250</span>
+            <h2 className="text-[15.5px] font-bold">Instructions for Driver <span className="font-medium text-slate-500">(Optional)</span></h2>
+            <span className="text-[11px] font-semibold text-slate-500">{instructions.length}/250</span>
           </div>
           <textarea
             value={instructions}
             onChange={(event) => setInstructions(event.target.value.slice(0, 250))}
             placeholder="Add any instructions for your driver..."
-            className="mt-2 h-16 w-full resize-none rounded-xl border border-slate-100 bg-slate-50 p-3 text-[11px] font-medium outline-none focus:border-[#f5b700]"
+            className="mt-2 h-16 w-full resize-none rounded-xl border border-slate-100 bg-slate-50 p-3 text-[13px] font-medium outline-none focus:border-[#f5b700]"
           />
-          <p className="mt-2 flex items-center gap-1.5 text-[9px] font-semibold text-emerald-700">
+          <p className="mt-2 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700">
             <CheckCircle2 size={12} fill="currentColor" />
             I agree to the booking terms and conditions.
           </p>
@@ -220,10 +220,10 @@ const PermanentDriverConfirm = () => {
       <div className="fixed inset-x-0 bottom-0 z-50 mx-auto max-w-lg border-t border-slate-100 bg-white/95 px-3 pb-3 pt-2 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur">
         <div className="grid grid-cols-[104px_1fr] gap-3">
           <button type="button" className="rounded-[13px] bg-slate-50 px-3 py-2 text-left">
-            <span className="block text-[9px] font-semibold text-slate-500">Estimated Total</span>
-            <span className="flex items-center gap-1 text-[18px] font-extrabold">₹3,000 <ChevronDown size={14} /></span>
+            <span className="block text-[11px] font-semibold text-slate-500">Estimated Total</span>
+            <span className="flex items-center gap-1 text-[19px] font-extrabold">₹3,000 <ChevronDown size={14} /></span>
           </button>
-          <button type="button" className="flex items-center justify-center gap-3 rounded-[13px] bg-[#f5b700] text-[15px] font-bold text-black shadow-[0_8px_18px_rgba(245,183,0,0.24)]">
+          <button type="button" className="flex items-center justify-center gap-3 rounded-[13px] bg-[#f5b700] text-[16.5px] font-bold text-black shadow-[0_8px_18px_rgba(245,183,0,0.24)]">
             Confirm Booking
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-white">→</span>
           </button>

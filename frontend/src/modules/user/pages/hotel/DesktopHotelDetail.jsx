@@ -125,13 +125,13 @@ const DesktopHotelDetail = () => {
       <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
         <DesktopNav activePath="/taxi/user/hotel" theme={theme} onToggleTheme={toggleTheme} />
         <div className="mx-auto max-w-[1440px] px-8 py-24 text-center xl:px-12">
-          <p className="text-[18px] font-black text-[var(--dh-text)]">
+          <p className="text-[19px] font-black text-[var(--dh-text)]">
             {loading ? 'Loading hotel…' : 'This hotel could not be found'}
           </p>
           {!loading && (
             <button
               onClick={() => navigate('/taxi/user/hotel')}
-              className="mt-5 rounded-[12px] bg-[#F5B700] px-6 py-3 text-[15px] font-bold text-slate-950"
+              className="mt-5 rounded-[12px] bg-[#F5B700] px-6 py-3 text-[16.5px] font-bold text-slate-950"
             >
               Back to Hotel List
             </button>
@@ -185,7 +185,7 @@ const DesktopHotelDetail = () => {
 
       <section className="mx-auto grid max-w-[1440px] grid-cols-[minmax(0,1fr)_404px] gap-6 px-8 pb-20 pt-5 xl:px-12">
         <div className="rounded-[20px] bg-[var(--dh-surface)] p-6 ring-1 ring-[var(--dh-border)]">
-          <nav className="flex items-center gap-2 text-[12.5px] font-semibold text-[var(--dh-muted)]">
+          <nav className="flex items-center gap-2 text-[14px] font-semibold text-[var(--dh-muted)]">
             <button onClick={() => navigate('/taxi/user')} className="hover:text-[var(--dh-text)]">Home</button>
             <Crumb size={13} />
             <button onClick={() => navigate('/taxi/user/hotel')} className="hover:text-[var(--dh-text)]">Hotel Booking</button>
@@ -217,7 +217,7 @@ const DesktopHotelDetail = () => {
                         >
                           <ChevronRight size={18} className="text-slate-900" strokeWidth={2.6} />
                         </button>
-                        <span className="absolute bottom-3 left-3 rounded-[7px] bg-black/60 px-2.5 py-1 text-[11px] font-bold text-white">
+                        <span className="absolute bottom-3 left-3 rounded-[7px] bg-black/60 px-2.5 py-1 text-[13px] font-bold text-white">
                           {imageIndex + 1} / {gallery.length}
                         </span>
                       </>
@@ -248,7 +248,7 @@ const DesktopHotelDetail = () => {
               <div className="flex items-start gap-3">
                 <h1 className="text-[26px] font-black leading-tight tracking-[-0.03em] text-[var(--dh-text)]">{hotel.name}</h1>
                 {hotel.badge && (
-                  <span className="mt-1 shrink-0 rounded-full bg-emerald-50 px-3 py-1 text-[11.5px] font-black text-emerald-700">
+                  <span className="mt-1 shrink-0 rounded-full bg-emerald-50 px-3 py-1 text-[13.5px] font-black text-emerald-700">
                     {hotel.badge}
                   </span>
                 )}
@@ -264,7 +264,7 @@ const DesktopHotelDetail = () => {
                     </span>
                   )}
                   {hotel.propertyType && (
-                    <span className="rounded-[6px] bg-[var(--dh-chip)] px-2 py-0.5 text-[11px] font-black uppercase tracking-[0.05em] text-[var(--dh-muted)]">
+                    <span className="rounded-[6px] bg-[var(--dh-chip)] px-2 py-0.5 text-[13px] font-black uppercase tracking-[0.05em] text-[var(--dh-muted)]">
                       {hotel.propertyType}
                     </span>
                   )}
@@ -273,16 +273,16 @@ const DesktopHotelDetail = () => {
 
               {Number(hotel.rating) > 0 && (
                 <p className="mt-3 flex items-center gap-2">
-                  <span className="flex items-center gap-1 rounded-[6px] bg-emerald-600 px-1.5 py-0.5 text-[12px] font-black text-white">
+                  <span className="flex items-center gap-1 rounded-[6px] bg-emerald-600 px-1.5 py-0.5 text-[13.5px] font-black text-white">
                     <Star size={11} className="fill-white" /> {hotel.rating}
                   </span>
-                  <span className="text-[13.5px] font-bold text-[var(--dh-text)]">{ratingWord(hotel.rating)}</span>
-                  {hotel.reviews && <span className="text-[13px] font-semibold text-[var(--dh-muted)]">({hotel.reviews} reviews)</span>}
+                  <span className="text-[15px] font-bold text-[var(--dh-text)]">{ratingWord(hotel.rating)}</span>
+                  {hotel.reviews && <span className="text-[14.5px] font-semibold text-[var(--dh-muted)]">({hotel.reviews} reviews)</span>}
                 </p>
               )}
 
               {(hotel.area || hotel.distance) && (
-                <p className="mt-2.5 flex items-start gap-1.5 text-[13px] font-semibold text-[var(--dh-muted)]">
+                <p className="mt-2.5 flex items-start gap-1.5 text-[14.5px] font-semibold text-[var(--dh-muted)]">
                   <MapPin size={15} className="mt-0.5 shrink-0 text-[#F5B700]" strokeWidth={2.3} />
                   {[hotel.area, hotel.distance].filter(Boolean).join(' · ')}
                 </p>
@@ -290,10 +290,10 @@ const DesktopHotelDetail = () => {
 
               {hotel.facilities?.length > 0 && (
                 <div className="mt-5">
-                  <p className="text-[15px] font-black text-[var(--dh-text)]">Top Highlights</p>
+                  <p className="text-[16.5px] font-black text-[var(--dh-text)]">Top Highlights</p>
                   <div className="mt-3 grid grid-cols-2 gap-2.5">
                     {hotel.facilities.slice(0, 8).map((facility) => (
-                      <span key={facility} className="flex items-center gap-2 text-[13px] font-semibold text-[var(--dh-text)]">
+                      <span key={facility} className="flex items-center gap-2 text-[14.5px] font-semibold text-[var(--dh-text)]">
                         <Sparkles size={14} className="shrink-0 text-[#F5B700]" strokeWidth={2.2} /> {facility}
                       </span>
                     ))}
@@ -304,12 +304,12 @@ const DesktopHotelDetail = () => {
               {(hotel.checkInTime || hotel.checkOutTime) && (
                 <div className="mt-5 flex gap-6 border-t border-[var(--dh-border)] pt-4">
                   {hotel.checkInTime && (
-                    <span className="flex items-center gap-2 text-[13px] font-semibold text-[var(--dh-muted)]">
+                    <span className="flex items-center gap-2 text-[14.5px] font-semibold text-[var(--dh-muted)]">
                       <LogIn size={15} className="text-[#F5B700]" strokeWidth={2.3} /> Check-in {hotel.checkInTime}
                     </span>
                   )}
                   {hotel.checkOutTime && (
-                    <span className="flex items-center gap-2 text-[13px] font-semibold text-[var(--dh-muted)]">
+                    <span className="flex items-center gap-2 text-[14.5px] font-semibold text-[var(--dh-muted)]">
                       <LogOut size={15} className="text-[#F5B700]" strokeWidth={2.3} /> Check-out {hotel.checkOutTime}
                     </span>
                   )}
@@ -321,10 +321,10 @@ const DesktopHotelDetail = () => {
           {/* ------------------------------------------------------------- Rooms */}
           <div className="mt-7 border-t border-[var(--dh-border)] pt-6">
             <h2 className="text-[20px] font-black tracking-[-0.03em] text-[var(--dh-text)]">Select Your Room</h2>
-            <p className="mt-1 text-[13.5px] font-medium text-[var(--dh-muted)]">Choose from our best available rooms</p>
+            <p className="mt-1 text-[15px] font-medium text-[var(--dh-muted)]">Choose from our best available rooms</p>
 
             {rooms.length === 0 ? (
-              <p className="mt-4 rounded-[14px] bg-[var(--dh-chip)] px-5 py-8 text-center text-[13.5px] font-semibold text-[var(--dh-muted)]">
+              <p className="mt-4 rounded-[14px] bg-[var(--dh-chip)] px-5 py-8 text-center text-[15px] font-semibold text-[var(--dh-muted)]">
                 No room types are configured for this hotel.
               </p>
             ) : (
@@ -349,22 +349,22 @@ const DesktopHotelDetail = () => {
                       </div>
 
                       <div className="flex min-w-0 flex-col justify-center px-5 py-4">
-                        <h3 className="truncate text-[16px] font-black text-[var(--dh-text)]">{room.name}</h3>
+                        <h3 className="truncate text-[17px] font-black text-[var(--dh-text)]">{room.name}</h3>
 
                         <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5">
                           {room.adults > 0 && (
-                            <span className="flex items-center gap-1.5 text-[12.5px] font-semibold text-[var(--dh-muted)]">
+                            <span className="flex items-center gap-1.5 text-[14px] font-semibold text-[var(--dh-muted)]">
                               <Users size={13} strokeWidth={2.2} /> {room.adults} Guest{room.adults === 1 ? '' : 's'}
                               {room.children > 0 ? ` + ${room.children}` : ''}
                             </span>
                           )}
                           {room.bed && (
-                            <span className="flex items-center gap-1.5 text-[12.5px] font-semibold text-[var(--dh-muted)]">
+                            <span className="flex items-center gap-1.5 text-[14px] font-semibold text-[var(--dh-muted)]">
                               <BedDouble size={13} strokeWidth={2.2} /> {room.bed}
                             </span>
                           )}
                           {room.sqft > 0 && (
-                            <span className="flex items-center gap-1.5 text-[12.5px] font-semibold text-[var(--dh-muted)]">
+                            <span className="flex items-center gap-1.5 text-[14px] font-semibold text-[var(--dh-muted)]">
                               <Maximize size={13} strokeWidth={2.2} /> {room.sqft} sq.ft
                             </span>
                           )}
@@ -373,7 +373,7 @@ const DesktopHotelDetail = () => {
                         {room.perks?.length > 0 && (
                           <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1">
                             {room.perks.map((perk) => (
-                              <span key={perk} className="flex items-center gap-1.5 text-[12px] font-bold text-emerald-700">
+                              <span key={perk} className="flex items-center gap-1.5 text-[13.5px] font-bold text-emerald-700">
                                 <BadgeCheck size={13} strokeWidth={2.3} /> {perk}
                               </span>
                             ))}
@@ -381,7 +381,7 @@ const DesktopHotelDetail = () => {
                         )}
 
                         {room.roomsLeft > 0 && room.roomsLeft <= 5 && (
-                          <p className="mt-2 text-[11.5px] font-black text-rose-600">Only {room.roomsLeft} left at this price</p>
+                          <p className="mt-2 text-[13.5px] font-black text-rose-600">Only {room.roomsLeft} left at this price</p>
                         )}
                       </div>
 
@@ -389,14 +389,14 @@ const DesktopHotelDetail = () => {
                         {nightly > 0 ? (
                           <>
                             <span className="text-[21px] font-black leading-none text-[var(--dh-text)]">{formatMoney(nightly)}</span>
-                            <span className="text-[11.5px] font-semibold text-[var(--dh-muted)]">/ night + Taxes</span>
+                            <span className="text-[13.5px] font-semibold text-[var(--dh-muted)]">/ night + Taxes</span>
                           </>
                         ) : (
-                          <span className="text-[12.5px] font-bold text-[var(--dh-muted)]">Rate on request</span>
+                          <span className="text-[14px] font-bold text-[var(--dh-muted)]">Rate on request</span>
                         )}
                         <button
                           onClick={() => setRoomKey(String(room.key))}
-                          className={`mt-2.5 w-full rounded-[10px] py-2.5 text-[13.5px] font-bold transition-colors ${
+                          className={`mt-2.5 w-full rounded-[10px] py-2.5 text-[15px] font-bold transition-colors ${
                             isActive ? 'bg-[#F5B700] text-slate-950' : 'border-2 border-[#F5B700] text-[var(--dh-text)] hover:bg-[#F5B700] hover:text-slate-950'
                           }`}
                         >
@@ -414,22 +414,22 @@ const DesktopHotelDetail = () => {
         {/* ------------------------------------------------------------- Sidebar */}
         <aside className="sticky top-[100px] h-fit space-y-4">
           <div className="rounded-[20px] bg-[var(--dh-surface)] p-5 shadow-[0_10px_30px_rgba(15,23,42,0.08)] ring-1 ring-[var(--dh-border)]">
-            <h2 className="text-[17px] font-black tracking-[-0.02em] text-[var(--dh-text)]">Your Booking Summary</h2>
+            <h2 className="text-[18px] font-black tracking-[-0.02em] text-[var(--dh-text)]">Your Booking Summary</h2>
 
             <div className="mt-4 flex gap-3.5">
               <span className="relative h-[62px] w-[86px] shrink-0 overflow-hidden rounded-[11px] bg-[var(--dh-chip)]">
                 <img src={hotel.image || gallery[0]} alt="" className="absolute inset-0 h-full w-full object-cover" />
               </span>
               <span className="min-w-0">
-                <span className="block truncate text-[14.5px] font-black text-[var(--dh-text)]">{hotel.name}</span>
+                <span className="block truncate text-[16px] font-black text-[var(--dh-text)]">{hotel.name}</span>
                 {Number(hotel.rating) > 0 && (
                   <span className="mt-1 flex items-center gap-1.5">
-                    <span className="flex items-center gap-1 rounded-[5px] bg-emerald-600 px-1.5 text-[10.5px] font-black text-white">
+                    <span className="flex items-center gap-1 rounded-[5px] bg-emerald-600 px-1.5 text-[12.5px] font-black text-white">
                       <Star size={9} className="fill-white" /> {hotel.rating}
                     </span>
                   </span>
                 )}
-                {hotel.area && <span className="mt-1 block truncate text-[11.5px] font-semibold text-[var(--dh-muted)]">{hotel.area}</span>}
+                {hotel.area && <span className="mt-1 block truncate text-[13.5px] font-semibold text-[var(--dh-muted)]">{hotel.area}</span>}
               </span>
             </div>
 
@@ -444,19 +444,19 @@ const DesktopHotelDetail = () => {
                 <div key={label} className="flex gap-2.5">
                   <Icon size={15} className="mt-0.5 shrink-0 text-[var(--dh-muted)]" strokeWidth={2.2} />
                   <span className="min-w-0">
-                    <dt className="text-[12px] font-bold text-[var(--dh-text)]">{label}</dt>
-                    <dd className="mt-0.5 text-[12.5px] font-semibold text-[var(--dh-muted)]">{value}</dd>
+                    <dt className="text-[13.5px] font-bold text-[var(--dh-text)]">{label}</dt>
+                    <dd className="mt-0.5 text-[14px] font-semibold text-[var(--dh-muted)]">{value}</dd>
                   </span>
                 </div>
               ))}
             </dl>
 
             <div className="mt-4 border-t border-[var(--dh-border)] pt-4">
-              <h3 className="text-[15px] font-black text-[var(--dh-text)]">Price Details</h3>
+              <h3 className="text-[16.5px] font-black text-[var(--dh-text)]">Price Details</h3>
 
               {quote ? (
                 <div className="mt-3 space-y-2.5">
-                  <div className="flex justify-between text-[13px] font-semibold text-[var(--dh-muted)]">
+                  <div className="flex justify-between text-[14.5px] font-semibold text-[var(--dh-muted)]">
                     <span>Room Charges ({quote.nights} Night{quote.nights === 1 ? '' : 's'})</span>
                     <span className="text-[var(--dh-text)]">{formatMoney(quote.roomCharges)}</span>
                   </div>
@@ -466,22 +466,22 @@ const DesktopHotelDetail = () => {
                       <span className="text-emerald-600">− {formatMoney(quote.memberDiscount)}</span>
                     </div>
                   ) : null}
-                  <div className="flex justify-between text-[13px] font-semibold text-[var(--dh-muted)]">
+                  <div className="flex justify-between text-[14.5px] font-semibold text-[var(--dh-muted)]">
                     <span>Taxes &amp; Fees ({quote.taxPercent}% GST)</span>
                     <span className="text-[var(--dh-text)]">{formatMoney(quote.taxes)}</span>
                   </div>
                   <div className="flex items-center justify-between border-t border-[var(--dh-border)] pt-3">
-                    <span className="text-[15px] font-black text-[var(--dh-text)]">Total Amount</span>
+                    <span className="text-[16.5px] font-black text-[var(--dh-text)]">Total Amount</span>
                     <span className="text-[21px] font-black text-[var(--dh-text)]">{formatMoney(quote.totalAmount)}</span>
                   </div>
                   {quote.savings > 0 && (
-                    <p className="rounded-[11px] bg-emerald-50 px-3.5 py-2.5 text-[12px] font-bold text-emerald-700">
+                    <p className="rounded-[11px] bg-emerald-50 px-3.5 py-2.5 text-[13.5px] font-bold text-emerald-700">
                       You save {formatMoney(quote.savings)} on this stay.
                     </p>
                   )}
                 </div>
               ) : quoteError ? (
-                <p className="mt-3 rounded-[10px] bg-rose-50 px-3 py-2.5 text-[12.5px] font-bold text-rose-700">{quoteError}</p>
+                <p className="mt-3 rounded-[10px] bg-rose-50 px-3 py-2.5 text-[14px] font-bold text-rose-700">{quoteError}</p>
               ) : (
                 <div className="mt-3 space-y-2">
                   <div className="skeleton h-4 rounded" />
@@ -494,7 +494,7 @@ const DesktopHotelDetail = () => {
             <button
               onClick={continueToPayment}
               disabled={!quote || booking || Boolean(confirmed)}
-              className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-[13px] bg-[#F5B700] py-3.5 text-[15.5px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-[13px] bg-[#F5B700] py-3.5 text-[17px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {confirmed ? `Confirmed · ${confirmed}` : booking ? 'Processing…' : 'Continue to Payment'}
               <ArrowRight size={18} strokeWidth={2.8} />
@@ -502,21 +502,21 @@ const DesktopHotelDetail = () => {
 
             <button
               onClick={() => navigate('/taxi/user/hotel')}
-              className="mt-2.5 flex w-full items-center justify-center gap-2.5 rounded-[13px] border border-[var(--dh-border)] py-3 text-[14.5px] font-bold text-[var(--dh-text)] hover:bg-[var(--dh-chip)]"
+              className="mt-2.5 flex w-full items-center justify-center gap-2.5 rounded-[13px] border border-[var(--dh-border)] py-3 text-[16px] font-bold text-[var(--dh-text)] hover:bg-[var(--dh-chip)]"
             >
               <ArrowLeft size={17} strokeWidth={2.4} /> Back to Hotel List
             </button>
           </div>
 
           <div className="rounded-[18px] bg-[var(--dh-surface)] p-5 ring-1 ring-[var(--dh-border)]">
-            <p className="text-[15px] font-black text-[var(--dh-text)]">Why book with Taxi09?</p>
+            <p className="text-[16.5px] font-black text-[var(--dh-text)]">Why book with Taxi09?</p>
             <div className="mt-4 space-y-3.5">
               {WHY_BOOK.map(({ icon: Icon, title, copy }) => (
                 <div key={title} className="flex gap-2.5">
                   <Icon size={19} className="mt-0.5 shrink-0 text-[#F5B700]" strokeWidth={2.1} />
                   <span>
-                    <span className="block text-[12.5px] font-black text-[var(--dh-text)]">{title}</span>
-                    <span className="mt-0.5 block text-[11.5px] font-semibold text-[var(--dh-muted)]">{copy}</span>
+                    <span className="block text-[14px] font-black text-[var(--dh-text)]">{title}</span>
+                    <span className="mt-0.5 block text-[13.5px] font-semibold text-[var(--dh-muted)]">{copy}</span>
                   </span>
                 </div>
               ))}

@@ -11,7 +11,7 @@ const fieldShellClassName =
   'rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm transition-all flex items-center gap-3 focus-within:border-slate-900 focus-within:ring-4 focus-within:ring-slate-900/5';
 
 const fieldInputClassName =
-  'w-full bg-transparent border-none text-[16px] font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none';
+  'w-full bg-transparent border-none text-[17px] font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none';
 
 const PENDING_SIGNUP_PHONE_KEY = 'pendingUserSignupPhone';
 const PENDING_SIGNUP_REFERRAL_CODE_KEY = 'pendingUserSignupReferralCode';
@@ -347,7 +347,7 @@ const Signup = () => {
             <label className="ml-1 text-xs font-bold uppercase tracking-widest text-slate-600">Mobile Number *</label>
             <div className={fieldShellClassName}>
               <Smartphone size={18} className="text-slate-500" />
-              <span className="text-[16px] font-bold text-slate-700">+91</span>
+              <span className="text-[17px] font-bold text-slate-700">+91</span>
               <input
                 type="tel"
                 maxLength={10}
@@ -396,7 +396,7 @@ const Signup = () => {
                 Login
               </Link>
             </p>
-            <p className="text-[12px] text-slate-400 font-medium leading-relaxed px-2">
+            <p className="text-[13.5px] text-slate-400 font-medium leading-relaxed px-2">
               By continuing, you agree to our
               <Link to="/terms" className="ml-1 text-black underline hover:opacity-70 transition-colors">
                 Terms
@@ -424,12 +424,12 @@ const Signup = () => {
                     <Camera size={14} />
                 </div>
             </div>
-            <p className="mt-3 text-[10px] font-bold uppercase tracking-widest text-slate-900 flex items-center gap-1">
+            <p className="mt-3 text-[12px] font-bold uppercase tracking-widest text-slate-900 flex items-center gap-1">
               Profile Photo <span className="text-red-500">*</span>
             </p>
             <p className="mt-2 text-xs font-medium text-slate-500">Please upload a clear photo of yourself to complete your profile.</p>
             <div className="mt-4 grid w-full max-w-[280px] grid-cols-2 gap-2">
-              <label className={`relative flex h-11 items-center justify-center gap-2 rounded-2xl border text-[11px] font-bold uppercase tracking-wider transition-all ${
+              <label className={`relative flex h-11 items-center justify-center gap-2 rounded-2xl border text-[13px] font-bold uppercase tracking-wider transition-all ${
                 photoUploading
                   ? 'cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400'
                   : 'cursor-pointer border-slate-200 bg-white text-slate-700 active:scale-[0.99]'
@@ -445,7 +445,7 @@ const Signup = () => {
                   onChange={handlePhotoChange}
                 />
               </label>
-              <label className={`relative flex h-11 items-center justify-center gap-2 rounded-2xl border text-[11px] font-bold uppercase tracking-wider transition-all ${
+              <label className={`relative flex h-11 items-center justify-center gap-2 rounded-2xl border text-[13px] font-bold uppercase tracking-wider transition-all ${
                 photoUploading
                   ? 'cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400'
                   : 'cursor-pointer border-slate-900 bg-slate-950 text-white active:scale-[0.99]'
@@ -463,8 +463,8 @@ const Signup = () => {
                 />
               </label>
             </div>
-            {photoUploading && <p className="text-[11px] font-bold text-slate-500 mt-2">Uploading...</p>}
-            {photoError && <p className="text-[11px] font-bold text-red-500 mt-2">{photoError}</p>}
+            {photoUploading && <p className="text-[13px] font-bold text-slate-500 mt-2">Uploading...</p>}
+            {photoError && <p className="text-[13px] font-bold text-red-500 mt-2">{photoError}</p>}
         </div>
 
         <div className="space-y-4 sm:space-y-5">
@@ -472,7 +472,7 @@ const Signup = () => {
             <label className="ml-1 text-xs font-bold uppercase tracking-widest text-slate-600">Mobile Number *</label>
             <div className={fieldShellClassName}>
               <Smartphone size={18} className="text-slate-500" />
-              <span className="text-[16px] font-bold text-slate-700">+91</span>
+              <span className="text-[17px] font-bold text-slate-700">+91</span>
               <input
                 type="tel"
                 maxLength={10}
@@ -542,8 +542,8 @@ const Signup = () => {
                 {governmentIdUploadItems.map((item) => (
                   <div key={item.side} className="rounded-2xl border border-slate-100 bg-slate-50/60 p-3">
                     <div className="mb-2 flex items-center justify-between gap-2">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">{item.label}</p>
-                      <span className="rounded-full bg-slate-200 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-slate-600">
+                      <p className="text-[12px] font-black uppercase tracking-widest text-slate-500">{item.label}</p>
+                      <span className="rounded-full bg-slate-200 px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-slate-600">
                         Required
                       </span>
                     </div>
@@ -555,7 +555,7 @@ const Signup = () => {
                       )}
                     </div>
                     <div className="mt-3 grid grid-cols-2 gap-2">
-                      <label className={`relative flex h-11 items-center justify-center gap-2 rounded-xl border text-[11px] font-bold uppercase tracking-wider transition-all ${
+                      <label className={`relative flex h-11 items-center justify-center gap-2 rounded-xl border text-[13px] font-bold uppercase tracking-wider transition-all ${
                         idUploading
                           ? 'cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400'
                           : 'cursor-pointer border-slate-200 bg-white text-slate-700 active:scale-[0.99]'
@@ -571,7 +571,7 @@ const Signup = () => {
                           onChange={(event) => handleGovernmentIdChange(event, item.side)}
                         />
                       </label>
-                      <label className={`relative flex h-11 items-center justify-center gap-2 rounded-xl border text-[11px] font-bold uppercase tracking-wider transition-all ${
+                      <label className={`relative flex h-11 items-center justify-center gap-2 rounded-xl border text-[13px] font-bold uppercase tracking-wider transition-all ${
                         idUploading
                           ? 'cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400'
                           : 'cursor-pointer border-slate-900 bg-slate-950 text-white active:scale-[0.99]'
@@ -591,12 +591,12 @@ const Signup = () => {
                     </div>
                     {item.preview && (
                       <>
-                        <div className="mt-2 flex items-center gap-2 text-[11px] font-bold text-emerald-600">
+                        <div className="mt-2 flex items-center gap-2 text-[13px] font-bold text-emerald-600">
                           <ShieldCheck size={14} />
                           {item.label} uploaded
                         </div>
                         {item.fileName && (
-                          <p className="mt-1 truncate text-[11px] font-medium text-slate-500">
+                          <p className="mt-1 truncate text-[13px] font-medium text-slate-500">
                             {item.fileName}
                           </p>
                         )}
@@ -605,8 +605,8 @@ const Signup = () => {
                   </div>
                 ))}
               </div>
-              {idUploading && <p className="mt-3 text-[11px] font-bold text-slate-500">Uploading ID proof...</p>}
-              {idError && <p className="mt-3 text-[11px] font-bold text-red-500">{idError}</p>}
+              {idUploading && <p className="mt-3 text-[13px] font-bold text-slate-500">Uploading ID proof...</p>}
+              {idError && <p className="mt-3 text-[13px] font-bold text-red-500">{idError}</p>}
             </div>
           </div>
 
@@ -618,7 +618,7 @@ const Signup = () => {
                         key={g}
                         type="button"
                         onClick={() => handleGenderChange(g.toLowerCase())}
-                        className={`w-full py-3 rounded-xl text-[13px] font-bold border-2 transition-all ${
+                        className={`w-full py-3 rounded-xl text-[14.5px] font-bold border-2 transition-all ${
                             formData.gender === g.toLowerCase() 
                             ? 'border-black bg-black text-white shadow-sm' 
                             : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'
@@ -703,7 +703,7 @@ const Signup = () => {
               Login
             </Link>
           </p>
-          <p className="text-[12px] text-slate-400 font-medium leading-relaxed px-1 sm:px-2">
+          <p className="text-[13.5px] text-slate-400 font-medium leading-relaxed px-1 sm:px-2">
             By creating an account, you agree to our
             <Link to="/terms" className="ml-1 text-black underline hover:opacity-70 transition-colors">
               Terms

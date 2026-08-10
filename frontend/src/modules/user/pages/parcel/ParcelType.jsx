@@ -276,8 +276,8 @@ const ParcelType = () => {
                <MapPin size={20} className="text-emerald-500 fill-emerald-500/20" />
              </div>
              <div className="flex-1 min-w-0">
-               <p className="text-[11px] font-black uppercase tracking-widest text-slate-400">Pick up from</p>
-               <p className="text-[13px] font-bold text-slate-900 truncate mt-0.5">{pickupAddress}</p>
+               <p className="text-[13px] font-black uppercase tracking-widest text-slate-400">Pick up from</p>
+               <p className="text-[14.5px] font-bold text-slate-900 truncate mt-0.5">{pickupAddress}</p>
              </div>
              <ChevronRight size={18} className="text-slate-400" />
            </motion.div>
@@ -307,7 +307,7 @@ const ParcelType = () => {
                   className="w-full h-auto object-contain max-h-[80px] drop-shadow-md"
                 />
               </div>
-              <p className="text-[12px] font-black text-slate-800 text-center leading-tight">
+              <p className="text-[13.5px] font-black text-slate-800 text-center leading-tight">
                 {cat.title}
               </p>
             </motion.button>
@@ -328,13 +328,13 @@ const ParcelType = () => {
           <div className="relative z-10 flex items-center justify-between">
             <div className="flex items-center gap-4">
                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-300 to-yellow-600 flex items-center justify-center shadow-lg border-4 border-white/20">
-                  <div className="w-6 h-6 rounded-full border-2 border-white/40 flex items-center justify-center font-black text-white text-[14px]">
+                  <div className="w-6 h-6 rounded-full border-2 border-white/40 flex items-center justify-center font-black text-white text-[15.5px]">
                     $
                   </div>
                </div>
                <div className="text-white">
-                  <h3 className="text-[17px] font-black tracking-tight leading-tight">Explore Rewards</h3>
-                  <p className="text-[11px] font-bold text-white/70 mt-1">Earn 2 coins for every 100 spent</p>
+                  <h3 className="text-[18px] font-black tracking-tight leading-tight">Explore Rewards</h3>
+                  <p className="text-[13px] font-bold text-white/70 mt-1">Earn 2 coins for every 100 spent</p>
                </div>
             </div>
             <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:translate-x-1 transition-transform">

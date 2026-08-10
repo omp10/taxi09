@@ -42,8 +42,8 @@ const Support = () => {
               <ArrowLeft size={22} className="text-slate-900" strokeWidth={3} />
             </button>
             <div className="min-w-0">
-              <p className="text-[10px] font-black uppercase tracking-[0.26em] text-slate-400">Support</p>
-              <h1 className="mt-1 text-[18px] font-black text-slate-900 tracking-tight leading-none truncate">
+              <p className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-400">Support</p>
+              <h1 className="mt-1 text-[19px] font-black text-slate-900 tracking-tight leading-none truncate">
                 Help &amp; Support
               </h1>
             </div>
@@ -65,8 +65,8 @@ const Support = () => {
                 <MessageCircle size={20} strokeWidth={2.6} />
               </div>
               <div className="min-w-0">
-                <div className="text-[13px] font-black text-slate-900 leading-tight">Live chat</div>
-                <div className="mt-0.5 text-[11px] font-bold text-slate-500 truncate">Get quick help</div>
+                <div className="text-[14.5px] font-black text-slate-900 leading-tight">Live chat</div>
+                <div className="mt-0.5 text-[13px] font-bold text-slate-500 truncate">Get quick help</div>
               </div>
             </div>
           </motion.button>
@@ -83,8 +83,8 @@ const Support = () => {
                 <Phone size={20} strokeWidth={2.6} />
               </div>
               <div className="min-w-0">
-                <div className="text-[13px] font-black text-slate-900 leading-tight">Call support</div>
-                <div className="mt-0.5 text-[11px] font-bold text-slate-500 truncate">Talk to us</div>
+                <div className="text-[14.5px] font-black text-slate-900 leading-tight">Call support</div>
+                <div className="mt-0.5 text-[13px] font-bold text-slate-500 truncate">Talk to us</div>
               </div>
             </div>
           </motion.button>
@@ -101,15 +101,15 @@ const Support = () => {
                 <Siren size={20} strokeWidth={2.6} />
               </div>
               <div className="min-w-0">
-                <div className="text-[13px] font-black text-slate-900 leading-tight">Emergency SOS</div>
-                <div className="mt-0.5 text-[11px] font-bold text-slate-500 truncate">Get safety help fast</div>
+                <div className="text-[14.5px] font-black text-slate-900 leading-tight">Emergency SOS</div>
+                <div className="mt-0.5 text-[13px] font-bold text-slate-500 truncate">Get safety help fast</div>
               </div>
             </div>
           </motion.button>
         </div>
 
         <div>
-          <h3 className="text-[10px] font-black uppercase tracking-[0.26em] text-slate-400 mb-3 ml-1">
+          <h3 className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-400 mb-3 ml-1">
             Choose a topic
           </h3>
           <div className="space-y-2.5">
@@ -125,7 +125,7 @@ const Support = () => {
                   <div className={`w-10 h-10 rounded-2xl border border-white/80 ${topic.ringClass} flex items-center justify-center shadow-sm`}>
                     <topic.Icon size={18} strokeWidth={2.6} className={topic.iconClass} />
                   </div>
-                  <span className="text-[14px] font-black text-slate-900 tracking-tight truncate">{topic.title}</span>
+                  <span className="text-[15.5px] font-black text-slate-900 tracking-tight truncate">{topic.title}</span>
                 </div>
                 <div className="w-8 h-8 rounded-full bg-slate-50 border border-white/80 flex items-center justify-center text-slate-300 shadow-sm shrink-0">
                   <ChevronRight size={16} strokeWidth={3} />

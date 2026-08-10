@@ -52,12 +52,12 @@ const buildItinerary = (pkg) => {
 const Row = ({ label, value, hint, strong }) => (
   <div className="flex items-start justify-between gap-4">
     <span className="min-w-0">
-      <span className={`block ${strong ? 'text-[15px] font-black text-[var(--dh-text)]' : 'text-[13px] font-semibold text-[var(--dh-muted)]'}`}>
+      <span className={`block ${strong ? 'text-[16.5px] font-black text-[var(--dh-text)]' : 'text-[14.5px] font-semibold text-[var(--dh-muted)]'}`}>
         {label}
       </span>
-      {hint && <span className="mt-0.5 block text-[11px] font-medium text-[var(--dh-muted)]">{hint}</span>}
+      {hint && <span className="mt-0.5 block text-[13px] font-medium text-[var(--dh-muted)]">{hint}</span>}
     </span>
-    <span className={strong ? 'text-[20px] font-black text-[var(--dh-text)]' : 'text-[13px] font-bold text-[var(--dh-text)]'}>
+    <span className={strong ? 'text-[20px] font-black text-[var(--dh-text)]' : 'text-[14.5px] font-bold text-[var(--dh-text)]'}>
       {value}
     </span>
   </div>
@@ -132,12 +132,12 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
       <div className={`desktop-home ${theme === 'dark' ? 'theme-dark' : ''} min-h-screen bg-[var(--dh-bg)] font-sans`}>
         <DesktopNav activePath={listPath} theme={theme} onToggleTheme={toggleTheme} />
         <div className="mx-auto max-w-[1440px] px-8 py-24 text-center xl:px-12">
-          <p className="text-[18px] font-black text-[var(--dh-text)]">
+          <p className="text-[19px] font-black text-[var(--dh-text)]">
             {slugParam ? 'Loading package…' : 'This package is no longer loaded'}
           </p>
           <button
             onClick={() => navigate(listPath)}
-            className="mt-5 rounded-[12px] bg-[#F5B700] px-6 py-3 text-[15px] font-bold text-slate-950"
+            className="mt-5 rounded-[12px] bg-[#F5B700] px-6 py-3 text-[16.5px] font-bold text-slate-950"
           >
             Back to packages
           </button>
@@ -204,7 +204,7 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
         <div>
           <button
             onClick={() => navigate(listPath)}
-            className="flex items-center gap-2 text-[13.5px] font-bold text-[var(--dh-text)] hover:text-[#F5B700]"
+            className="flex items-center gap-2 text-[15px] font-bold text-[var(--dh-text)] hover:text-[#F5B700]"
           >
             <ArrowLeft size={16} strokeWidth={2.6} /> Back to {isInternational ? 'International Packages' : 'Tour Packages'}
           </button>
@@ -215,7 +215,7 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
               <div className="relative h-[320px] overflow-hidden rounded-[16px] bg-[var(--dh-chip)]">
                 <img src={gallery[slide]} alt={titleOf(pkg)} className="absolute inset-0 h-full w-full object-cover" />
                 {pkg.badge && (
-                  <span className="absolute left-4 top-4 rounded-[9px] bg-[#F5B700] px-3 py-1.5 text-[11.5px] font-black uppercase tracking-[0.05em] text-slate-950">
+                  <span className="absolute left-4 top-4 rounded-[9px] bg-[#F5B700] px-3 py-1.5 text-[13.5px] font-black uppercase tracking-[0.05em] text-slate-950">
                     {pkg.badge}
                   </span>
                 )}
@@ -235,7 +235,7 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
                     >
                       <ChevronRight size={19} className="text-slate-900" strokeWidth={2.6} />
                     </button>
-                    <span className="absolute bottom-4 left-4 rounded-[8px] bg-black/60 px-2.5 py-1 text-[11.5px] font-bold text-white">
+                    <span className="absolute bottom-4 left-4 rounded-[8px] bg-black/60 px-2.5 py-1 text-[13.5px] font-bold text-white">
                       {slide + 1} / {gallery.length}
                     </span>
                   </>
@@ -248,7 +248,7 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-[28px] font-black tracking-[-0.035em] text-[var(--dh-text)]">{titleOf(pkg)}</h1>
                 {pkg.category && (
-                  <span className="rounded-[7px] bg-[var(--dh-chip)] px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.05em] text-[var(--dh-muted)]">
+                  <span className="rounded-[7px] bg-[var(--dh-chip)] px-2.5 py-1 text-[13px] font-black uppercase tracking-[0.05em] text-[var(--dh-muted)]">
                     {pkg.category}
                   </span>
                 )}
@@ -256,27 +256,27 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
 
               <div className="mt-2.5 flex flex-wrap items-center gap-x-5 gap-y-2">
                 {region && (
-                  <span className="text-[13.5px] font-semibold text-[var(--dh-muted)]">{region}</span>
+                  <span className="text-[15px] font-semibold text-[var(--dh-muted)]">{region}</span>
                 )}
                 {durationLabel(pkg) && (
-                  <span className="flex items-center gap-1.5 text-[13.5px] font-semibold text-[var(--dh-text)]">
+                  <span className="flex items-center gap-1.5 text-[15px] font-semibold text-[var(--dh-text)]">
                     <CalendarDays size={15} className="text-[var(--dh-muted)]" strokeWidth={2.2} /> {durationLabel(pkg)}
                   </span>
                 )}
                 {Number(pkg.rating) > 0 && (
                   <span className="flex items-center gap-2">
-                    <span className="flex items-center gap-1 rounded-[6px] bg-emerald-600 px-1.5 py-0.5 text-[11.5px] font-black text-white">
+                    <span className="flex items-center gap-1 rounded-[6px] bg-emerald-600 px-1.5 py-0.5 text-[13.5px] font-black text-white">
                       <Star size={11} className="fill-white" /> {pkg.rating}
                     </span>
                     {pkg.reviews && (
-                      <span className="text-[12.5px] font-semibold text-[var(--dh-muted)]">({pkg.reviews} reviews)</span>
+                      <span className="text-[14px] font-semibold text-[var(--dh-muted)]">({pkg.reviews} reviews)</span>
                     )}
                   </span>
                 )}
               </div>
 
               {pkg.stops?.length > 0 && (
-                <p className="mt-3 text-[13.5px] font-semibold text-[var(--dh-muted)]">
+                <p className="mt-3 text-[15px] font-semibold text-[var(--dh-muted)]">
                   {pkg.stops.join(' • ')}
                 </p>
               )}
@@ -284,7 +284,7 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
               {pkg.perks?.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-2">
                   {pkg.perks.map((perk) => (
-                    <span key={perk} className="flex items-center gap-1.5 rounded-[8px] bg-emerald-50 px-3 py-1.5 text-[12px] font-bold text-emerald-700">
+                    <span key={perk} className="flex items-center gap-1.5 rounded-[8px] bg-emerald-50 px-3 py-1.5 text-[13.5px] font-bold text-emerald-700">
                       <BadgeCheck size={13} strokeWidth={2.4} /> {perk}
                     </span>
                   ))}
@@ -296,34 +296,34 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
           {/* ------------------------------------------------- Highlights + plan */}
           <div className="mt-4 grid grid-cols-2 gap-4">
             <div className="rounded-[20px] bg-[var(--dh-surface)] p-6 ring-1 ring-[var(--dh-border)]">
-              <h2 className="text-[18px] font-black tracking-[-0.02em] text-[var(--dh-text)]">What&apos;s Included</h2>
+              <h2 className="text-[19px] font-black tracking-[-0.02em] text-[var(--dh-text)]">What&apos;s Included</h2>
               {pkg.includes?.length ? (
                 <ul className="mt-4 space-y-2.5">
                   {pkg.includes.map((item) => (
-                    <li key={item} className="flex items-start gap-2.5 text-[13.5px] font-semibold text-[var(--dh-text)]">
+                    <li key={item} className="flex items-start gap-2.5 text-[15px] font-semibold text-[var(--dh-text)]">
                       <Check size={16} className="mt-0.5 shrink-0 text-emerald-600" strokeWidth={2.8} /> {item}
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="mt-4 text-[13.5px] font-medium text-[var(--dh-muted)]">
+                <p className="mt-4 text-[15px] font-medium text-[var(--dh-muted)]">
                   Inclusions for this package have not been listed yet.
                 </p>
               )}
             </div>
 
             <div className="rounded-[20px] bg-[var(--dh-surface)] p-6 ring-1 ring-[var(--dh-border)]">
-              <h2 className="text-[18px] font-black tracking-[-0.02em] text-[var(--dh-text)]">Trip Highlights</h2>
+              <h2 className="text-[19px] font-black tracking-[-0.02em] text-[var(--dh-text)]">Trip Highlights</h2>
               {pkg.highlights?.length ? (
                 <ul className="mt-4 space-y-2.5">
                   {pkg.highlights.map((item) => (
-                    <li key={item} className="flex items-start gap-2.5 text-[13.5px] font-semibold text-[var(--dh-text)]">
+                    <li key={item} className="flex items-start gap-2.5 text-[15px] font-semibold text-[var(--dh-text)]">
                       <Sparkles size={15} className="mt-0.5 shrink-0 text-[#F5B700]" strokeWidth={2.3} /> {item}
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="mt-4 text-[13.5px] font-medium text-[var(--dh-muted)]">
+                <p className="mt-4 text-[15px] font-medium text-[var(--dh-muted)]">
                   Highlights for this package have not been listed yet.
                 </p>
               )}
@@ -332,7 +332,7 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
 
           {/* -------------------------------------------------------- Itinerary */}
           <div className="mt-4 rounded-[20px] bg-[var(--dh-surface)] p-6 ring-1 ring-[var(--dh-border)]">
-            <h2 className="text-[18px] font-black tracking-[-0.02em] text-[var(--dh-text)]">Day-wise Plan</h2>
+            <h2 className="text-[19px] font-black tracking-[-0.02em] text-[var(--dh-text)]">Day-wise Plan</h2>
             <div className="mt-4 space-y-2.5">
               {itinerary.map((entry) => {
                 const isOpen = openDay === entry.day;
@@ -343,16 +343,16 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
                       aria-expanded={isOpen}
                       className="flex w-full items-center gap-3.5 px-4 py-3.5 text-left"
                     >
-                      <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[12.5px] font-black ${isOpen ? 'bg-[#F5B700] text-slate-950' : 'bg-[var(--dh-chip)] text-[var(--dh-muted)]'}`}>
+                      <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[14px] font-black ${isOpen ? 'bg-[#F5B700] text-slate-950' : 'bg-[var(--dh-chip)] text-[var(--dh-muted)]'}`}>
                         {entry.day}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[14.5px] font-black text-[var(--dh-text)]">{entry.title}</span>
+                        <span className="block truncate text-[16px] font-black text-[var(--dh-text)]">{entry.title}</span>
                       </span>
                       <ChevronRight size={17} className={`shrink-0 text-[var(--dh-muted)] transition-transform ${isOpen ? 'rotate-90' : ''}`} strokeWidth={2.4} />
                     </button>
                     {isOpen && (
-                      <p className="px-4 pb-4 pl-[66px] text-[13px] font-medium leading-[1.55] text-[var(--dh-muted)]">
+                      <p className="px-4 pb-4 pl-[66px] text-[14.5px] font-medium leading-[1.55] text-[var(--dh-muted)]">
                         {entry.detail}
                       </p>
                     )}
@@ -369,18 +369,18 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
             <div className="flex items-end justify-between">
               <div>
                 {Number(pkg.oldPrice) > Number(pkg.price) && (
-                  <p className="text-[13px] font-bold text-[var(--dh-muted)] line-through">{formatMoney(pkg.oldPrice)}</p>
+                  <p className="text-[14.5px] font-bold text-[var(--dh-muted)] line-through">{formatMoney(pkg.oldPrice)}</p>
                 )}
                 <p className="text-[26px] font-black leading-none tracking-[-0.03em] text-[var(--dh-text)]">
                   {formatMoney(pkg.price)}
                 </p>
-                <p className="mt-1 text-[12px] font-semibold text-[var(--dh-muted)]">per person · on twin sharing</p>
+                <p className="mt-1 text-[13.5px] font-semibold text-[var(--dh-muted)]">per person · on twin sharing</p>
               </div>
             </div>
 
             {/* Travellers */}
             <div className="mt-5 flex items-center justify-between border-t border-[var(--dh-border)] pt-4">
-              <span className="flex items-center gap-2 text-[13.5px] font-bold text-[var(--dh-text)]">
+              <span className="flex items-center gap-2 text-[15px] font-bold text-[var(--dh-text)]">
                 <Users size={16} className="text-[var(--dh-muted)]" strokeWidth={2.3} /> Travellers
               </span>
               <span className="flex items-center gap-3">
@@ -392,7 +392,7 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
                 >
                   <Minus size={14} strokeWidth={2.8} />
                 </button>
-                <span className="w-6 text-center text-[15px] font-black text-[var(--dh-text)]">{travellers}</span>
+                <span className="w-6 text-center text-[16.5px] font-black text-[var(--dh-text)]">{travellers}</span>
                 <button
                   onClick={() => setTravellers((n) => n + 1)}
                   className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--dh-border)] text-[var(--dh-text)]"
@@ -407,7 +407,7 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
             <div className="mt-4 border-t border-[var(--dh-border)] pt-4">
               {appliedCoupon ? (
                 <div className="flex items-center justify-between rounded-[11px] bg-emerald-50 px-3.5 py-2.5">
-                  <span className="flex items-center gap-2 text-[12.5px] font-black text-emerald-700">
+                  <span className="flex items-center gap-2 text-[14px] font-black text-emerald-700">
                     <Ticket size={14} strokeWidth={2.5} /> {appliedCoupon} applied
                   </span>
                   <button
@@ -426,20 +426,20 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
                       value={couponInput}
                       onChange={(e) => { setCouponInput(e.target.value); setCouponError(''); }}
                       placeholder="Coupon code"
-                      className="w-full bg-transparent text-[13.5px] font-semibold uppercase text-[var(--dh-text)] placeholder:normal-case placeholder:text-[var(--dh-muted)] outline-none"
+                      className="w-full bg-transparent text-[15px] font-semibold uppercase text-[var(--dh-text)] placeholder:normal-case placeholder:text-[var(--dh-muted)] outline-none"
                     />
                   </span>
                   <button
                     onClick={applyCoupon}
                     disabled={!couponInput.trim()}
-                    className="h-[42px] rounded-[11px] bg-[#F5B700] px-5 text-[13.5px] font-bold text-slate-950 disabled:opacity-50"
+                    className="h-[42px] rounded-[11px] bg-[#F5B700] px-5 text-[15px] font-bold text-slate-950 disabled:opacity-50"
                   >
                     Apply
                   </button>
                 </div>
               )}
               {couponError && (
-                <p className="mt-2 text-[12px] font-bold text-rose-700">{couponError}</p>
+                <p className="mt-2 text-[13.5px] font-bold text-rose-700">{couponError}</p>
               )}
             </div>
 
@@ -469,13 +469,13 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
                     <Row label="Total Amount" value={formatMoney(quote.totalAmount)} strong />
                   </div>
                   {quote.savings > 0 && (
-                    <p className="rounded-[11px] bg-emerald-50 px-3.5 py-2.5 text-[12px] font-bold text-emerald-700">
+                    <p className="rounded-[11px] bg-emerald-50 px-3.5 py-2.5 text-[13.5px] font-bold text-emerald-700">
                       You save {formatMoney(quote.savings)} on this booking.
                     </p>
                   )}
                 </>
               ) : quoteError ? (
-                <p className="rounded-[10px] bg-rose-50 px-3 py-2.5 text-[12.5px] font-bold text-rose-700">{quoteError}</p>
+                <p className="rounded-[10px] bg-rose-50 px-3 py-2.5 text-[14px] font-bold text-rose-700">{quoteError}</p>
               ) : (
                 <div className="space-y-2">
                   <div className="skeleton h-4 rounded" />
@@ -487,11 +487,11 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
 
             {confirmed ? (
               <div className="mt-5 rounded-[13px] bg-emerald-50 p-4 text-center">
-                <p className="text-[13.5px] font-black text-emerald-800">Booking confirmed</p>
-                <p className="mt-1 text-[12px] font-bold text-emerald-700">{confirmed}</p>
+                <p className="text-[15px] font-black text-emerald-800">Booking confirmed</p>
+                <p className="mt-1 text-[13.5px] font-bold text-emerald-700">{confirmed}</p>
                 <button
                   onClick={() => navigate('/taxi/user/activity')}
-                  className="mt-3 rounded-[10px] bg-emerald-600 px-4 py-2 text-[12.5px] font-bold text-white"
+                  className="mt-3 rounded-[10px] bg-emerald-600 px-4 py-2 text-[14px] font-bold text-white"
                 >
                   View my bookings
                 </button>
@@ -500,24 +500,24 @@ const DesktopPackageDetails = ({ scope = 'domestic' }) => {
               <button
                 disabled={!quote || booking}
                 onClick={bookTrip}
-                className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-[13px] bg-[#F5B700] py-3.5 text-[15.5px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)] transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+                className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-[13px] bg-[#F5B700] py-3.5 text-[17px] font-bold text-slate-950 shadow-[0_10px_24px_rgba(245,183,0,0.3)] transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {booking ? 'Processing…' : 'Book & Pay'} <ArrowRight size={18} strokeWidth={2.8} />
               </button>
             )}
 
-            <p className="mt-3 flex items-start gap-2 text-[11px] font-medium text-[var(--dh-muted)]">
+            <p className="mt-3 flex items-start gap-2 text-[13px] font-medium text-[var(--dh-muted)]">
               <Info size={13} className="mt-0.5 shrink-0" strokeWidth={2.2} />
               Taxes and levies shown are calculated by Taxi09 and confirmed again before payment.
             </p>
           </div>
 
           <div className="rounded-[18px] bg-[#FFFBEC] p-5">
-            <p className="text-[14px] font-black text-slate-900">Questions about this trip?</p>
-            <p className="mt-1 text-[12.5px] font-semibold text-slate-600">Our travel experts can help you plan it.</p>
+            <p className="text-[15.5px] font-black text-slate-900">Questions about this trip?</p>
+            <p className="mt-1 text-[14px] font-semibold text-slate-600">Our travel experts can help you plan it.</p>
             <button
               onClick={() => navigate('/taxi/user/support')}
-              className="mt-3.5 flex items-center gap-2 rounded-[11px] bg-white px-4 py-2.5 text-[13.5px] font-bold text-slate-900 ring-1 ring-[var(--dh-border)]"
+              className="mt-3.5 flex items-center gap-2 rounded-[11px] bg-white px-4 py-2.5 text-[15px] font-bold text-slate-900 ring-1 ring-[var(--dh-border)]"
             >
               <Headphones size={15} strokeWidth={2.5} /> Talk to an expert
             </button>

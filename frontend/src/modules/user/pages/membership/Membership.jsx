@@ -90,8 +90,8 @@ const PlanCard = ({ plan, selected, onSelect }) => {
       <div className="p-4">
         <div className="flex items-start justify-between">
           <div>
-            <p className={`text-[19px] font-black leading-none ${theme.name}`}>{plan.name.toUpperCase()}</p>
-            <p className={`mt-1 text-[10.5px] font-bold tracking-wider ${dark ? 'text-slate-400' : 'text-slate-500'}`}>
+            <p className={`text-[20px] font-black leading-none ${theme.name}`}>{plan.name.toUpperCase()}</p>
+            <p className={`mt-1 text-[12.5px] font-bold tracking-wider ${dark ? 'text-slate-400' : 'text-slate-500'}`}>
               {plan.tagline}
             </p>
           </div>
@@ -99,11 +99,11 @@ const PlanCard = ({ plan, selected, onSelect }) => {
         </div>
 
         {plan.discountPercent > 0 ? (
-          <span className={`mt-3 inline-block rounded-md px-2 py-1 text-[13px] font-black ${theme.pill}`}>
+          <span className={`mt-3 inline-block rounded-md px-2 py-1 text-[14.5px] font-black ${theme.pill}`}>
             {plan.discountPercent}% OFF
           </span>
         ) : null}
-        <p className={`mt-1.5 text-[12px] ${theme.body}`}>on all bookings</p>
+        <p className={`mt-1.5 text-[13.5px] ${theme.body}`}>on all bookings</p>
 
         <div className={`my-3 h-px ${dark ? 'bg-white/10' : 'bg-slate-200'}`} />
 
@@ -114,11 +114,11 @@ const PlanCard = ({ plan, selected, onSelect }) => {
               <li key={benefit.title} className="flex gap-2.5">
                 <Icon size={15} className={`mt-0.5 shrink-0 ${dark ? 'text-[#F5B700]' : 'text-slate-500'}`} />
                 <span>
-                  <span className={`block text-[12.5px] font-bold ${dark ? 'text-white' : 'text-slate-900'}`}>
+                  <span className={`block text-[14px] font-bold ${dark ? 'text-white' : 'text-slate-900'}`}>
                     {benefit.title}
                   </span>
                   {benefit.subtitle ? (
-                    <span className={`block text-[11px] ${theme.body}`}>{benefit.subtitle}</span>
+                    <span className={`block text-[13px] ${theme.body}`}>{benefit.subtitle}</span>
                   ) : null}
                 </span>
               </li>
@@ -128,12 +128,12 @@ const PlanCard = ({ plan, selected, onSelect }) => {
       </div>
 
       <div className={`px-4 py-3 ${theme.foot}`}>
-        <p className={`text-[19px] font-black ${dark ? 'text-white' : 'text-slate-900'}`}>
+        <p className={`text-[20px] font-black ${dark ? 'text-white' : 'text-slate-900'}`}>
           {money(plan.price)}
-          <span className="text-[12.5px] font-bold"> / {plan.durationMonths} Months</span>
+          <span className="text-[14px] font-bold"> / {plan.durationMonths} Months</span>
         </p>
         {plan.oldPrice > plan.price ? (
-          <p className={`text-[11.5px] ${theme.body}`}>
+          <p className={`text-[13.5px] ${theme.body}`}>
             <span className="line-through">{money(plan.oldPrice)}</span>{' '}
             <span className="font-bold">Save {money(plan.oldPrice - plan.price)}</span>
           </p>
@@ -215,12 +215,12 @@ const Membership = () => {
             </button>
             <div>
               <h1 className="text-[22px] font-black leading-tight text-slate-900">Membership</h1>
-              <p className="text-[12.5px] font-semibold text-slate-700">Choose a plan that suits you</p>
+              <p className="text-[14px] font-semibold text-slate-700">Choose a plan that suits you</p>
             </div>
           </div>
 
           {active ? (
-            <span className="flex items-center gap-1.5 rounded-xl bg-white px-3 py-2 text-[12px] font-black text-slate-900">
+            <span className="flex items-center gap-1.5 rounded-xl bg-white px-3 py-2 text-[13.5px] font-black text-slate-900">
               <Crown size={14} className="text-[#F5B700]" fill="currentColor" /> {active.planName} Member
             </span>
           ) : null}
@@ -234,10 +234,10 @@ const Membership = () => {
               <Crown size={26} className="text-[#F5B700]" fill="currentColor" />
             </span>
             <div>
-              <p className="text-[17px] font-black text-white">
+              <p className="text-[18px] font-black text-white">
                 Go Premium with <span className="text-[#F5B700]">Taxi09</span>
               </p>
-              <p className="text-[12.5px] text-slate-300">Exclusive benefits. More savings.</p>
+              <p className="text-[14px] text-slate-300">Exclusive benefits. More savings.</p>
             </div>
           </div>
         </div>
@@ -248,17 +248,17 @@ const Membership = () => {
           <Loader2 className="animate-spin text-slate-400" />
         </div>
       ) : plans.length === 0 ? (
-        <p className="px-6 py-16 text-center text-[13.5px] text-slate-500">
+        <p className="px-6 py-16 text-center text-[15px] text-slate-500">
           No membership plans are on sale right now. Please check back soon.
         </p>
       ) : (
         <>
           {active ? (
             <div className="mx-4 mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
-              <p className="text-[13.5px] font-black text-emerald-800">
+              <p className="text-[15px] font-black text-emerald-800">
                 Your {active.planName} membership is active
               </p>
-              <p className="text-[12px] text-emerald-700">
+              <p className="text-[13.5px] text-emerald-700">
                 {active.discountPercent}% off bookings until{' '}
                 {new Date(active.expiresAt).toLocaleDateString('en-IN', {
                   day: 'numeric', month: 'short', year: 'numeric',
@@ -267,7 +267,7 @@ const Membership = () => {
             </div>
           ) : null}
 
-          <h2 className="px-4 pb-3 pt-6 text-[16px] font-black text-slate-900">Choose Your Plan</h2>
+          <h2 className="px-4 pb-3 pt-6 text-[17px] font-black text-slate-900">Choose Your Plan</h2>
           <div className="flex gap-3 overflow-x-auto px-4 pb-2 no-scrollbar">
             {plans.map((plan) => (
               <PlanCard
@@ -279,29 +279,29 @@ const Membership = () => {
             ))}
           </div>
 
-          <h2 className="px-4 pb-3 pt-7 text-[16px] font-black text-slate-900">Why Become a Member?</h2>
+          <h2 className="px-4 pb-3 pt-7 text-[17px] font-black text-slate-900">Why Become a Member?</h2>
           <div className="grid grid-cols-2 gap-3 px-4">
             {WHY.map((item) => (
               <div key={item.title} className="rounded-2xl border border-slate-100 bg-white p-3.5">
                 <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#FFF3CC]">
                   <item.icon size={17} className="text-[#C79100]" />
                 </span>
-                <p className="mt-2 text-[12.5px] font-black text-slate-900">{item.title}</p>
-                <p className="text-[11px] text-slate-500">{item.sub}</p>
+                <p className="mt-2 text-[14px] font-black text-slate-900">{item.title}</p>
+                <p className="text-[13px] text-slate-500">{item.sub}</p>
               </div>
             ))}
           </div>
 
           {comparison.length > 0 ? (
             <>
-              <h2 className="px-4 pb-3 pt-7 text-[16px] font-black text-slate-900">Compare Plans</h2>
+              <h2 className="px-4 pb-3 pt-7 text-[17px] font-black text-slate-900">Compare Plans</h2>
               <div className="mx-4 overflow-x-auto rounded-2xl border border-slate-200">
                 <table className="w-full text-left">
                   <thead>
                     <tr className="bg-slate-50">
-                      <th className="px-3 py-2.5 text-[11.5px] font-bold text-slate-700">Benefits</th>
+                      <th className="px-3 py-2.5 text-[13.5px] font-bold text-slate-700">Benefits</th>
                       {plans.map((plan) => (
-                        <th key={plan._id} className="px-3 py-2.5 text-center text-[11.5px] font-bold text-slate-700">
+                        <th key={plan._id} className="px-3 py-2.5 text-center text-[13.5px] font-bold text-slate-700">
                           {plan.name}
                         </th>
                       ))}
@@ -309,16 +309,16 @@ const Membership = () => {
                   </thead>
                   <tbody>
                     <tr className="border-t border-slate-100">
-                      <td className="px-3 py-2.5 text-[12px] text-slate-700">Discount on Bookings</td>
+                      <td className="px-3 py-2.5 text-[13.5px] text-slate-700">Discount on Bookings</td>
                       {plans.map((plan) => (
-                        <td key={plan._id} className="px-3 py-2.5 text-center text-[12px] font-black text-slate-900">
+                        <td key={plan._id} className="px-3 py-2.5 text-center text-[13.5px] font-black text-slate-900">
                           {plan.discountPercent}%
                         </td>
                       ))}
                     </tr>
                     {comparison.map((row) => (
                       <tr key={row.title} className="border-t border-slate-100">
-                        <td className="px-3 py-2.5 text-[12px] text-slate-700">{row.title}</td>
+                        <td className="px-3 py-2.5 text-[13.5px] text-slate-700">{row.title}</td>
                         {row.has.map((has, index) => (
                           <td key={plans[index]._id} className="px-3 py-2.5 text-center">
                             {has ? (
@@ -342,15 +342,15 @@ const Membership = () => {
       {!loading && plans.length > 0 && !active ? (
         <div className="fixed inset-x-0 bottom-0 z-40 mx-auto flex max-w-lg items-center gap-3 border-t border-slate-100 bg-white px-4 py-3">
           <div className="flex-1">
-            <p className="flex items-center gap-1.5 text-[12px] font-black text-slate-900">
+            <p className="flex items-center gap-1.5 text-[13.5px] font-black text-slate-900">
               <ShieldCheck size={14} className="text-emerald-600" /> 100% Secure Payment
             </p>
-            <p className="text-[11px] text-slate-500">Safe & encrypted transactions</p>
+            <p className="text-[13px] text-slate-500">Safe & encrypted transactions</p>
           </div>
           <button
             onClick={buy}
             disabled={busy || !selected}
-            className="flex items-center gap-2 rounded-2xl bg-[#F5B700] px-5 py-3 text-[14px] font-black text-slate-900 disabled:opacity-60"
+            className="flex items-center gap-2 rounded-2xl bg-[#F5B700] px-5 py-3 text-[15.5px] font-black text-slate-900 disabled:opacity-60"
           >
             {busy ? <Loader2 size={16} className="animate-spin" /> : null}
             Continue to Payment
