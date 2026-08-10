@@ -32,7 +32,6 @@ export const PRODUCT_TONES = {
   International: 'bg-violet-50 text-violet-700',
   Ride: 'bg-amber-50 text-amber-700',
   Bus: 'bg-orange-50 text-orange-700',
-  Pooling: 'bg-teal-50 text-teal-700',
   Rental: 'bg-indigo-50 text-indigo-700',
 };
 

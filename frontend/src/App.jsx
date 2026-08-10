@@ -149,11 +149,6 @@ const RentalDeposit = lazy(() => import('./modules/user/pages/rental/RentalDepos
 const RentalConfirmed = lazy(() => import('./modules/user/pages/rental/RentalConfirmed'));
 const IntercityHome = lazy(() => import('./modules/user/pages/intercity/IntercityHome'));
 
-// Car Pooling flow
-const UserPoolingHome = lazy(() => import('./modules/user/pages/pooling/PoolingHome'));
-const UserPoolingList = lazy(() => import('./modules/user/pages/pooling/PoolingList'));
-const UserPoolingSeats = lazy(() => import('./modules/user/pages/pooling/PoolingSeats'));
-const UserPoolingConfirm = lazy(() => import('./modules/user/pages/pooling/PoolingConfirm'));
 
 // Profile Settings Sub-pages
 const ProfileSettings = lazy(() => import('./modules/user/pages/profile/ProfileSettings'));
@@ -180,7 +175,6 @@ const DriverHome = lazy(() => import('./modules/driver/pages/DriverHome'));
 const OwnerDashboard = lazy(() => import('./modules/driver/pages/OwnerDashboard'));
 const OwnerBusServicePage = lazy(() => import('./modules/driver/pages/OwnerBusServicePage'));
 const OwnerBusBookingsPage = lazy(() => import('./modules/driver/pages/OwnerBusBookingsPage'));
-const OwnerPoolingVehicleForm = lazy(() => import('./modules/driver/pages/OwnerPoolingVehicleForm'));
 const ActiveTrip = lazy(() => import('./modules/driver/pages/ActiveTrip'));
 const DriverWallet = lazy(() => import('./modules/driver/pages/DriverWallet'));
 const DriverProfile = lazy(() => import('./modules/driver/pages/DriverProfile'));
@@ -193,10 +187,6 @@ const RideRequests = lazy(() => import('./modules/driver/pages/RideRequests'));
 const DriverIncentives = lazy(() => import('./modules/driver/pages/DriverIncentives'));
 const BusDriverHome = lazy(() => import('./modules/driver/pages/BusDriverHome'));
 const BusDriverLiveRoute = lazy(() => import('./modules/driver/pages/BusDriverLiveRoute'));
-const PoolingDriverDashboard = lazy(() => import('./modules/driver/pages/PoolingDriverDashboard'));
-const PoolingDriverOnboarding = lazy(() => import('./modules/driver/pages/pooling/PoolingDriverOnboarding'));
-const PoolingDriverPendingStatus = lazy(() => import('./modules/driver/pages/pooling/PoolingDriverPendingStatus'));
-const PoolingDriverBookings = lazy(() => import('./modules/driver/pages/pooling/PoolingDriverBookings'));
 const PortalSupportPage = lazy(() => import('./modules/driver/pages/PortalSupportPage'));
 
 // Driver Module - Settings
@@ -299,8 +289,7 @@ const AdminRentalQuoteRequests = lazy(() => import('./modules/admin/pages/price-
 const AdminRentalQuoteDetail = lazy(() => import('./modules/admin/pages/price-management/RentalQuoteDetail'));
 const AdminRentalPackageTypes = lazy(() => import('./modules/admin/pages/price-management/RentalPackageTypes'));
 const AdminGoodsTypes = lazy(() => import('./modules/admin/pages/price-management/GoodsTypes'));
-// The Car Pooling admin screens were removed; see git history to restore them.
-// Rider and driver pooling are unaffected.
+// Car Pooling was removed entirely; see git history to restore it.
 const AdminBusServiceManager = lazy(() => import('./modules/admin/pages/bus-service/BusServiceManager'));
 const AdminBusServiceDetails = lazy(() => import('./modules/admin/pages/bus-service/BusServiceDetails'));
 const AdminBusBookingManager = lazy(() => import('./modules/admin/pages/bus-service/BusBookingManager'));
@@ -586,7 +575,6 @@ const UserUpcomingRideReminderBootstrap = () => {
     location.pathname.startsWith('/taxi/user') ||
     location.pathname === '/user' ||
     location.pathname.startsWith('/ride') ||
-    location.pathname.startsWith('/pooling') ||
     location.pathname.startsWith('/bus');
   const hasUserToken = !!getLocalUserToken();
   const isBusEnabled = settings?.transportRide?.enable_bus_service === '1';
@@ -600,11 +588,10 @@ const UserUpcomingRideReminderBootstrap = () => {
 
     const syncReminders = async () => {
       try {
-        const [busResult, poolingResult, scheduledRideResult] = await Promise.all([
+        const [busResult, scheduledRideResult] = await Promise.all([
           isBusEnabled
             ? userBusService.getMyBookings({ page: 1, limit: 20, tripState: 'upcoming' })
             : Promise.resolve({ results: [] }),
-          userService.getMyPoolingBookings(),
           api.get('/rides', {
             params: {
               page: 1,
@@ -619,49 +606,10 @@ const UserUpcomingRideReminderBootstrap = () => {
         }
 
         const busPayload = getResponsePayload(busResult);
-        const poolingPayload = getResponsePayload(poolingResult);
         const scheduledRidePayload = getResponsePayload(scheduledRideResult);
-
-        const rawPoolingBookings = Array.isArray(poolingPayload)
-          ? poolingPayload
-          : Array.isArray(poolingPayload?.results)
-            ? poolingPayload.results
-            : [];
-        const routeIds = [...new Set(rawPoolingBookings.map((booking) => String(booking?.route?._id || '')).filter(Boolean))];
-        const routeDetailsEntries = await Promise.all(
-          routeIds.map(async (routeId) => {
-            try {
-              const routeResponse = await userService.getPoolingRouteDetails(routeId);
-              return [routeId, getResponsePayload(routeResponse)];
-            } catch {
-              return [routeId, null];
-            }
-          }),
-        );
-
-        if (cancelled) {
-          return;
-        }
-
-        const routeDetailsMap = new Map(routeDetailsEntries);
-        const poolingBookings = rawPoolingBookings.map((booking) => {
-          const routeId = String(booking?.route?._id || '');
-          const routeDetails = routeDetailsMap.get(routeId);
-
-          return routeDetails
-            ? {
-                ...booking,
-                route: {
-                  ...(booking.route || {}),
-                  ...routeDetails,
-                },
-              }
-            : booking;
-        });
 
         syncUpcomingRideReminders({
           busBookings: Array.isArray(busPayload?.results) ? busPayload.results : [],
-          poolingBookings,
           scheduledRides: Array.isArray(scheduledRidePayload?.results) ? scheduledRidePayload.results : [],
         });
       } catch {
@@ -802,7 +750,6 @@ function App() {
               <Route path="/intercity/vehicle" element={<IntercityVehicle />} />
               <Route path="/intercity/details" element={<IntercityDetails />} />
               <Route path="/intercity/confirm" element={<IntercityConfirm />} />
-              <Route path="/cab-sharing" element={<Navigate to="/taxi/user/pooling" replace />} />
               <Route path="/cab" element={<CabHome />} />
               <Route path="/cab/shared" element={<SharedTaxi />} />
               <Route path="/cab/shared/seats" element={<SharedTaxiSeats />} />
@@ -934,10 +881,6 @@ function App() {
                 element={<RideDetail />}
               />
 
-              <Route path="/taxi/user/pooling" element={<UserPoolingHome />} />
-              <Route path="/taxi/user/pooling/list" element={<UserPoolingList />} />
-              <Route path="/taxi/user/pooling/seats/:id" element={<UserPoolingSeats />} />
-              <Route path="/taxi/user/pooling/confirm" element={<UserPoolingConfirm />} />
               <Route path="/taxi/user/rental/type" element={<RentalTypeSelection />} />
               <Route path="/taxi/user/rental/bike-categories" element={<BikeRentalRoute />} />
               <Route path="/taxi/user/rental/bikes-list" element={<BikeCategoryList />} />
@@ -973,7 +916,6 @@ function App() {
                 path="/taxi/user/intercity/confirm"
                 element={<IntercityConfirm />}
               />
-              <Route path="/taxi/user/cab-sharing" element={<Navigate to="/taxi/user/pooling" replace />} />
               <Route path="/taxi/user/cab" element={<CabHome />} />
               <Route path="/taxi/user/cab/shared" element={<SharedTaxi />} />
               <Route
@@ -1107,10 +1049,6 @@ function App() {
                 <Route path="home" element={<DriverHome />} />
                 <Route path="bus-home" element={<BusDriverHome />} />
                 <Route path="bus-home/live-route" element={<BusDriverLiveRoute />} />
-                <Route path="pooling" element={<PoolingDriverDashboard />} />
-                <Route path="pooling/onboarding" element={<PoolingDriverOnboarding />} />
-                <Route path="pooling/status" element={<PoolingDriverPendingStatus />} />
-                <Route path="pooling/bookings" element={<PoolingDriverBookings />} />
                 <Route path="dashboard" element={<DriverHome />} />
                 <Route path="active-trip" element={<ActiveTrip />} />
                 <Route path="chat" element={<Chat />} />
@@ -1178,8 +1116,6 @@ function App() {
                 <Route path="bus-service/edit/:id" element={<OwnerBusServicePage />} />
                 <Route path="bus-service/:id" element={<OwnerBusServicePage />} />
                 <Route path="bus-bookings" element={<OwnerBusBookingsPage />} />
-                <Route path="pooling-vehicles" element={<OwnerPoolingVehicleForm />} />
-                <Route path="pooling-vehicles/create" element={<OwnerPoolingVehicleForm />} />
                 <Route path="profile" element={<DriverProfile />} />
                 <Route path="profile/bank-details" element={<DriverBankDetailsPage />} />
                 <Route path="wallet" element={<DriverWallet />} />

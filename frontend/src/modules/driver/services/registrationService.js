@@ -2,7 +2,7 @@ import api from "../../../shared/api/axiosInstance";
 
 const STORAGE_KEY = "driverRegistrationSession";
 const DRIVER_AUTH_KEYS = ["token", "driverToken", "driverInfo", "role", "driverRole", "chatRole"];
-const DRIVER_PORTAL_ROLES = ["driver", "owner", "pooling_driver", "bus_driver", "service_center", "service_center_staff"];
+const DRIVER_PORTAL_ROLES = ["driver", "owner", "bus_driver", "service_center", "service_center_staff"];
 const isDataUrl = (value) => /^data:/i.test(String(value || "").trim());
 
 const sanitizeStoredDocumentValue = (value) => {
@@ -132,9 +132,6 @@ export const normalizeDriverPortalRole = (role) => {
   if (!normalized) return "";
 
   if (normalized === "owner") return "owner";
-  if (normalized === "pooling_driver" || normalized === "pooling-driver" || normalized === "poolingdriver" || normalized === "pooling") {
-    return "pooling_driver";
-  }
   if (normalized === "service_center" || normalized === "service-center" || normalized === "servicecenter") {
     return "service_center";
   }
@@ -160,26 +157,6 @@ export const sendDriverLoginOtp = (payload) =>
 export const verifyDriverLoginOtp = (payload) =>
   api.post("/drivers/auth/verify-otp", payload);
 
-export const startPoolingDriverOnboarding = (payload) =>
-  api.post("/drivers/pooling/onboarding/send-otp", payload);
-
-export const verifyPoolingDriverOnboardingOtp = (payload) =>
-  api.post("/drivers/pooling/onboarding/verify-otp", payload);
-
-export const getPoolingDriverOnboardingSession = ({ registrationId, phone }) =>
-  api.get(`/drivers/pooling/onboarding/session/${encodeURIComponent(registrationId)}`, {
-    params: phone ? { phone } : {},
-  });
-
-export const savePoolingDriverOnboardingDetails = (payload) =>
-  api.patch("/drivers/pooling/onboarding/details", payload);
-
-export const completePoolingDriverOnboarding = (payload) =>
-  api.post("/drivers/pooling/onboarding/complete", payload);
-
-export const uploadPoolingDriverOnboardingImage = (image) =>
-  api.post("/drivers/pooling/onboarding/upload-image", { image });
-
 export const getDriverOnboardingSession = ({ registrationId, phone }) =>
   api.get(`/drivers/onboarding/session/${encodeURIComponent(registrationId)}`, {
     params: phone ? { phone } : {},
@@ -199,13 +176,6 @@ export const saveDriverDocuments = (payload) =>
 
 export const completeDriverOnboarding = (payload) =>
   api.post("/drivers/onboarding/complete", payload);
-
-export const ownerPoolingVehicleService = {
-  getPoolingVehicles: () => api.get("/drivers/fleet/pooling-vehicles"),
-  createPoolingVehicle: (data) => api.post("/drivers/fleet/pooling-vehicles", data),
-  updatePoolingVehicle: (id, data) => api.patch(`/drivers/fleet/pooling-vehicles/${id}`, data),
-  deletePoolingVehicle: (id) => api.delete(`/drivers/fleet/pooling-vehicles/${id}`),
-};
 
 export const buildDriverOnboardingSessionSnapshot = (payload = {}, fallbackSession = {}) => {
   const serverSession = payload?.session || {};
@@ -425,9 +395,6 @@ const withDriverAuth = (config = {}) => {
 
 export const getCurrentDriver = () => api.get("/drivers/me", withDriverAuth());
 
-export const getPoolingDriverBookings = () =>
-  api.get("/drivers/pooling/bookings", withDriverAuth());
-
 export const getDriverRideHistory = (params = {}) =>
   api.get("/rides", withDriverAuth({ params }));
 
@@ -468,7 +435,6 @@ const TRANSPORTS_BY_SERVICE = {
   taxi: ['taxi', 'both'],
   outstation: ['taxi', 'both'],
   delivery: ['delivery', 'both'],
-  pooling: ['pooling', 'both'],
 };
 
 export const filterVehicleTypesForServices = (types = [], serviceCategories = []) => {

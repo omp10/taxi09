@@ -165,67 +165,12 @@ const getBusReminderPayload = (booking) => {
   };
 };
 
-const getPoolingReminderPayload = (booking) => {
-  const bookingId = String(booking?._id || booking?.bookingId || '').trim();
-  const routeSchedules = Array.isArray(booking?.route?.schedules) ? booking.route.schedules : [];
-  const selectedSchedule = routeSchedules.find((item) => String(item?.id || '') === String(booking?.scheduleId || ''));
-  const departureTime = String(selectedSchedule?.departureTime || booking?.departureTime || '').trim();
-  const eventTime = parseDateTime(booking?.travelDate, departureTime);
-
-  if (!bookingId || !eventTime) {
-    return null;
-  }
-
-  const routeName = String(
-    booking?.route?.routeName ||
-    `${booking?.route?.originLabel || 'Pickup'} to ${booking?.route?.destinationLabel || 'Drop'}`,
-  ).trim();
-
-  return {
-    scope: 'pooling',
-    entityId: bookingId,
-    eventTime,
-    title: `Pooling trip soon: ${routeName}`,
-    body: `Your shared ride leaves at ${departureTime || 'the scheduled time'}. Please reach ${booking?.pickupLabel || 'the pickup point'} early.`,
-    type: 'ride',
-  };
-};
-
-const isTerminalRideStatus = (ride) => {
-  const status = String(ride?.status || ride?.liveStatus || '').toLowerCase();
-  return ['cancelled', 'completed', 'failed', 'expired'].includes(status);
-};
-
-const getScheduledRideReminderPayload = (ride) => {
-  const rideId = String(ride?.rideId || ride?._id || ride?.id || '').trim();
-  const eventTime = parseDateTime(ride?.scheduledAt);
-
-  if (!rideId || !eventTime || isTerminalRideStatus(ride)) {
-    return null;
-  }
-
-  return {
-    scope: 'scheduled-ride',
-    entityId: rideId,
-    eventTime,
-    title: 'Scheduled ride coming up',
-    body: `${ride?.pickupAddress || ride?.pickup || 'Pickup'} to ${ride?.dropAddress || ride?.drop || 'Drop'} is scheduled soon.`,
-    type: 'ride',
-  };
-};
-
 export const syncUpcomingRideReminders = ({
   busBookings = [],
-  poolingBookings = [],
   scheduledRides = [],
 } = {}) => {
   busBookings
     .map(getBusReminderPayload)
-    .filter(Boolean)
-    .forEach(scheduleReminderWindowSet);
-
-  poolingBookings
-    .map(getPoolingReminderPayload)
     .filter(Boolean)
     .forEach(scheduleReminderWindowSet);
 
@@ -242,12 +187,6 @@ export const scheduleBusBookingReminders = (booking) => {
   }
 };
 
-export const schedulePoolingBookingReminders = (booking) => {
-  const payload = getPoolingReminderPayload(booking);
-  if (payload) {
-    scheduleReminderWindowSet(payload);
-  }
-};
 
 export const scheduleScheduledRideReminders = (ride) => {
   const payload = getScheduledRideReminderPayload(ride);

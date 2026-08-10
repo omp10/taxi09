@@ -21,7 +21,6 @@ import {
   createPreference,
   createRole,
   createPaymentMethod,
-  createPoolingRoute,
   createServiceLocation,
   createServiceStore,
   createServiceStoreStaff,
@@ -50,7 +49,6 @@ import {
   deletePreference,
   deleteRole,
   deletePaymentMethod,
-  deletePoolingRoute,
   deleteRentalVehicleType,
   deleteSetPrice,
   deleteServiceLocation,
@@ -115,7 +113,6 @@ import {
   getPaymentGateways,
   getPaymentMethods,
   getPaymentSettings,
-  getPoolingRoutes,
   getRentalBookingRequests,
   getRentalTrackingDashboard,
   getRentalQuoteRequests,
@@ -191,7 +188,6 @@ import {
   updateFleetVehicle,
   updatePaymentSettings,
   updatePaymentMethod,
-  updatePoolingRoute,
   updateRentalBookingRequest,
   updateRentalQuoteRequest,
   updatePreferenceStatus,
@@ -214,17 +210,8 @@ import {
   getAdmins,
   getTransportTypes,
   deleteFleetVehicle,
-} from '../controllers/adminController.js';
-import {
-  getPoolingVehicles,
-  createPoolingVehicle,
-  updatePoolingVehicle,
-  deletePoolingVehicle,
-  approvePoolingVehicle,
-  getPoolingBookings,
-  updatePoolingBookingStatus,
   uploadImage,
-} from '../controllers/poolingController.js';
+} from '../controllers/adminController.js';
 import { promotionsRouter } from '../promotions/routes/index.js';
 import { contentRouter } from '../content/routes/contentRoutes.js';
 import { listSafetyAlerts, resolveSafetyAlert } from '../../safety/controllers/safetyController.js';
@@ -355,19 +342,8 @@ adminRouter.get('/admin/types/rental-vehicle-subcategories', getRentalVehicleSub
 adminRouter.post('/admin/types/rental-vehicle-subcategories', createRentalVehicleSubcategory);
 adminRouter.patch('/admin/types/rental-vehicle-subcategories/:id', updateRentalVehicleSubcategory);
 adminRouter.delete('/admin/types/rental-vehicle-subcategories/:id', deleteRentalVehicleSubcategory);
-adminRouter.get('/admin/pooling-routes', getPoolingRoutes);
-adminRouter.post('/admin/pooling-routes', createPoolingRoute);
-adminRouter.patch('/admin/pooling-routes/:id', updatePoolingRoute);
-adminRouter.delete('/admin/pooling-routes/:id', deletePoolingRoute);
 
-adminRouter.get('/admin/pooling-vehicles', getPoolingVehicles);
-adminRouter.post('/admin/pooling-vehicles', createPoolingVehicle);
-adminRouter.patch('/admin/pooling-vehicles/:id/approve', approvePoolingVehicle);
-adminRouter.patch('/admin/pooling-vehicles/:id', updatePoolingVehicle);
-adminRouter.delete('/admin/pooling-vehicles/:id', deletePoolingVehicle);
 
-adminRouter.get('/admin/pooling-bookings', getPoolingBookings);
-adminRouter.patch('/admin/pooling-bookings/:id/status', updatePoolingBookingStatus);
 
 adminRouter.post('/admin/upload-image', uploadImage);
 adminRouter.get('/admin/rental-booking-requests', getRentalBookingRequests);

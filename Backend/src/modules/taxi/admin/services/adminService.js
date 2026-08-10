@@ -23,7 +23,6 @@ import { AdminThirdPartySetting } from '../models/AdminThirdPartySetting.js';
 import { createDefaultThirdPartySettings } from '../data/defaultThirdPartySettings.js';
 import { RentalPackageType } from '../models/RentalPackageType.js';
 import { RentalBookingRequest } from '../models/RentalBookingRequest.js';
-import { PoolingRoute } from '../models/PoolingRoute.js';
 import { RentalVehicleSubcategory } from '../models/RentalVehicleSubcategory.js';
 import { RentalVehicleType } from '../models/RentalVehicleType.js';
 import { RentalQuoteRequest } from '../models/RentalQuoteRequest.js';
@@ -344,7 +343,7 @@ const normalizeDriverVehicleFieldType = (value) => {
 
 const DRIVER_VEHICLE_FIELD_DEFINITIONS = {
   locationId: { label: 'Operating City', field_type: 'location_select', field_group: 'common', account_type: 'both', sort_order: 10 },
-  serviceCategories: { label: 'Service Category', field_type: 'multi_select', field_group: 'driver', account_type: 'individual', sort_order: 20, options: ['taxi', 'outstation', 'delivery', 'pooling'] },
+  serviceCategories: { label: 'Service Category', field_type: 'multi_select', field_group: 'driver', account_type: 'individual', sort_order: 20, options: ['taxi', 'outstation', 'delivery'] },
   vehicleTypeId: { label: 'Vehicle Type', field_type: 'vehicle_type_select', field_group: 'driver', account_type: 'individual', sort_order: 30 },
   make: { label: 'Brand / Make', field_type: 'text', field_group: 'driver', account_type: 'individual', sort_order: 40, placeholder: 'e.g. Maruti Suzuki' },
   model: { label: 'Model', field_type: 'text', field_group: 'driver', account_type: 'individual', sort_order: 50, placeholder: 'Swift, Bolt' },
@@ -406,7 +405,6 @@ const toDocumentKey = (value = '') => {
 const normalizeVehicleTransportType = (value = '') => {
   const normalized = String(value || '').trim().toLowerCase();
   if (normalized === 'delivery') return 'delivery';
-  if (normalized === 'pooling') return 'pooling';
   if (normalized === 'both' || normalized === 'all') return 'both';
   return 'taxi';
 };
@@ -417,7 +415,6 @@ const normalizeDriverRegisterFor = (value = '', fallback = 'taxi') => {
   if (normalized === 'both') return 'both';
   if (normalized === 'delivery') return 'delivery';
   if (normalized === 'outstation') return 'outstation';
-  if (normalized === 'pooling') return 'pooling';
   if (normalized === 'bike') return 'bike';
   if (normalized === 'auto') return 'auto';
   if (normalized === 'car') return 'car';
@@ -435,7 +432,7 @@ const normalizeDriverServiceCategories = (value, fallback = 'taxi') => {
     rawValues
       .map((item) => String(item || '').trim().toLowerCase())
       .flatMap((item) => item === 'both' ? ['taxi', 'outstation'] : item ? [item] : [])
-      .filter((item) => ['taxi', 'outstation', 'delivery', 'pooling'].includes(item)),
+      .filter((item) => ['taxi', 'outstation', 'delivery'].includes(item)),
   )];
 
   if (normalized.length > 0) {
@@ -447,7 +444,7 @@ const normalizeDriverServiceCategories = (value, fallback = 'taxi') => {
     return ['taxi', 'outstation'];
   }
 
-  return ['taxi', 'outstation', 'delivery', 'pooling'].includes(registerFor)
+  return ['taxi', 'outstation', 'delivery'].includes(registerFor)
     ? [registerFor]
     : ['taxi'];
 };
@@ -1141,132 +1138,6 @@ const normalizeRentalVehiclePayload = (payload = {}, existing = {}) => {
   };
 };
 
-const sanitizePoolingText = (value = '', fallback = '') =>
-  String(value ?? fallback).trim();
-
-const sanitizePoolingNumber = (value, fallback = 0) => {
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : fallback;
-};
-
-const normalizePoolingStop = (stop = {}, index = 0, defaultType = 'stop') => ({
-  id: sanitizePoolingText(stop.id, `pool-stop-${Date.now()}-${index}`),
-  name: sanitizePoolingText(stop.name),
-  address: sanitizePoolingText(stop.address),
-  landmark: sanitizePoolingText(stop.landmark),
-  stopType: ['pickup', 'drop', 'both', 'stop'].includes(stop.stopType)
-    ? stop.stopType
-    : defaultType,
-  sequence: Math.max(1, sanitizePoolingNumber(stop.sequence, index + 1)),
-  etaMinutes: Math.max(0, sanitizePoolingNumber(stop.etaMinutes, 0)),
-  latitude:
-    stop.latitude === '' || stop.latitude === null || stop.latitude === undefined
-      ? null
-      : sanitizePoolingNumber(stop.latitude, null),
-  longitude:
-    stop.longitude === '' || stop.longitude === null || stop.longitude === undefined
-      ? null
-      : sanitizePoolingNumber(stop.longitude, null),
-});
-
-const normalizePoolingSchedule = (schedule = {}, index = 0) => ({
-  id: sanitizePoolingText(schedule.id, `pool-schedule-${Date.now()}-${index}`),
-  label: sanitizePoolingText(schedule.label, `Trip ${index + 1}`),
-  departureTime: sanitizePoolingText(schedule.departureTime),
-  arrivalTime: sanitizePoolingText(schedule.arrivalTime),
-  activeDays: Array.isArray(schedule.activeDays)
-    ? schedule.activeDays.filter((day) => BUS_DAY_OPTIONS.includes(day))
-    : [],
-  status: ['active', 'paused', 'draft'].includes(schedule.status)
-    ? schedule.status
-    : 'active',
-});
-
-const normalizePoolingPayload = (payload = {}, existing = {}) => ({
-  routeName: sanitizePoolingText(payload.routeName, existing.routeName || ''),
-  routeCode: sanitizePoolingText(payload.routeCode, existing.routeCode || ''),
-  originLabel: sanitizePoolingText(payload.originLabel, existing.originLabel || ''),
-  destinationLabel: sanitizePoolingText(payload.destinationLabel, existing.destinationLabel || ''),
-  description: sanitizePoolingText(payload.description, existing.description || ''),
-  assignedVehicleTypeIds: Array.isArray(payload.assignedVehicleTypeIds)
-    ? payload.assignedVehicleTypeIds
-        .map((value) => String(value || '').trim())
-        .filter(Boolean)
-    : Array.isArray(existing.assignedVehicleTypeIds)
-      ? existing.assignedVehicleTypeIds.map((value) => String(value || '').trim()).filter(Boolean)
-      : [],
-  pickupPoints: Array.isArray(payload.pickupPoints)
-    ? payload.pickupPoints.map((item, index) => normalizePoolingStop(item, index, 'pickup'))
-    : Array.isArray(existing.pickupPoints)
-      ? existing.pickupPoints.map((item, index) => normalizePoolingStop(item, index, 'pickup'))
-      : [],
-  dropPoints: Array.isArray(payload.dropPoints)
-    ? payload.dropPoints.map((item, index) => normalizePoolingStop(item, index, 'drop'))
-    : Array.isArray(existing.dropPoints)
-      ? existing.dropPoints.map((item, index) => normalizePoolingStop(item, index, 'drop'))
-      : [],
-  stops: Array.isArray(payload.stops)
-    ? payload.stops.map((item, index) => normalizePoolingStop(item, index, 'stop'))
-    : Array.isArray(existing.stops)
-      ? existing.stops.map((item, index) => normalizePoolingStop(item, index, 'stop'))
-      : [],
-  schedules: Array.isArray(payload.schedules)
-    ? payload.schedules.map((item, index) => normalizePoolingSchedule(item, index))
-    : Array.isArray(existing.schedules)
-      ? existing.schedules.map((item, index) => normalizePoolingSchedule(item, index))
-      : [],
-  farePerSeat: Math.max(0, sanitizePoolingNumber(payload.farePerSeat, existing.farePerSeat || 0)),
-  maxSeatsPerBooking: Math.max(
-    1,
-    sanitizePoolingNumber(payload.maxSeatsPerBooking, existing.maxSeatsPerBooking || 1),
-  ),
-  maxAdvanceBookingHours: Math.max(
-    0,
-    sanitizePoolingNumber(
-      payload.maxAdvanceBookingHours,
-      existing.maxAdvanceBookingHours || 24,
-    ),
-  ),
-  boardingBufferMinutes: Math.max(
-    0,
-    sanitizePoolingNumber(
-      payload.boardingBufferMinutes,
-      existing.boardingBufferMinutes || 15,
-    ),
-  ),
-  poolingRules: {
-    allowInstantBooking: normalizeBoolean(
-      payload.poolingRules?.allowInstantBooking ??
-        existing.poolingRules?.allowInstantBooking ??
-        true,
-    ),
-    allowLuggage: normalizeBoolean(
-      payload.poolingRules?.allowLuggage ?? existing.poolingRules?.allowLuggage ?? true,
-    ),
-    womenOnly: normalizeBoolean(
-      payload.poolingRules?.womenOnly ?? existing.poolingRules?.womenOnly ?? false,
-    ),
-    autoAssignNearestPickup: normalizeBoolean(
-      payload.poolingRules?.autoAssignNearestPickup ??
-        existing.poolingRules?.autoAssignNearestPickup ??
-        true,
-    ),
-    maxDetourKm: Math.max(
-      0,
-      sanitizePoolingNumber(
-        payload.poolingRules?.maxDetourKm,
-        existing.poolingRules?.maxDetourKm || 5,
-      ),
-    ),
-  },
-  status: ['draft', 'active', 'paused'].includes(payload.status)
-    ? payload.status
-    : existing.status || 'draft',
-  active: normalizeBoolean(
-    payload.active ?? existing.active ?? (payload.status ? payload.status !== 'draft' : true),
-  ),
-});
-
 export const serializeRentalVehicleType = (item = {}) => ({
   id: String(item._id || item.id || ''),
   _id: item._id,
@@ -1311,70 +1182,6 @@ export const serializeRentalVehicleType = (item = {}) => ({
   createdAt: item.createdAt,
   updatedAt: item.updatedAt,
 });
-
-const serializePoolingRoute = (item = {}, vehicleMap = new Map()) => {
-  const assignedVehicleIds = Array.isArray(item.assignedVehicleTypeIds)
-    ? item.assignedVehicleTypeIds.map((value) => String(value))
-    : [];
-
-  const assignedVehicles = assignedVehicleIds
-    .map((id) => vehicleMap.get(id))
-    .filter(Boolean)
-    .map((vehicle) => ({
-      id: String(vehicle._id || vehicle.id || ''),
-      name: vehicle.name || '',
-      vehicleCategory: vehicle.vehicleCategory || 'Car',
-      capacity: Number(vehicle.capacity || 0),
-      luggageCapacity: Number(vehicle.luggageCapacity || 0),
-      image: vehicle.image || '',
-      poolingEnabled: Boolean(vehicle.poolingEnabled),
-      blueprint: {
-        templateKey: vehicle.blueprint?.templateKey || 'compact_4',
-        lowerDeck: normalizeBusDeck(vehicle.blueprint?.lowerDeck || []),
-        upperDeck: normalizeBusDeck(vehicle.blueprint?.upperDeck || []),
-      },
-    }));
-
-  return {
-    id: String(item._id || item.id || ''),
-    _id: item._id,
-    routeName: item.routeName || '',
-    routeCode: item.routeCode || '',
-    originLabel: item.originLabel || '',
-    destinationLabel: item.destinationLabel || '',
-    description: item.description || '',
-    assignedVehicleTypeIds: assignedVehicleIds,
-    assignedVehicles,
-    pickupPoints: Array.isArray(item.pickupPoints)
-      ? item.pickupPoints.map((stop, index) => normalizePoolingStop(stop, index, 'pickup'))
-      : [],
-    dropPoints: Array.isArray(item.dropPoints)
-      ? item.dropPoints.map((stop, index) => normalizePoolingStop(stop, index, 'drop'))
-      : [],
-    stops: Array.isArray(item.stops)
-      ? item.stops.map((stop, index) => normalizePoolingStop(stop, index, 'stop'))
-      : [],
-    schedules: Array.isArray(item.schedules)
-      ? item.schedules.map((schedule, index) => normalizePoolingSchedule(schedule, index))
-      : [],
-    farePerSeat: Number(item.farePerSeat || 0),
-    maxSeatsPerBooking: Number(item.maxSeatsPerBooking || 1),
-    maxAdvanceBookingHours: Number(item.maxAdvanceBookingHours || 24),
-    boardingBufferMinutes: Number(item.boardingBufferMinutes || 15),
-    poolingRules: {
-      allowInstantBooking: Boolean(item.poolingRules?.allowInstantBooking),
-      allowLuggage: Boolean(item.poolingRules?.allowLuggage),
-      womenOnly: Boolean(item.poolingRules?.womenOnly),
-      autoAssignNearestPickup: Boolean(item.poolingRules?.autoAssignNearestPickup),
-      maxDetourKm: Number(item.poolingRules?.maxDetourKm || 0),
-    },
-    activeVehicleCount: assignedVehicles.length,
-    status: item.status || 'draft',
-    active: item.active !== false,
-    createdAt: item.createdAt,
-    updatedAt: item.updatedAt,
-  };
-};
 
 const serializeRentalQuoteRequest = (item = {}) => ({
   id: String(item._id || item.id || ''),
@@ -8849,108 +8656,6 @@ export const updateBusService = async (id, payload = {}, options = {}) => {
   export const deleteRentalVehicleType = async (id) => {
     const item = await RentalVehicleType.findByIdAndDelete(id);
     if (!item) throw new ApiError(404, 'Rental vehicle type not found');
-    return true;
-  };
-
-  export const listPoolingRoutes = async () => {
-    const items = await PoolingRoute.find().sort({ createdAt: -1 }).lean();
-    const vehicleIds = [
-      ...new Set(
-        items
-          .flatMap((item) => (Array.isArray(item.assignedVehicleTypeIds) ? item.assignedVehicleTypeIds : []))
-          .map((value) => String(value || ''))
-          .filter(Boolean),
-      ),
-    ];
-
-    const vehicles = vehicleIds.length
-      ? await RentalVehicleType.find({ _id: { $in: vehicleIds } }).lean()
-      : [];
-    const vehicleMap = new Map(vehicles.map((item) => [String(item._id), item]));
-
-    return items.map((item) => serializePoolingRoute(item, vehicleMap));
-  };
-
-  export const createPoolingRoute = async (payload = {}) => {
-    const normalizedPayload = normalizePoolingPayload(payload);
-
-    if (!normalizedPayload.routeName) {
-      throw new ApiError(400, 'Pooling route name is required');
-    }
-
-    if (!normalizedPayload.originLabel) {
-      throw new ApiError(400, 'Origin location is required');
-    }
-
-    if (!normalizedPayload.destinationLabel) {
-      throw new ApiError(400, 'Destination location is required');
-    }
-
-    if (normalizedPayload.assignedVehicleTypeIds.length === 0) {
-      throw new ApiError(400, 'Please assign at least one pooling-enabled vehicle');
-    }
-
-    const item = await PoolingRoute.create({
-      ...normalizedPayload,
-      assignedVehicleTypeIds: normalizedPayload.assignedVehicleTypeIds.map((value) =>
-        toObjectId(value),
-      ),
-      active: normalizedPayload.status === 'active',
-    });
-
-    const vehicles = await RentalVehicleType.find({
-      _id: { $in: item.assignedVehicleTypeIds || [] },
-    }).lean();
-    const vehicleMap = new Map(vehicles.map((vehicle) => [String(vehicle._id), vehicle]));
-
-    return serializePoolingRoute(item.toObject(), vehicleMap);
-  };
-
-  export const updatePoolingRoute = async (id, payload = {}) => {
-    const existingItem = await PoolingRoute.findById(id);
-
-    if (!existingItem) {
-      throw new ApiError(404, 'Pooling route not found');
-    }
-
-    const normalizedPayload = normalizePoolingPayload(payload, existingItem.toObject());
-
-    if (!normalizedPayload.routeName) {
-      throw new ApiError(400, 'Pooling route name is required');
-    }
-
-    if (!normalizedPayload.originLabel) {
-      throw new ApiError(400, 'Origin location is required');
-    }
-
-    if (!normalizedPayload.destinationLabel) {
-      throw new ApiError(400, 'Destination location is required');
-    }
-
-    if (normalizedPayload.assignedVehicleTypeIds.length === 0) {
-      throw new ApiError(400, 'Please assign at least one pooling-enabled vehicle');
-    }
-
-    Object.assign(existingItem, {
-      ...normalizedPayload,
-      assignedVehicleTypeIds: normalizedPayload.assignedVehicleTypeIds.map((value) =>
-        toObjectId(value),
-      ),
-      active: normalizedPayload.status === 'active',
-    });
-    await existingItem.save();
-
-    const vehicles = await RentalVehicleType.find({
-      _id: { $in: existingItem.assignedVehicleTypeIds || [] },
-    }).lean();
-    const vehicleMap = new Map(vehicles.map((vehicle) => [String(vehicle._id), vehicle]));
-
-    return serializePoolingRoute(existingItem.toObject(), vehicleMap);
-  };
-
-  export const deletePoolingRoute = async (id) => {
-    const item = await PoolingRoute.findByIdAndDelete(id);
-    if (!item) throw new ApiError(404, 'Pooling route not found');
     return true;
   };
 

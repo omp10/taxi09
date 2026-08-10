@@ -8,14 +8,12 @@ const TYPE_TINT = {
   parcel: 'bg-[#FFF0D6]',
   rental: 'bg-[#FFF6DA]',
   bus: 'bg-[#E8F4FF]',
-  pooling: 'bg-[#EAF7EE]',
 };
 
 const FALLBACK_IMAGE = {
   parcel: '/5_Parcel.png',
   bus: '/bus.png',
   rental: '/scooty.png',
-  pooling: '/4_Taxi.png',
   ride: '/4_Taxi.png',
 };
 

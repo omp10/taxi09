@@ -57,14 +57,6 @@ import {
   getZones,
 } from '../controllers/userController.js';
 import {
-  searchPoolingRoutes,
-  getPoolingRouteDetails,
-  createPoolingBookingOrder,
-  verifyPoolingBookingPayment,
-  createPoolingBooking,
-  getMyPoolingBookings
-} from '../controllers/poolingController.js';
-import {
   postHotelBooking,
   getMyHotelBookings,
   postPackageBooking,
@@ -234,9 +226,3 @@ userRouter.post('/bus-bookings/order', authenticate(['user']), asyncHandler(crea
 userRouter.post('/bus-bookings/verify', authenticate(['user']), asyncHandler(verifyBusBookingPayment));
 userRouter.post('/bus-bookings/:id/cancel', authenticate(['user']), asyncHandler(cancelMyBusBooking));
 
-userRouter.get('/pooling/search', authenticate(['user']), asyncHandler(searchPoolingRoutes));
-userRouter.get('/pooling/routes/:id', authenticate(['user']), asyncHandler(getPoolingRouteDetails));
-userRouter.post('/pooling/bookings/order', authenticate(['user']), asyncHandler(createPoolingBookingOrder));
-userRouter.post('/pooling/bookings/verify', authenticate(['user']), asyncHandler(verifyPoolingBookingPayment));
-userRouter.post('/pooling/bookings', authenticate(['user']), asyncHandler(createPoolingBooking));
-userRouter.get('/pooling/bookings', authenticate(['user']), asyncHandler(getMyPoolingBookings));

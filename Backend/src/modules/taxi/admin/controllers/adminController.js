@@ -1,4 +1,5 @@
 import { asyncHandler } from "../../../../utils/asyncHandler.js";
+import { uploadDataUrlToCloudinary } from "../../../../utils/cloudinaryUpload.js";
 import * as adminService from "../services/adminService.js";
 import ExcelJS from 'exceljs';
 import { BusBooking } from '../../user/models/BusBooking.js';
@@ -1316,19 +1317,6 @@ export const deleteRentalVehicleSubcategory = asyncHandler(async (req, res) => {
   ok(res, { deleted: true });
 });
 
-export const getPoolingRoutes = asyncHandler(async (_req, res) =>
-  ok(res, { results: await adminService.listPoolingRoutes() }),
-);
-export const createPoolingRoute = asyncHandler(async (req, res) =>
-  ok(res, await adminService.createPoolingRoute(req.body)),
-);
-export const updatePoolingRoute = asyncHandler(async (req, res) =>
-  ok(res, await adminService.updatePoolingRoute(req.params.id, req.body)),
-);
-export const deletePoolingRoute = asyncHandler(async (req, res) => {
-  await adminService.deletePoolingRoute(req.params.id);
-  ok(res, { deleted: true });
-});
 export const getRentalQuoteRequests = asyncHandler(async (_req, res) =>
   ok(res, { results: await adminService.listRentalQuoteRequests() }),
 );
@@ -1641,4 +1629,20 @@ export const getAppBootstrap = asyncHandler(async (_req, res) => {
       paymentGateway: paymentGateway?.activeGateway || null,
     }
   });
+});
+
+// Generic admin image upload used by the shared FormWizard.
+export const uploadImage = asyncHandler(async (req, res) => {
+  const { image } = req.body;
+
+  if (!image) {
+    throw new ApiError(400, 'Image data is required');
+  }
+
+  const result = await uploadDataUrlToCloudinary({
+    dataUrl: image,
+    publicIdPrefix: 'admin-upload',
+  });
+
+  return ok(res, { url: result.secureUrl });
 });

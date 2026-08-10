@@ -117,10 +117,9 @@ export const getAdminAllBookings = asyncHandler(async (req, res) => {
 
   // Imported lazily: these live in the older taxi modules and pulling them in
   // at module scope would create an import cycle with the admin routes.
-  const [{ Ride }, { BusBooking }, { PoolingBooking }, { RentalBookingRequest }] = await Promise.all([
+  const [{ Ride }, { BusBooking }, { RentalBookingRequest }] = await Promise.all([
     import('../../../user/models/Ride.js'),
     import('../../../user/models/BusBooking.js'),
-    import('../../models/PoolingBooking.js'),
     import('../../models/RentalBookingRequest.js'),
   ]);
 
@@ -130,12 +129,11 @@ export const getAdminAllBookings = asyncHandler(async (req, res) => {
     createdAt, customer: customer || '',
   });
 
-  const [hotels, packages, rides, buses, pooling, rentals] = await Promise.all([
+  const [hotels, packages, rides, buses, rentals] = await Promise.all([
     HotelBooking.find().populate('userId', 'name phone').sort({ createdAt: -1 }).limit(limit).lean(),
     PackageBooking.find().populate('userId', 'name phone').sort({ createdAt: -1 }).limit(limit).lean(),
     Ride.find().select('rideCode fare status paymentStatus createdAt pickupAddress dropAddress serviceType').sort({ createdAt: -1 }).limit(limit).lean().catch(() => []),
     BusBooking.find().sort({ createdAt: -1 }).limit(limit).lean().catch(() => []),
-    PoolingBooking.find().sort({ createdAt: -1 }).limit(limit).lean().catch(() => []),
     RentalBookingRequest.find().sort({ createdAt: -1 }).limit(limit).lean().catch(() => []),
   ]);
 
@@ -144,7 +142,6 @@ export const getAdminAllBookings = asyncHandler(async (req, res) => {
     ...packages.map((b) => asRow(b.scope === 'international' ? 'International' : 'Tour', b._id, b.bookingReference, b.packageTitle, `${b.travellers} traveller(s) · ${b.region}`, b.totalAmount, b.status, b.paymentStatus, b.createdAt, b.userId?.name || b.travellerName)),
     ...rides.map((b) => asRow('Ride', b._id, b.rideCode, b.pickupAddress, b.dropAddress, b.fare, b.status, b.paymentStatus, b.createdAt, '')),
     ...buses.map((b) => asRow('Bus', b._id, b.bookingCode || b.bookingReference, b.operatorName || b.busName, `${(b.passengers || []).length || b.seatCount || 0} seat(s)`, b.totalFare ?? b.totalAmount, b.status, b.paymentStatus, b.createdAt, b.contactName)),
-    ...pooling.map((b) => asRow('Pooling', b._id, b.bookingCode, b.routeName, `${(b.seats || []).length || 0} seat(s)`, b.totalFare ?? b.totalAmount, b.status, b.paymentStatus, b.createdAt, b.contactName)),
     ...rentals.map((b) => asRow('Rental', b._id, b.bookingReference, b.vehicleName, b.selectedPackage?.label, b.totalCost, b.status, b.paymentStatus, b.createdAt, b.customerName)),
   ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 

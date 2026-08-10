@@ -11,7 +11,6 @@ import {
     saveDriverRegistrationSession,
     sendDriverLoginOtp,
     sendDriverOtp,
-    startPoolingDriverOnboarding,
 } from '../../services/registrationService';
 
 import { useSettings } from '../../../../shared/context/SettingsContext';
@@ -19,7 +18,6 @@ import taxiBg from '../../../../assets/images/light-taxi-bg.png';
 
 const ROLE_CONFIG = [
     { id: 'driver', label: 'Driver', Icon: UserRound, color: '#FFB300' },
-    { id: 'pooling_driver', label: 'Pooling', Icon: Car, color: '#14B8A6' },
     { id: 'owner', label: 'Owner', Icon: Briefcase, color: '#10B981' },
     { id: 'bus_driver', label: 'Bus', Icon: ShieldCheck, color: '#3B82F6' },
     { id: 'service_center', label: 'Center', Icon: Building2, color: '#8B5CF6' },
@@ -68,7 +66,6 @@ const PhoneRegistration = () => {
         const normalizePortalRole = (value) => {
             const normalized = String(value || '').toLowerCase();
             if (normalized === 'owner') return 'owner';
-            if (normalized === 'pooling_driver' || normalized === 'pooling-driver' || normalized === 'poolingdriver' || normalized === 'pooling') return 'pooling_driver';
             if (normalized === 'bus_driver' || normalized === 'bus-driver' || normalized === 'busdriver') return 'bus_driver';
             if (normalized === 'service_center' || normalized === 'service-center' || normalized === 'servicecenter') return 'service_center';
             if (normalized === 'service_center_staff' || normalized === 'service-center-staff' || normalized === 'servicecenterstaff') return 'service_center_staff';
@@ -241,10 +238,7 @@ const PhoneRegistration = () => {
                     response = isLoginPage ? await sendDriverLoginOtp({ phone, role: requestRole }) : await sendDriverOtp({ phone, role: requestRole });
                     loginMode = isLoginPage;
                 } catch (requestError) {
-                    if (isLoginPage && requestRole === 'pooling_driver' && isAccountNotFoundError(requestError)) {
-                        response = await startPoolingDriverOnboarding({ phone });
-                        loginMode = false;
-                    } else if (isLoginPage && ['driver', 'owner'].includes(requestRole)) {
+                    if (isLoginPage && ['driver', 'owner'].includes(requestRole)) {
                         if (!isAccountNotFoundError(requestError)) throw requestError;
 
                         response = await sendDriverOtp({ phone, role: requestRole });
@@ -266,7 +260,6 @@ const PhoneRegistration = () => {
                 registrationId: sessionData.registrationId || '',
                 debugOtp: sessionData.debugOtp || '',
                 loginMode,
-                poolingOnboarding: requestRole === 'pooling_driver' && !loginMode,
                 entryPath: flowEntryPath,
                 referralCode: sharedReferralCode,
             });
