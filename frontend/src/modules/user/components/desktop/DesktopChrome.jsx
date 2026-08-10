@@ -220,7 +220,7 @@ export const DesktopFooter = ({ locations = [] }) => {
 
   return (
     <footer className="border-t border-[var(--dh-border)] bg-[var(--dh-surface)]">
-      <div className="mx-auto max-w-[1680px] px-4 py-12 xl:px-6">
+      <div className="mx-auto max-w-[1728px] px-4 py-12 xl:px-6">
         <div className="grid grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-10">
           <div>
             <div className="flex text-[var(--dh-text)]">

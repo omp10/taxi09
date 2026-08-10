@@ -146,7 +146,7 @@ const DesktopHome = () => {
       <DesktopNav activePath="/taxi/user" theme={theme} onToggleTheme={toggleTheme} loading={bannersLoading || !platformStats} />
 
       {/* -------------------------------------------------------------- Hero */}
-      <section className="relative mx-auto max-w-[1680px] px-4 xl:px-6">
+      <section className="relative mx-auto max-w-[1728px] px-4 xl:px-6">
         {/* Hero is entirely admin artwork: whatever is uploaded as a desktop
             banner is what renders, and more than one turns it into a carousel. */}
         <div className="relative pt-6">
@@ -282,7 +282,7 @@ const DesktopHome = () => {
       </section>
 
       {/* ---------------------------------------------------------- Services */}
-      <section className="mx-auto mt-12 max-w-[1680px] px-4 xl:px-6">
+      <section className="mx-auto mt-12 max-w-[1728px] px-4 xl:px-6">
         <div className="grid grid-cols-[300px_minmax(0,1fr)] gap-8">
           <div>
             <p className="text-[14.5px] font-black uppercase tracking-[0.12em] text-[#F5B700]">Explore Our Services</p>
@@ -313,7 +313,7 @@ const DesktopHome = () => {
       </section>
 
       {/* ------------------------------------------------------------- Stats */}
-      <section className="mx-auto mt-10 max-w-[1680px] px-4 pb-16 xl:px-6">
+      <section className="mx-auto mt-10 max-w-[1728px] px-4 pb-16 xl:px-6">
         <div className="flex flex-wrap justify-between gap-6 rounded-[20px] bg-[var(--dh-accent-soft)] px-10 py-7">
           {buildStats(platformStats || {}).map(({ icon: Icon, value, label }) => (
             <div key={label} className="flex items-center gap-4">
