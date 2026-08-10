@@ -22,23 +22,23 @@ export const DesktopNav = ({ activePath, theme, onToggleTheme, loading = false }
         {/* The mark sits on its own panel, set apart from the links. */}
         <button
           onClick={() => navigate('/taxi/user')}
-          className="flex h-[76px] shrink-0 items-center justify-center rounded-[20px] bg-[var(--dh-surface)] px-4 text-[var(--dh-text)] ring-1 ring-[var(--dh-border)]"
+          className="flex h-[76px] shrink-0 items-center justify-center rounded-[20px] bg-[var(--dh-surface)] px-5 text-[var(--dh-text)] ring-1 ring-[var(--dh-border)]"
         >
-          <BrandLogo height={52} withTagline />
+          <BrandLogo height={60} withTagline />
         </button>
 
         <div className="flex h-[76px] min-w-0 flex-1 items-center gap-1 rounded-[20px] bg-[var(--dh-surface)] px-3 ring-1 ring-[var(--dh-border)]">
           {/* Ten links do not fit on a narrow desktop. Scrolling keeps every
               one of them reachable instead of letting the row collide with the
               account button or quietly clipping the last few. */}
-          <nav className="dh-nav-scroll flex min-w-0 flex-1 items-center justify-start gap-1 overflow-x-auto">
+          <nav className="dh-nav-scroll flex min-w-0 flex-1 items-center justify-start gap-2 overflow-x-auto">
             {NAV_LINKS.map(({ label, path, badge, icon: Icon }) => {
               const isActive = path === activePath;
               return (
                 <button
                   key={label}
                   onClick={() => navigate(path)}
-                  className={`group flex shrink-0 items-center whitespace-nowrap rounded-[14px] px-2.5 py-2.5 text-[14.5px] transition-colors ${
+                  className={`group flex shrink-0 items-center whitespace-nowrap rounded-[14px] px-3 py-2.5 text-[14.5px] transition-colors ${
                     isActive
                       ? 'bg-[#F5B700] font-bold text-slate-950'
                       : 'font-semibold text-[var(--dh-text)] hover:bg-[var(--dh-chip)] hover:text-[#F5B700]'
@@ -182,7 +182,7 @@ export const ServiceCard = ({ title, copy, image, path, badge, highlighted }) =>
       )}
       <img src={image} alt="" className="h-[92px] w-full object-contain" />
       <span className="mt-2.5 block min-h-[40px] text-[16.5px] font-black leading-[1.3] tracking-[-0.02em] text-[var(--dh-text)]">{title}</span>
-      <span className="mt-1.5 block min-h-[70px] text-[13.5px] font-medium leading-[1.45] text-[var(--dh-muted)]">{copy}</span>
+      <span className="mt-1.5 block min-h-[78px] text-[16px] font-medium leading-[1.45] text-[var(--dh-muted)]">{copy}</span>
       <span className="mt-auto flex h-8 w-8 items-center justify-center self-end rounded-full border border-[#F5B700] mt-3 text-[#F5B700] transition-colors group-hover:bg-[#F5B700] group-hover:text-slate-950">
         <ArrowRight size={15} strokeWidth={2.8} />
       </span>
