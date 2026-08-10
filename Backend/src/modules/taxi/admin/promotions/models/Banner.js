@@ -8,15 +8,21 @@ const bannerSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
+    /**
+     * Phone artwork. Optional on its own: a banner may be desktop-only, in
+     * which case this is empty and phones skip it. The service enforces that
+     * at least one of the two slots is filled.
+     */
     image: {
       type: String,
-      required: true,
+      default: '',
       trim: true,
     },
     /**
      * Artwork for wide screens. The two layouts crop very differently - a
-     * portrait phone banner loses its subject on a desktop hero - so a separate
-     * image can be uploaded. Empty means the phone artwork is used for both.
+     * portrait phone banner loses its subject on a desktop hero - so each
+     * surface gets its own upload. An empty slot means "do not show this
+     * banner there" rather than "fall back to the other one".
      */
     desktopImage: {
       type: String,
