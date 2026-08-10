@@ -63,7 +63,7 @@ const PaymentSettings = () => {
         <div className="bg-white p-6 rounded-[32px] border border-gray-50 shadow-sm flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center"><Banknote /></div>
-            <div><p className="font-black">Cash</p><p className="text-[13.5px] leading-[18px] text-gray-400">Default</p></div>
+            <div><p className="font-black">Cash</p><p className="text-[13.5px] leading-[18px] text-gray-600">Default</p></div>
           </div>
           <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white p-1"><Plus className="rotate-45" /></div>
         </div>
@@ -74,7 +74,7 @@ const PaymentSettings = () => {
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${item.type === 'upi' ? 'bg-purple-50 text-purple-600' : 'bg-blue-50 text-blue-600'}`}>
                 {item.type === 'upi' ? <Smartphone size={20} /> : <CreditCard size={20} />}
               </div>
-              <div><p className="font-black">{item.label}</p><p className="text-[13.5px] leading-[18px] text-gray-400">{item.type === 'upi' ? 'UPI' : 'Card'}</p></div>
+              <div><p className="font-black">{item.label}</p><p className="text-[13.5px] leading-[18px] text-gray-600">{item.type === 'upi' ? 'UPI' : 'Card'}</p></div>
             </div>
             <button onClick={() => setAdded(prev => prev.filter(a => a.id !== item.id))} className="w-7 h-7 bg-red-50 text-red-400 rounded-full flex items-center justify-center active:scale-90">
               <X size={14} strokeWidth={3} />
@@ -84,7 +84,7 @@ const PaymentSettings = () => {
 
         <button
           onClick={() => setShowModal(true)}
-          className="w-full py-5 border-2 border-dashed border-gray-200 rounded-[32px] text-gray-400 font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform hover:border-gray-300 hover:text-gray-500"
+          className="w-full py-5 border-2 border-dashed border-gray-200 rounded-[32px] text-gray-600 font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform hover:border-gray-300 hover:text-gray-600"
         >
           <Plus size={18} /> Add New Payment Method
         </button>
@@ -100,13 +100,13 @@ const PaymentSettings = () => {
               exit={{ y: "100%" }}
               className="bg-white w-full max-w-md rounded-[32px] p-8 pb-10 space-y-6 shadow-2xl relative"
             >
-              <button onClick={handleClose} className="absolute top-6 right-6 w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-400 active:scale-90">
+              <button onClick={handleClose} className="absolute top-6 right-6 w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-600 active:scale-90">
                 <X size={18} />
               </button>
 
               <div className="text-center space-y-1">
                 <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">Add Payment Method</h3>
-                <p className="text-[13px] font-bold text-gray-400 tracking-widest uppercase">Choose a method to add</p>
+                <p className="text-[13px] font-bold text-gray-600 tracking-widest uppercase">Choose a method to add</p>
               </div>
 
               {isSuccess ? (
@@ -147,7 +147,7 @@ const PaymentSettings = () => {
                       value={upiId}
                       onChange={e => setUpiId(e.target.value)}
                       placeholder="Enter UPI ID (e.g. name@upi)"
-                      className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[15.5px] font-bold text-gray-900 focus:outline-none focus:border-purple-300 transition-all placeholder:text-gray-300"
+                      className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[15.5px] font-bold text-gray-900 focus:outline-none focus:border-purple-300 transition-all placeholder:text-gray-500"
                     />
                   )}
 
@@ -159,21 +159,21 @@ const PaymentSettings = () => {
                         value={cardNumber}
                         onChange={e => setCardNumber(e.target.value.replace(/\D/g, '').slice(0, 16))}
                         placeholder="Card number"
-                        className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[15.5px] font-bold text-gray-900 focus:outline-none focus:border-blue-300 transition-all placeholder:text-gray-300"
+                        className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[15.5px] font-bold text-gray-900 focus:outline-none focus:border-blue-300 transition-all placeholder:text-gray-500"
                       />
                       <input
                         type="text"
                         value={cardName}
                         onChange={e => setCardName(e.target.value)}
                         placeholder="Name on card"
-                        className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[15.5px] font-bold text-gray-900 focus:outline-none focus:border-blue-300 transition-all placeholder:text-gray-300"
+                        className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[15.5px] font-bold text-gray-900 focus:outline-none focus:border-blue-300 transition-all placeholder:text-gray-500"
                       />
                       <input
                         type="text"
                         value={cardExpiry}
                         onChange={e => setCardExpiry(e.target.value)}
                         placeholder="MM / YY"
-                        className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[15.5px] font-bold text-gray-900 focus:outline-none focus:border-blue-300 transition-all placeholder:text-gray-300"
+                        className="w-full h-14 bg-gray-50 border-2 border-gray-100 rounded-[18px] px-5 text-[15.5px] font-bold text-gray-900 focus:outline-none focus:border-blue-300 transition-all placeholder:text-gray-500"
                       />
                     </div>
                   )}

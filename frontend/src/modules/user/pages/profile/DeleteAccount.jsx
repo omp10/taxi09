@@ -115,7 +115,7 @@ const DeleteAccount = () => {
 
         {/* Reason selector */}
         <div>
-          <p className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-400 mb-2">Why are you leaving?</p>
+          <p className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-600 mb-2">Why are you leaving?</p>
           <div className="rounded-[20px] border border-white/80 bg-white/90 shadow-[0_4px_14px_rgba(15,23,42,0.05)] overflow-hidden">
             {REASONS.map((r, i) => (
               <button key={r} type="button" onClick={() => setReason(r)}
@@ -135,12 +135,12 @@ const DeleteAccount = () => {
             onClick={() => setShowConfirm(true)}
             disabled={!reason}
             className={`w-full py-4 rounded-[18px] text-[15.5px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${
-              reason ? 'bg-red-500 text-white shadow-[0_6px_20px_rgba(239,68,68,0.25)]' : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+              reason ? 'bg-red-500 text-white shadow-[0_6px_20px_rgba(239,68,68,0.25)]' : 'bg-slate-100 text-slate-600 cursor-not-allowed'
             }`}>
             <AlertTriangle size={15} strokeWidth={2.5} /> Delete My Account
           </MotionButton>
           <button onClick={() => navigate('/taxi/user/profile')}
-            className="w-full py-4 rounded-[18px] text-[15.5px] font-black text-slate-500 uppercase tracking-widest border border-slate-100 bg-white/80">
+            className="w-full py-4 rounded-[18px] text-[15.5px] font-black text-slate-600 uppercase tracking-widest border border-slate-100 bg-white/80">
             Cancel
           </button>
         </div>
@@ -159,7 +159,7 @@ const DeleteAccount = () => {
                 <AlertTriangle size={30} className="text-red-500" strokeWidth={2} />
               </div>
               <h3 className="text-[19px] font-black text-slate-900 mb-2">Send deletion request?</h3>
-              <p className="text-[14.5px] font-bold text-slate-500 mb-1 leading-relaxed">Admin will review this request before your account is deleted.</p>
+              <p className="text-[14.5px] font-bold text-slate-600 mb-1 leading-relaxed">Admin will review this request before your account is deleted.</p>
               <p className="text-[13.5px] font-bold text-red-400 mb-6">Your account remains active until approval.</p>
               <div className="space-y-2.5">
                 <MotionButton whileTap={{ scale: 0.97 }} onClick={handleDelete} disabled={loading}
@@ -167,7 +167,7 @@ const DeleteAccount = () => {
                   {loading ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : 'Yes, Send Request'}
                 </MotionButton>
                 <button onClick={() => setShowConfirm(false)}
-                  className="w-full py-3.5 text-[14.5px] font-black text-slate-400 uppercase tracking-widest">
+                  className="w-full py-3.5 text-[14.5px] font-black text-slate-600 uppercase tracking-widest">
                   No, Keep My Account
                 </button>
               </div>

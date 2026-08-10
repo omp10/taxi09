@@ -261,8 +261,8 @@ const Profile = () => {
                 <h2 className="font-outfit text-[22px] font-extrabold text-slate-900 truncate capitalize leading-tight">
                   {profile.name}
                 </h2>
-                <p className="text-[15.5px] font-bold text-slate-400 mt-1 flex items-center gap-1.5">
-                   <Phone size={14} className="text-slate-300" />
+                <p className="text-[15.5px] font-bold text-slate-600 mt-1 flex items-center gap-1.5">
+                   <Phone size={14} className="text-slate-500" />
                    {profile.phone ? `+91 ${profile.phone}` : 'Account Active'}
                 </p>
               </div>
@@ -271,18 +271,18 @@ const Profile = () => {
             {/* Quick Stats Row */}
             <div className="grid grid-cols-3 gap-3 mt-8 pt-6 border-t border-slate-50">
               <div className="text-center">
-                <p className="text-[12px] font-black uppercase tracking-[0.15em] text-slate-300">Total Trips</p>
+                <p className="text-[12px] font-black uppercase tracking-[0.15em] text-slate-500">Total Trips</p>
                 <p className="font-outfit text-[19px] font-extrabold text-slate-900 mt-1">{profile.stats.trips}</p>
               </div>
               <div className="text-center border-x border-slate-50">
-                <p className="text-[12px] font-black uppercase tracking-[0.15em] text-slate-300">Rating</p>
+                <p className="text-[12px] font-black uppercase tracking-[0.15em] text-slate-500">Rating</p>
                 <div className="flex items-center justify-center gap-1 mt-1">
                   <Star size={14} className="text-amber-400 fill-amber-400" />
                   <p className="font-outfit text-[19px] font-extrabold text-slate-900">{profile.stats.rating}</p>
                 </div>
               </div>
               <div className="text-center">
-                <p className="text-[12px] font-black uppercase tracking-[0.15em] text-slate-300">Credits</p>
+                <p className="text-[12px] font-black uppercase tracking-[0.15em] text-slate-500">Credits</p>
                 <p className="font-outfit text-[19px] font-extrabold text-amber-600 mt-1">₹{profile.stats.wallet}</p>
               </div>
             </div>
@@ -298,7 +298,7 @@ const Profile = () => {
         >
           {menuSections.map((section, sIdx) => (
             <motion.div key={sIdx} variants={itemVariants} className="space-y-4">
-              <h3 className="font-outfit text-[13.5px] font-black text-slate-400 uppercase tracking-[0.25em] ml-1">
+              <h3 className="font-outfit text-[13.5px] font-black text-slate-600 uppercase tracking-[0.25em] ml-1">
                 {section.title}
               </h3>
               
@@ -315,7 +315,7 @@ const Profile = () => {
                     </div>
                     <div className="flex-1">
                       <p className="text-[16.5px] font-bold text-slate-900 leading-tight tracking-tight">{item.title}</p>
-                      <p className="text-[13.5px] font-semibold text-slate-400 mt-1 opacity-80">{item.sub}</p>
+                      <p className="text-[13.5px] font-semibold text-slate-600 mt-1">{item.sub}</p>
                     </div>
                     <div className="h-8 w-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-200">
                       <ChevronRight size={18} strokeWidth={3} />
@@ -351,7 +351,7 @@ const Profile = () => {
             </MotionButton>
 
             <div className="text-center pt-6">
-              <p className="text-[12px] font-black text-slate-300 uppercase tracking-[0.3em]">
+              <p className="text-[12px] font-black text-slate-500 uppercase tracking-[0.3em]">
                 Version 2.4.1 • Built with Love
               </p>
             </div>

@@ -20,7 +20,7 @@ const defaultState = {
 
 const Field = ({ label, children }) => (
   <div className="space-y-1.5">
-    <div className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-400">{label}</div>
+    <div className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-600">{label}</div>
     {children}
   </div>
 );
@@ -58,7 +58,7 @@ const AddressCard = ({ icon: Icon, title, subtitle, accentClass, onEdit, onDelet
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="text-[16.5px] font-black text-slate-900 leading-none">{title}</div>
-          <div className={`mt-1 text-[13.5px] font-bold ${isEmpty ? 'text-slate-400 italic' : 'text-slate-500'} truncate`}>
+          <div className={`mt-1 text-[13.5px] font-bold ${isEmpty ? 'text-slate-600 italic' : 'text-slate-600'} truncate`}>
             {subtitle}
           </div>
         </div>
@@ -67,7 +67,7 @@ const AddressCard = ({ icon: Icon, title, subtitle, accentClass, onEdit, onDelet
           <button
             type="button"
             onClick={onEdit}
-            className="w-9 h-9 rounded-full bg-slate-50 border border-white/80 shadow-sm flex items-center justify-center text-slate-500 active:scale-95 transition-transform"
+            className="w-9 h-9 rounded-full bg-slate-50 border border-white/80 shadow-sm flex items-center justify-center text-slate-600 active:scale-95 transition-transform"
             aria-label={`Edit ${title}`}
           >
             <Pencil size={16} strokeWidth={2.8} />
@@ -101,12 +101,12 @@ const ModalShell = ({ title, subtitle, onClose, children }) => (
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="text-[17px] font-black text-slate-900 tracking-tight">{title}</div>
-            {subtitle && <div className="mt-1 text-[13.5px] font-bold text-slate-500">{subtitle}</div>}
+            {subtitle && <div className="mt-1 text-[13.5px] font-bold text-slate-600">{subtitle}</div>}
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="w-10 h-10 rounded-full bg-white/80 border border-white/80 shadow-sm flex items-center justify-center text-slate-500 active:scale-95 transition-transform"
+            className="w-10 h-10 rounded-full bg-white/80 border border-white/80 shadow-sm flex items-center justify-center text-slate-600 active:scale-95 transition-transform"
             aria-label="Close"
           >
             <X size={18} strokeWidth={2.8} />
@@ -228,7 +228,7 @@ const AddressSettings = () => {
               <ArrowLeft size={22} className="text-slate-900" strokeWidth={3} />
             </button>
             <div className="min-w-0">
-              <p className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-400">Profile</p>
+              <p className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-600">Profile</p>
               <h1 className="mt-1 text-[19px] font-black text-slate-900 tracking-tight leading-none truncate">
                 Addresses
               </h1>
@@ -262,7 +262,7 @@ const AddressSettings = () => {
         <div className="space-y-3">
           <div className="flex items-end justify-between px-1">
             <div>
-              <div className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-400">Landmarks</div>
+              <div className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-600">Landmarks</div>
               <div className="mt-1 text-[16.5px] font-black text-slate-900 tracking-tight">Saved places</div>
             </div>
             <button
@@ -279,18 +279,18 @@ const AddressSettings = () => {
             <div className="bg-white/75 backdrop-blur-md rounded-[22px] border border-white/80 shadow-[0_14px_34px_rgba(15,23,42,0.06)] overflow-hidden">
               {data.landmarks.map((lm) => (
                 <div key={lm.id} className="flex flex-wrap items-start gap-3 border-b border-white/70 px-4 py-3 last:border-none">
-                  <div className="w-10 h-10 rounded-2xl bg-white/70 border border-white/80 shadow-sm flex items-center justify-center shrink-0 text-slate-500">
+                  <div className="w-10 h-10 rounded-2xl bg-white/70 border border-white/80 shadow-sm flex items-center justify-center shrink-0 text-slate-600">
                     <MapPin size={18} strokeWidth={2.6} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-[15.5px] font-black text-slate-900 truncate">{lm.label}</div>
-                    <div className="mt-1 text-[13.5px] font-bold text-slate-500 truncate">{lm.address}</div>
+                    <div className="mt-1 text-[13.5px] font-bold text-slate-600 truncate">{lm.address}</div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <button
                       type="button"
                       onClick={() => openEdit('landmark', lm.id)}
-                      className="w-9 h-9 rounded-full bg-slate-50 border border-white/80 shadow-sm flex items-center justify-center text-slate-500 active:scale-95 transition-transform"
+                      className="w-9 h-9 rounded-full bg-slate-50 border border-white/80 shadow-sm flex items-center justify-center text-slate-600 active:scale-95 transition-transform"
                       aria-label={`Edit ${lm.label}`}
                     >
                       <Pencil size={16} strokeWidth={2.8} />
@@ -309,11 +309,11 @@ const AddressSettings = () => {
             </div>
           ) : (
             <div className="bg-white/70 backdrop-blur-md rounded-[22px] border border-white/80 shadow-[0_14px_34px_rgba(15,23,42,0.06)] p-5 text-center">
-              <div className="w-12 h-12 rounded-2xl bg-white/70 border border-white/80 shadow-sm flex items-center justify-center mx-auto text-slate-400">
+              <div className="w-12 h-12 rounded-2xl bg-white/70 border border-white/80 shadow-sm flex items-center justify-center mx-auto text-slate-600">
                 <MapPin size={20} strokeWidth={2.6} />
               </div>
               <div className="mt-3 text-[15.5px] font-black text-slate-900">No landmarks yet</div>
-              <div className="mt-1 text-[13.5px] font-bold text-slate-500">
+              <div className="mt-1 text-[13.5px] font-bold text-slate-600">
                 Save places like “Gym”, “Mom’s house”, or “Office gate”.
               </div>
               <div className="mt-4">
@@ -349,7 +349,7 @@ const AddressSettings = () => {
                     value={draft.label}
                     onChange={(e) => setDraft((prev) => ({ ...prev, label: e.target.value }))}
                     placeholder="e.g., Gym, Office gate"
-                    className="w-full h-12 rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 text-[15.5px] font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
+                    className="w-full h-12 rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 text-[15.5px] font-bold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200"
                   />
                 </Field>
               )}
@@ -360,7 +360,7 @@ const AddressSettings = () => {
                   onChange={(e) => setDraft((prev) => ({ ...prev, address: e.target.value }))}
                   placeholder="Add full address"
                   rows={3}
-                  className="w-full rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 py-3 text-[15.5px] font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200 resize-none"
+                  className="w-full rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 py-3 text-[15.5px] font-bold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200 resize-none"
                 />
               </Field>
 
@@ -369,7 +369,7 @@ const AddressSettings = () => {
                   value={draft.landmark}
                   onChange={(e) => setDraft((prev) => ({ ...prev, landmark: e.target.value }))}
                   placeholder="Near…"
-                  className="w-full h-12 rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 text-[15.5px] font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
+                  className="w-full h-12 rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 text-[15.5px] font-bold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200"
                 />
               </Field>
 
@@ -378,7 +378,7 @@ const AddressSettings = () => {
                   value={draft.notes}
                   onChange={(e) => setDraft((prev) => ({ ...prev, notes: e.target.value }))}
                   placeholder="e.g., Ring bell, call on arrival"
-                  className="w-full h-12 rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 text-[15.5px] font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
+                  className="w-full h-12 rounded-2xl bg-white/80 border border-white/80 shadow-sm px-4 text-[15.5px] font-bold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200"
                 />
               </Field>
 
@@ -406,14 +406,14 @@ const AddressSettings = () => {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="text-[16.5px] font-black text-slate-900">Delete</div>
-                  <div className="mt-1 text-[13.5px] font-bold text-slate-500">
+                  <div className="mt-1 text-[13.5px] font-bold text-slate-600">
                     Remove <span className="text-slate-900">{confirmDelete.title}</span> from saved addresses?
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => setConfirmDelete(null)}
-                  className="w-10 h-10 rounded-full bg-white/80 border border-white/80 shadow-sm flex items-center justify-center text-slate-500 active:scale-95 transition-transform"
+                  className="w-10 h-10 rounded-full bg-white/80 border border-white/80 shadow-sm flex items-center justify-center text-slate-600 active:scale-95 transition-transform"
                   aria-label="Close"
                 >
                   <X size={18} strokeWidth={2.8} />

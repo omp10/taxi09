@@ -95,21 +95,21 @@ const Subscriptions = () => {
           </button>
           <div>
             <h1 className="text-2xl font-black text-slate-900">Subscriptions</h1>
-            <p className="text-[15.5px] leading-[21px] font-medium text-slate-500">Buy ride passes for specific vehicle categories.</p>
+            <p className="text-[15.5px] leading-[21px] font-medium text-slate-600">Buy ride passes for specific vehicle categories.</p>
           </div>
         </div>
 
         <div className="mb-6 grid gap-4 md:grid-cols-3">
           <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-100">
-            <p className="text-[13.5px] leading-[18px] font-black uppercase tracking-[0.2em] text-slate-400">Wallet Balance</p>
+            <p className="text-[13.5px] leading-[18px] font-black uppercase tracking-[0.2em] text-slate-600">Wallet Balance</p>
             <p className="mt-2 text-2xl font-black text-slate-900">{formatCurrency(walletBalance)}</p>
           </div>
           <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-100">
-            <p className="text-[13.5px] leading-[18px] font-black uppercase tracking-[0.2em] text-slate-400">Active Plans</p>
+            <p className="text-[13.5px] leading-[18px] font-black uppercase tracking-[0.2em] text-slate-600">Active Plans</p>
             <p className="mt-2 text-2xl font-black text-slate-900">{summary.activeCount}</p>
           </div>
           <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-100">
-            <p className="text-[13.5px] leading-[18px] font-black uppercase tracking-[0.2em] text-slate-400">Ride Credits</p>
+            <p className="text-[13.5px] leading-[18px] font-black uppercase tracking-[0.2em] text-slate-600">Ride Credits</p>
             <p className="mt-2 text-2xl font-black text-slate-900">
               {summary.hasUnlimitedPlan ? 'Unlimited' : summary.availableRideCredits}
             </p>
@@ -122,7 +122,7 @@ const Subscriptions = () => {
             <div>
               <h2 className="text-lg font-black">Your Active Coverage</h2>
               {summary.activePlans.length === 0 ? (
-                <p className="mt-2 text-[15.5px] leading-[21px] text-slate-300">No active subscription yet. Buy one below to start using included rides.</p>
+                <p className="mt-2 text-[15.5px] leading-[21px] text-slate-500">No active subscription yet. Buy one below to start using included rides.</p>
               ) : (
                 <div className="mt-3 space-y-3">
                   {summary.activePlans.map((item) => (
@@ -130,7 +130,7 @@ const Subscriptions = () => {
                       <div className="flex items-center justify-between gap-3">
                         <div>
                           <p className="text-[15.5px] leading-[21px] font-black">{item.name}</p>
-                          <p className="text-[13.5px] leading-[18px] text-slate-300">{item.vehicle_type?.name || 'Vehicle plan'}</p>
+                          <p className="text-[13.5px] leading-[18px] text-slate-500">{item.vehicle_type?.name || 'Vehicle plan'}</p>
                         </div>
                         <span className="rounded-full bg-emerald-400/15 px-3 py-1 text-[13.5px] leading-[18px] font-black uppercase tracking-wide text-emerald-200">
                           {item.isUnlimited ? 'Unlimited' : `${item.rides_remaining} rides left`}
@@ -161,7 +161,7 @@ const Subscriptions = () => {
                         </span>
                       ) : null}
                     </div>
-                    <p className="text-[15.5px] leading-[21px] font-medium text-slate-500">{plan.description || plan.how_it_works || 'Subscription ride plan'}</p>
+                    <p className="text-[15.5px] leading-[21px] font-medium text-slate-600">{plan.description || plan.how_it_works || 'Subscription ride plan'}</p>
                     <div className="mt-4 flex flex-wrap gap-2">
                       <span className="rounded-full bg-slate-100 px-3 py-1 text-[13.5px] leading-[18px] font-bold text-slate-700">
                         {plan.vehicle_type?.name || 'Vehicle category'}
@@ -203,7 +203,7 @@ const Subscriptions = () => {
                 <div key={item.id} className="flex items-center justify-between gap-3 rounded-2xl border border-slate-100 px-4 py-3">
                   <div>
                     <p className="text-[15.5px] leading-[21px] font-black text-slate-900">{item.name}</p>
-                    <p className="text-[13.5px] leading-[18px] font-semibold text-slate-500">
+                    <p className="text-[13.5px] leading-[18px] font-semibold text-slate-600">
                       {item.vehicle_type?.name || 'Vehicle plan'} • {item.isUnlimited ? 'Unlimited' : `${item.rides_used}/${item.ride_limit} used`}
                     </p>
                   </div>
@@ -216,7 +216,7 @@ const Subscriptions = () => {
                       )}
                       <span className="text-[13.5px] leading-[18px] font-black uppercase tracking-wide text-slate-700">{item.status}</span>
                     </div>
-                    <p className="mt-1 text-[13.5px] leading-[18px] font-semibold text-slate-500">
+                    <p className="mt-1 text-[13.5px] leading-[18px] font-semibold text-slate-600">
                       {item.expiresAt ? `Ends ${new Date(item.expiresAt).toLocaleDateString()}` : 'No expiry'}
                     </p>
                   </div>
