@@ -381,6 +381,12 @@ const normalizeNotificationPayload = async (payload, existing = null) => {
   };
 };
 
+// Kept in step with the Banner model's enum.
+export const BANNER_TYPES = [
+  'rental', 'subscription', 'top', 'bottom',
+  'self_drive', 'with_driver', 'bike_rental', 'bus', 'hotel', 'tours', 'stories', 'internship',
+];
+
 const normalizeBannerPayload = async (payload, existing = null) => {
   const generatedTitle = `Banner ${new Date().toISOString()}`;
   const title = normalizeText(payload.title ?? existing?.title ?? generatedTitle);
@@ -400,8 +406,8 @@ const normalizeBannerPayload = async (payload, existing = null) => {
     throw new ApiError(400, 'Upload a banner image for phone or desktop');
   }
 
-  if (type && !['rental', 'subscription', 'top', 'bottom'].includes(type)) {
-    throw new ApiError(400, 'Banner type must be rental, subscription, top, or bottom');
+  if (type && !BANNER_TYPES.includes(type)) {
+    throw new ApiError(400, `Banner type must be one of: ${BANNER_TYPES.join(', ')}`);
   }
 
   // If image is a data URL (base64), upload it to Cloudinary

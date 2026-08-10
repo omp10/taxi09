@@ -51,7 +51,11 @@ const bannerSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['rental', 'subscription', 'top', 'bottom'],
+      enum: [
+        'rental', 'subscription', 'top', 'bottom',
+        // One per landing page that shows an admin-managed hero.
+        'self_drive', 'with_driver', 'bike_rental', 'bus', 'hotel', 'tours', 'stories', 'internship',
+      ],
       default: 'rental',
       trim: true,
       index: true,

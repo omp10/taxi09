@@ -1329,6 +1329,70 @@ function App() {
                   path="homepage-banners/bottom/create"
                   element={<AdminHomepageBanners type="bottom" mode="create" />}
                 />
+                <Route
+                  path="homepage-banners/self_drive"
+                  element={<AdminHomepageBanners type="self_drive" mode="list" />}
+                />
+                <Route
+                  path="homepage-banners/self_drive/create"
+                  element={<AdminHomepageBanners type="self_drive" mode="create" />}
+                />
+                <Route
+                  path="homepage-banners/with_driver"
+                  element={<AdminHomepageBanners type="with_driver" mode="list" />}
+                />
+                <Route
+                  path="homepage-banners/with_driver/create"
+                  element={<AdminHomepageBanners type="with_driver" mode="create" />}
+                />
+                <Route
+                  path="homepage-banners/bike_rental"
+                  element={<AdminHomepageBanners type="bike_rental" mode="list" />}
+                />
+                <Route
+                  path="homepage-banners/bike_rental/create"
+                  element={<AdminHomepageBanners type="bike_rental" mode="create" />}
+                />
+                <Route
+                  path="homepage-banners/bus"
+                  element={<AdminHomepageBanners type="bus" mode="list" />}
+                />
+                <Route
+                  path="homepage-banners/bus/create"
+                  element={<AdminHomepageBanners type="bus" mode="create" />}
+                />
+                <Route
+                  path="homepage-banners/hotel"
+                  element={<AdminHomepageBanners type="hotel" mode="list" />}
+                />
+                <Route
+                  path="homepage-banners/hotel/create"
+                  element={<AdminHomepageBanners type="hotel" mode="create" />}
+                />
+                <Route
+                  path="homepage-banners/tours"
+                  element={<AdminHomepageBanners type="tours" mode="list" />}
+                />
+                <Route
+                  path="homepage-banners/tours/create"
+                  element={<AdminHomepageBanners type="tours" mode="create" />}
+                />
+                <Route
+                  path="homepage-banners/stories"
+                  element={<AdminHomepageBanners type="stories" mode="list" />}
+                />
+                <Route
+                  path="homepage-banners/stories/create"
+                  element={<AdminHomepageBanners type="stories" mode="create" />}
+                />
+                <Route
+                  path="homepage-banners/internship"
+                  element={<AdminHomepageBanners type="internship" mode="list" />}
+                />
+                <Route
+                  path="homepage-banners/internship/create"
+                  element={<AdminHomepageBanners type="internship" mode="create" />}
+                />
 
                 {/* Admin Management */}
                 <Route path="management/admins" element={<AdminAdmins />} />

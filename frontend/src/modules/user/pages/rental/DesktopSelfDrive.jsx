@@ -1,15 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight, ArrowUpDown, BadgeCheck, CalendarDays, CalendarRange, Car, Clock, CreditCard,
   Gauge, Headphones, IndianRupee, MapPin, Play, ShieldCheck, Sparkles, Truck, UserCheck, Users, Zap,
 } from 'lucide-react';
-import api from '../../../../shared/api/axiosInstance';
 import {
-  AiChatBubble, DesktopNav, LiveFleetPanel, QuickRail, ServiceCard,
+  AiChatBubble, DesktopNav, ServiceCard,
 } from '../../components/desktop/DesktopChrome';
+import BannerHero from '../../components/BannerHero';
 import {
-  SERVICES, resolveBannerImage, unwrapResults, useDesktopTheme,
+  SERVICES, useDesktopTheme,
 } from '../../components/desktop/desktopShared';
 
 /**
@@ -65,28 +65,8 @@ const DesktopSelfDrive = () => {
   const navigate = useNavigate();
   const [theme, toggleTheme] = useDesktopTheme();
 
-  const [banners, setBanners] = useState([]);
-  const [fleet, setFleet] = useState([]);
   const [activeTab, setActiveTab] = useState('self-drive');
   const [search, setSearch] = useState({ pickup: '', drop: '', date: '', time: '' });
-
-  useEffect(() => {
-    let cancelled = false;
-    Promise.all([
-      api.get('/users/banners?type=top').catch(() => null),
-      api.get('/users/rental-vehicles').catch(() => null),
-    ]).then(([bannerRes, fleetRes]) => {
-      if (cancelled) return;
-      setBanners(bannerRes ? unwrapResults(bannerRes) : []);
-      setFleet(fleetRes ? unwrapResults(fleetRes).slice(0, 4) : []);
-    });
-    return () => { cancelled = true; };
-  }, []);
-
-  const heroImage = useMemo(() => {
-    const first = banners.find((banner) => banner?.image);
-    return first ? resolveBannerImage(first.image) : '/taxi09_rental_hero_banner.png';
-  }, [banners]);
 
   const submitSearch = (event) => {
     event.preventDefault();
@@ -126,68 +106,9 @@ const DesktopSelfDrive = () => {
 
       {/* -------------------------------------------------------------- Hero */}
       <section className="relative mx-auto max-w-[1440px] px-8 xl:px-12">
-        <div className="relative grid grid-cols-[minmax(0,0.95fr)_minmax(0,1.2fr)] items-center gap-6 pt-8">
-          <div className="relative z-10">
-            <div className="inline-flex items-center gap-2.5 rounded-[10px] bg-[#FFF7DC] px-3 py-2">
-              <span className="rounded-[7px] bg-[#F5B700] px-2 py-0.5 text-[13px] font-black text-slate-950">#1</span>
-              <span className="text-[13.5px] font-bold text-slate-800">Trusted Self Drive Car Rental Platform in India</span>
-            </div>
-
-            <h1 className="mt-6 text-[58px] font-black leading-[1.02] tracking-[-0.04em] text-[var(--dh-text)]">
-              Self Drive,
-              <br />
-              <span className="text-[#F5B700]">Your Way.</span>
-            </h1>
-
-            <p className="mt-5 max-w-[430px] text-[16px] font-medium leading-[1.55] text-[var(--dh-muted)]">
-              Drive your dream car on your terms.
-              <br />
-              No driver. No limits. Just you and the road.
-            </p>
-
-            <div className="mt-7 flex flex-wrap gap-2.5">
-              {HERO_CHIPS.map(({ icon: Icon, title, copy }) => (
-                <span
-                  key={title}
-                  className="flex items-center gap-2 rounded-[10px] bg-[var(--dh-surface)] px-3 py-2 shadow-[0_4px_14px_rgba(15,23,42,0.07)] ring-1 ring-[var(--dh-border)]"
-                >
-                  <Icon size={17} className="shrink-0 text-[#F5B700]" strokeWidth={2.3} />
-                  <span className="leading-tight">
-                    <span className="block text-[12px] font-black text-[var(--dh-text)]">{title}</span>
-                    <span className="block text-[10.5px] font-semibold text-[var(--dh-muted)]">{copy}</span>
-                  </span>
-                </span>
-              ))}
-            </div>
-
-            <div className="mt-8 flex items-center gap-6">
-              <button
-                onClick={() => navigate('/taxi/user/rental?search=true')}
-                className="flex h-[56px] items-center gap-4 rounded-[15px] bg-[#F5B700] pl-6 pr-2.5 text-[16px] font-bold text-slate-950 shadow-[0_12px_28px_rgba(245,183,0,0.35)] transition-transform hover:-translate-y-0.5"
-              >
-                Book Self Drive Car
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-950 text-[#F5B700]">
-                  <ArrowRight size={18} strokeWidth={2.8} />
-                </span>
-              </button>
-
-              <button
-                onClick={() => navigate('/taxi/user/rental/type')}
-                className="flex items-center gap-3 text-[16px] font-bold text-[var(--dh-text)]"
-              >
-                <span className="flex h-[48px] w-[48px] items-center justify-center rounded-full border-2 border-[var(--dh-border)] bg-[var(--dh-surface)]">
-                  <Play size={16} className="ml-0.5 fill-current text-[var(--dh-text)]" />
-                </span>
-                How It Works
-              </button>
-            </div>
-          </div>
-
-          <div className="relative">
-            <img src={heroImage} alt="Self drive" className="h-[440px] w-full rounded-[26px] object-cover" />
-            <LiveFleetPanel fleet={fleet} className="absolute right-[70px] top-4" />
-            <QuickRail />
-          </div>
+        {/* Hero is admin artwork only - see Homepage Banners > Self Drive. */}
+        <div className="pt-8">
+          <BannerHero type="self_drive" rounded="rounded-[26px]" />
         </div>
 
         {/* ------------------------------------------------------- Booking card */}
