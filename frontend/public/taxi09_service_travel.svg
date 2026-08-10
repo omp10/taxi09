@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" width="100%" height="100%">
+  <defs>
+    <!-- Background circle gradient -->
+    <radialGradient id="tealBg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#CCFBF1" />
+      <stop offset="100%" stop-color="#99F6E4" />
+    </radialGradient>
+
+    <!-- Suitcase leather gradient (Brown/Tan) -->
+    <linearGradient id="leather" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#EA580C" />
+      <stop offset="100%" stop-color="#C2410C" />
+    </linearGradient>
+
+    <!-- Suitcase straps (Dark Brown) -->
+    <linearGradient id="straps" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9A3412" />
+      <stop offset="100%" stop-color="#7C2D12" />
+    </linearGradient>
+
+    <!-- Gold metal hardware -->
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FEF08A" />
+      <stop offset="50%" stop-color="#F5B700" />
+      <stop offset="100%" stop-color="#CA8A04" />
+    </linearGradient>
+
+    <!-- Globe Water Gradient -->
+    <radialGradient id="globeWater" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </radialGradient>
+
+    <!-- Camera Body -->
+    <linearGradient id="cameraBody" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#64748B" />
+      <stop offset="100%" stop-color="#334155" />
+    </linearGradient>
+
+    <!-- Drop Shadow filter -->
+    <filter id="suitShadow" x="-20%" y="-20%" width="140%" height="145%">
+      <feDropShadow dx="0" dy="8" stdDeviation="5" flood-color="#0F172A" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <!-- Background decorative circle -->
+  <circle cx="100" cy="70" r="55" fill="url(#tealBg)" opacity="0.9" />
+
+  <!-- Shadow under the suitcase -->
+  <ellipse cx="100" cy="116" rx="60" ry="8" fill="#0F172A" opacity="0.18" filter="blur(2px)" />
+
+  <!-- Main Suitcase Group -->
+  <g filter="url(#suitShadow)" transform="translate(0, -5)">
+    <!-- Suitcase Body -->
+    <rect x="52" y="55" width="96" height="62" rx="8" fill="url(#leather)" />
+    <!-- Inner frame line (stitching detail) -->
+    <rect x="56" y="59" width="88" height="54" rx="6" fill="none" stroke="#9A3412" stroke-width="1.5" stroke-dasharray="3,2" />
+
+    <!-- Corner Protectors (Gold) -->
+    <!-- Top Left -->
+    <path d="M 52,65 A 8,8 0 0 1 62,55 L 62,60 A 2,2 0 0 1 60,62 L 52,62 Z" fill="url(#gold)" />
+    <circle cx="58" cy="58" r="1" fill="#FFF" />
+    <!-- Top Right -->
+    <path d="M 148,65 A 8,8 0 0 0 138,55 L 138,60 A 2,2 0 0 0 140,62 L 148,62 Z" fill="url(#gold)" />
+    <circle cx="142" cy="58" r="1" fill="#FFF" />
+    <!-- Bottom Left -->
+    <path d="M 52,107 A 8,8 0 0 0 62,117 L 62,112 A 2,2 0 0 0 60,110 L 52,110 Z" fill="url(#gold)" />
+    <circle cx="58" cy="114" r="1" fill="#FFF" />
+    <!-- Bottom Right -->
+    <path d="M 148,107 A 8,8 0 0 1 138,117 L 138,112 A 2,2 0 0 1 140,110 L 148,110 Z" fill="url(#gold)" />
+    <circle cx="142" cy="114" r="1" fill="#FFF" />
+
+    <!-- Suitcase Handle -->
+    <path d="M 85,55 L 85,47 A 3,3 0 0 1 88,44 L 112,44 A 3,3 0 0 1 115,47 L 115,55" fill="none" stroke="url(#straps)" stroke-width="5" stroke-linecap="round" />
+    <!-- Handle Mounts (Gold) -->
+    <rect x="82" y="52" width="6" height="5" rx="1" fill="url(#gold)" />
+    <rect x="112" y="52" width="6" height="5" rx="1" fill="url(#gold)" />
+
+    <!-- Vertical Leather Straps -->
+    <!-- Left Strap -->
+    <rect x="68" y="55" width="8" height="62" fill="url(#straps)" />
+    <rect x="68" y="55" width="8" height="62" fill="none" stroke="#5C1D06" stroke-width="0.5" />
+    <!-- Buckle Left -->
+    <rect x="66" y="80" width="12" height="12" rx="2" fill="url(#gold)" />
+    <rect x="69" y="83" width="6" height="6" fill="#7C2D12" />
+    <line x1="72" y1="80" x2="72" y2="92" stroke="#FEF08A" stroke-width="1.5" />
+    
+    <!-- Right Strap -->
+    <rect x="124" y="55" width="8" height="62" fill="url(#straps)" />
+    <rect x="124" y="55" width="8" height="62" fill="none" stroke="#5C1D06" stroke-width="0.5" />
+    <!-- Buckle Right -->
+    <rect x="122" y="80" width="12" height="12" rx="2" fill="url(#gold)" />
+    <rect x="125" y="83" width="6" height="6" fill="#7C2D12" />
+    <line x1="128" y1="80" x2="128" y2="92" stroke="#FEF08A" stroke-width="1.5" />
+
+    <!-- Travel Stickers -->
+    <!-- Circular Sticker (Paris) -->
+    <circle cx="85" cy="72" r="10" fill="#3B82F6" stroke="#FFF" stroke-width="1.5" />
+    <text x="85" y="75" font-family="sans-serif" font-size="7" font-weight="black" fill="#FFF" text-anchor="middle">PARIS</text>
+    <!-- Rectangular Sticker (Goa) -->
+    <rect x="94" y="90" width="22" height="12" rx="1" fill="#10B981" stroke="#FFF" stroke-width="1.5" transform="rotate(-10, 105, 96)" />
+    <text x="105" y="99" font-family="sans-serif" font-size="7" font-weight="black" fill="#FFF" text-anchor="middle" transform="rotate(-10, 105, 96)">GOA</text>
+    <!-- Triangular Sticker (Delhi) -->
+    <polygon points="102,64 116,84 88,84" fill="#F5B700" stroke="#FFF" stroke-width="1.5" transform="rotate(15, 102, 74)" />
+    <text x="102" y="81" font-family="sans-serif" font-size="6" font-weight="black" fill="#0F172A" text-anchor="middle" transform="rotate(15, 102, 74)">DEL</text>
+  </g>
+
+  <!-- Mini Globe -->
+  <g transform="translate(130, 85)" filter="url(#suitShadow)">
+    <!-- Globe Stand -->
+    <path d="M -5,22 L 15,22 L 5,10 Z" fill="url(#gold)" />
+    <path d="M 5,22 L 5,5 Q 18,5 18,-3" fill="none" stroke="url(#gold)" stroke-width="3" stroke-linecap="round" />
+    <!-- Globe ball -->
+    <circle cx="5" cy="-3" r="15" fill="url(#globeWater)" stroke="#1E293B" stroke-width="1.5" />
+    <!-- Globe Continents -->
+    <path d="M -5,-12 Q -1,-8 2,-11 Q 5,-14 9,-10 Q 12,-6 5,-3 Q -1,0 -5,-5 Z" fill="#22C55E" />
+    <path d="M -3,5 Q 3,3 8,6 Q 5,10 -1,8 Z" fill="#22C55E" />
+    <path d="M 12,-4 Q 17,-8 19,-2 Q 15,2 12,-4 Z" fill="#22C55E" />
+  </g>
+
+  <!-- Small Camera -->
+  <g transform="translate(42, 92)" filter="url(#suitShadow)">
+    <rect x="-10" y="-8" width="24" height="16" rx="3" fill="url(#cameraBody)" stroke="#0F172A" stroke-width="1" />
+    <rect x="-8" y="-12" width="6" height="4" fill="#94A3B8" />
+    <circle cx="10" cy="-8" r="1.5" fill="#EF4444" /> <!-- Red indicator -->
+    <circle cx="2" cy="0" r="6" fill="#1E293B" stroke="#64748B" stroke-width="1.5" />
+    <circle cx="2" cy="0" r="3" fill="#0284C7" />
+    <circle cx="3" cy="-1" r="1" fill="#FFF" opacity="0.8" /> <!-- Reflection -->
+  </g>
+
+  <!-- Styled Airplane flying around -->
+  <g transform="translate(100, 32)">
+    <!-- Flight trail -->
+    <path d="M -65,30 Q -40,5 -10,0" fill="none" stroke="#64748B" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.6" stroke-linecap="round" />
+    <!-- Airplane -->
+    <g transform="rotate(15)">
+      <!-- Main body -->
+      <path d="M -8,0 L 8,0 C 10,0 12,-1.5 12,0 C 12,1.5 10,0 8,0 Z" fill="#F8FAFC" stroke="#475569" stroke-width="0.75" />
+      <!-- Wings -->
+      <path d="M -2,0 L -6,-8 L -3,-8 L 2,0 L -2,8 L -5,8 Z" fill="#E2E8F0" stroke="#475569" stroke-width="0.75" />
+      <!-- Tail -->
+      <path d="M -8,0 L -11,-4 L -9,-4 L -6,0 Z" fill="#E2E8F0" stroke="#475569" stroke-width="0.75" />
+      <!-- Engine glow -->
+      <circle cx="11" cy="0" r="0.8" fill="#F5B700" />
+    </g>
+  </g>
+</svg>

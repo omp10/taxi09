@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Bike, Building2, Bus, Car, UserCheck } from 'lucide-react';
+import {
+  Bike, BookOpen, Building2, Bus, Car, GraduationCap, Headphones, House, Map, UserCheck,
+} from 'lucide-react';
 
 /**
  * Constants and helpers shared by the desktop landing pages.
@@ -8,17 +10,18 @@ import { Bike, Building2, Bus, Car, UserCheck } from 'lucide-react';
  * mixing the two disables fast refresh for the whole module.
  */
 
+/** The nav icon shows on the current link and on hover, not on all ten at once. */
 export const NAV_LINKS = [
-  { label: 'Home', path: '/taxi/user' },
-  { label: 'Self Drive', path: '/taxi/user/rental', badge: 'NEW' },
-  { label: 'Hire Driver', path: '/taxi/user/with-driver' },
-  { label: 'Bike Rental', path: '/taxi/user/rental/bike-categories' },
-  { label: 'Bus Booking', path: '/taxi/user/bus' },
-  { label: 'Hotel Booking', path: '/taxi/user/hotel' },
-  { label: 'Tour Packages', path: '/taxi/user/tours' },
-  { label: 'Travel Stories', path: '/taxi/user/stories' },
-  { label: 'Internship', path: '/taxi/user/internship' },
-  { label: 'Contact Us', path: '/taxi/user/support' },
+  { label: 'Home', path: '/taxi/user', icon: House },
+  { label: 'Self Drive', path: '/taxi/user/rental', badge: 'NEW', icon: Car },
+  { label: 'Hire Driver', path: '/taxi/user/with-driver', icon: UserCheck },
+  { label: 'Bike Rental', path: '/taxi/user/rental/bike-categories', icon: Bike },
+  { label: 'Bus Booking', path: '/taxi/user/bus', icon: Bus },
+  { label: 'Hotel Booking', path: '/taxi/user/hotel', icon: Building2 },
+  { label: 'Tour Packages', path: '/taxi/user/tours', icon: Map },
+  { label: 'Travel Stories', path: '/taxi/user/stories', icon: BookOpen },
+  { label: 'Internship', path: '/taxi/user/internship', icon: GraduationCap },
+  { label: 'Contact Us', path: '/taxi/user/support', icon: Headphones },
 ];
 
 export const QUICK_RAIL = [
@@ -33,20 +36,28 @@ export const SERVICES = [
   { title: 'Self Drive Cars', copy: 'Drive your car on your own terms.', image: '/taxi09_rental_self_drive.png', path: '/taxi/user/rental' },
   { title: 'Hire Driver', copy: 'Relax! Our professional drivers are at your service.', image: '/taxi09_rental_with_driver.png', path: '/taxi/user/with-driver' },
   { title: 'Bike Rental', copy: 'Affordable bikes & scooters for city ride.', image: '/taxi09_rental_bike.png', path: '/taxi/user/rental/bike-categories' },
-  { title: 'Bus Booking', copy: 'Book buses for outstation trips & group travel.', image: '/bus.png', path: '/taxi/user/bus' },
-  { title: 'Hotel Booking', copy: 'Best hotels at best prices across India.', image: '/taxi09_service_hotel.png', path: '/taxi/user/hotel' },
-  { title: 'Tour Packages', copy: 'Explore amazing places with our tour packages.', image: '/taxi09_service_travel.png', path: '/taxi/user/tours' },
+  { title: 'Bus Booking', copy: 'Book buses for outstation trips & group travel.', image: '/taxi09_service_bus.png', path: '/taxi/user/bus' },
+  { title: 'Hotel Booking', copy: 'Best hotels at best prices across India.', image: '/taxi09_service_hotel.svg', path: '/taxi/user/hotel' },
+  { title: 'Tour Packages', copy: 'Explore amazing places with our tour packages.', image: '/taxi09_service_travel.svg', path: '/taxi/user/tours' },
 ];
 
-const THEME_KEY = 'taxi09:desktop-theme';
+// Bumped when the palette changed to dark-by-default: the old key already had
+// 'light' written into every returning visitor's storage on first mount, which
+// would have overridden the new default for everyone who had ever loaded the page.
+const THEME_KEY = 'taxi09:desktop-theme:v2';
 
-/** Theme choice is shared across the desktop pages, hence one storage key. */
+/**
+ * Theme choice is shared across the desktop pages, hence one storage key.
+ *
+ * Dark is the default look; light is kept for anyone who picks it from the
+ * sun/moon control, so an existing preference still wins over the default.
+ */
 export const useDesktopTheme = () => {
   const [theme, setTheme] = useState(() => {
     try {
-      return localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light';
+      return localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark';
     } catch {
-      return 'light';
+      return 'dark';
     }
   });
 

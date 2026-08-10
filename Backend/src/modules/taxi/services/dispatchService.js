@@ -1248,6 +1248,34 @@ export const notifyRideAccepted = async (ride) => {
   });
 };
 
+/**
+ * Tells both participants that one of them has recorded their odometer, so the
+ * waiting side sees the other tick over without polling. The start PIN rides
+ * along because it is withheld until both readings exist - the moment the pair
+ * is complete is exactly the moment the rider's app can show it.
+ */
+export const notifyRideOdometerUpdated = async (ride) => {
+  const safeRide = ride?._id ? ride : await Ride.findById(ride);
+
+  if (!safeRide) {
+    return;
+  }
+
+  const { serializeRideOdometer, isOdometerCaptureComplete } = await import('./rideService.js');
+  const payload = {
+    rideId: String(safeRide._id),
+    odometer: serializeRideOdometer(safeRide),
+    otp: isOdometerCaptureComplete(safeRide) ? (safeRide.otp || '') : '',
+  };
+
+  emitToRoom(getRideRoom(safeRide._id), SOCKET_EVENTS.RIDE_ODOMETER_UPDATED, payload);
+  emitToRoom(getUserRoom(safeRide.userId), SOCKET_EVENTS.RIDE_ODOMETER_UPDATED, payload);
+
+  if (safeRide.driverId) {
+    emitToDriver(safeRide.driverId, SOCKET_EVENTS.RIDE_ODOMETER_UPDATED, payload);
+  }
+};
+
 export const notifyRideBidUpdated = async ({ ride, bid }) => {
   const safeRide = ride?._id ? ride : await Ride.findById(ride?.rideId || ride);
 

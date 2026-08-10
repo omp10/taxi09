@@ -18,9 +18,11 @@ import {
   increaseRideBidCeiling,
   listRideBidsForUser,
   listRideHistoryForIdentity,
+  recordRideOdometer,
   serializeRideRealtime,
   submitRideFeedback,
   updateRideLifecycle,
+  withGatedRideOtp,
 } from '../../services/rideService.js';
 import {
   cancelRideByUser,
@@ -334,7 +336,9 @@ export const createRide = async (req, res) => {
   res.status(201).json({
     success: true,
     data: {
-      ride,
+      // The PIN is withheld here too - the app caches this payload, so handing
+      // it over at booking time would survive every later gate.
+      ride: withGatedRideOtp(ride),
       realtime: {
         room: getRideRoom(ride._id),
         rideId: String(ride._id),
@@ -354,7 +358,7 @@ export const getRideById = async (req, res) => {
 
   res.json({
     success: true,
-    data: ride,
+    data: withGatedRideOtp(ride),
   });
 };
 
@@ -410,6 +414,26 @@ export const updateRideStatus = async (req, res) => {
   res.json({
     success: true,
     data: serializeRideRealtime(ride),
+  });
+};
+
+/**
+ * Records the caller's own start-of-trip odometer. One route serves both apps:
+ * which side is being written comes from the token's role, so the body cannot
+ * be used to record on the other participant's behalf.
+ */
+export const recordOdometerReading = async (req, res) => {
+  const odometer = await recordRideOdometer({
+    rideId: req.params.rideId,
+    role: req.auth.role,
+    entityId: req.auth.sub,
+    readingKm: req.body.readingKm,
+    imageDataUrl: req.body.imageDataUrl,
+  });
+
+  res.json({
+    success: true,
+    data: odometer,
   });
 };
 

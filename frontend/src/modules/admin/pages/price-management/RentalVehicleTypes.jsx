@@ -831,6 +831,51 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
     }
   };
 
+  /**
+   * Publishes or hides a vehicle. `status` is the one field the admin owns -
+   * the backend derives `active` from it, and the public catalogue query filters
+   * on both, so flipping this is what takes a car off the user-facing list.
+   * (`available`/`availableFrom` are computed from bookings, not settable here.)
+   */
+  const handleToggleActive = async (item) => {
+    const vehicleId = String(item.id || item._id);
+    if (!vehicleId || togglingIds.includes(vehicleId)) return;
+
+    const wasActive = item.active !== false;
+    const nextActive = !wasActive;
+    const applyActive = (value) =>
+      setItems((current) =>
+        current.map((entry) =>
+          String(entry.id || entry._id) === vehicleId
+            ? { ...entry, active: value, status: value ? 'active' : 'inactive' }
+            : entry,
+        ),
+      );
+
+    setTogglingIds((current) => [...current, vehicleId]);
+    applyActive(nextActive);
+
+    try {
+      // The whole vehicle is sent back, not just the status: the backend's text
+      // sanitiser blanks any field the payload omits instead of keeping the
+      // stored one, so a status-only PATCH would wipe the name and description.
+      await adminService.updateRentalVehicleType(vehicleId, {
+        ...item,
+        capacity: Number(item.capacity || countSeats(item.blueprint)),
+        amenities: Array.isArray(item.amenities) ? item.amenities : [],
+        pricing: normalizePricing(item.pricing),
+        active: nextActive,
+        status: nextActive ? 'active' : 'inactive',
+      });
+      toast.success(`${item.name} is now ${nextActive ? 'available' : 'unavailable'}`);
+    } catch (error) {
+      applyActive(wasActive);
+      toast.error(error?.response?.data?.message || error.message || 'Could not update availability.');
+    } finally {
+      setTogglingIds((current) => current.filter((idValue) => idValue !== vehicleId));
+    }
+  };
+
   const handleTogglePooling = async (item) => {
     const vehicleId = String(item.id || item._id);
 
@@ -991,9 +1036,19 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
                 </div>
                 <div className="flex items-center text-sm font-semibold text-slate-700">{item.capacity || 0}</div>
                 <div className="flex items-center text-sm font-semibold text-slate-700">{item.luggageCapacity || 0}</div>
-                <div className="flex items-center">
-                  <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${item.active !== false ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
-                    {item.active !== false ? 'Active' : 'Inactive'}
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleToggleActive(item)}
+                    disabled={togglingIds.includes(String(item.id || item._id))}
+                    aria-pressed={item.active !== false}
+                    title={item.active !== false ? 'Hide from the rental catalogue' : 'Show in the rental catalogue'}
+                    className={`relative h-6 w-11 shrink-0 rounded-full transition-all disabled:opacity-50 ${item.active !== false ? 'bg-emerald-500' : 'bg-slate-300'}`}
+                  >
+                    <span className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-all ${item.active !== false ? 'left-6' : 'left-1'}`} />
+                  </button>
+                  <span className={`text-[10px] font-bold uppercase tracking-wide ${item.active !== false ? 'text-emerald-700' : 'text-slate-400'}`}>
+                    {item.active !== false ? 'Live' : 'Off'}
                   </span>
                 </div>
                 <div className="flex items-center justify-end gap-2">

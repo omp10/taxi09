@@ -11,4 +11,5 @@ export const SOCKET_EVENTS = Object.freeze({
   RIDE_DRIVER_ROUTE_UPDATED: 'ride:driver-route:updated',
   RIDE_MESSAGE_SEND: 'ride:message:send',
   RIDE_MESSAGE_NEW: 'ride:message:new',
+  RIDE_ODOMETER_UPDATED: 'ride:odometer:updated',
 });

@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import api from '../../../shared/api/axiosInstance';
 import {
-  DesktopNav, ServiceCard,
+  DesktopFooter, DesktopNav, ServiceCard,
 } from '../components/desktop/DesktopChrome';
 import {
   SERVICES, resolveBannerImage, unwrapResults, useDesktopTheme,
@@ -314,22 +314,26 @@ const DesktopHome = () => {
 
       {/* ------------------------------------------------------------- Stats */}
       <section className="mx-auto mt-10 max-w-[1440px] px-8 pb-16 xl:px-12">
-        <div className="flex flex-wrap justify-between gap-6 rounded-[20px] bg-[#FFF9E6] px-10 py-7">
+        <div className="flex flex-wrap justify-between gap-6 rounded-[20px] bg-[var(--dh-accent-soft)] px-10 py-7">
           {buildStats(platformStats || {}).map(({ icon: Icon, value, label }) => (
             <div key={label} className="flex items-center gap-4">
               <Icon size={34} className="shrink-0 text-[#F5B700]" strokeWidth={2} />
               <div>
                 {platformStats ? (
-                  <p className="text-[25px] font-black leading-none tracking-[-0.03em] text-slate-950">{value}</p>
+                  <p className="text-[25px] font-black leading-none tracking-[-0.03em] text-[var(--dh-text)]">{value}</p>
                 ) : (
                   <span className="block h-[25px] w-20 rounded-md dh-skeleton" />
                 )}
-                <p className="mt-1.5 text-[13.5px] font-semibold text-slate-600">{label}</p>
+                <p className="mt-1.5 text-[13.5px] font-semibold text-[var(--dh-muted)]">{label}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
+
+      {/* The service stores are already loaded for the search suggestions, so
+          the footer reuses that list instead of asking for it again. */}
+      <DesktopFooter locations={serviceStores} />
     </div>
   );
 };

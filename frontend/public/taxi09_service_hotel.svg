@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" width="100%" height="100%">
+  <defs>
+    <!-- Background Circle Gradient (Sunset) -->
+    <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFEDD5" />
+      <stop offset="60%" stop-color="#FED7AA" />
+      <stop offset="100%" stop-color="#FDBA74" />
+    </radialGradient>
+
+    <!-- Hotel Wall Gradient (Warm Cream/Champagne) -->
+    <linearGradient id="hotelWall" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC" />
+      <stop offset="100%" stop-color="#E2E8F0" />
+    </linearGradient>
+
+    <!-- Hotel Accent (Gold/Bronze) -->
+    <linearGradient id="hotelAccent" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F5B700" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+
+    <!-- Glass Windows (Teal/Cyan reflections) -->
+    <linearGradient id="glassWin" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+
+    <!-- Night window glow -->
+    <linearGradient id="windowGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047" />
+      <stop offset="100%" stop-color="#CA8A04" />
+    </linearGradient>
+
+    <!-- Tree Trunk -->
+    <linearGradient id="trunkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#78350F" />
+      <stop offset="100%" stop-color="#451A03" />
+    </linearGradient>
+
+    <!-- Palm Leaves -->
+    <linearGradient id="leavesGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4ADE80" />
+      <stop offset="100%" stop-color="#15803D" />
+    </linearGradient>
+
+    <!-- Drop Shadow -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="5" flood-color="#0F172A" flood-opacity="0.12" />
+    </filter>
+  </defs>
+
+  <!-- Background Sunset Circle -->
+  <circle cx="100" cy="70" r="55" fill="url(#sunGrad)" opacity="0.9" />
+
+  <!-- Ground / Base -->
+  <rect x="25" y="115" width="150" height="8" rx="3" fill="#334155" />
+  <rect x="35" y="118" width="130" height="2" fill="#1E293B" opacity="0.3" />
+
+  <!-- Main Hotel Building Structure (Left side tall tower, right side lounge) -->
+  <g filter="url(#shadow)">
+    <!-- Right side lower building (lounge/lobby extension) -->
+    <path d="M 100,75 L 155,75 A 3,3 0 0 1 158,78 L 158,115 L 100,115 Z" fill="url(#hotelWall)" />
+    <path d="M 100,75 L 158,75 L 158,78 L 100,78 Z" fill="url(#hotelAccent)" /> <!-- Gold Roof line -->
+
+    <!-- Left side tall building (hotel rooms tower) -->
+    <path d="M 45,45 A 4,4 0 0 1 49,41 L 105,41 A 4,4 0 0 1 109,45 L 109,115 L 45,115 Z" fill="url(#hotelWall)" />
+    <!-- Decorative Gold vertical pillar on the edge -->
+    <rect x="45" y="41" width="4" height="74" fill="url(#hotelAccent)" />
+    <!-- Roof trim -->
+    <path d="M 49,41 L 105,41 L 105,45 L 49,45 Z" fill="#1E293B" />
+
+    <!-- Entrance Canopy (Lobby) -->
+    <path d="M 90,95 L 125,95 L 120,102 L 95,102 Z" fill="#1E293B" />
+    <rect x="98" y="102" width="18" height="13" fill="url(#glassWin)" />
+    <line x1="107" y1="102" x2="107" y2="115" stroke="#1E293B" stroke-width="1" /> <!-- Door seam -->
+    <circle cx="102" cy="109" r="1" fill="#FDE047" /> <!-- Door handle -->
+    <circle cx="112" cy="109" r="1" fill="#FDE047" />
+
+    <!-- Hotel Windows & Balconies -->
+    <!-- Tower Floor 3 -->
+    <rect x="55" y="52" width="12" height="10" rx="1.5" fill="url(#windowGlow)" />
+    <rect x="73" y="52" width="12" height="10" rx="1.5" fill="url(#glassWin)" />
+    <rect x="90" y="52" width="12" height="10" rx="1.5" fill="url(#windowGlow)" />
+    <!-- Balcony Railings Floor 3 -->
+    <rect x="53" y="59" width="16" height="5" rx="1" fill="#64748B" opacity="0.8" />
+    <rect x="71" y="59" width="16" height="5" rx="1" fill="#64748B" opacity="0.8" />
+    <rect x="88" y="59" width="16" height="5" rx="1" fill="#64748B" opacity="0.8" />
+
+    <!-- Tower Floor 2 -->
+    <rect x="55" y="68" width="12" height="10" rx="1.5" fill="url(#glassWin)" />
+    <rect x="73" y="68" width="12" height="10" rx="1.5" fill="url(#windowGlow)" />
+    <rect x="90" y="68" width="12" height="10" rx="1.5" fill="url(#glassWin)" />
+    <!-- Balcony Railings Floor 2 -->
+    <rect x="53" y="75" width="16" height="5" rx="1" fill="#64748B" opacity="0.8" />
+    <rect x="71" y="75" width="16" height="5" rx="1" fill="#64748B" opacity="0.8" />
+    <rect x="88" y="75" width="16" height="5" rx="1" fill="#64748B" opacity="0.8" />
+
+    <!-- Tower Floor 1 -->
+    <rect x="55" y="84" width="12" height="10" rx="1.5" fill="url(#windowGlow)" />
+    <rect x="73" y="84" width="12" height="10" rx="1.5" fill="url(#glassWin)" />
+    <rect x="90" y="84" width="12" height="10" rx="1.5" fill="url(#windowGlow)" />
+    <!-- Balcony Railings Floor 1 -->
+    <rect x="53" y="91" width="16" height="5" rx="1" fill="#64748B" opacity="0.8" />
+    <rect x="71" y="91" width="16" height="5" rx="1" fill="#64748B" opacity="0.8" />
+    <rect x="88" y="91" width="16" height="5" rx="1" fill="#64748B" opacity="0.8" />
+
+    <!-- Right wing windows -->
+    <rect x="120" y="82" width="10" height="8" rx="1" fill="url(#windowGlow)" />
+    <rect x="138" y="82" width="10" height="8" rx="1" fill="url(#glassWin)" />
+    <line x1="125" y1="82" x2="125" y2="90" stroke="#334155" stroke-width="0.5" />
+    <line x1="143" y1="82" x2="143" y2="90" stroke="#334155" stroke-width="0.5" />
+  </g>
+
+  <!-- Palm Trees (Foreground details for resort feel) -->
+  <!-- Left Palm Tree -->
+  <g transform="translate(18, 55)">
+    <!-- Trunk -->
+    <path d="M 12,60 Q 15,35 7,10" fill="none" stroke="url(#trunkGrad)" stroke-width="3" stroke-linecap="round" />
+    <!-- Leaves -->
+    <path d="M 7,10 Q -5,0 -12,8" fill="none" stroke="url(#leavesGrad)" stroke-width="2.5" stroke-linecap="round" />
+    <path d="M 7,10 Q 0,-7 -2,-15" fill="none" stroke="url(#leavesGrad)" stroke-width="2.5" stroke-linecap="round" />
+    <path d="M 7,10 Q 15,-10 24,-8" fill="none" stroke="url(#leavesGrad)" stroke-width="2.5" stroke-linecap="round" />
+    <path d="M 7,10 Q 18,10 22,20" fill="none" stroke="url(#leavesGrad)" stroke-width="2.5" stroke-linecap="round" />
+    <path d="M 7,10 Q 4,5 -1,15" fill="none" stroke="url(#leavesGrad)" stroke-width="2.5" stroke-linecap="round" />
+  </g>
+
+  <!-- Right Palm Tree -->
+  <g transform="translate(155, 60)">
+    <!-- Trunk -->
+    <path d="M 10,55 Q 5,30 12,8" fill="none" stroke="url(#trunkGrad)" stroke-width="2.5" stroke-linecap="round" />
+    <!-- Leaves -->
+    <path d="M 12,8 Q 0,0 -8,5" fill="none" stroke="url(#leavesGrad)" stroke-width="2" stroke-linecap="round" />
+    <path d="M 12,8 Q 8,-7 5,-12" fill="none" stroke="url(#leavesGrad)" stroke-width="2" stroke-linecap="round" />
+    <path d="M 12,8 Q 20,-5 26,-2" fill="none" stroke="url(#leavesGrad)" stroke-width="2" stroke-linecap="round" />
+    <path d="M 12,8 Q 22,10 25,18" fill="none" stroke="url(#leavesGrad)" stroke-width="2" stroke-linecap="round" />
+  </g>
+</svg>

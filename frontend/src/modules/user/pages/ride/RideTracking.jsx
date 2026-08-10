@@ -14,6 +14,7 @@ import bikeIcon from '../../../../assets/icons/bike.png';
 import autoIcon from '../../../../assets/icons/auto.png';
 import deliveryIcon from '../../../../assets/icons/Delivery.png';
 import { useSettings } from '../../../../shared/context/SettingsContext';
+import OdometerCapture from '../../../../shared/components/OdometerCapture';
 
 const MAP_CONTAINER_STYLE = { width: '100%', height: '100%' };
 const DEFAULT_CENTER = { lat: 22.7196, lng: 75.8577 };
@@ -343,6 +344,9 @@ const RideTracking = () => {
   const [shareToast, setShareToast] = useState(false);
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
   const [rideRealtime, setRideRealtime] = useState(null);
+  // Kept apart from rideRealtime so the driver's capture can land here over the
+  // socket without waiting for the next full ride state push.
+  const [odometer, setOdometer] = useState(null);
   const [routePath, setRoutePath] = useState([]);
   const [routeError, setRouteError] = useState('');
   const [map, setMap] = useState(null);
@@ -397,7 +401,13 @@ const RideTracking = () => {
   const otp = ['started', 'ongoing', 'arrived', 'completed'].includes(tripStatus)
     ? ''
     : String(rideRealtime?.otp || state.otp || state.ride_otp || '');
+  const rideOdometer = odometer || rideRealtime?.odometer || state.odometer || null;
   const serviceType = String(state.serviceType || state.type || 'ride').toLowerCase();
+  // Recorded between the driver accepting and the trip starting. Once both
+  // sides are in, the PIN takes its place; parcels have no odometer step.
+  const isOdometerStep = ['accepted', 'arriving'].includes(tripStatus)
+    && serviceType !== 'parcel'
+    && !rideOdometer?.complete;
   const activeDestination = useMemo(
     () => (['started', 'ongoing', 'arrived', 'completed'].includes(tripStatus) ? dropPosition : pickupPosition),
     [dropPosition, pickupPosition, tripStatus],
@@ -911,15 +921,31 @@ const RideTracking = () => {
       }));
     };
 
+    const onOdometerUpdated = (payload = {}) => {
+      if (String(payload.rideId || '') !== String(rideId)) {
+        return;
+      }
+
+      setOdometer(payload.odometer || null);
+
+      // The PIN is released the moment both readings exist, so it rides along
+      // on this event rather than waiting for the next ride state push.
+      if (payload.otp) {
+        setRideRealtime((prev) => ({ ...(prev || {}), otp: payload.otp }));
+      }
+    };
+
     socketService.on('ride:state', onRideState);
     socketService.on('ride:driver-location:updated', onLocationUpdated);
     socketService.on('ride:status:updated', onStatusUpdated);
+    socketService.on('ride:odometer:updated', onOdometerUpdated);
     socketService.emit('ride:join', { rideId });
 
     return () => {
       socketService.off('ride:state', onRideState);
       socketService.off('ride:driver-location:updated', onLocationUpdated);
       socketService.off('ride:status:updated', onStatusUpdated);
+      socketService.off('ride:odometer:updated', onOdometerUpdated);
     };
   }, [rideId]);
 
@@ -1402,14 +1428,31 @@ const RideTracking = () => {
               </div>
             </div>
 
-            {/* OTP CARD - High Fidelity */}
-            {otp && (
+            {/* OTP CARD - High Fidelity. The server withholds the PIN until
+                both odometers are recorded, so this appears once the capture
+                below is done on both sides. */}
+            {otp ? (
               <div className="bg-[#fff9ef] border border-[#fef3c7] rounded-[20px] px-3 py-3 flex flex-col items-center justify-center min-w-[80px] shadow-sm">
                 <span className="text-[9px] font-black text-orange-500 uppercase tracking-[0.18em] mb-1 leading-none">OTP</span>
                 <span className="text-[18px] font-black text-slate-900 tracking-tighter leading-none">{otp}</span>
               </div>
-            )}
+            ) : isOdometerStep ? (
+              <div className="bg-slate-50 border border-slate-100 rounded-[20px] px-3 py-3 flex flex-col items-center justify-center min-w-[80px]">
+                <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.18em] mb-1 leading-none">OTP</span>
+                <span className="text-[18px] font-black text-slate-300 tracking-tighter leading-none">----</span>
+              </div>
+            ) : null}
           </div>
+
+          {isOdometerStep && rideId ? (
+            <OdometerCapture
+              rideId={rideId}
+              role="user"
+              odometer={rideOdometer}
+              onRecorded={setOdometer}
+              className="mb-4"
+            />
+          ) : null}
 
           {isScheduledRide ? (
             <div className="rounded-[22px] border border-emerald-100 bg-emerald-50/70 px-4 py-4 shadow-sm">

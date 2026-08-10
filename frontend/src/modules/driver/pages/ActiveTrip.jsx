@@ -23,6 +23,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { GoogleMap, MarkerF, OverlayView, OverlayViewF, PolylineF } from '@react-google-maps/api';
 import { HAS_VALID_GOOGLE_MAPS_KEY, useAppGoogleMapsLoader } from '../../admin/utils/googleMaps';
 import { socketService } from '../../../shared/api/socket';
+import OdometerCapture from '../../../shared/components/OdometerCapture';
 import api from '../../../shared/api/axiosInstance';
 import carIcon from '../../../assets/icons/car.png';
 import { getLocalDriverToken } from '../services/registrationService';
@@ -906,6 +907,9 @@ const ActiveTrip = () => {
     });
     const [otp, setOtp] = useState(['', '', '', '']);
     const [otpError, setOtpError] = useState('');
+    // Held locally so the passenger's capture can land here over the socket
+    // without waiting for the next full ride state push.
+    const [odometer, setOdometer] = useState(null);
     const [selectedRating, setSelectedRating] = useState(0);
     const [driverPaymentStatus, setDriverPaymentStatus] = useState('pending');
     const [selectedPaymentMode, setSelectedPaymentMode] = useState('');
@@ -1022,16 +1026,26 @@ const ActiveTrip = () => {
             }
         };
 
+        const handleOdometerUpdated = (payload = {}) => {
+            if (String(payload.rideId || '') !== String(currentRideId)) {
+                return;
+            }
+
+            setOdometer(payload.odometer || null);
+        };
+
         socketService.on('rideRequestClosed', handleTripClosed);
         socketService.on('rideCancelled', handleTripClosed);
         socketService.on('ride:status:updated', handleRideStatusUpdated);
         socketService.on('ride:state', handleRideState);
+        socketService.on('ride:odometer:updated', handleOdometerUpdated);
 
         return () => {
             socketService.off('rideRequestClosed', handleTripClosed);
             socketService.off('rideCancelled', handleTripClosed);
             socketService.off('ride:status:updated', handleRideStatusUpdated);
             socketService.off('ride:state', handleRideState);
+            socketService.off('ride:odometer:updated', handleOdometerUpdated);
         };
     }, [exitToDriverHome, rideId, routeRideId]);
 
@@ -1274,6 +1288,16 @@ const ActiveTrip = () => {
     const displayFare = liveRequest?.fare || tripData.fare;
     const fareAmount = parseFareAmount(displayFare);
     const expectedOtp = String(liveRaw?.otp || liveRequest?.otp || effectiveState?.otp || '');
+    // Socket pushes win over the ride payload, which can be a snapshot taken
+    // before the passenger recorded theirs.
+    const rideOdometer = odometer
+        || liveRaw?.odometer
+        || liveRequest?.odometer
+        || effectiveState?.odometer
+        || null;
+    // Parcels have no odometer step, and a cached snapshot taken before this
+    // existed carries no odometer block - neither should hold up a delivery.
+    const isOdometerComplete = isParcel || Boolean(rideOdometer?.complete);
     const waitingPricing = liveRaw?.pricingSnapshot || liveRequest?.raw?.pricingSnapshot || effectiveState?.pricingSnapshot || {};
     const allowedPaymentModes = (() => {
         const rawItems = Array.isArray(waitingPricing?.allowed_payment_methods) ? waitingPricing.allowed_payment_methods : [];
@@ -2246,9 +2270,15 @@ const ActiveTrip = () => {
                             className="bg-white rounded-t-[2.5rem] p-6 pb-8 shadow-2xl border-t border-slate-100 max-h-[88vh] overflow-y-auto overscroll-contain touch-pan-y"
                         >
                             <div className="text-center mb-6">
-                                <h3 className="text-xl font-semibold text-slate-900 tracking-tight uppercase leading-none">Security Pin</h3>
+                                <h3 className="text-xl font-semibold text-slate-900 tracking-tight uppercase leading-none">
+                                    {isOdometerComplete ? 'Security Pin' : 'Odometer Check'}
+                                </h3>
                                 <p className="text-[10px] font-bold text-slate-400 tracking-wide uppercase mt-2">
-                                    Ask <span className="text-slate-900">{isParcel ? 'Sender' : 'Passenger'}</span> for Start PIN
+                                    {isOdometerComplete ? (
+                                        <>Ask <span className="text-slate-900">{isParcel ? 'Sender' : 'Passenger'}</span> for Start PIN</>
+                                    ) : (
+                                        <>Both of you record the odometer to unlock the PIN</>
+                                    )}
                                 </p>
                             </div>
                             {isWaitingForOtp && (
@@ -2283,33 +2313,49 @@ const ActiveTrip = () => {
                                     </div>
                                 </div>
                             )}
-                            <div className="flex justify-center gap-3 mb-8">
-                                {otp.map((digit, index) => (
-                                    <input
-                                        key={index}
-                                        id={`otp-${index}`}
-                                        type="tel"
-                                        maxLength={1}
-                                        value={digit}
-                                        onChange={(e) => handleOTPChange(index, e.target.value)}
-                                        onKeyDown={(e) => handleOTPKeyDown(index, e)}
-                                        className="w-12 h-16 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center text-3xl font-semibold text-slate-900 focus:outline-none transition-all shadow-inner"
-                                        style={{ '--tw-ring-color': routeStrokeColor, borderColor: routeAccentBorder }}
-                                    />
-                                ))}
-                            </div>
-                            {otpError && (
-                                <p className="-mt-5 mb-5 text-center text-[11px] font-black text-red-500 uppercase tracking-wider">
-                                    {otpError}
-                                </p>
+                            {/* The passenger is only shown the PIN once both
+                                odometers are on file, so the pad stays out of
+                                the way until there is a PIN to ask for. */}
+                            {!isOdometerComplete ? (
+                                <OdometerCapture
+                                    rideId={rideId}
+                                    role="driver"
+                                    odometer={rideOdometer}
+                                    onRecorded={setOdometer}
+                                    accentColor={routeStrokeColor}
+                                    className="mb-6"
+                                />
+                            ) : (
+                                <>
+                                    <div className="flex justify-center gap-3 mb-8">
+                                        {otp.map((digit, index) => (
+                                            <input
+                                                key={index}
+                                                id={`otp-${index}`}
+                                                type="tel"
+                                                maxLength={1}
+                                                value={digit}
+                                                onChange={(e) => handleOTPChange(index, e.target.value)}
+                                                onKeyDown={(e) => handleOTPKeyDown(index, e)}
+                                                className="w-12 h-16 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center text-3xl font-semibold text-slate-900 focus:outline-none transition-all shadow-inner"
+                                                style={{ '--tw-ring-color': routeStrokeColor, borderColor: routeAccentBorder }}
+                                            />
+                                        ))}
+                                    </div>
+                                    {otpError && (
+                                        <p className="-mt-5 mb-5 text-center text-[11px] font-black text-red-500 uppercase tracking-wider">
+                                            {otpError}
+                                        </p>
+                                    )}
+                                    <button
+                                        onClick={() => startTripAfterOtp(otp.join(''))}
+                                        className="mb-3 h-13 w-full rounded-xl text-[12px] font-black uppercase tracking-widest text-white shadow-lg active:scale-95 transition-all"
+                                        style={{ backgroundColor: routeStrokeColor, boxShadow: `0 16px 28px ${routeAccentMuted}` }}
+                                    >
+                                        Submit PIN
+                                    </button>
+                                </>
                             )}
-                            <button
-                                onClick={() => startTripAfterOtp(otp.join(''))}
-                                className="mb-3 h-13 w-full rounded-xl text-[12px] font-black uppercase tracking-widest text-white shadow-lg active:scale-95 transition-all"
-                                style={{ backgroundColor: routeStrokeColor, boxShadow: `0 16px 28px ${routeAccentMuted}` }}
-                            >
-                                Submit PIN
-                            </button>
                             <div className="flex gap-3">
                                 <button onClick={() => {
                                     setLocalArrivedAt('');

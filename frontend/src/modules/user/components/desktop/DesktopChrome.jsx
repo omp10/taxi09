@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Moon, Sun, UserRound } from 'lucide-react';
-import { NAV_LINKS, QUICK_RAIL, openRentalVehicle, readUserToken } from './desktopShared';
+import { ArrowRight, ChevronDown, MapPin, Moon, Phone, Sun, UserRound } from 'lucide-react';
+import { NAV_LINKS, QUICK_RAIL, SERVICES, openRentalVehicle, readUserToken } from './desktopShared';
+import { useSettings } from '../../../../shared/context/SettingsContext';
 
 /**
  * Chrome shared by the desktop landing pages (home, self drive).
@@ -15,63 +16,83 @@ export const DesktopNav = ({ activePath, theme, onToggleTheme, loading = false }
   const isAuthenticated = Boolean(readUserToken());
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--dh-surface)]/95 backdrop-blur-md relative">
-      <div className="mx-auto flex h-[84px] max-w-[1440px] items-center gap-8 px-8 xl:px-12">
-        <button onClick={() => navigate('/taxi/user')} className="flex shrink-0 flex-col leading-none">
-          <svg viewBox="0 0 120 22" className="mb-0.5 h-[13px] w-[86px]" aria-hidden="true">
+    <header className="sticky top-0 z-50 bg-[var(--dh-bg)] px-4 pb-2 pt-3 xl:px-6">
+      <div className="relative mx-auto flex max-w-[1440px] items-stretch gap-2.5">
+        {/* The mark sits on its own panel, set apart from the links. */}
+        <button
+          onClick={() => navigate('/taxi/user')}
+          className="flex h-[76px] shrink-0 flex-col items-center justify-center rounded-[20px] bg-[var(--dh-surface)] px-5 leading-none ring-1 ring-[var(--dh-border)]"
+        >
+          <svg viewBox="0 0 120 22" className="mb-0.5 h-[12px] w-[80px]" aria-hidden="true">
             <path d="M4 20C22 4 74 -2 116 8" fill="none" stroke="#F5B700" strokeWidth="5" strokeLinecap="round" />
           </svg>
-          <span className="text-[30px] font-black italic tracking-[-0.05em] text-[var(--dh-text)]">
+          <span className="text-[27px] font-black italic tracking-[-0.05em] text-[var(--dh-text)]">
             Taxi<span className="text-[#F5B700]">09</span>
           </span>
-          <span className="mt-0.5 text-[9px] font-semibold tracking-[0.08em] text-[var(--dh-muted)]">
+          <span className="mt-1 text-[8.5px] font-semibold tracking-[0.06em] text-[var(--dh-muted)]">
             Self Drive | Hire Driver
           </span>
         </button>
 
-        <nav className="flex flex-1 items-center justify-center gap-6">
-          {NAV_LINKS.map(({ label, path, badge }) => {
-            const isActive = path === activePath;
-            return (
-              <button
-                key={label}
-                onClick={() => navigate(path)}
-                className={`relative flex items-center gap-1.5 whitespace-nowrap text-[14.5px] transition-colors ${
-                  isActive
-                    ? 'font-bold text-[var(--dh-text)]'
-                    : 'font-medium text-[var(--dh-muted)] hover:text-[var(--dh-text)]'
-                }`}
-              >
-                {label}
-                {badge && (
-                  <span className="rounded-full bg-[#F5B700] px-1.5 py-[1px] text-[8.5px] font-black text-slate-950">
-                    {badge}
-                  </span>
-                )}
-                {isActive && <span className="absolute -bottom-2 left-0 h-[3px] w-full rounded-full bg-[#F5B700]" />}
-              </button>
-            );
-          })}
-        </nav>
+        <div className="flex h-[76px] min-w-0 flex-1 items-center gap-1 rounded-[20px] bg-[var(--dh-surface)] px-3 ring-1 ring-[var(--dh-border)]">
+          {/* Ten links do not fit on a narrow desktop. Scrolling keeps every
+              one of them reachable instead of letting the row collide with the
+              account button or quietly clipping the last few. */}
+          <nav className="dh-nav-scroll flex min-w-0 flex-1 items-center justify-start overflow-x-auto">
+            {NAV_LINKS.map(({ label, path, badge, icon: Icon }) => {
+              const isActive = path === activePath;
+              return (
+                <button
+                  key={label}
+                  onClick={() => navigate(path)}
+                  className={`group flex shrink-0 items-center whitespace-nowrap rounded-[14px] px-1.5 py-2.5 text-[13px] transition-colors ${
+                    isActive
+                      ? 'font-bold text-[#F5B700]'
+                      : 'font-semibold text-[var(--dh-text)] hover:bg-[#F5B700] hover:text-slate-950'
+                  }`}
+                >
+                  {/* Ten permanent icons would not fit, so the slot opens for
+                      the current link and on hover rather than jumping wide. */}
+                  {Icon ? (
+                    <span
+                      className={`flex items-center overflow-hidden transition-[width] duration-200 ${
+                        isActive ? 'w-[20px]' : 'w-0 group-hover:w-[20px]'
+                      }`}
+                    >
+                      <Icon size={16} strokeWidth={2.4} className="shrink-0" />
+                    </span>
+                  ) : null}
+                  {label}
+                  {badge ? (
+                    <span className="ml-1.5 rounded-md bg-[#F5B700] px-1.5 py-[2px] text-[8px] font-black text-slate-950 group-hover:bg-slate-950 group-hover:text-[#F5B700]">
+                      {badge}
+                    </span>
+                  ) : null}
+                </button>
+              );
+            })}
+          </nav>
 
-        <div className="flex shrink-0 items-center gap-4">
-          <button
-            onClick={onToggleTheme}
-            className="flex h-[38px] w-[74px] items-center justify-between rounded-full bg-[var(--dh-chip)] px-2.5"
-            aria-label="Toggle theme"
-            aria-pressed={theme === 'dark'}
-          >
-            <Sun size={17} className={theme === 'light' ? 'text-[#F5B700]' : 'text-[var(--dh-muted)]'} strokeWidth={2.4} />
-            <Moon size={17} className={theme === 'dark' ? 'text-[#F5B700]' : 'text-[var(--dh-muted)]'} strokeWidth={2.4} />
-          </button>
+          <div className="flex shrink-0 items-center gap-1.5 pl-1">
+            <button
+              onClick={onToggleTheme}
+              className="flex items-center gap-2 rounded-full px-1 py-2"
+              aria-label="Toggle theme"
+              aria-pressed={theme === 'dark'}
+            >
+              <Sun size={18} className={theme === 'light' ? 'text-[#F5B700]' : 'text-[var(--dh-muted)]'} strokeWidth={2.4} />
+              <Moon size={18} className={theme === 'dark' ? 'text-[#F5B700]' : 'text-[var(--dh-muted)]'} strokeWidth={2.4} />
+            </button>
 
-          <button
-            onClick={() => navigate(isAuthenticated ? '/taxi/user/profile' : '/taxi/user/login')}
-            className="flex h-[50px] items-center gap-2 rounded-[14px] bg-[#F5B700] px-6 text-[15px] font-bold text-slate-950 shadow-[0_8px_20px_rgba(245,183,0,0.32)] transition-transform hover:-translate-y-0.5"
-          >
-            <UserRound size={18} strokeWidth={2.6} />
-            {isAuthenticated ? 'My Account' : 'Login / Sign Up'}
-          </button>
+            <button
+              onClick={() => navigate(isAuthenticated ? '/taxi/user/profile' : '/taxi/user/login')}
+              className="flex h-[52px] items-center gap-2 rounded-[16px] bg-[#F5B700] px-4 text-[14.5px] font-bold text-slate-950 transition-transform hover:-translate-y-0.5"
+            >
+              <UserRound size={18} strokeWidth={2.6} />
+              {isAuthenticated ? 'My Account' : 'Login / Sign Up'}
+              <ChevronDown size={16} strokeWidth={3} />
+            </button>
+          </div>
         </div>
       </div>
       {/* Indeterminate bar: the page cannot know how much is left, so it
@@ -169,5 +190,119 @@ export const ServiceCard = ({ title, copy, image, path, badge, highlighted }) =>
         <ArrowRight size={15} strokeWidth={2.8} />
       </span>
     </button>
+  );
+};
+
+/**
+ * Site footer for the desktop pages.
+ *
+ * Everything here is real: the phone numbers and the two copyright lines come
+ * from the admin's general settings, the service links are the same ones the
+ * nav and the service grid use, and the cities are the branches the fleet
+ * actually operates from. Anything the admin has not filled in is left out
+ * rather than replaced with a plausible-looking placeholder.
+ */
+export const DesktopFooter = ({ locations = [] }) => {
+  const navigate = useNavigate();
+  const { settings } = useSettings();
+  const general = settings?.general || {};
+
+  const phones = [
+    { label: 'Bookings', value: general.contact_booking_number },
+    { label: 'Support', value: general.contact_phone_1 },
+    { label: 'Alternate', value: general.contact_phone_2 },
+  ].filter((item) => String(item.value || '').trim());
+
+  // Whatever the nav offers that the Services column does not already list.
+  const serviceLabels = new Set(SERVICES.map((service) => service.title));
+  const company = NAV_LINKS.filter(
+    (link) => link.label !== 'Home' && !serviceLabels.has(link.label) && !SERVICES.some((service) => service.path === link.path),
+  );
+
+  const column = 'text-[13px] font-medium text-[var(--dh-muted)] transition-colors hover:text-[#F5B700]';
+
+  return (
+    <footer className="border-t border-[var(--dh-border)] bg-[var(--dh-surface)]">
+      <div className="mx-auto max-w-[1440px] px-8 py-12 xl:px-12">
+        <div className="grid grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-10">
+          <div>
+            <div className="flex flex-col leading-none">
+              <svg viewBox="0 0 120 22" className="mb-0.5 h-[13px] w-[86px]" aria-hidden="true">
+                <path d="M4 20C22 4 74 -2 116 8" fill="none" stroke="#F5B700" strokeWidth="5" strokeLinecap="round" />
+              </svg>
+              <span className="text-[28px] font-black italic tracking-[-0.05em] text-[var(--dh-text)]">
+                Taxi<span className="text-[#F5B700]">09</span>
+              </span>
+            </div>
+            <p className="mt-4 max-w-[300px] text-[13.5px] font-medium leading-[1.65] text-[var(--dh-muted)]">
+              Self drive cars, bikes, buses, hotels and tour packages - booked in one place,
+              with round the clock support on every trip.
+            </p>
+            {phones.length ? (
+              <div className="mt-5 space-y-2">
+                {phones.map(({ label, value }) => (
+                  <a
+                    key={label}
+                    href={`tel:${value}`}
+                    className="flex items-center gap-2.5 text-[13.5px] font-semibold text-[var(--dh-text)] transition-colors hover:text-[#F5B700]"
+                  >
+                    <Phone size={15} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
+                    {value}
+                    <span className="text-[11.5px] font-medium text-[var(--dh-muted)]">{label}</span>
+                  </a>
+                ))}
+              </div>
+            ) : null}
+          </div>
+
+          <div>
+            <p className="text-[12px] font-black uppercase tracking-[0.12em] text-[var(--dh-text)]">Services</p>
+            <ul className="mt-4 space-y-2.5">
+              {SERVICES.map((service) => (
+                <li key={service.title}>
+                  <button type="button" onClick={() => navigate(service.path)} className={column}>
+                    {service.title}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className="text-[12px] font-black uppercase tracking-[0.12em] text-[var(--dh-text)]">Company</p>
+            <ul className="mt-4 space-y-2.5">
+              {company.map((link) => (
+                <li key={link.label}>
+                  <button type="button" onClick={() => navigate(link.path)} className={column}>
+                    {link.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {locations.length ? (
+            <div>
+              <p className="text-[12px] font-black uppercase tracking-[0.12em] text-[var(--dh-text)]">Where We Operate</p>
+              <ul className="mt-4 space-y-2.5">
+                {locations.map((name) => (
+                  <li key={name} className="flex items-start gap-2 text-[13px] font-medium text-[var(--dh-muted)]">
+                    <MapPin size={14} className="mt-0.5 shrink-0 text-[#F5B700]" strokeWidth={2.4} />
+                    {name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </div>
+
+        {general.footer_1 || general.footer_2 ? (
+          <div className="mt-10 flex items-center justify-between gap-6 border-t border-[var(--dh-border)] pt-6">
+            <p className="text-[12.5px] font-medium text-[var(--dh-muted)]">{general.footer_1}</p>
+            <p className="text-[12.5px] font-medium text-[var(--dh-muted)]">{general.footer_2}</p>
+          </div>
+        ) : null}
+      </div>
+    </footer>
   );
 };

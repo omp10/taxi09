@@ -501,15 +501,31 @@ body {
   --dh-border: #eceef1;
   --dh-text: #0f172a;
   --dh-muted: #64748b;
+  /* The warm wash behind the stats strip. */
+  --dh-accent-soft: #fff9e6;
 }
 
+/* Neutral black rather than the blue-grey it used to be: the panels sit just
+   off the page black and are separated by their hairline border, not by fill. */
 .desktop-home.theme-dark {
-  --dh-bg: #0d1117;
-  --dh-surface: #161b22;
-  --dh-chip: #21262d;
-  --dh-border: #2b3138;
-  --dh-text: #f0f3f6;
-  --dh-muted: #93a1b0;
+  --dh-bg: #000000;
+  --dh-surface: #0d0d0d;
+  --dh-chip: #1a1a1a;
+  --dh-border: #262626;
+  --dh-text: #ffffff;
+  --dh-muted: #9a9a9a;
+  /* Keeps the amber identity without putting a cream slab on a black page. */
+  --dh-accent-soft: #191307;
+}
+
+/* The nav scrolls when ten links will not fit; the bar itself stays hidden so
+   a full-width nav never shows a stray scrollbar. */
+.dh-nav-scroll {
+  scrollbar-width: none;
+}
+
+.dh-nav-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 /* Indeterminate nav progress: sweeps while page data is in flight. */

@@ -329,6 +329,24 @@ const rideSchema = new mongoose.Schema(
       minlength: 4,
       maxlength: 4,
     },
+    /**
+     * Start-of-trip odometer, recorded independently by each side once the
+     * driver has accepted. Both readings must be present before the start PIN
+     * is released, so a dispute later has two photos taken at the same moment
+     * rather than one party's word.
+     */
+    odometer: {
+      user: {
+        readingKm: { type: Number, default: null, min: 0 },
+        imageUrl: { type: String, default: '', trim: true },
+        recordedAt: { type: Date, default: null },
+      },
+      driver: {
+        readingKm: { type: Number, default: null, min: 0 },
+        imageUrl: { type: String, default: '', trim: true },
+        recordedAt: { type: Date, default: null },
+      },
+    },
     driverPaymentCollection: {
       provider: {
         type: String,

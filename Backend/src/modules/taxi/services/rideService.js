@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { ApiError } from '../../../utils/ApiError.js';
 import { normalizePoint, toPoint } from '../../../utils/geo.js';
+import { uploadDataUrlToCloudinary } from '../../../utils/cloudinaryUpload.js';
 import { RIDE_LIVE_STATUS, RIDE_STATUS } from '../constants/index.js';
 import { AdminBusinessSetting } from '../admin/models/AdminBusinessSetting.js';
 import { SetPrice } from '../admin/models/SetPrice.js';
@@ -1333,7 +1334,10 @@ export const serializeRideRealtime = (ride) => ({
         updatedAt: ride.driverPaymentCollection.updatedAt || null,
       }
     : null,
-  otp: ride.otp || '',
+  // Withheld until both odometers are recorded - the PIN is what starts the
+  // trip, so releasing it early would make the capture step skippable.
+  otp: isOdometerCaptureComplete(ride) ? (ride.otp || '') : '',
+  odometer: serializeRideOdometer(ride),
   parcel: ride.deliveryId?.parcel || ride.parcel || null,
   intercity: ride.intercity || null,
   commissionAmount: ride.commissionAmount,
@@ -1487,6 +1491,7 @@ export const listRideHistoryForIdentity = async ({ role, entityId, limit = 50, p
       'estimatedDurationMinutes',
       'paymentMethod',
       'otp',
+      'odometer',
       'parcel',
       'intercity',
       'pricingSnapshot',
@@ -1544,7 +1549,10 @@ export const listRideHistoryForIdentity = async ({ role, entityId, limit = 50, p
     estimatedDistanceMeters: ride.estimatedDistanceMeters || 0,
     estimatedDurationMinutes: ride.estimatedDurationMinutes || 0,
     paymentMethod: ride.paymentMethod,
-    otp: ride.otp || '',
+    // Same gate as the realtime payload, so the history list cannot be used to
+    // read the PIN of a ride that has not captured both odometers yet.
+    otp: isOdometerCaptureComplete(ride) ? (ride.otp || '') : '',
+    odometer: serializeRideOdometer(ride),
     parcel: ride.deliveryId?.parcel || ride.parcel || null,
     intercity: ride.intercity || null,
     pricingSnapshot: ride.pricingSnapshot || null,
@@ -1686,6 +1694,109 @@ const rideStatusConfig = {
   },
 };
 
+/** The window in which an odometer may be recorded: accepted, not yet started. */
+const ODOMETER_CAPTURE_STATUSES = [RIDE_LIVE_STATUS.ACCEPTED, RIDE_LIVE_STATUS.ARRIVING];
+
+/** A side counts as recorded only with both a reading and a photo on file. */
+const hasOdometerReading = (side) =>
+  Number.isFinite(Number(side?.readingKm)) && Boolean(String(side?.imageUrl || '').trim());
+
+/**
+ * Parcels are handed over rather than ridden, and their tracking screen has no
+ * capture step - requiring one there would leave every delivery unable to
+ * start. Rides, intercity trips and hired drivers all share the ride tracking
+ * screen, so they all capture.
+ */
+const requiresOdometerCapture = (ride) =>
+  String(ride?.serviceType || 'ride').toLowerCase() !== 'parcel';
+
+/** True when there is nothing further to capture before the trip may start. */
+export const isOdometerCaptureComplete = (ride) =>
+  !requiresOdometerCapture(ride)
+  || (hasOdometerReading(ride?.odometer?.user) && hasOdometerReading(ride?.odometer?.driver));
+
+const serializeOdometerSide = (side) => ({
+  readingKm: Number.isFinite(Number(side?.readingKm)) ? Number(side.readingKm) : null,
+  imageUrl: side?.imageUrl || '',
+  recordedAt: side?.recordedAt || null,
+  recorded: hasOdometerReading(side),
+});
+
+/**
+ * A ride document safe to hand to a client during the capture window: the start
+ * PIN is blanked until both odometers are on file. Deliberately returns a plain
+ * object so a caller cannot save the blanked value back over the stored PIN.
+ */
+export const withGatedRideOtp = (ride) => {
+  const plain = typeof ride?.toObject === 'function' ? ride.toObject() : { ...(ride || {}) };
+
+  if (!isOdometerCaptureComplete(plain)) {
+    plain.otp = '';
+  }
+
+  // Same shape the realtime payload carries, so both apps read one structure.
+  plain.odometer = serializeRideOdometer(plain);
+
+  return plain;
+};
+
+export const serializeRideOdometer = (ride) => ({
+  user: serializeOdometerSide(ride?.odometer?.user),
+  driver: serializeOdometerSide(ride?.odometer?.driver),
+  complete: isOdometerCaptureComplete(ride),
+});
+
+/**
+ * Stores one side's start-of-trip odometer. Either participant may call this
+ * for their own side only - the role comes from the authenticated token, never
+ * from the request body, so neither can record on the other's behalf.
+ */
+export const recordRideOdometer = async ({ rideId, role, entityId, readingKm, imageDataUrl }) => {
+  const reading = Number(readingKm);
+
+  if (!Number.isFinite(reading) || reading < 0) {
+    throw new ApiError(400, 'A valid odometer reading in kilometres is required');
+  }
+
+  if (!String(imageDataUrl || '').trim()) {
+    throw new ApiError(400, 'An odometer photo is required');
+  }
+
+  await ensureRideParticipantAccess({ rideId, role, entityId });
+
+  const ride = await Ride.findById(rideId);
+
+  if (!ride) {
+    throw new ApiError(404, 'Ride not found');
+  }
+
+  if (!ODOMETER_CAPTURE_STATUSES.includes(ride.liveStatus)) {
+    throw new ApiError(409, 'The odometer can only be recorded after the driver accepts and before the trip starts');
+  }
+
+  // Uploaded before the write so a failed upload leaves the ride untouched.
+  const { secureUrl } = await uploadDataUrlToCloudinary({
+    dataUrl: imageDataUrl,
+    publicIdPrefix: `ride-odometer-${role}`,
+    publicIdSuffix: String(rideId),
+  });
+
+  ride.set(`odometer.${role}`, {
+    readingKm: reading,
+    imageUrl: secureUrl,
+    recordedAt: new Date(),
+  });
+
+  await ride.save();
+
+  // dispatchService imports this module, so it is pulled in on demand to keep
+  // the two from importing each other at load time.
+  const { notifyRideOdometerUpdated } = await import('./dispatchService.js');
+  await notifyRideOdometerUpdated(ride);
+
+  return serializeRideOdometer(ride);
+};
+
 export const updateRideLifecycle = async ({ rideId, driverId, nextStatus, paymentMethod }) => {
   const config = rideStatusConfig[nextStatus];
 
@@ -1701,6 +1812,12 @@ export const updateRideLifecycle = async ({ rideId, driverId, nextStatus, paymen
 
   if (!config.allowedCurrent.includes(ride.liveStatus)) {
     throw new ApiError(409, `Ride cannot move from ${ride.liveStatus} to ${nextStatus}`);
+  }
+
+  // The start PIN is only released once both odometers are on file, so a trip
+  // must not be able to start without them either.
+  if (nextStatus === RIDE_LIVE_STATUS.STARTED && !isOdometerCaptureComplete(ride)) {
+    throw new ApiError(409, 'Both the rider and the driver must record the odometer before the trip can start');
   }
 
   ride.liveStatus = nextStatus;
