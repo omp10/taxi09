@@ -50,12 +50,12 @@ const HowItWorksSection = () => {
                 <div className="w-16 h-16 rounded-full bg-[#1a1a1a] border-2 border-[#FFC107] flex items-center justify-center text-[#FFC107] shadow-[0_0_20px_rgba(255,193,7,0.15)] mb-4">
                   {step.icon}
                 </div>
-                <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-white text-black text-xs font-bold flex items-center justify-center border-2 border-[#111111]">
+                <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-white text-black text-[13.5px] leading-[18px] font-bold flex items-center justify-center border-2 border-[#111111]">
                   {step.id}
                 </div>
               </div>
               <h3 className="text-lg font-bold text-white mb-2">{step.title}</h3>
-              <p className="text-sm text-gray-400 max-w-[200px] leading-relaxed">{step.desc}</p>
+              <p className="text-[15.5px] leading-[21px] text-gray-400 max-w-[200px] leading-relaxed">{step.desc}</p>
             </div>
           ))}
         </div>

@@ -313,7 +313,7 @@ const IntercityVehicle = () => {
             <ArrowLeft size={18} />
           </motion.button>
           <div className="min-w-0">
-            <p className="text-xs font-medium text-slate-500">Intercity booking</p>
+            <p className="text-[13.5px] leading-[18px] font-medium text-slate-500">Intercity booking</p>
             <h1 className="truncate text-lg font-semibold text-slate-900">{toCity}</h1>
           </div>
         </div>
@@ -323,15 +323,15 @@ const IntercityVehicle = () => {
         <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-sm font-medium text-slate-500">Route</p>
+              <p className="text-[15.5px] leading-[21px] font-medium text-slate-500">Route</p>
               <h2 className="mt-1 text-xl font-semibold text-slate-900">{fromCity} to {toCity}</h2>
             </div>
-            <div className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+            <div className="rounded-full bg-blue-50 px-3 py-1 text-[13.5px] leading-[18px] font-medium text-blue-700">
               {selectedPackages.length} package{selectedPackages.length === 1 ? '' : 's'}
             </div>
           </div>
           {pickupAddress ? (
-            <div className="mt-4 flex items-start gap-2 rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+            <div className="mt-4 flex items-start gap-2 rounded-2xl bg-slate-50 px-4 py-3 text-[15.5px] leading-[21px] text-slate-600">
               <MapPin size={16} className="mt-0.5 shrink-0 text-blue-600" />
               <span className="line-clamp-2">{pickupAddress}</span>
             </div>
@@ -342,7 +342,7 @@ const IntercityVehicle = () => {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-base font-semibold text-slate-900">Trip details</h3>
-              <p className="mt-1 text-sm text-slate-500">Choose how and when this trip should run.</p>
+              <p className="mt-1 text-[15.5px] leading-[21px] text-slate-500">Choose how and when this trip should run.</p>
             </div>
           </div>
 
@@ -354,7 +354,7 @@ const IntercityVehicle = () => {
                   type="button"
                   key={type}
                   onClick={() => setTripType(type)}
-                  className={`rounded-2xl border px-4 py-3 text-sm font-medium transition ${
+                  className={`rounded-2xl border px-4 py-3 text-[15.5px] leading-[21px] font-medium transition ${
                     active
                       ? 'border-blue-600 bg-blue-50 text-blue-700'
                       : 'border-slate-200 bg-white text-slate-700'
@@ -370,7 +370,7 @@ const IntercityVehicle = () => {
             <button
               type="button"
               onClick={() => setRideMode('now')}
-              className={`flex items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-sm font-medium transition ${
+              className={`flex items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-[15.5px] leading-[21px] font-medium transition ${
                 rideMode === 'now'
                   ? 'border-blue-600 bg-blue-50 text-blue-700'
                   : 'border-slate-200 bg-white text-slate-700'
@@ -382,7 +382,7 @@ const IntercityVehicle = () => {
             <button
               type="button"
               onClick={() => setRideMode('schedule')}
-              className={`flex items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-sm font-medium transition ${
+              className={`flex items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-[15.5px] leading-[21px] font-medium transition ${
                 rideMode === 'schedule'
                   ? 'border-blue-600 bg-blue-50 text-blue-700'
                   : 'border-slate-200 bg-white text-slate-700'
@@ -395,12 +395,12 @@ const IntercityVehicle = () => {
 
           {rideMode === 'schedule' ? (
             <div className="mt-4">
-              <label className="mb-2 block text-sm font-medium text-slate-700">Travel date</label>
+              <label className="mb-2 block text-[15.5px] leading-[21px] font-medium text-slate-700">Travel date</label>
               <div className="relative">
                 <button
                   type="button"
                   onClick={() => openPicker(travelDateInputRef)}
-                  className="flex h-12 w-full items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 text-left text-sm text-slate-900 outline-none transition focus:border-blue-500"
+                  className="flex h-12 w-full items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 text-left text-[15.5px] leading-[21px] text-slate-900 outline-none transition focus:border-blue-500"
                 >
                   <span>{travelDate || 'Select travel date'}</span>
                   <Calendar size={16} className="text-slate-400" />
@@ -419,12 +419,12 @@ const IntercityVehicle = () => {
                   tabIndex={-1}
                 />
               </div>
-              <label className="mb-2 mt-4 block text-sm font-medium text-slate-700">Pickup time</label>
+              <label className="mb-2 mt-4 block text-[15.5px] leading-[21px] font-medium text-slate-700">Pickup time</label>
               <div className="relative">
                 <button
                   type="button"
                   onClick={() => openPicker(scheduledAtInputRef)}
-                  className="flex h-12 w-full items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 text-left text-sm text-slate-900 outline-none transition focus:border-blue-500"
+                  className="flex h-12 w-full items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 text-left text-[15.5px] leading-[21px] text-slate-900 outline-none transition focus:border-blue-500"
                 >
                   <span>{scheduledAt ? scheduledAt.replace('T', ' ') : 'Select pickup time'}</span>
                   <Clock3 size={16} className="text-slate-400" />
@@ -444,9 +444,9 @@ const IntercityVehicle = () => {
                 />
               </div>
               {scheduleError ? (
-                <p className="mt-2 text-sm font-medium text-rose-500">{scheduleError}</p>
+                <p className="mt-2 text-[15.5px] leading-[21px] font-medium text-rose-500">{scheduleError}</p>
               ) : (
-                <p className="mt-2 text-xs text-slate-500">Drivers will be notified automatically around this scheduled time.</p>
+                <p className="mt-2 text-[13.5px] leading-[18px] text-slate-500">Drivers will be notified automatically around this scheduled time.</p>
               )}
             </div>
           ) : null}
@@ -455,8 +455,8 @@ const IntercityVehicle = () => {
             <div className="flex items-center gap-2">
               <Users size={16} className="text-slate-500" />
               <div>
-                <p className="text-sm font-medium text-slate-900">Passengers</p>
-                <p className="text-xs text-slate-500">Up to {selectedVehicle?.seats || 1} seats</p>
+                <p className="text-[15.5px] leading-[21px] font-medium text-slate-900">Passengers</p>
+                <p className="text-[13.5px] leading-[18px] text-slate-500">Up to {selectedVehicle?.seats || 1} seats</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -483,7 +483,7 @@ const IntercityVehicle = () => {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-base font-semibold text-slate-900">Choose vehicle</h3>
-              <p className="mt-1 text-sm text-slate-500">Only vehicles mapped to this package are shown.</p>
+              <p className="mt-1 text-[15.5px] leading-[21px] text-slate-500">Only vehicles mapped to this package are shown.</p>
             </div>
           </div>
 
@@ -492,8 +492,8 @@ const IntercityVehicle = () => {
               <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
                 <Info size={20} />
               </div>
-              <p className="text-sm font-medium text-slate-900">No vehicles available</p>
-              <p className="mt-1 text-sm text-slate-500">Try another destination or package.</p>
+              <p className="text-[15.5px] leading-[21px] font-medium text-slate-900">No vehicles available</p>
+              <p className="mt-1 text-[15.5px] leading-[21px] text-slate-500">Try another destination or package.</p>
             </div>
           ) : (
             vehicles.map((vehicle) => {
@@ -524,11 +524,11 @@ const IntercityVehicle = () => {
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
                           <h4 className="truncate text-base font-semibold text-slate-900">{vehicle.name}</h4>
-                          <p className="mt-1 text-sm text-slate-500">{vehicle.seats} seats · {vehicle.packageTypeName}</p>
+                          <p className="mt-1 text-[15.5px] leading-[21px] text-slate-500">{vehicle.seats} seats · {vehicle.packageTypeName}</p>
                         </div>
                         <div className="text-right">
                           <p className="text-lg font-semibold text-slate-900">Rs {vehicleFare.toLocaleString()}</p>
-                          <p className="text-xs text-slate-500">estimated</p>
+                          <p className="text-[13.5px] leading-[18px] text-slate-500">estimated</p>
                         </div>
                       </div>
                     </div>
@@ -543,7 +543,7 @@ const IntercityVehicle = () => {
       <div className="fixed bottom-0 left-1/2 w-full max-w-lg -translate-x-1/2 border-t border-slate-200 bg-white px-5 py-4">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-medium text-slate-500">{tripType} · {getDisplayDate(rideMode, travelDate)}</p>
+            <p className="text-[13.5px] leading-[18px] font-medium text-slate-500">{tripType} · {getDisplayDate(rideMode, travelDate)}</p>
             <p className="mt-1 text-xl font-semibold text-slate-900">Rs {finalFare.toLocaleString()}</p>
           </div>
           <motion.button
@@ -551,7 +551,7 @@ const IntercityVehicle = () => {
             whileTap={{ scale: 0.98 }}
             onClick={handleContinue}
             disabled={!selectedVehicle}
-            className="flex h-12 items-center justify-center gap-2 rounded-2xl bg-slate-900 px-5 text-sm font-medium text-white disabled:opacity-50"
+            className="flex h-12 items-center justify-center gap-2 rounded-2xl bg-slate-900 px-5 text-[15.5px] leading-[21px] font-medium text-white disabled:opacity-50"
           >
             Continue
             <ChevronRight size={16} />

@@ -18,7 +18,7 @@ export const DesktopNav = ({ activePath, theme, onToggleTheme, loading = false }
 
   return (
     <header className="sticky top-0 z-50 bg-[var(--dh-bg)] px-4 pb-2 pt-3 xl:px-6">
-      <div className="relative mx-auto flex max-w-[1440px] items-stretch gap-2.5">
+      <div className="relative mx-auto flex max-w-[1680px] items-stretch gap-2.5">
         {/* The mark sits on its own panel, set apart from the links. */}
         <button
           onClick={() => navigate('/taxi/user')}
@@ -31,14 +31,14 @@ export const DesktopNav = ({ activePath, theme, onToggleTheme, loading = false }
           {/* Ten links do not fit on a narrow desktop. Scrolling keeps every
               one of them reachable instead of letting the row collide with the
               account button or quietly clipping the last few. */}
-          <nav className="dh-nav-scroll flex min-w-0 flex-1 items-center justify-start overflow-x-auto">
+          <nav className="dh-nav-scroll flex min-w-0 flex-1 items-center justify-start gap-1 overflow-x-auto">
             {NAV_LINKS.map(({ label, path, badge, icon: Icon }) => {
               const isActive = path === activePath;
               return (
                 <button
                   key={label}
                   onClick={() => navigate(path)}
-                  className={`group flex shrink-0 items-center whitespace-nowrap rounded-[14px] px-1.5 py-2.5 text-[14.5px] transition-colors ${
+                  className={`group flex shrink-0 items-center whitespace-nowrap rounded-[14px] px-2.5 py-2.5 text-[14.5px] transition-colors ${
                     isActive
                       ? 'bg-[#F5B700] font-bold text-slate-950'
                       : 'font-semibold text-[var(--dh-text)] hover:bg-[var(--dh-chip)] hover:text-[#F5B700]'
@@ -220,7 +220,7 @@ export const DesktopFooter = ({ locations = [] }) => {
 
   return (
     <footer className="border-t border-[var(--dh-border)] bg-[var(--dh-surface)]">
-      <div className="mx-auto max-w-[1440px] px-8 py-12 xl:px-12">
+      <div className="mx-auto max-w-[1680px] px-4 py-12 xl:px-6">
         <div className="grid grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-10">
           <div>
             <div className="flex text-[var(--dh-text)]">

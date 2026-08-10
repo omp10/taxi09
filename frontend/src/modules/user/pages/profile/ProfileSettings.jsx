@@ -212,7 +212,7 @@ const ProfileSettings = () => {
                </div>
             </div>
          </div>
-         {saveError && <p className="text-sm font-bold text-rose-500 text-center">{saveError}</p>}
+         {saveError && <p className="text-[15.5px] leading-[21px] font-bold text-rose-500 text-center">{saveError}</p>}
       </div>
 
       <div className="p-6 bg-white border-t border-gray-50 pb-12">

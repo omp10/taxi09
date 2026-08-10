@@ -344,7 +344,7 @@ const Signup = () => {
       {step === 'phone' ? (
         <form onSubmit={handleStartSignup} className="space-y-6">
           <div className="space-y-2">
-            <label className="ml-1 text-xs font-bold uppercase tracking-widest text-slate-600">Mobile Number *</label>
+            <label className="ml-1 text-[13.5px] leading-[18px] font-bold uppercase tracking-widest text-slate-600">Mobile Number *</label>
             <div className={fieldShellClassName}>
               <Smartphone size={18} className="text-slate-500" />
               <span className="text-[17px] font-bold text-slate-700">+91</span>
@@ -358,11 +358,11 @@ const Signup = () => {
                 required
               />
             </div>
-            <p className="ml-1 text-sm text-slate-500">We’ll send a 4-digit OTP to this number.</p>
+            <p className="ml-1 text-[15.5px] leading-[21px] text-slate-500">We’ll send a 4-digit OTP to this number.</p>
           </div>
 
           {error && (
-            <p className="text-sm font-bold text-red-500 text-center">{error}</p>
+            <p className="text-[15.5px] leading-[21px] font-bold text-red-500 text-center">{error}</p>
           )}
 
           <Motion.motion.button
@@ -386,7 +386,7 @@ const Signup = () => {
           </Motion.motion.button>
 
           <div className="space-y-3 text-center">
-            <p className="text-sm font-medium text-slate-500">
+            <p className="text-[15.5px] leading-[21px] font-medium text-slate-500">
               Already have an account?{' '}
               <Link
                 to="/taxi/user/login"
@@ -427,7 +427,7 @@ const Signup = () => {
             <p className="mt-3 text-[12px] font-bold uppercase tracking-widest text-slate-900 flex items-center gap-1">
               Profile Photo <span className="text-red-500">*</span>
             </p>
-            <p className="mt-2 text-xs font-medium text-slate-500">Please upload a clear photo of yourself to complete your profile.</p>
+            <p className="mt-2 text-[13.5px] leading-[18px] font-medium text-slate-500">Please upload a clear photo of yourself to complete your profile.</p>
             <div className="mt-4 grid w-full max-w-[280px] grid-cols-2 gap-2">
               <label className={`relative flex h-11 items-center justify-center gap-2 rounded-2xl border text-[13px] font-bold uppercase tracking-wider transition-all ${
                 photoUploading
@@ -469,7 +469,7 @@ const Signup = () => {
 
         <div className="space-y-4 sm:space-y-5">
           <div className="space-y-2">
-            <label className="ml-1 text-xs font-bold uppercase tracking-widest text-slate-600">Mobile Number *</label>
+            <label className="ml-1 text-[13.5px] leading-[18px] font-bold uppercase tracking-widest text-slate-600">Mobile Number *</label>
             <div className={fieldShellClassName}>
               <Smartphone size={18} className="text-slate-500" />
               <span className="text-[17px] font-bold text-slate-700">+91</span>
@@ -484,11 +484,11 @@ const Signup = () => {
                 required
               />
             </div>
-            <p className="ml-1 text-xs font-medium text-slate-500">Verified number. You can&apos;t edit it here.</p>
+            <p className="ml-1 text-[13.5px] leading-[18px] font-medium text-slate-500">Verified number. You can&apos;t edit it here.</p>
           </div>
 
           <div className="space-y-2">
-            <label className="ml-1 text-xs font-bold uppercase tracking-widest text-slate-600">Full Name *</label>
+            <label className="ml-1 text-[13.5px] leading-[18px] font-bold uppercase tracking-widest text-slate-600">Full Name *</label>
             <div className={fieldShellClassName}>
               <User size={18} className="text-slate-500" />
               <input 
@@ -503,7 +503,7 @@ const Signup = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="ml-1 text-xs font-bold uppercase tracking-widest text-slate-600">Email Address (Optional)</label>
+            <label className="ml-1 text-[13.5px] leading-[18px] font-bold uppercase tracking-widest text-slate-600">Email Address (Optional)</label>
             <div className={fieldShellClassName}>
               <Mail size={18} className="text-slate-500" />
               <input 
@@ -517,7 +517,7 @@ const Signup = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="ml-1 text-xs font-bold uppercase tracking-widest text-slate-600">Referral Code (Optional)</label>
+            <label className="ml-1 text-[13.5px] leading-[18px] font-bold uppercase tracking-widest text-slate-600">Referral Code (Optional)</label>
             <div className={fieldShellClassName}>
               <User size={18} className="text-slate-500" />
               <input
@@ -531,13 +531,13 @@ const Signup = () => {
                 }))}
               />
             </div>
-            <p className="ml-1 text-xs font-medium text-slate-500">If someone shared a referral link, the code should already be filled in.</p>
+            <p className="ml-1 text-[13.5px] leading-[18px] font-medium text-slate-500">If someone shared a referral link, the code should already be filled in.</p>
           </div>
 
           <div className="space-y-3">
-            <label className="ml-1 text-xs font-bold uppercase tracking-widest text-slate-600">Government ID Proof *</label>
+            <label className="ml-1 text-[13.5px] leading-[18px] font-bold uppercase tracking-widest text-slate-600">Government ID Proof *</label>
             <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
-              <p className="mb-3 text-xs font-bold text-slate-700">Upload clear front and back photos of your government ID proof.</p>
+              <p className="mb-3 text-[13.5px] leading-[18px] font-bold text-slate-700">Upload clear front and back photos of your government ID proof.</p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {governmentIdUploadItems.map((item) => (
                   <div key={item.side} className="rounded-2xl border border-slate-100 bg-slate-50/60 p-3">
@@ -611,7 +611,7 @@ const Signup = () => {
           </div>
 
           <div className="space-y-3">
-             <label className="ml-1 text-xs font-bold uppercase tracking-widest text-slate-600">Gender</label>
+             <label className="ml-1 text-[13.5px] leading-[18px] font-bold uppercase tracking-widest text-slate-600">Gender</label>
              <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap">
                 {['Male', 'Female', 'Other'].map((g) => (
                     <button
@@ -631,30 +631,30 @@ const Signup = () => {
           </div>
 
           {error && (
-            <p className="text-sm font-bold text-red-500 text-center">{error}</p>
+            <p className="text-[15.5px] leading-[21px] font-bold text-red-500 text-center">{error}</p>
           )}
         </div>
 
         {/* Missing Fields Checklist */}
         {(!formData.name || !hasGovernmentIdProof || !formData.profileImage) && (
           <div className="rounded-2xl bg-amber-50/50 border border-amber-100 p-4 space-y-2 transition-all duration-300">
-            <h4 className="text-xs font-bold text-amber-800 uppercase tracking-wider flex items-center gap-1.5">
+            <h4 className="text-[13.5px] leading-[18px] font-bold text-amber-800 uppercase tracking-wider flex items-center gap-1.5">
               <span>Remaining Steps to Complete</span>
             </h4>
             <ul className="space-y-2">
-              <li className="flex items-center gap-2.5 text-xs font-semibold">
+              <li className="flex items-center gap-2.5 text-[13.5px] leading-[18px] font-semibold">
                 <span className={`w-2 h-2 rounded-full ${formData.profileImage ? 'bg-emerald-500' : 'bg-amber-400 animate-pulse'}`} />
                 <span className={formData.profileImage ? 'text-slate-400 line-through font-normal' : 'text-slate-700'}>
                   Upload Profile Photo
                 </span>
               </li>
-              <li className="flex items-center gap-2.5 text-xs font-semibold">
+              <li className="flex items-center gap-2.5 text-[13.5px] leading-[18px] font-semibold">
                 <span className={`w-2 h-2 rounded-full ${formData.name.trim() ? 'bg-emerald-500' : 'bg-amber-400 animate-pulse'}`} />
                 <span className={formData.name.trim() ? 'text-slate-400 line-through font-normal' : 'text-slate-700'}>
                   Enter Full Name
                 </span>
               </li>
-              <li className="flex items-center gap-2.5 text-xs font-semibold">
+              <li className="flex items-center gap-2.5 text-[13.5px] leading-[18px] font-semibold">
                 <span className={`w-2 h-2 rounded-full ${hasGovernmentIdProof ? 'bg-emerald-500' : 'bg-amber-400 animate-pulse'}`} />
                 <span className={hasGovernmentIdProof ? 'text-slate-400 line-through font-normal' : 'text-slate-700'}>
                   Upload Government ID Front & Back
@@ -685,7 +685,7 @@ const Signup = () => {
           <button
             type="button"
             onClick={() => navigate('/taxi/user/support')}
-            className="w-full py-3 text-sm font-bold text-slate-500 transition-colors hover:text-slate-900 flex items-center justify-center gap-2"
+            className="w-full py-3 text-[15.5px] leading-[21px] font-bold text-slate-500 transition-colors hover:text-slate-900 flex items-center justify-center gap-2"
           >
             <LifeBuoy size={16} />
             Need Help?
@@ -693,7 +693,7 @@ const Signup = () => {
         </div>
 
         <div className="space-y-3 text-center">
-          <p className="text-sm font-medium text-slate-500">
+          <p className="text-[15.5px] leading-[21px] font-medium text-slate-500">
             Already have an account?{' '}
             <Link
               to="/taxi/user/login"

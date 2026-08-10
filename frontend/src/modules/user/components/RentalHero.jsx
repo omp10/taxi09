@@ -18,7 +18,7 @@ const RentalHero = () => {
         {/* Left Side: Search Card */}
         <div className="w-full max-w-md flex-shrink-0">
           <div className="flex items-center justify-center mb-8">
-             <div className="inline-flex items-center rounded-full border border-[#ffe066] bg-[#fff9e6] p-1 text-xs font-semibold text-amber-800">
+             <div className="inline-flex items-center rounded-full border border-[#ffe066] bg-[#fff9e6] p-1 text-[13.5px] leading-[18px] font-semibold text-amber-800">
                 <span className="px-3 py-1">Car Rental In India</span>
                 <button className="rounded-full bg-[#FFC107] px-3 py-1 text-slate-900 transition-colors hover:bg-amber-400">
                   Learn More
@@ -35,7 +35,7 @@ const RentalHero = () => {
             <div className="relative flex rounded-xl bg-[#FFC107] p-1 shadow-inner">
               <button
                 onClick={() => setActiveTab('rental')}
-                className={`relative flex-1 rounded-lg py-3 text-center text-sm transition-colors ${
+                className={`relative flex-1 rounded-lg py-3 text-center text-[15.5px] leading-[21px] transition-colors ${
                   activeTab === 'rental' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-800 hover:bg-white/50'
                 }`}
               >
@@ -47,7 +47,7 @@ const RentalHero = () => {
               </button>
               <button
                 onClick={() => setActiveTab('subscriptions')}
-                className={`relative flex-1 rounded-lg py-3 text-center text-sm transition-colors ${
+                className={`relative flex-1 rounded-lg py-3 text-center text-[15.5px] leading-[21px] transition-colors ${
                   activeTab === 'subscriptions' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-800 hover:bg-white/50'
                 }`}
               >
@@ -75,7 +75,7 @@ const RentalHero = () => {
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FFC107] text-slate-900 shadow-sm">
                   <MapPin size={16} />
                 </div>
-                <span className="text-sm font-medium text-slate-500">Select location to search</span>
+                <span className="text-[15.5px] leading-[21px] font-medium text-slate-500">Select location to search</span>
               </div>
               <ArrowRight size={20} className="text-slate-800" />
             </div>
@@ -110,7 +110,7 @@ const RentalHero = () => {
 
             <button 
               onClick={() => navigate('/taxi/user/rental')}
-              className="rounded-md bg-[#FFC107] px-6 py-2.5 text-sm font-bold text-slate-900 transition-colors hover:bg-amber-400 flex items-center gap-2 shadow-sm"
+              className="rounded-md bg-[#FFC107] px-6 py-2.5 text-[15.5px] leading-[21px] font-bold text-slate-900 transition-colors hover:bg-amber-400 flex items-center gap-2 shadow-sm"
             >
               View cars <ArrowRight size={16} />
             </button>

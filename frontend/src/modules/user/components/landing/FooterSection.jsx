@@ -11,7 +11,7 @@ const FooterSection = () => {
           <h2 className="text-3xl font-black italic tracking-widest text-white mb-4">
             TAXI09
           </h2>
-          <p className="text-gray-400 text-sm max-w-sm mb-6">
+          <p className="text-gray-400 text-[15.5px] leading-[21px] max-w-sm mb-6">
             Your trusted partner for premium bike and car rentals. Ride more, worry less.
           </p>
           <div className="flex gap-4">
@@ -30,7 +30,7 @@ const FooterSection = () => {
         {/* Links 1 */}
         <div>
           <h4 className="font-bold mb-4 text-white">Company</h4>
-          <ul className="space-y-2 text-sm text-gray-400">
+          <ul className="space-y-2 text-[15.5px] leading-[21px] text-gray-400">
             <li><a href="#" className="hover:text-[#FFC107] transition-colors">About Us</a></li>
             <li><a href="#" className="hover:text-[#FFC107] transition-colors">Careers</a></li>
             <li><a href="#" className="hover:text-[#FFC107] transition-colors">Blog</a></li>
@@ -41,7 +41,7 @@ const FooterSection = () => {
         {/* Links 2 */}
         <div>
           <h4 className="font-bold mb-4 text-white">Rentals</h4>
-          <ul className="space-y-2 text-sm text-gray-400">
+          <ul className="space-y-2 text-[15.5px] leading-[21px] text-gray-400">
             <li><a href="#" className="hover:text-[#FFC107] transition-colors">2 Wheeler Rentals</a></li>
             <li><a href="#" className="hover:text-[#FFC107] transition-colors">4 Wheeler Rentals</a></li>
             <li><a href="#" className="hover:text-[#FFC107] transition-colors">All Vehicles</a></li>
@@ -52,7 +52,7 @@ const FooterSection = () => {
         {/* Links 3 */}
         <div>
           <h4 className="font-bold mb-4 text-white">Contact Us</h4>
-          <ul className="space-y-4 text-sm text-gray-400">
+          <ul className="space-y-4 text-[15.5px] leading-[21px] text-gray-400">
             <li className="flex items-start gap-3">
               <Phone size={16} className="text-[#FFC107] mt-0.5" />
               <span>+91 98765 43210</span>
@@ -70,7 +70,7 @@ const FooterSection = () => {
 
       </div>
 
-      <div className="max-w-7xl mx-auto pt-8 border-t border-white/10 text-center text-sm text-gray-500 flex flex-col md:flex-row items-center justify-between">
+      <div className="max-w-7xl mx-auto pt-8 border-t border-white/10 text-center text-[15.5px] leading-[21px] text-gray-500 flex flex-col md:flex-row items-center justify-between">
         <p>© 2026 TAXI09. All Rights Reserved.</p>
         <div className="flex gap-4 mt-4 md:mt-0">
           <a href="#" className="hover:text-white transition-colors">Terms & Conditions</a>

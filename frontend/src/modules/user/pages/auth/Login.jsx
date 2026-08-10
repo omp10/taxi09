@@ -149,7 +149,7 @@ const Login = () => {
               </div>
               <div>
                 <h3 className="font-extrabold text-slate-800 text-base">Self-Drive & Chauffeur Rides</h3>
-                <p className="text-xs text-slate-500 mt-1">Book direct or rental cars and bikes on demand with transparent pricing.</p>
+                <p className="text-[13.5px] leading-[18px] text-slate-500 mt-1">Book direct or rental cars and bikes on demand with transparent pricing.</p>
               </div>
             </div>
 
@@ -159,7 +159,7 @@ const Login = () => {
               </div>
               <div>
                 <h3 className="font-extrabold text-slate-800 text-base">24/7 Verified Security</h3>
-                <p className="text-xs text-slate-500 mt-1">Real-time SOS tracking, secure payments, and fully verified driver credentials.</p>
+                <p className="text-[13.5px] leading-[18px] text-slate-500 mt-1">Real-time SOS tracking, secure payments, and fully verified driver credentials.</p>
               </div>
             </div>
 
@@ -169,7 +169,7 @@ const Login = () => {
               </div>
               <div>
                 <h3 className="font-extrabold text-slate-800 text-base">Eco-Friendly Premium Fleet</h3>
-                <p className="text-xs text-slate-500 mt-1">Ride in standard sedan, SUV, or premium electric fleets optimized for efficiency.</p>
+                <p className="text-[13.5px] leading-[18px] text-slate-500 mt-1">Ride in standard sedan, SUV, or premium electric fleets optimized for efficiency.</p>
               </div>
             </div>
           </div>
@@ -192,7 +192,7 @@ const Login = () => {
             ) : (
               <div className="w-2 h-2 bg-[#FFC107] rounded-full" />
             )}
-            <span className="text-xs font-black text-slate-900">TAXI09</span>
+            <span className="text-[13.5px] leading-[18px] font-black text-slate-900">TAXI09</span>
           </div>
         </div>
 
@@ -200,7 +200,7 @@ const Login = () => {
         <div className="my-auto w-full max-w-md mx-auto z-20 space-y-8">
           <div className="space-y-2">
             <h2 className="text-3xl font-black text-slate-900 tracking-tight">Sign In / Register</h2>
-            <p className="text-slate-500 text-sm">Enter your phone number to get started with Taxi09.</p>
+            <p className="text-slate-500 text-[15.5px] leading-[21px]">Enter your phone number to get started with Taxi09.</p>
           </div>
 
           <AnimatePresence mode="wait">
@@ -220,7 +220,7 @@ const Login = () => {
                   <span>Continue with Phone Number</span>
                 </button>
 
-                <div className="flex items-center gap-3 text-xs text-slate-400">
+                <div className="flex items-center gap-3 text-[13.5px] leading-[18px] text-slate-400">
                   <div className="h-px flex-1 bg-slate-200" />
                   <span>SECURED LOGIN</span>
                   <div className="h-px flex-1 bg-slate-200" />
@@ -247,17 +247,17 @@ const Login = () => {
                   >
                     <ArrowLeft size={18} />
                   </button>
-                  <span className="font-extrabold text-sm text-slate-500 uppercase tracking-widest">Back</span>
+                  <span className="font-extrabold text-[15.5px] leading-[21px] text-slate-500 uppercase tracking-widest">Back</span>
                 </div>
 
                 <form onSubmit={handleLogin} className="space-y-6">
                   <div className="space-y-4">
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Mobile Number</label>
+                    <label className="block text-[13.5px] leading-[18px] font-bold text-slate-500 uppercase tracking-wider">Mobile Number</label>
                     
                     <div className={`flex items-center gap-4 p-5 rounded-2xl transition-all border ${error ? 'border-rose-500 bg-rose-50' : 'border-slate-200 bg-slate-50 focus-within:border-slate-900 focus-within:bg-white focus-within:shadow-xl'}`}>
                       <div className="flex items-center gap-2 pr-4 border-r border-slate-200">
                         <img src="https://flagcdn.com/w40/in.png" alt="India" className="w-5 h-3.5 object-cover rounded-sm" />
-                        <span className="text-slate-550 text-sm font-black">+91</span>
+                        <span className="text-slate-550 text-[15.5px] leading-[21px] font-black">+91</span>
                       </div>
                       <input
                         ref={phoneInputRef}
@@ -277,7 +277,7 @@ const Login = () => {
                     </div>
 
                     {error && (
-                      <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">
+                      <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-[15.5px] leading-[21px] font-medium text-rose-700">
                         {error}
                       </div>
                     )}
@@ -308,7 +308,7 @@ const Login = () => {
         </div>
 
         {/* Footer brand label */}
-        <div className="text-center z-20 mt-auto text-xs text-slate-400 select-none">
+        <div className="text-center z-20 mt-auto text-[13.5px] leading-[18px] text-slate-400 select-none">
           &copy; {new Date().getFullYear()} {appName}. Powered by OMP10.
         </div>
 

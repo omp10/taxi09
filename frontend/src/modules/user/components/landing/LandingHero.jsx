@@ -82,7 +82,7 @@ const LandingHero = () => {
              </div>
              <div>
                <h4 className="text-2xl font-extrabold !text-white leading-tight">500+</h4>
-               <p className="text-sm font-medium !text-gray-400">Vehicles</p>
+               <p className="text-[15.5px] leading-[21px] font-medium !text-gray-400">Vehicles</p>
              </div>
           </div>
 
@@ -93,7 +93,7 @@ const LandingHero = () => {
              </div>
              <div>
                <h4 className="text-2xl font-extrabold !text-white leading-tight">24/7</h4>
-               <p className="text-sm font-medium !text-gray-400">Support</p>
+               <p className="text-[15.5px] leading-[21px] font-medium !text-gray-400">Support</p>
              </div>
           </div>
 
@@ -104,7 +104,7 @@ const LandingHero = () => {
              </div>
              <div>
                <h4 className="text-xl font-extrabold !text-white leading-tight">Best Price</h4>
-               <p className="text-sm font-medium !text-gray-400">Guarantee</p>
+               <p className="text-[15.5px] leading-[21px] font-medium !text-gray-400">Guarantee</p>
              </div>
           </div>
 

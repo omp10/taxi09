@@ -438,7 +438,7 @@ const MobileHome = () => {
             <div className="flex justify-between items-center">
               <div>
                 <p className="text-md font-black text-slate-800">{scheduledCountdown}</p>
-                <p className="text-xs text-slate-400 font-semibold">{scheduledDateLabel}</p>
+                <p className="text-[13.5px] leading-[18px] text-slate-400 font-semibold">{scheduledDateLabel}</p>
               </div>
               <img src={currentRideIcon} className="h-12 w-12 object-contain" alt="" />
             </div>

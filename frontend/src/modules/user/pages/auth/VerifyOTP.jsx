@@ -187,7 +187,7 @@ const VerifyOTP = () => {
               </div>
               <div>
                 <h3 className="font-extrabold text-slate-800 text-base">Self-Drive & Chauffeur Rides</h3>
-                <p className="text-xs text-slate-500 mt-1">Book direct or rental cars and bikes on demand with transparent pricing.</p>
+                <p className="text-[13.5px] leading-[18px] text-slate-500 mt-1">Book direct or rental cars and bikes on demand with transparent pricing.</p>
               </div>
             </div>
 
@@ -197,7 +197,7 @@ const VerifyOTP = () => {
               </div>
               <div>
                 <h3 className="font-extrabold text-slate-800 text-base">24/7 Verified Security</h3>
-                <p className="text-xs text-slate-500 mt-1">Real-time SOS tracking, secure payments, and fully verified driver credentials.</p>
+                <p className="text-[13.5px] leading-[18px] text-slate-500 mt-1">Real-time SOS tracking, secure payments, and fully verified driver credentials.</p>
               </div>
             </div>
 
@@ -207,7 +207,7 @@ const VerifyOTP = () => {
               </div>
               <div>
                 <h3 className="font-extrabold text-slate-800 text-base">Eco-Friendly Premium Fleet</h3>
-                <p className="text-xs text-slate-500 mt-1">Ride in standard sedan, SUV, or premium electric fleets optimized for efficiency.</p>
+                <p className="text-[13.5px] leading-[18px] text-slate-500 mt-1">Ride in standard sedan, SUV, or premium electric fleets optimized for efficiency.</p>
               </div>
             </div>
           </div>
@@ -230,7 +230,7 @@ const VerifyOTP = () => {
             ) : (
               <div className="w-2 h-2 bg-[#FFC107] rounded-full" />
             )}
-            <span className="text-xs font-black text-slate-900">TAXI09</span>
+            <span className="text-[13.5px] leading-[18px] font-black text-slate-900">TAXI09</span>
           </div>
         </div>
 
@@ -243,12 +243,12 @@ const VerifyOTP = () => {
             >
               <ArrowLeft size={18} />
             </button>
-            <span className="font-extrabold text-sm text-slate-500 uppercase tracking-widest">Back</span>
+            <span className="font-extrabold text-[15.5px] leading-[21px] text-slate-500 uppercase tracking-widest">Back</span>
           </div>
 
           <div className="space-y-2">
             <h2 className="text-3xl font-black text-slate-900 tracking-tight">Verify Number</h2>
-            <p className="text-slate-500 text-sm">
+            <p className="text-slate-500 text-[15.5px] leading-[21px]">
               We've sent a code to <span className="text-slate-900 font-bold">+91 {phone}</span>
             </p>
           </div>
@@ -283,7 +283,7 @@ const VerifyOTP = () => {
                   exit={{ opacity: 0, y: -10 }}
                   className="bg-rose-50 border border-rose-100 rounded-2xl p-4 text-center animate-in fade-in"
                 >
-                  <p className="text-rose-500 text-xs font-bold">{error}</p>
+                  <p className="text-rose-500 text-[13.5px] leading-[18px] font-bold">{error}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -296,7 +296,7 @@ const VerifyOTP = () => {
                 type="button"
                 onClick={handleResend}
                 disabled={timer > 0 || loading}
-                className={`flex items-center gap-2 text-xs font-black uppercase tracking-widest transition-all ${
+                className={`flex items-center gap-2 text-[13.5px] leading-[18px] font-black uppercase tracking-widest transition-all ${
                   timer > 0 
                     ? 'text-slate-300' 
                     : 'text-slate-900 hover:opacity-75 underline underline-offset-4 decoration-2'
@@ -336,7 +336,7 @@ const VerifyOTP = () => {
         </div>
 
         {/* Footer brand label */}
-        <div className="text-center z-20 mt-auto text-xs text-slate-400 select-none">
+        <div className="text-center z-20 mt-auto text-[13.5px] leading-[18px] text-slate-400 select-none">
           &copy; {new Date().getFullYear()} {appName}. Powered by OMP10.
         </div>
 

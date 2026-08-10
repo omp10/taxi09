@@ -182,13 +182,13 @@ const BusBookings = () => {
           {loading ? (
             <div className="bg-white rounded-2xl p-10 text-center border border-slate-100 shadow-sm">
               <Loader2 size={24} className="mx-auto animate-spin text-slate-400 mb-2" />
-              <p className="text-xs font-bold text-slate-900">Loading trips...</p>
+              <p className="text-[13.5px] leading-[18px] font-bold text-slate-900">Loading trips...</p>
             </div>
           ) : null}
 
           {!loading && error ? (
             <div className="bg-rose-50 border border-rose-100 rounded-xl p-3 text-center">
-              <p className="text-xs font-bold text-rose-600">{error}</p>
+              <p className="text-[13.5px] leading-[18px] font-bold text-rose-600">{error}</p>
             </div>
           ) : null}
 
@@ -198,10 +198,10 @@ const BusBookings = () => {
                 <BusFront size={32} className="text-slate-300" />
               </div>
               <h3 className="text-md font-bold text-slate-900">No bookings yet</h3>
-              <p className="text-xs text-slate-500 mt-1">Book your next journey now!</p>
+              <p className="text-[13.5px] leading-[18px] text-slate-500 mt-1">Book your next journey now!</p>
               <button 
                 onClick={() => navigate(`${routePrefix}/bus`)}
-                className="mt-4 px-5 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-bold"
+                className="mt-4 px-5 py-2.5 bg-slate-900 text-white rounded-xl text-[13.5px] leading-[18px] font-bold"
               >
                 Book Now
               </button>
@@ -234,7 +234,7 @@ const BusBookings = () => {
                   {/* Route & Times */}
                   <div className="flex items-center justify-between gap-3 mb-4">
                     <div className="flex-1">
-                      <p className="text-sm font-black text-slate-900 truncate">{booking.bus?.fromCity || 'From'}</p>
+                      <p className="text-[15.5px] leading-[21px] font-black text-slate-900 truncate">{booking.bus?.fromCity || 'From'}</p>
                       <p className="text-[12px] font-bold text-slate-500 mt-0.5">{booking.bus?.departure || '--:--'}</p>
                     </div>
                     <div className="flex flex-col items-center px-1">
@@ -244,7 +244,7 @@ const BusBookings = () => {
                       <BusFront size={12} className="text-slate-300 mt-1" />
                     </div>
                     <div className="flex-1 text-right">
-                      <p className="text-sm font-black text-slate-900 truncate">{booking.bus?.toCity || 'To'}</p>
+                      <p className="text-[15.5px] leading-[21px] font-black text-slate-900 truncate">{booking.bus?.toCity || 'To'}</p>
                       <p className="text-[12px] font-bold text-slate-500 mt-0.5">{booking.bus?.arrival || '--:--'}</p>
                     </div>
                   </div>

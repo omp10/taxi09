@@ -119,7 +119,7 @@ const BusConfirm = () => {
               </div>
 
               <h3 className="text-xl font-bold mb-1">{booking.bus?.operator}</h3>
-            <p className="text-xs font-medium text-slate-400">
+            <p className="text-[13.5px] leading-[18px] font-medium text-slate-400">
               {booking.bus?.type}
               {booking.bus?.registrationNumber ? ` • ${formatBusRegistrationNumber(booking.bus.registrationNumber)}` : ''}
             </p>
@@ -148,7 +148,7 @@ const BusConfirm = () => {
                   <BusFront size={15} />
                   <p className="text-[12px] font-black uppercase tracking-[0.18em]">Bus number</p>
                 </div>
-                <p className="mt-2 text-sm font-black text-slate-900">
+                <p className="mt-2 text-[15.5px] leading-[21px] font-black text-slate-900">
                   {booking.bus?.registrationNumber
                     ? formatBusRegistrationNumber(booking.bus.registrationNumber)
                     : 'Will be shared soon'}
@@ -159,7 +159,7 @@ const BusConfirm = () => {
                   <Phone size={15} />
                   <p className="text-[12px] font-black uppercase tracking-[0.18em]">Driver contact</p>
                 </div>
-                <p className="mt-2 text-sm font-black text-slate-900">{booking.bus?.driverPhone || booking.bus?.driverName || 'Assigned before departure'}</p>
+                <p className="mt-2 text-[15.5px] leading-[21px] font-black text-slate-900">{booking.bus?.driverPhone || booking.bus?.driverName || 'Assigned before departure'}</p>
               </div>
             </div>
 
@@ -171,11 +171,11 @@ const BusConfirm = () => {
               <div className="mt-3 space-y-3">
                 <div>
                   <p className="text-[12px] font-black uppercase tracking-[0.16em] text-emerald-600">Pickup</p>
-                  <p className="mt-1 text-sm font-black text-slate-900">{booking.bus?.pickupLocation || booking.bus?.fromCity || fromCity}</p>
+                  <p className="mt-1 text-[15.5px] leading-[21px] font-black text-slate-900">{booking.bus?.pickupLocation || booking.bus?.fromCity || fromCity}</p>
                 </div>
                 <div>
                   <p className="text-[12px] font-black uppercase tracking-[0.16em] text-rose-600">Drop</p>
-                  <p className="mt-1 text-sm font-black text-slate-900">{booking.bus?.dropLocation || booking.bus?.toCity || toCity}</p>
+                  <p className="mt-1 text-[15.5px] leading-[21px] font-black text-slate-900">{booking.bus?.dropLocation || booking.bus?.toCity || toCity}</p>
                 </div>
               </div>
             </div>
@@ -183,13 +183,13 @@ const BusConfirm = () => {
             <div className="bg-slate-50 rounded-2xl p-5 flex justify-between items-center border border-slate-100">
               <div>
                 <p className="text-[12px] font-bold text-slate-400 uppercase tracking-wider mb-1">Passenger</p>
-                <p className="text-sm font-bold text-slate-900">
+                <p className="text-[15.5px] leading-[21px] font-bold text-slate-900">
                   {booking.passenger?.name}
                   <span className="text-slate-400 ml-2 font-medium">
                     ({booking.passenger?.age}{String(booking.passenger?.gender || '').charAt(0)})
                   </span>
                 </p>
-                <p className="mt-2 text-xs font-bold text-slate-500">Paid ₹{Number(booking.amount || 0)}</p>
+                <p className="mt-2 text-[13.5px] leading-[18px] font-bold text-slate-500">Paid ₹{Number(booking.amount || 0)}</p>
               </div>
               <QrCode size={48} className="text-slate-900" strokeWidth={1.5} />
             </div>
@@ -201,14 +201,14 @@ const BusConfirm = () => {
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={() => navigate(`${routePrefix}/profile/bus-bookings`)}
-          className="flex-1 bg-slate-50 text-slate-700 py-4 rounded-2xl text-sm font-bold border border-slate-100 transition-colors hover:bg-slate-100"
+          className="flex-1 bg-slate-50 text-slate-700 py-4 rounded-2xl text-[15.5px] leading-[21px] font-bold border border-slate-100 transition-colors hover:bg-slate-100"
         >
           My Bookings
         </motion.button>
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={() => navigate(`${routePrefix}` || '/')}
-          className="flex-[2] bg-slate-900 text-white py-4 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 shadow-lg"
+          className="flex-[2] bg-slate-900 text-white py-4 rounded-2xl text-[15.5px] leading-[21px] font-bold flex items-center justify-center gap-2 shadow-lg"
         >
           <Home size={18} /> Home
         </motion.button>

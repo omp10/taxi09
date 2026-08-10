@@ -731,7 +731,7 @@ const MapPickerSheet = ({ open, title, confirmLabel, value, initialCoords, onClo
                 }}
               />
             ) : (
-              <div className="flex h-full items-center justify-center px-6 text-center text-sm font-bold text-slate-500">
+              <div className="flex h-full items-center justify-center px-6 text-center text-[15.5px] leading-[21px] font-bold text-slate-500">
                 {loadError ? 'Map could not be loaded right now.' : 'Loading map...'}
               </div>
             )}
@@ -813,7 +813,7 @@ const MapPickerSheet = ({ open, title, confirmLabel, value, initialCoords, onClo
             <button
               type="button"
               onClick={() => onConfirm(latLngToCoordPair(center), String(searchQuery || '').trim())}
-              className="flex h-14 w-full items-center justify-center gap-2 rounded-[20px] bg-slate-900 text-sm font-black text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)]"
+              className="flex h-14 w-full items-center justify-center gap-2 rounded-[20px] bg-slate-900 text-[15.5px] leading-[21px] font-black text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)]"
             >
               {confirmLabel}
               <ChevronRight size={16} />
@@ -870,7 +870,7 @@ const ContactDetailsSheet = ({
                 <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                   <User size={16} />
                 </div>
-                <p className="text-sm font-black text-slate-900">Sender</p>
+                <p className="text-[15.5px] leading-[21px] font-black text-slate-900">Sender</p>
               </div>
 
               <div className="space-y-2">
@@ -884,7 +884,7 @@ const ContactDetailsSheet = ({
                       setSenderName(event.target.value);
                       clearError('senderName');
                     }}
-                    className="flex-1 bg-transparent text-sm font-semibold text-slate-900 outline-none placeholder:text-slate-300"
+                    className="flex-1 bg-transparent text-[15.5px] leading-[21px] font-semibold text-slate-900 outline-none placeholder:text-slate-300"
                   />
                 </div>
                 {errors.senderName ? <p className="text-[13px] font-black text-red-500">{errors.senderName}</p> : null}
@@ -898,7 +898,7 @@ const ContactDetailsSheet = ({
                 <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
                   <Contact size={16} />
                 </div>
-                <p className="text-sm font-black text-slate-900">Receiver</p>
+                <p className="text-[15.5px] leading-[21px] font-black text-slate-900">Receiver</p>
               </div>
 
               <label className="flex cursor-pointer items-center gap-3 rounded-[24px] border-2 border-dashed border-slate-100 bg-slate-50/30 px-4 py-4 transition-colors hover:bg-blue-50/30 group">
@@ -929,7 +929,7 @@ const ContactDetailsSheet = ({
                       setReceiverName(event.target.value);
                       clearError('receiverName');
                     }}
-                    className="flex-1 bg-transparent text-sm font-semibold text-slate-900 outline-none placeholder:text-slate-300"
+                    className="flex-1 bg-transparent text-[15.5px] leading-[21px] font-semibold text-slate-900 outline-none placeholder:text-slate-300"
                   />
                 </div>
                 {errors.receiverName ? <p className="text-[13px] font-black text-red-500">{errors.receiverName}</p> : null}
@@ -943,7 +943,7 @@ const ContactDetailsSheet = ({
             <button
               type="button"
               onClick={onSave}
-              className="flex h-14 w-full items-center justify-center gap-2 rounded-[20px] bg-slate-900 text-sm font-black text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)]"
+              className="flex h-14 w-full items-center justify-center gap-2 rounded-[20px] bg-slate-900 text-[15.5px] leading-[21px] font-black text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)]"
             >
               Save Details
               <ChevronRight size={16} />

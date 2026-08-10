@@ -73,7 +73,7 @@ const FeaturedVehiclesSection = () => {
           </div>
           <button 
             onClick={() => navigate('/taxi/user/rental')}
-            className="bg-[#FFC107] text-black px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-amber-400 transition-colors"
+            className="bg-[#FFC107] text-black px-4 py-2 rounded-full text-[15.5px] leading-[21px] font-bold flex items-center gap-2 hover:bg-amber-400 transition-colors"
           >
             View All Vehicles <div className="bg-black text-[#FFC107] rounded-full p-0.5"><ChevronRight size={12} /></div>
           </button>
@@ -90,22 +90,22 @@ const FeaturedVehiclesSection = () => {
               </div>
               <div className="mt-auto">
                 <h3 className="text-lg font-bold text-black">{v.name}</h3>
-                <p className="text-xs text-gray-500 mb-2">{v.type}</p>
+                <p className="text-[13.5px] leading-[18px] text-gray-500 mb-2">{v.type}</p>
                 
                 <div className="flex items-center gap-1 mb-4">
                   <Star size={14} className="fill-[#FFC107] text-[#FFC107]" />
-                  <span className="text-sm font-bold">{v.rating}</span>
-                  <span className="text-xs text-gray-500">({v.reviews})</span>
+                  <span className="text-[15.5px] leading-[21px] font-bold">{v.rating}</span>
+                  <span className="text-[13.5px] leading-[18px] text-gray-500">({v.reviews})</span>
                 </div>
                 
                 <div className="flex items-center justify-between mt-4">
                   <div>
                     <span className="text-xl font-extrabold text-black">₹{v.price}</span>
-                    <span className="text-xs text-gray-500 font-medium"> / day</span>
+                    <span className="text-[13.5px] leading-[18px] text-gray-500 font-medium"> / day</span>
                   </div>
                   <button 
                     onClick={() => navigate('/taxi/user/rental')}
-                    className="bg-[#FFC107] text-black px-4 py-2 rounded-md text-sm font-bold hover:bg-amber-400 transition-colors flex items-center gap-1"
+                    className="bg-[#FFC107] text-black px-4 py-2 rounded-md text-[15.5px] leading-[21px] font-bold hover:bg-amber-400 transition-colors flex items-center gap-1"
                   >
                     Book Now <ChevronRight size={16} />
                   </button>

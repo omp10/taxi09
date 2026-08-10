@@ -150,12 +150,12 @@ const IntercityConfirm = () => {
         <div className="mt-6 rounded-[24px] border border-white/10 bg-white/5 px-4 py-4 text-left">
           <div className="flex items-center gap-3 text-white">
             <Calendar size={16} className="text-blue-300" />
-            <span className="text-sm font-bold">Scheduled For</span>
+            <span className="text-[15.5px] leading-[21px] font-bold">Scheduled For</span>
           </div>
           <p className="mt-2 text-lg font-black text-white">{formattedSchedule || state.date || 'Scheduled'}</p>
           <div className="mt-4 flex items-center gap-3 text-white/65">
             <Clock3 size={15} />
-            <span className="text-xs font-bold uppercase tracking-[0.16em]">{state.fromCity} to {state.toCity}</span>
+            <span className="text-[13.5px] leading-[18px] font-bold uppercase tracking-[0.16em]">{state.fromCity} to {state.toCity}</span>
           </div>
         </div>
         {status === 'saving' ? (
@@ -167,7 +167,7 @@ const IntercityConfirm = () => {
         <button
           type="button"
           onClick={() => navigate(routePrefix || '/')}
-          className="mt-6 h-12 w-full rounded-[18px] bg-white text-sm font-black uppercase tracking-[0.16em] text-slate-900"
+          className="mt-6 h-12 w-full rounded-[18px] bg-white text-[15.5px] leading-[21px] font-black uppercase tracking-[0.16em] text-slate-900"
         >
           {status === 'error' ? 'Back to Home' : 'Done'}
         </button>

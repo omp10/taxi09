@@ -48,7 +48,7 @@ const WhyChooseUsSection = () => {
               </div>
               <div>
                 <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#FFC107] transition-colors">{reason.title}</h3>
-                <p className="text-sm text-gray-400 leading-relaxed">{reason.desc}</p>
+                <p className="text-[15.5px] leading-[21px] text-gray-400 leading-relaxed">{reason.desc}</p>
               </div>
             </div>
           ))}

@@ -63,9 +63,9 @@ const TIME_OPTIONS = [
 ];
 
 const inputClass =
-  'w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition-all focus:border-amber-400 focus:ring-4 focus:ring-amber-100/60';
+  'w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-[15.5px] leading-[21px] text-slate-800 outline-none transition-all focus:border-amber-400 focus:ring-4 focus:ring-amber-100/60';
 const pickerTriggerClass =
-  'w-full rounded-[18px] border border-slate-200 bg-white px-4 py-3.5 text-left text-sm text-slate-800 shadow-[0_4px_12px_rgba(15,23,42,0.04)] transition-all';
+  'w-full rounded-[18px] border border-slate-200 bg-white px-4 py-3.5 text-left text-[15.5px] leading-[21px] text-slate-800 shadow-[0_4px_12px_rgba(15,23,42,0.04)] transition-all';
 
 const pad = (n) => String(n).padStart(2, '0');
 const startOfDay = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -233,7 +233,7 @@ const DateTimePickerModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600"
+              className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[13.5px] leading-[18px] font-bold text-slate-600"
             >
               Close
             </button>
@@ -332,7 +332,7 @@ const DateTimePickerModal = ({
           <button
             type="button"
             onClick={onApply}
-            className="mt-5 w-full rounded-[18px] bg-[#2e3c78] px-5 py-3.5 text-sm font-bold text-white shadow-[0_10px_26px_rgba(46,60,120,0.28)]"
+            className="mt-5 w-full rounded-[18px] bg-[#2e3c78] px-5 py-3.5 text-[15.5px] leading-[21px] font-bold text-white shadow-[0_10px_26px_rgba(46,60,120,0.28)]"
           >
             Apply Date & Time
           </button>

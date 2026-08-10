@@ -300,7 +300,7 @@ const BikeCategoryList = () => {
       <div className="min-h-screen bg-white max-w-lg md:max-w-none md:mx-0 w-full mx-auto flex items-center justify-center font-sans">
         <div className="text-center">
           <Loader2 className="animate-spin text-indigo-600 mx-auto mb-2" size={32} />
-          <p className="text-xs text-slate-500 font-semibold">Loading Vehicles...</p>
+          <p className="text-[13.5px] leading-[18px] text-slate-500 font-semibold">Loading Vehicles...</p>
         </div>
       </div>
     );

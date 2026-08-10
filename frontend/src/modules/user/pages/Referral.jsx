@@ -227,7 +227,7 @@ const Referral = () => {
                 type="button"
                 onClick={handleCopy}
                 disabled={!referralCode}
-                className="rounded-xl bg-[#1830b8] text-white px-4 text-sm font-medium flex items-center gap-2 disabled:opacity-50"
+                className="rounded-xl bg-[#1830b8] text-white px-4 text-[15.5px] leading-[21px] font-medium flex items-center gap-2 disabled:opacity-50"
               >
                 {copied ? <CheckCircle2 size={15} /> : <Copy size={15} />}
                 Copy
@@ -238,7 +238,7 @@ const Referral = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab('refer')}
-                className={`rounded-lg py-2 text-xs font-medium ${
+                className={`rounded-lg py-2 text-[13.5px] leading-[18px] font-medium ${
                   activeTab === 'refer' ? 'bg-white border border-gray-200 text-gray-900' : 'bg-gray-100 text-gray-500'
                 }`}
               >
@@ -247,7 +247,7 @@ const Referral = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab('history')}
-                className={`rounded-lg py-2 text-xs font-medium ${
+                className={`rounded-lg py-2 text-[13.5px] leading-[18px] font-medium ${
                   activeTab === 'history' ? 'bg-white border border-gray-200 text-gray-900' : 'bg-gray-100 text-gray-500'
                 }`}
               >
@@ -265,7 +265,7 @@ const Referral = () => {
               <div className="space-y-4">
                 <h2 className="text-[19px] font-semibold text-gray-900">How it works?</h2>
                 {infoBlocks.length === 0 ? (
-                  <p className="text-sm text-gray-400">Referral content will appear here after admin updates this language.</p>
+                  <p className="text-[15.5px] leading-[21px] text-gray-400">Referral content will appear here after admin updates this language.</p>
                 ) : (
                   infoBlocks.map((block) => (
                     <div
@@ -278,9 +278,9 @@ const Referral = () => {
               </div>
             ) : (
               <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-5 py-8 text-center">
-                <p className="text-sm font-medium text-gray-900">Successful referrals</p>
+                <p className="text-[15.5px] leading-[21px] font-medium text-gray-900">Successful referrals</p>
                 <p className="text-3xl font-semibold text-[#1830b8] mt-2">{profile.referralCount}</p>
-                <p className="text-xs text-gray-400 mt-2">Detailed referral history is not available on this screen yet.</p>
+                <p className="text-[13.5px] leading-[18px] text-gray-400 mt-2">Detailed referral history is not available on this screen yet.</p>
               </div>
             )}
           </div>
@@ -290,7 +290,7 @@ const Referral = () => {
           type="button"
           onClick={handleShare}
           disabled={!referralCode}
-          className="w-full rounded-xl bg-[#ef4444] text-white py-3.5 text-sm font-semibold mt-5 flex items-center justify-center gap-2 disabled:opacity-50"
+          className="w-full rounded-xl bg-[#ef4444] text-white py-3.5 text-[15.5px] leading-[21px] font-semibold mt-5 flex items-center justify-center gap-2 disabled:opacity-50"
         >
           Refer now <Share2 size={16} />
         </button>
@@ -302,7 +302,7 @@ const Referral = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-24 left-1/2 -translate-x-1/2 rounded-2xl bg-gray-900 text-white px-4 py-3 text-xs font-semibold shadow-xl"
+            className="fixed bottom-24 left-1/2 -translate-x-1/2 rounded-2xl bg-gray-900 text-white px-4 py-3 text-[13.5px] leading-[18px] font-semibold shadow-xl"
           >
             Referral code copied
           </motion.div>

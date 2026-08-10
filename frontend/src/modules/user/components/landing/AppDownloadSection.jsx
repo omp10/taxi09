@@ -23,7 +23,7 @@ const AppDownloadSection = () => {
               <Apple size={28} />
               <div className="text-left">
                 <div className="text-[12px] text-gray-300">Download on the</div>
-                <div className="text-sm font-bold leading-none mt-0.5">App Store</div>
+                <div className="text-[15.5px] leading-[21px] font-bold leading-none mt-0.5">App Store</div>
               </div>
             </button>
             
@@ -32,7 +32,7 @@ const AppDownloadSection = () => {
               <Play size={28} className="fill-current" />
               <div className="text-left">
                 <div className="text-[12px] text-gray-300">GET IT ON</div>
-                <div className="text-sm font-bold leading-none mt-0.5">Google Play</div>
+                <div className="text-[15.5px] leading-[21px] font-bold leading-none mt-0.5">Google Play</div>
               </div>
             </button>
           </div>

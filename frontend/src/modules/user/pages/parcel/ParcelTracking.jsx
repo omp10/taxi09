@@ -797,7 +797,7 @@ const ParcelTracking = () => {
           </div>
           <div className="min-w-0 flex-1 overflow-hidden">
             <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">Destination</p>
-            <p className="mt-1 truncate text-xs font-black text-gray-900">
+            <p className="mt-1 truncate text-[13.5px] leading-[18px] font-black text-gray-900">
               {state.drop || 'Drop'}
             </p>
           </div>
@@ -807,7 +807,7 @@ const ParcelTracking = () => {
       {/* Toast Notification */}
       <AnimatePresence>
         {shareToast && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white px-4 py-2 rounded-full text-xs font-black shadow-2xl">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white px-4 py-2 rounded-full text-[13.5px] leading-[18px] font-black shadow-2xl">
             Tracking link copied!
           </motion.div>
         )}
@@ -1013,7 +1013,7 @@ const ParcelTracking = () => {
               </div>
               <div className="min-w-0">
                 <h3 className="text-lg font-black text-gray-900 leading-tight tracking-tight">{driver.name}</h3>
-                <p className="text-xs font-bold text-gray-400 mt-0.5 uppercase tracking-tight">{driver.plate} • {driver.vehicle || 'Delivery Agent'}</p>
+                <p className="text-[13.5px] leading-[18px] font-bold text-gray-400 mt-0.5 uppercase tracking-tight">{driver.plate} • {driver.vehicle || 'Delivery Agent'}</p>
                 <div className="flex items-center gap-1.5 mt-2 text-slate-900">
                   <Clock size={12} strokeWidth={3} />
                   <span className="text-[13px] font-black uppercase tracking-wider">
@@ -1056,7 +1056,7 @@ const ParcelTracking = () => {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowCancelConfirm(true)}
-              className="px-6 py-3 rounded-2xl border border-red-100 text-red-500 text-xs font-black uppercase tracking-widest hover:bg-red-50 transition-colors"
+              className="px-6 py-3 rounded-2xl border border-red-100 text-red-500 text-[13.5px] leading-[18px] font-black uppercase tracking-widest hover:bg-red-50 transition-colors"
             >
               Cancel
             </motion.button>
@@ -1075,7 +1075,7 @@ const ParcelTracking = () => {
                 <AlertTriangle size={32} strokeWidth={2.5} />
               </div>
               <h3 className="text-xl font-black text-gray-900 mb-2">Cancel Delivery?</h3>
-              <p className="text-sm font-bold text-gray-400 mb-8 leading-relaxed">Your delivery agent is already moving. Cancellation may incur charges.</p>
+              <p className="text-[15.5px] leading-[21px] font-bold text-gray-400 mb-8 leading-relaxed">Your delivery agent is already moving. Cancellation may incur charges.</p>
               <div className="flex flex-col gap-3">
                 <motion.button
                   whileTap={{ scale: 0.96 }}
@@ -1085,11 +1085,11 @@ const ParcelTracking = () => {
                       navigate(userHomeRoute, { replace: true });
                     });
                   }}
-                  className="w-full bg-red-500 text-white py-5 rounded-[24px] text-sm font-black uppercase tracking-widest shadow-xl shadow-red-500/20"
+                  className="w-full bg-red-500 text-white py-5 rounded-[24px] text-[15.5px] leading-[21px] font-black uppercase tracking-widest shadow-xl shadow-red-500/20"
                 >
                   Yes, Cancel
                 </motion.button>
-                <button onClick={() => setShowCancelConfirm(false)} className="w-full py-4 text-sm font-black text-gray-400 uppercase tracking-widest">Keep Tracking</button>
+                <button onClick={() => setShowCancelConfirm(false)} className="w-full py-4 text-[15.5px] leading-[21px] font-black text-gray-400 uppercase tracking-widest">Keep Tracking</button>
               </div>
             </motion.div>
           </>

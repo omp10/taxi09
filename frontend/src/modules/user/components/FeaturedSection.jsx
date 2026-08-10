@@ -37,7 +37,7 @@ const FeaturedSection = () => {
                 <p className="text-lg font-bold text-amber-600">Rental Package</p>
               </div>
               <div className="flex items-center gap-1 mt-auto">
-                <span className="text-xs font-bold text-slate-800">Lowest Price Ever</span>
+                <span className="text-[13.5px] leading-[18px] font-bold text-slate-800">Lowest Price Ever</span>
                 <ArrowRight size={14} className="text-slate-800" />
               </div>
             </div>
@@ -86,7 +86,7 @@ const FeaturedSection = () => {
                 <p className="text-lg font-bold text-amber-600">Rental Package</p>
               </div>
               <div className="flex items-center gap-1 mt-auto">
-                <span className="text-xs font-bold text-slate-800">Lowest Price Ever</span>
+                <span className="text-[13.5px] leading-[18px] font-bold text-slate-800">Lowest Price Ever</span>
                 <ArrowRight size={14} className="text-slate-800" />
               </div>
             </div>

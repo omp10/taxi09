@@ -28,9 +28,9 @@ const ChooseRideSection = () => {
             <div className="flex-1 z-10 text-white">
               <h3 className="text-2xl font-extrabold mb-2">2 Wheeler<br/><span className="text-[#FFC107]">Rentals</span></h3>
               <ul className="space-y-2 my-4">
-                <li className="flex items-center gap-2 text-sm font-medium"><CheckCircle2 size={16} className="text-[#FFC107]"/> Scooters</li>
-                <li className="flex items-center gap-2 text-sm font-medium"><CheckCircle2 size={16} className="text-[#FFC107]"/> Sports Bikes</li>
-                <li className="flex items-center gap-2 text-sm font-medium"><CheckCircle2 size={16} className="text-[#FFC107]"/> Electric Vehicles</li>
+                <li className="flex items-center gap-2 text-[15.5px] leading-[21px] font-medium"><CheckCircle2 size={16} className="text-[#FFC107]"/> Scooters</li>
+                <li className="flex items-center gap-2 text-[15.5px] leading-[21px] font-medium"><CheckCircle2 size={16} className="text-[#FFC107]"/> Sports Bikes</li>
+                <li className="flex items-center gap-2 text-[15.5px] leading-[21px] font-medium"><CheckCircle2 size={16} className="text-[#FFC107]"/> Electric Vehicles</li>
               </ul>
               <button 
                 onClick={() => navigate('/taxi/user/rental')}
@@ -54,9 +54,9 @@ const ChooseRideSection = () => {
             <div className="flex-1 z-10 text-white">
               <h3 className="text-2xl font-extrabold mb-2">4 Wheeler<br/><span className="text-[#FFC107]">Rentals</span></h3>
               <ul className="space-y-2 my-4">
-                <li className="flex items-center gap-2 text-sm font-medium"><CheckCircle2 size={16} className="text-[#FFC107]"/> Hatchbacks</li>
-                <li className="flex items-center gap-2 text-sm font-medium"><CheckCircle2 size={16} className="text-[#FFC107]"/> SUVs</li>
-                <li className="flex items-center gap-2 text-sm font-medium"><CheckCircle2 size={16} className="text-[#FFC107]"/> Luxury Cars</li>
+                <li className="flex items-center gap-2 text-[15.5px] leading-[21px] font-medium"><CheckCircle2 size={16} className="text-[#FFC107]"/> Hatchbacks</li>
+                <li className="flex items-center gap-2 text-[15.5px] leading-[21px] font-medium"><CheckCircle2 size={16} className="text-[#FFC107]"/> SUVs</li>
+                <li className="flex items-center gap-2 text-[15.5px] leading-[21px] font-medium"><CheckCircle2 size={16} className="text-[#FFC107]"/> Luxury Cars</li>
               </ul>
               <button 
                 onClick={() => navigate('/taxi/user/rental')}

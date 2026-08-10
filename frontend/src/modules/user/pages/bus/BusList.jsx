@@ -805,12 +805,12 @@ const BusList = () => {
         {loading ? (
           <div className="mt-4 rounded-[18px] bg-white p-10 text-center shadow-sm">
             <Loader2 size={30} className="mx-auto animate-spin text-[#f5b700]" />
-            <p className="mt-3 text-sm font-black text-slate-500">Finding available buses...</p>
+            <p className="mt-3 text-[15.5px] leading-[21px] font-black text-slate-500">Finding available buses...</p>
           </div>
         ) : null}
 
         {!loading && error ? (
-          <div className="mt-4 rounded-[16px] border border-rose-100 bg-rose-50 p-4 text-sm font-black text-rose-600">{error}</div>
+          <div className="mt-4 rounded-[16px] border border-rose-100 bg-rose-50 p-4 text-[15.5px] leading-[21px] font-black text-rose-600">{error}</div>
         ) : null}
 
         {!loading && !error && buses.length > 0 ? (
@@ -830,7 +830,7 @@ const BusList = () => {
         {!loading && !error && visibleBuses.length === 0 ? (
           <div className="mt-4 rounded-[18px] bg-white p-10 text-center shadow-sm">
             <h2 className="text-lg font-black text-slate-950">No buses found</h2>
-            <p className="mt-2 text-xs font-semibold text-slate-500">
+            <p className="mt-2 text-[13.5px] leading-[18px] font-semibold text-slate-500">
               Try changing filters or searching for another date.
             </p>
           </div>

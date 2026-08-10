@@ -63,7 +63,7 @@ const PaymentSettings = () => {
         <div className="bg-white p-6 rounded-[32px] border border-gray-50 shadow-sm flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center"><Banknote /></div>
-            <div><p className="font-black">Cash</p><p className="text-xs text-gray-400">Default</p></div>
+            <div><p className="font-black">Cash</p><p className="text-[13.5px] leading-[18px] text-gray-400">Default</p></div>
           </div>
           <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white p-1"><Plus className="rotate-45" /></div>
         </div>
@@ -74,7 +74,7 @@ const PaymentSettings = () => {
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${item.type === 'upi' ? 'bg-purple-50 text-purple-600' : 'bg-blue-50 text-blue-600'}`}>
                 {item.type === 'upi' ? <Smartphone size={20} /> : <CreditCard size={20} />}
               </div>
-              <div><p className="font-black">{item.label}</p><p className="text-xs text-gray-400">{item.type === 'upi' ? 'UPI' : 'Card'}</p></div>
+              <div><p className="font-black">{item.label}</p><p className="text-[13.5px] leading-[18px] text-gray-400">{item.type === 'upi' ? 'UPI' : 'Card'}</p></div>
             </div>
             <button onClick={() => setAdded(prev => prev.filter(a => a.id !== item.id))} className="w-7 h-7 bg-red-50 text-red-400 rounded-full flex items-center justify-center active:scale-90">
               <X size={14} strokeWidth={3} />

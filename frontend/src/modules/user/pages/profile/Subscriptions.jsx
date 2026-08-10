@@ -95,21 +95,21 @@ const Subscriptions = () => {
           </button>
           <div>
             <h1 className="text-2xl font-black text-slate-900">Subscriptions</h1>
-            <p className="text-sm font-medium text-slate-500">Buy ride passes for specific vehicle categories.</p>
+            <p className="text-[15.5px] leading-[21px] font-medium text-slate-500">Buy ride passes for specific vehicle categories.</p>
           </div>
         </div>
 
         <div className="mb-6 grid gap-4 md:grid-cols-3">
           <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-100">
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Wallet Balance</p>
+            <p className="text-[13.5px] leading-[18px] font-black uppercase tracking-[0.2em] text-slate-400">Wallet Balance</p>
             <p className="mt-2 text-2xl font-black text-slate-900">{formatCurrency(walletBalance)}</p>
           </div>
           <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-100">
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Active Plans</p>
+            <p className="text-[13.5px] leading-[18px] font-black uppercase tracking-[0.2em] text-slate-400">Active Plans</p>
             <p className="mt-2 text-2xl font-black text-slate-900">{summary.activeCount}</p>
           </div>
           <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-100">
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Ride Credits</p>
+            <p className="text-[13.5px] leading-[18px] font-black uppercase tracking-[0.2em] text-slate-400">Ride Credits</p>
             <p className="mt-2 text-2xl font-black text-slate-900">
               {summary.hasUnlimitedPlan ? 'Unlimited' : summary.availableRideCredits}
             </p>
@@ -122,17 +122,17 @@ const Subscriptions = () => {
             <div>
               <h2 className="text-lg font-black">Your Active Coverage</h2>
               {summary.activePlans.length === 0 ? (
-                <p className="mt-2 text-sm text-slate-300">No active subscription yet. Buy one below to start using included rides.</p>
+                <p className="mt-2 text-[15.5px] leading-[21px] text-slate-300">No active subscription yet. Buy one below to start using included rides.</p>
               ) : (
                 <div className="mt-3 space-y-3">
                   {summary.activePlans.map((item) => (
                     <div key={item.id} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
                       <div className="flex items-center justify-between gap-3">
                         <div>
-                          <p className="text-sm font-black">{item.name}</p>
-                          <p className="text-xs text-slate-300">{item.vehicle_type?.name || 'Vehicle plan'}</p>
+                          <p className="text-[15.5px] leading-[21px] font-black">{item.name}</p>
+                          <p className="text-[13.5px] leading-[18px] text-slate-300">{item.vehicle_type?.name || 'Vehicle plan'}</p>
                         </div>
-                        <span className="rounded-full bg-emerald-400/15 px-3 py-1 text-xs font-black uppercase tracking-wide text-emerald-200">
+                        <span className="rounded-full bg-emerald-400/15 px-3 py-1 text-[13.5px] leading-[18px] font-black uppercase tracking-wide text-emerald-200">
                           {item.isUnlimited ? 'Unlimited' : `${item.rides_remaining} rides left`}
                         </span>
                       </div>
@@ -161,15 +161,15 @@ const Subscriptions = () => {
                         </span>
                       ) : null}
                     </div>
-                    <p className="text-sm font-medium text-slate-500">{plan.description || plan.how_it_works || 'Subscription ride plan'}</p>
+                    <p className="text-[15.5px] leading-[21px] font-medium text-slate-500">{plan.description || plan.how_it_works || 'Subscription ride plan'}</p>
                     <div className="mt-4 flex flex-wrap gap-2">
-                      <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
+                      <span className="rounded-full bg-slate-100 px-3 py-1 text-[13.5px] leading-[18px] font-bold text-slate-700">
                         {plan.vehicle_type?.name || 'Vehicle category'}
                       </span>
-                      <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-bold text-indigo-700">
+                      <span className="rounded-full bg-indigo-50 px-3 py-1 text-[13.5px] leading-[18px] font-bold text-indigo-700">
                         {plan.duration} days
                       </span>
-                      <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700">
+                      <span className="rounded-full bg-amber-50 px-3 py-1 text-[13.5px] leading-[18px] font-bold text-amber-700">
                         {plan.benefit_type === 'unlimited' ? 'Unlimited rides' : `${plan.ride_limit} rides included`}
                       </span>
                     </div>
@@ -180,13 +180,13 @@ const Subscriptions = () => {
                       type="button"
                       disabled={isBuying || walletBalance < Number(plan.amount || 0)}
                       onClick={() => handleBuy(plan.id)}
-                      className="mt-4 inline-flex min-w-[170px] items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-black text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="mt-4 inline-flex min-w-[170px] items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-5 py-3 text-[15.5px] leading-[21px] font-black text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {isBuying ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wallet size={16} />}
                       Buy With Wallet
                     </button>
                     {walletBalance < Number(plan.amount || 0) ? (
-                      <p className="mt-2 text-xs font-semibold text-rose-500">Not enough wallet balance for this plan.</p>
+                      <p className="mt-2 text-[13.5px] leading-[18px] font-semibold text-rose-500">Not enough wallet balance for this plan.</p>
                     ) : null}
                   </div>
                 </div>
@@ -202,8 +202,8 @@ const Subscriptions = () => {
               {summary.history.map((item) => (
                 <div key={item.id} className="flex items-center justify-between gap-3 rounded-2xl border border-slate-100 px-4 py-3">
                   <div>
-                    <p className="text-sm font-black text-slate-900">{item.name}</p>
-                    <p className="text-xs font-semibold text-slate-500">
+                    <p className="text-[15.5px] leading-[21px] font-black text-slate-900">{item.name}</p>
+                    <p className="text-[13.5px] leading-[18px] font-semibold text-slate-500">
                       {item.vehicle_type?.name || 'Vehicle plan'} • {item.isUnlimited ? 'Unlimited' : `${item.rides_used}/${item.ride_limit} used`}
                     </p>
                   </div>
@@ -214,9 +214,9 @@ const Subscriptions = () => {
                       ) : (
                         <AlertCircle className="h-4 w-4 text-amber-500" />
                       )}
-                      <span className="text-xs font-black uppercase tracking-wide text-slate-700">{item.status}</span>
+                      <span className="text-[13.5px] leading-[18px] font-black uppercase tracking-wide text-slate-700">{item.status}</span>
                     </div>
-                    <p className="mt-1 text-xs font-semibold text-slate-500">
+                    <p className="mt-1 text-[13.5px] leading-[18px] font-semibold text-slate-500">
                       {item.expiresAt ? `Ends ${new Date(item.expiresAt).toLocaleDateString()}` : 'No expiry'}
                     </p>
                   </div>

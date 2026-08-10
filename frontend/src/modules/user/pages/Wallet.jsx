@@ -243,7 +243,7 @@ const Wallet = () => {
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-slate-900">Wallet Refilled!</p>
-                    <p className="text-xs font-medium text-slate-400 mt-1">Balance updated successfully</p>
+                    <p className="text-[13.5px] leading-[18px] font-medium text-slate-400 mt-1">Balance updated successfully</p>
                   </div>
                 </Motion.div>
               ) : (
@@ -264,7 +264,7 @@ const Wallet = () => {
                       <button
                         key={val}
                         onClick={() => setAmount(val)}
-                        className={`py-3 rounded-xl font-bold text-sm transition-all ${
+                        className={`py-3 rounded-xl font-bold text-[15.5px] leading-[21px] transition-all ${
                           amount === val ? 'bg-[#FFC107] text-slate-950 shadow-md' : 'bg-slate-50 text-slate-600 border border-slate-100'
                         }`}
                       >
@@ -318,9 +318,9 @@ const Wallet = () => {
                   <>₹ {balanceText.whole}<span className="text-slate-950/60 text-2xl font-outfit">.{balanceText.decimals}</span></>
                 )}
               </h2>
-              {walletError && <p className="text-xs font-bold text-rose-950 mt-2">{walletError}</p>}
+              {walletError && <p className="text-[13.5px] leading-[18px] font-bold text-rose-950 mt-2">{walletError}</p>}
               {activePaymentGateway && !canTopUpWallet && (
-                <p className="text-xs font-bold text-amber-950 mt-2">
+                <p className="text-[13.5px] leading-[18px] font-bold text-amber-950 mt-2">
                   {walletTopUpGatewayLabel} is active, but wallet top-up is not available for it yet.
                 </p>
               )}
@@ -334,7 +334,7 @@ const Wallet = () => {
                   setShowAddMoney(true);
                 }}
                 disabled={!canTopUpWallet}
-                className="flex-1 bg-slate-950 text-white h-12 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform disabled:bg-slate-100 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed"
+                className="flex-1 bg-slate-950 text-white h-12 rounded-xl font-bold text-[15.5px] leading-[21px] flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform disabled:bg-slate-100 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed"
               >
                 <Plus size={16} strokeWidth={2.5} />
                 Add Money
@@ -353,7 +353,7 @@ const Wallet = () => {
             <Gift size={20} />
           </div>
           <div className="flex-1 text-left">
-            <h4 className="text-sm font-bold text-slate-900 font-outfit">Refer & Earn ₹50</h4>
+            <h4 className="text-[15.5px] leading-[21px] font-bold text-slate-900 font-outfit">Refer & Earn ₹50</h4>
             <p className="text-[12px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">Invite friends to {appName}</p>
           </div>
           <ArrowLeft size={18} className="text-slate-300 rotate-180 group-hover:text-slate-900 transition-colors" />
@@ -368,7 +368,7 @@ const Wallet = () => {
         
         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-50">
           {walletLoading ? (
-            <div className="p-8 text-center text-xs font-bold text-slate-400">Loading transactions...</div>
+            <div className="p-8 text-center text-[13.5px] leading-[18px] font-bold text-slate-400">Loading transactions...</div>
           ) : wallet.recentTransactions?.length ? (
             wallet.recentTransactions.map((tx) => {
               const isDebit = tx.kind === 'debit';
@@ -387,7 +387,7 @@ const Wallet = () => {
                     {isDebit ? <ArrowLeft size={16} className="rotate-45" /> : <Plus size={16} />}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-bold text-slate-900 truncate font-outfit">{title}</h4>
+                    <h4 className="text-[15.5px] leading-[21px] font-bold text-slate-900 truncate font-outfit">{title}</h4>
                     <p className="text-[12px] font-bold text-slate-400 uppercase mt-0.5">{whenText}</p>
                   </div>
                   <div className="text-right shrink-0">
@@ -402,7 +402,7 @@ const Wallet = () => {
               );
             })
           ) : (
-            <div className="p-8 text-center text-xs font-bold text-slate-400">No transactions yet</div>
+            <div className="p-8 text-center text-[13.5px] leading-[18px] font-bold text-slate-400">No transactions yet</div>
           )}
         </div>
       </div>

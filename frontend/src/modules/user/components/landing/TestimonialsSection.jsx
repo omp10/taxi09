@@ -54,7 +54,7 @@ const TestimonialsSection = () => {
                 </div>
               </div>
               
-              <p className="text-gray-600 text-sm leading-relaxed relative z-10">
+              <p className="text-gray-600 text-[15.5px] leading-[21px] leading-relaxed relative z-10">
                 "{t.text}"
               </p>
             </div>
