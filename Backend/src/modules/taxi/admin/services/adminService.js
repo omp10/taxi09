@@ -10564,6 +10564,9 @@ export const buildDriverDutyReport = async (query = {}) => {
       contact_phone_1: '$general.contact_phone_1',
       contact_phone_2: '$general.contact_phone_2',
       contact_booking_number: '$general.contact_booking_number',
+      // Drives the floating WhatsApp button. Omitting it here meant the
+      // field saved and was then dropped on read, so the site never saw it.
+      whatsapp_number: '$general.whatsapp_number',
       footer_1: '$general.footer_1',
       footer_2: '$general.footer_2',
       default_lat: '$general.default_lat',
