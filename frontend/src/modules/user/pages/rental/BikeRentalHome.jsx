@@ -132,7 +132,6 @@ const normalizeRentalVehicle = (item = {}, index = 0) => {
     tagColor,
     tagBg,
     image: item.image || '',
-    rating: '4.8',
     fuel: item.fuel || (isBike ? 'Self-drive ┬╖ License required' : 'Self-drive ┬╖ Clean and sanitized'),
     prices,
     kmLimit,
@@ -573,18 +572,16 @@ const BikeRentalHome = () => {
     if (isAddressEntered) {
       // 2. Render Search Results View (Indore Listing)
       const fallbackCars = [
-        { id: 'swift-demo', brand: 'Maruti', name: 'Swift', image: rentalCarImg, fuel: 'Petrol', capacity: 5, price: 2199, badge: 'Popular', rating: '4.6', reviews: 128, body: 'Hatchback' },
-        { id: 'city-demo', brand: 'Honda', name: 'City', image: rentalCarImg, fuel: 'Petrol', capacity: 5, price: 2599, badge: 'Best Value', rating: '4.7', reviews: 210, body: 'Sedan' },
-        { id: 'creta-demo', brand: 'Hyundai', name: 'Creta', image: rentalCarImg, fuel: 'Diesel', capacity: 5, price: 3199, badge: 'Premium', rating: '4.8', reviews: 156, body: 'SUV' },
-        { id: 'scorpio-demo', brand: 'Mahindra', name: 'Scorpio-N', image: rentalCarImg, fuel: 'Diesel', capacity: 7, price: 3899, badge: '', rating: '4.8', reviews: 98, body: 'SUV' },
+        { id: 'swift-demo', brand: 'Maruti', name: 'Swift', image: rentalCarImg, fuel: 'Petrol', capacity: 5, price: 2199, badge: 'Popular', body: 'Hatchback' },
+        { id: 'city-demo', brand: 'Honda', name: 'City', image: rentalCarImg, fuel: 'Petrol', capacity: 5, price: 2599, badge: 'Best Value', body: 'Sedan' },
+        { id: 'creta-demo', brand: 'Hyundai', name: 'Creta', image: rentalCarImg, fuel: 'Diesel', capacity: 5, price: 3199, badge: 'Premium', body: 'SUV' },
+        { id: 'scorpio-demo', brand: 'Mahindra', name: 'Scorpio-N', image: rentalCarImg, fuel: 'Diesel', capacity: 7, price: 3899, badge: '', body: 'SUV' },
       ];
       const listingCars = (matchedCars.length ? matchedCars : fallbackCars).slice(0, 4).map((car, index) => ({
         ...fallbackCars[index],
         ...car,
         body: car.body || car.categoryType?.replace(/s$/, '') || fallbackCars[index]?.body || 'Hatchback',
         badge: car.badge || fallbackCars[index]?.badge || '',
-        rating: car.rating || fallbackCars[index]?.rating || '4.7',
-        reviews: car.reviews || fallbackCars[index]?.reviews || 128,
         fuel: String(car.fuel || fallbackCars[index]?.fuel || 'Petrol').split(' ')[0],
         transmission: car.transmission || fallbackCars[index]?.transmission || (index === 1 ? 'Auto' : 'Manual'),
       }));
@@ -601,8 +598,9 @@ const BikeRentalHome = () => {
         .sort((a, b) => {
           if (resultSort === 'Price Low') return Number(a.price || 0) - Number(b.price || 0);
           if (resultSort === 'Price High') return Number(b.price || 0) - Number(a.price || 0);
-          if (resultSort === 'Rating') return Number(b.rating || 0) - Number(a.rating || 0);
-          return Number(b.reviews || 0) - Number(a.reviews || 0);
+          // "Recommended" keeps the catalogue's own order; there is no rating
+          // or review data to sort on.
+          return 0;
         });
       const activeFilterCount = [
         resultPriceFilter !== 'Any',
@@ -780,7 +778,7 @@ const BikeRentalHome = () => {
 
             {resultDropdown === 'Sort' && (
               <div className="ml-auto mt-2 w-44 overflow-hidden rounded-[12px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.16)]">
-                {['Recommended', 'Price Low', 'Price High', 'Rating'].map((option) => (
+                {['Recommended', 'Price Low', 'Price High'].map((option) => (
                   <button
                     key={option}
                     type="button"
@@ -840,9 +838,11 @@ const BikeRentalHome = () => {
                       </span>
                     </div>
                     <div className="flex flex-col items-end justify-between">
-                      <span className="flex items-center gap-1 text-[13.5px] font-semibold text-slate-700">
-                        <Star size={14} fill="#f5b700" className="text-[#f5b700]" />
-                        {car.rating} <span className="text-slate-500">({car.reviews})</span>
+                      {/* No rating is shown: vehicles carry no rating field, so
+                          anything here would be invented. Restore this once real
+                          reviews exist to average. */}
+                      <span className="flex items-center gap-1 text-[13.5px] font-semibold text-slate-600">
+                        {car.transmission || car.fuel || ''}
                       </span>
                       <div className="text-right">
                         <p className="text-[18px] font-black">₹{Number(car.price || 2199).toLocaleString('en-IN')}</p>
@@ -2362,9 +2362,7 @@ const BikeRentalHome = () => {
                       <p className="text-[13.5px] font-medium text-slate-500/80">{v.shortDescription}</p>
                     ) : null}
                     <div className="flex items-center gap-1">
-                      <Star size={10.5} className="text-yellow-500 fill-yellow-400" />
-                      <span className="text-[13.5px] font-bold text-slate-700">{v.rating}</span>
-                      <span className="text-[12px] font-medium text-slate-400">┬╖ {v.kmLimit[selectedDuration]} limit</span>
+                      <span className="text-[12px] font-medium text-slate-500">┬╖ {v.kmLimit[selectedDuration]} limit</span>
                     </div>
                   </div>
                   {v.image ? (

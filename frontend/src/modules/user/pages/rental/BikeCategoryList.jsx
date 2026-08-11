@@ -229,7 +229,6 @@ const BikeCategoryList = () => {
         vehicleCategory: 'bike',
         coverImage: v.image,
         image: v.image,
-        rating: '4.8',
         fuel: 'Self-drive · Helmet included',
         prices: {
           Hourly: Math.round(v.price / 8),
@@ -269,7 +268,6 @@ const BikeCategoryList = () => {
       vehicleCategory: 'bike',
       coverImage: v.coverImage || v.image,
       image: v.image,
-      rating: '4.8',
       fuel: v.short_description || 'Self-drive · Helmet included',
       prices: {
         Hourly: activePricing.find(p => p.durationHours === 1)?.price || Math.round(dailyPrice / 8),

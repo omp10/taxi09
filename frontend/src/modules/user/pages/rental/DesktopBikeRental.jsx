@@ -78,11 +78,6 @@ const BikeCard = ({ bike, selected, onSelect }) => {
         {bike.image ? (
           <img src={bike.image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-contain p-3" />
         ) : null}
-        {bike.rating ? (
-          <span className="absolute bottom-2 right-2 flex items-center gap-1 rounded-lg bg-[#F5B700] px-1.5 py-0.5 text-[13px] font-black text-slate-900">
-            {bike.rating} <Star size={10} fill="currentColor" />
-          </span>
-        ) : null}
         {bike.available === false ? (
           <span className="absolute left-2 top-2 rounded-lg bg-slate-900/85 px-2 py-1 text-[12.5px] font-bold text-white">
             Booked

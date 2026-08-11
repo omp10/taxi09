@@ -2224,11 +2224,6 @@ const RentalVehicleDetail = () => {
                   <h2 className="text-[32px] font-black text-slate-900 tracking-tight leading-tight text-center">{vehicle.name}</h2>
                   <p className="text-[18px] font-bold text-slate-700 mt-2 text-center">{vehicle.vehicleCategory || vehicle.shortDescription || 'Vehicle'}</p>
                   <div className="flex items-center justify-center gap-4 mt-4">
-                    <div className="flex items-center gap-1.5 bg-yellow-50 px-2.5 py-1.5 rounded-md">
-                      <Star size={16} className="text-yellow-500 fill-yellow-500" />
-                      <span className="text-[16.5px] font-bold text-slate-900">{vehicle.rating || '4.8'}</span>
-                    </div>
-                    <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
                     <span className="text-[16.5px] font-bold text-slate-700">
                       {selectedPackage ? selectedPackage.includedKm : (vehicle.kmLimit?.[duration] || '10')} km included
                     </span>
