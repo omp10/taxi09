@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight, Play, Quote, Star } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Play, Quote, Star } from 'lucide-react';
 import api from '../../../shared/api/axiosInstance';
 
 /**
@@ -67,6 +67,7 @@ const HomeContentSections = () => {
   const [reviews, setReviews] = useState([]);
   const [videos, setVideos] = useState([]);
   const [drivers, setDrivers] = useState([]);
+  const [articles, setArticles] = useState([]);
   const [playing, setPlaying] = useState('');
   const reduceMotion = useReducedMotion();
 
@@ -82,7 +83,8 @@ const HomeContentSections = () => {
     Promise.all([
       api.get('/users/content-blocks').catch(() => null),
       api.get('/users/hire-drivers').catch(() => null),
-    ]).then(([blockRes, driverRes]) => {
+      api.get('/users/travel-stories?limit=8').catch(() => null),
+    ]).then(([blockRes, driverRes, storyRes]) => {
       if (cancelled) return;
 
       // The public feed returns { blocks: { 'home.videos': {...} } } - keyed,
@@ -103,12 +105,18 @@ const HomeContentSections = () => {
       setReviews(asItems('home.testimonials').filter((item) => String(item?.quote || '').trim()));
       setVideos(asItems('home.videos').filter((item) => youtubeIdOf(item?.youtubeUrl)));
       setDrivers(unwrap(driverRes).filter((driver) => driver?.active !== false).slice(0, 8));
+      // Only published stories with a cover; a card here is mostly its image.
+      setArticles(
+        unwrap(storyRes)
+          .filter((story) => story?.coverImage && (!story.status || story.status === 'published'))
+          .slice(0, 8),
+      );
     });
 
     return () => { cancelled = true; };
   }, []);
 
-  const nothingToShow = !reviews.length && !videos.length && !drivers.length;
+  const nothingToShow = !reviews.length && !videos.length && !drivers.length && !articles.length;
   if (nothingToShow) return null;
 
   return (
@@ -229,6 +237,58 @@ const HomeContentSections = () => {
                   ) : null}
                 </div>
               </motion.div>
+            ))}
+          </motion.div>
+        </section>
+      ) : null}
+
+      {articles.length ? (
+        <section className="mt-7 lg:mt-14">
+          <SectionHeading
+            title="Read about us"
+            action="All stories"
+            onAction={() => navigate('/taxi/user/stories')}
+          />
+          <motion.div
+            {...rowMotion}
+            className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 lg:mx-0 lg:gap-6 lg:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {articles.map((story) => (
+              <motion.button
+                {...cardMotion}
+                key={story.slug || story.id || story._id}
+                type="button"
+                onClick={() => navigate(`/taxi/user/stories/${story.slug}`)}
+                className="group w-[236px] shrink-0 snap-start text-left lg:w-[300px]"
+              >
+                {/* The date sits on the image, so the card below it is just the
+                    headline - which is what a reader scans for. */}
+                <span className="relative block aspect-[4/3] overflow-hidden rounded-[18px] bg-slate-100">
+                  <img
+                    src={story.coverImage}
+                    alt=""
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                  />
+                  <span className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/65 to-transparent" />
+                  {story.publishedAt ? (
+                    <span className="absolute bottom-3 left-4 text-[13px] font-semibold text-white drop-shadow">
+                      {new Date(story.publishedAt).toLocaleDateString('en-IN', {
+                        day: 'numeric', month: 'long', year: 'numeric',
+                      })}
+                    </span>
+                  ) : null}
+                </span>
+
+                <span className="mt-3 flex items-start justify-between gap-3">
+                  <span className="min-w-0 flex-1 text-[15px] font-bold leading-[1.35] text-emerald-900 lg:text-[17px] lg:text-[var(--dh-text,#064e3b)]">
+                    {story.title}
+                  </span>
+                  <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-300 text-slate-800 transition-colors group-hover:border-slate-900 lg:border-[var(--dh-border,#cbd5e1)] lg:text-[var(--dh-text,#0f172a)]">
+                    <ArrowUpRight size={17} strokeWidth={2.2} />
+                  </span>
+                </span>
+              </motion.button>
             ))}
           </motion.div>
         </section>
