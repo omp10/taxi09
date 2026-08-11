@@ -43,9 +43,17 @@ const NeedsAttention = () => {
     {
       key: 'overdueReturns',
       label: 'Overdue returns',
-      hint: 'Should already be back and not closed off',
+      hint: 'A car went out and has not come back',
       icon: AlertTriangle,
       tone: 'text-rose-600 bg-rose-50',
+      path: '/admin/pricing/rental-requests',
+    },
+    {
+      key: 'staleRequests',
+      label: 'Stale requests',
+      hint: 'Never actioned and now past their own return date',
+      icon: AlertTriangle,
+      tone: 'text-amber-600 bg-amber-50',
       path: '/admin/pricing/rental-requests',
     },
     {

@@ -8818,6 +8818,7 @@ export const updateBusService = async (id, payload = {}, options = {}) => {
       dueBackToday,
       startingToday,
       overdue,
+      staleRequests,
       inMaintenance,
       pendingApplications,
       types,
@@ -8836,9 +8837,16 @@ export const updateBusService = async (id, payload = {}, options = {}) => {
         status: { $in: LIVE },
         pickupDateTime: { $gte: startOfDay, $lte: endOfDay },
       }),
-      // Should have come back and has not been closed off.
+      // A car that actually went out and has not come back. A 'pending'
+      // request was never confirmed or assigned, so nothing left the branch -
+      // counting those here overstated the problem badly.
       RentalBookingRequest.countDocuments({
-        status: { $in: LIVE },
+        status: { $in: ['confirmed', 'assigned'] },
+        returnDateTime: { $lt: startOfDay },
+      }),
+      // Requests nobody ever actioned, now past their own return date.
+      RentalBookingRequest.countDocuments({
+        status: 'pending',
         returnDateTime: { $lt: startOfDay },
       }),
       RentalVehicleUnit.countDocuments({ status: 'maintenance' }),
@@ -8855,6 +8863,7 @@ export const updateBusService = async (id, payload = {}, options = {}) => {
       dueBackToday,
       startingToday,
       overdueReturns: overdue,
+      staleRequests,
       carsInMaintenance: inMaintenance,
       pendingCarApplications: pendingApplications,
       // Models still relying on the "assume one car" fallback.
