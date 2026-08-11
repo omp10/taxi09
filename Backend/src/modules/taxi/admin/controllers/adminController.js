@@ -1294,6 +1294,9 @@ export const cancelAdminBusBookingSeats = asyncHandler(async (req, res) => {
 export const getRentalVehicleUnits = asyncHandler(async (req, res) =>
   ok(res, { results: await adminService.listRentalVehicleUnits(req.query) }),
 );
+export const getOperationsAttention = asyncHandler(async (_req, res) =>
+  ok(res, await adminService.getOperationsAttention()),
+);
 export const getRentalFleetSummary = asyncHandler(async (_req, res) =>
   ok(res, { results: await adminService.getRentalFleetSummary() }),
 );

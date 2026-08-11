@@ -26,6 +26,7 @@ import { RentalBookingRequest } from '../models/RentalBookingRequest.js';
 import { RentalVehicleSubcategory } from '../models/RentalVehicleSubcategory.js';
 import { RentalVehicleType } from '../models/RentalVehicleType.js';
 import { RentalVehicleUnit } from '../models/RentalVehicleUnit.js';
+import { AttachedVehicle } from '../content/models/AttachedVehicle.js';
 import { RentalQuoteRequest } from '../models/RentalQuoteRequest.js';
 import { SetPrice } from '../models/SetPrice.js';
 import { ServiceLocation } from '../models/ServiceLocation.js';
@@ -8795,6 +8796,70 @@ export const updateBusService = async (id, payload = {}, options = {}) => {
       added: created.length,
       skipped,
       registrations: created.map((c) => c.registrationNumber),
+    };
+  };
+
+  /**
+   * "What needs me today."
+   *
+   * Every number here is a count of real records with a page to act on, not a
+   * vanity metric. A zero is meaningful - it means that queue is clear - so
+   * zeros are returned rather than omitted.
+   */
+  export const getOperationsAttention = async () => {
+    const now = new Date();
+    const startOfDay = new Date(now); startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(now); endOfDay.setHours(23, 59, 59, 999);
+
+    const LIVE = ['pending', 'confirmed', 'assigned'];
+
+    const [
+      unassigned,
+      dueBackToday,
+      startingToday,
+      overdue,
+      inMaintenance,
+      pendingApplications,
+      types,
+      unitCounts,
+    ] = await Promise.all([
+      // Booked and paid for, but nobody has said which car goes out.
+      RentalBookingRequest.countDocuments({
+        status: { $in: ['pending', 'confirmed'] },
+        $or: [{ 'assignedVehicle.unitId': null }, { 'assignedVehicle.unitId': { $exists: false } }],
+      }),
+      RentalBookingRequest.countDocuments({
+        status: { $in: LIVE },
+        returnDateTime: { $gte: startOfDay, $lte: endOfDay },
+      }),
+      RentalBookingRequest.countDocuments({
+        status: { $in: LIVE },
+        pickupDateTime: { $gte: startOfDay, $lte: endOfDay },
+      }),
+      // Should have come back and has not been closed off.
+      RentalBookingRequest.countDocuments({
+        status: { $in: LIVE },
+        returnDateTime: { $lt: startOfDay },
+      }),
+      RentalVehicleUnit.countDocuments({ status: 'maintenance' }),
+      AttachedVehicle.countDocuments({ status: { $in: ['submitted', 'under_review'] } }),
+      RentalVehicleType.countDocuments({ active: true }),
+      RentalVehicleUnit.aggregate([
+        { $match: { status: { $ne: 'retired' } } },
+        { $group: { _id: '$vehicleTypeId' } },
+      ]),
+    ]);
+
+    return {
+      unassignedBookings: unassigned,
+      dueBackToday,
+      startingToday,
+      overdueReturns: overdue,
+      carsInMaintenance: inMaintenance,
+      pendingCarApplications: pendingApplications,
+      // Models still relying on the "assume one car" fallback.
+      modelsWithNoFleet: Math.max(types - unitCounts.length, 0),
+      generatedAt: now,
     };
   };
 

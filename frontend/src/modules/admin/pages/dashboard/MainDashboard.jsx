@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import NeedsAttention from '../../components/NeedsAttention';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowDownRight,
@@ -120,6 +121,9 @@ const MainDashboard = () => {
                    Live: {lastUpdatedAt?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
              </div>
+
+        {/* What needs acting on today, before any of the metrics below. */}
+        <NeedsAttention />
              {isRefreshing && <p className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.2em] animate-pulse">Syncing Cloud Nodes...</p>}
           </div>
         </div>

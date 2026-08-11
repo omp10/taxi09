@@ -229,6 +229,7 @@ export const adminService = {
   // Fleet - the individual cars behind each rental model line.
   getRentalFleet: (params = {}) => api.get('/admin/fleet/rental-vehicle-units', { params }),
   getRentalFleetSummary: () => api.get('/admin/fleet/summary'),
+  getOperationsAttention: () => api.get('/admin/operations/attention'),
   createRentalVehicleUnit: (data) => api.post('/admin/fleet/rental-vehicle-units', data),
   importRentalVehicleUnits: (rows) => api.post('/admin/fleet/import', { rows }),
   updateRentalVehicleUnit: (id, data) => api.patch(`/admin/fleet/rental-vehicle-units/${id}`, data),
