@@ -167,7 +167,7 @@ export const MobileSearchCard = () => {
             onChange={update('pickup')}
             list="mobile-service-stores"
             placeholder="Enter city or location"
-            className="w-full bg-transparent text-[15px] font-bold text-slate-950 outline-none placeholder:font-semibold placeholder:text-slate-700"
+            className="w-full bg-transparent text-[15px] font-bold text-slate-950 outline-none placeholder:font-bold placeholder:text-slate-800"
           />
         </span>
       </label>
@@ -189,7 +189,7 @@ export const MobileSearchCard = () => {
                 tap opens the real picker instead of the dd/mm/yyyy skeleton. */}
             <span className="mt-0.5 flex items-baseline gap-1 text-[13px] font-semibold">
               <span className="relative">
-                <span className={form[dateKey] ? 'text-slate-950' : 'text-slate-700'}>
+                <span className={form[dateKey] ? 'text-slate-950' : 'text-slate-800'}>
                   {formatDateLabel(form[dateKey])}
                 </span>
                 <input
@@ -206,7 +206,7 @@ export const MobileSearchCard = () => {
               <span className="text-slate-700">&middot;</span>
 
               <span className="relative">
-                <span className={form[timeKey] ? 'text-slate-950' : 'text-slate-700'}>
+                <span className={form[timeKey] ? 'text-slate-950' : 'text-slate-800'}>
                   {formatTimeLabel(form[timeKey])}
                 </span>
                 <input
