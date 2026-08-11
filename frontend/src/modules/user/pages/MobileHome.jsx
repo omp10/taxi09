@@ -540,7 +540,7 @@ const MobileHome = () => {
         {/* Rental Options */}
         <section className="mt-6">
           <div className="mb-4 flex items-end justify-between px-1">
-            <h2 className="text-[24px] font-black tracking-[-0.05em] text-slate-950">Rental Options</h2>
+            <h2 className="text-[24px] font-bold tracking-[-0.03em] text-slate-950">Rental Options</h2>
             <button
               onClick={() => navigate('/taxi/user/rental/type')}
               className="flex items-center gap-1.5 text-[15.5px] font-bold text-[#F5B700] active:scale-95 transition-transform"
