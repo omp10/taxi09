@@ -534,9 +534,6 @@ const MobileHome = () => {
 
         <MobilePopularCars />
 
-        {/* Admin-managed: drivers, videos, reviews. Renders nothing when empty. */}
-        <HomeContentSections />
-
         {/* Rental Options */}
         <section className="mt-6">
           <div className="mb-4 flex items-end justify-between px-1">
@@ -605,6 +602,9 @@ const MobileHome = () => {
             ))}
           </div>
         </section>
+
+        {/* Admin-managed: drivers, videos, reviews. Renders nothing when empty. */}
+        <HomeContentSections />
 
         <section className="mt-7">
           {!bannersFetched || !bottomImageReady ? <BannerSkeleton ratio="16 / 7" /> : null}
