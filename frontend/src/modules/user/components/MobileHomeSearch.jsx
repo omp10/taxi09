@@ -187,7 +187,7 @@ export const MobileSearchCard = () => {
                 "Date & Time", so stacking two more captions repeated it. Each
                 native control is laid transparently over its own value, so a
                 tap opens the real picker instead of the dd/mm/yyyy skeleton. */}
-            <span className="mt-0.5 flex items-baseline gap-1 text-[13px] font-semibold">
+            <span className="mt-0.5 flex items-baseline gap-2 text-[13px] font-semibold">
               <span className="relative">
                 <span className={form[dateKey] ? 'text-slate-950' : 'text-slate-800'}>
                   {formatDateLabel(form[dateKey])}

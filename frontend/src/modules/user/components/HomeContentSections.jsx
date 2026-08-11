@@ -171,7 +171,7 @@ const SectionHeading = ({ eyebrow, icon: Icon, title, subtitle, action, onAction
           {eyebrow}
         </p>
       ) : null}
-      <h2 className="mt-0.5 text-[20px] lg:text-[30px] font-extrabold tracking-[-0.03em] text-slate-900 lg:text-[var(--dh-text,#0f172a)]">{title}</h2>
+      <h2 className="mt-0.5 text-[21px] lg:text-[30px] font-bold lg:font-extrabold tracking-[-0.03em] text-slate-950 lg:text-[var(--dh-text,#0f172a)]">{title}</h2>
       {subtitle ? (
         <p className="mt-0.5 text-[12.5px] lg:text-[14.5px] font-medium text-slate-500 lg:text-[var(--dh-muted,#64748b)]">{subtitle}</p>
       ) : null}
@@ -252,7 +252,7 @@ const HomeContentSections = () => {
                 <ShieldCheck size={13} strokeWidth={2.6} />
                 Vetted &amp; verified drivers
               </p>
-              <h2 className="mt-1 text-[19px] lg:text-[30px] font-black leading-tight text-slate-900 lg:text-[var(--dh-text,#0f172a)]">
+              <h2 className="mt-1 text-[21px] lg:text-[30px] font-bold lg:font-black leading-tight tracking-[-0.03em] text-slate-950 lg:text-[var(--dh-text,#0f172a)]">
                 Meet our drivers
               </h2>
               <p className="mt-0.5 text-[12.5px] lg:text-[14.5px] font-medium text-slate-500 lg:text-[var(--dh-muted,#64748b)]">
@@ -362,7 +362,7 @@ const HomeContentSections = () => {
                   <p className="text-[10.5px] lg:text-[11.5px] font-black uppercase tracking-[0.16em] text-[#F5B700]">
                     How it works
                   </p>
-                  <h2 className="mt-1 text-[20px] lg:text-[32px] font-black leading-tight text-slate-900 lg:text-[var(--dh-text,#0f172a)]">
+                  <h2 className="mt-1 text-[21px] lg:text-[32px] font-bold lg:font-black leading-tight tracking-[-0.03em] text-slate-950 lg:text-[var(--dh-text,#0f172a)]">
                     {current.title}
                   </h2>
                   {current.caption ? (

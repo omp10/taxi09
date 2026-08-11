@@ -540,7 +540,7 @@ const MobileHome = () => {
         {/* Rental Options */}
         <section className="mt-6">
           <div className="mb-4 flex items-end justify-between px-1">
-            <h2 className="text-[24px] font-bold tracking-[-0.03em] text-slate-950">Rental Options</h2>
+            <h2 className="text-[21px] font-bold tracking-[-0.03em] text-slate-950">Rental Options</h2>
             <button
               onClick={() => navigate('/taxi/user/rental/type')}
               className="flex items-center gap-1.5 text-[15.5px] font-bold text-[#F5B700] active:scale-95 transition-transform"
@@ -585,7 +585,7 @@ const MobileHome = () => {
 
         {/* More Services */}
         <section className="mt-7">
-          <h2 className="mb-4 px-1 text-[24px] font-black tracking-[-0.05em] text-slate-950">More Services</h2>
+          <h2 className="mb-4 px-1 text-[21px] font-bold tracking-[-0.03em] text-slate-950">More Services</h2>
 
           <div className="grid grid-cols-3 gap-3">
             {moreServices.map(({ iconImage, icon: Icon, label, path }) => (
@@ -618,7 +618,7 @@ const MobileHome = () => {
           <div
             onTouchStart={handleTouchStart}
             onTouchEnd={(e) => handleTouchEnd(e, bottomBanners.length, setBottomIndex)}
-            onClick={() => openBanner(bottomBanners[bottomIndex], '/taxi/user/cab/spiritual')}
+            onClick={() => openBanner(bottomBanners[bottomIndex], '/taxi/user/tours')}
             className={`relative w-full cursor-pointer touch-pan-y select-none overflow-hidden rounded-[28px] border border-[#f1ede6] bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)] ${
               bannersFetched && bottomImageReady ? 'block' : 'hidden'
             }`}
