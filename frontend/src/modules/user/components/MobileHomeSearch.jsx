@@ -145,7 +145,7 @@ export const MobileSearchCard = () => {
             className={`flex flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2.5 text-[13px] font-semibold transition-colors ${
               mode === key
                 ? 'border-transparent bg-[#F5B700] text-slate-950'
-                : 'border-slate-200 bg-white text-slate-800'
+                : 'border-slate-200 bg-white text-slate-950'
             }`}
           >
             <Icon size={17} strokeWidth={2.3} />
@@ -161,13 +161,13 @@ export const MobileSearchCard = () => {
       <label className="mt-2.5 flex items-center gap-2.5 rounded-xl border border-slate-200 px-3 py-2">
         <MapPin size={17} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
         <span className="min-w-0 flex-1">
-          <span className="block text-[12px] font-semibold text-slate-700">Pickup Location</span>
+          <span className="block text-[12px] font-bold text-slate-950">Pickup Location</span>
           <input
             value={form.pickup}
             onChange={update('pickup')}
             list="mobile-service-stores"
             placeholder="Enter city or location"
-            className="w-full bg-transparent text-[15px] font-semibold text-slate-800 outline-none placeholder:font-semibold placeholder:text-slate-600"
+            className="w-full bg-transparent text-[15px] font-bold text-slate-950 outline-none placeholder:font-semibold placeholder:text-slate-700"
           />
         </span>
       </label>
@@ -178,7 +178,7 @@ export const MobileSearchCard = () => {
           { label: 'Return', dateKey: 'returnDate', timeKey: 'returnTime' },
         ].map(({ label, dateKey, timeKey }) => (
           <div key={dateKey} className="rounded-xl border border-slate-200 px-2.5 py-1.5">
-            <span className="flex items-center gap-1 text-[12px] font-semibold text-slate-700">
+            <span className="flex items-center gap-1 text-[12px] font-bold text-slate-950">
               <Calendar size={13} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} />
               {label}
             </span>
@@ -189,7 +189,7 @@ export const MobileSearchCard = () => {
                 tap opens the real picker instead of the dd/mm/yyyy skeleton. */}
             <span className="mt-0.5 flex items-baseline gap-1 text-[13px] font-semibold">
               <span className="relative">
-                <span className={form[dateKey] ? 'text-slate-800' : 'text-slate-600'}>
+                <span className={form[dateKey] ? 'text-slate-950' : 'text-slate-700'}>
                   {formatDateLabel(form[dateKey])}
                 </span>
                 <input
@@ -203,10 +203,10 @@ export const MobileSearchCard = () => {
                 />
               </span>
 
-              <span className="text-slate-600">&middot;</span>
+              <span className="text-slate-700">&middot;</span>
 
               <span className="relative">
-                <span className={form[timeKey] ? 'text-slate-800' : 'text-slate-600'}>
+                <span className={form[timeKey] ? 'text-slate-950' : 'text-slate-700'}>
                   {formatTimeLabel(form[timeKey])}
                 </span>
                 <input
