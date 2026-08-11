@@ -7,6 +7,7 @@ import api from '../../../shared/api/axiosInstance';
 import {
   DesktopFooter, DesktopNav, ServiceCard,
 } from '../components/desktop/DesktopChrome';
+import HomeContentSections from '../components/HomeContentSections';
 import {
   SERVICES, resolveBannerImage, unwrapResults, useDesktopTheme,
 } from '../components/desktop/desktopShared';
@@ -329,6 +330,11 @@ const DesktopHome = () => {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Admin-managed: drivers, videos, reviews. Renders nothing when empty. */}
+      <section className="mx-auto max-w-[1728px] px-4 pb-4 xl:px-6">
+        <HomeContentSections />
       </section>
 
       {/* The service stores are already loaded for the search suggestions, so

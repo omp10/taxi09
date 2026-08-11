@@ -52,7 +52,7 @@ const SectionHeading = ({ eyebrow, title, action, onAction }) => (
       {eyebrow ? (
         <p className="text-[11.5px] font-black uppercase tracking-[0.14em] text-[#F5B700]">{eyebrow}</p>
       ) : null}
-      <h2 className="mt-0.5 text-[20px] font-extrabold tracking-[-0.03em] text-slate-900">{title}</h2>
+      <h2 className="mt-0.5 text-[20px] lg:text-[30px] font-extrabold tracking-[-0.03em] text-slate-900 lg:text-[var(--dh-text,#0f172a)]">{title}</h2>
     </div>
     {action ? (
       <button type="button" onClick={onAction} className="flex shrink-0 items-center gap-1 text-[13px] font-semibold text-[#4338ca]">
@@ -114,20 +114,20 @@ const HomeContentSections = () => {
   return (
     <>
       {drivers.length ? (
-        <section className="mt-7">
+        <section className="mt-7 lg:mt-14">
           <SectionHeading
             eyebrow="Vetted and verified"
             title="Meet our drivers"
             action="See all"
             onAction={() => navigate('/taxi/user/with-driver')}
           />
-          <motion.div {...rowMotion} className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <motion.div {...rowMotion} className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 lg:mx-0 lg:gap-5 lg:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {drivers.map((driver) => (
               <motion.button {...cardMotion}
                 key={driver.id || driver._id || driver.name}
                 type="button"
                 onClick={() => navigate('/taxi/user/with-driver')}
-                className="w-[132px] shrink-0 snap-start rounded-2xl border border-slate-100 bg-white p-3 text-left shadow-[0_6px_18px_rgba(15,23,42,0.05)]"
+                className="w-[132px] lg:w-[168px] shrink-0 snap-start rounded-2xl border border-slate-100 bg-white p-3 text-left shadow-[0_6px_18px_rgba(15,23,42,0.05)] lg:border-[var(--dh-border,#eceef1)] lg:bg-[var(--dh-surface,#ffffff)]"
               >
                 <span className="mx-auto flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-slate-100">
                   {driver.photo || driver.image ? (
@@ -138,7 +138,7 @@ const HomeContentSections = () => {
                     </span>
                   )}
                 </span>
-                <span className="mt-2 block truncate text-center text-[13.5px] font-bold text-slate-800">{driver.name}</span>
+                <span className="mt-2 block truncate text-center text-[13.5px] font-bold text-slate-800 lg:text-[var(--dh-text,#0f172a)]">{driver.name}</span>
                 {driver.city ? (
                   <span className="block truncate text-center text-[12px] font-semibold text-slate-500">{driver.city}</span>
                 ) : null}
@@ -155,15 +155,15 @@ const HomeContentSections = () => {
       ) : null}
 
       {videos.length ? (
-        <section className="mt-7">
+        <section className="mt-7 lg:mt-14">
           <SectionHeading eyebrow="Watch" title="How it works" />
-          <motion.div {...rowMotion} className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <motion.div {...rowMotion} className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 lg:mx-0 lg:gap-5 lg:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {videos.map((video) => {
               const id = youtubeIdOf(video.youtubeUrl);
               const isPlaying = playing === id;
 
               return (
-                <motion.div key={id} {...cardMotion} className="w-[248px] shrink-0 snap-start overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-[0_6px_18px_rgba(15,23,42,0.05)]">
+                <motion.div key={id} {...cardMotion} className="w-[248px] lg:w-[320px] shrink-0 snap-start overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-[0_6px_18px_rgba(15,23,42,0.05)] lg:border-[var(--dh-border,#eceef1)] lg:bg-[var(--dh-surface,#ffffff)]">
                   <div className="relative aspect-video bg-slate-900">
                     {isPlaying ? (
                       // Only loaded once tapped, so the homepage does not pull
@@ -187,7 +187,7 @@ const HomeContentSections = () => {
                     )}
                   </div>
                   <div className="p-3">
-                    <p className="text-[13.5px] font-bold leading-tight text-slate-800">{video.title}</p>
+                    <p className="text-[13.5px] font-bold leading-tight text-slate-800 lg:text-[var(--dh-text,#0f172a)]">{video.title}</p>
                     {video.caption ? (
                       <p className="mt-0.5 text-[12px] font-semibold text-slate-500">{video.caption}</p>
                     ) : null}
@@ -200,13 +200,13 @@ const HomeContentSections = () => {
       ) : null}
 
       {reviews.length ? (
-        <section className="mt-7">
+        <section className="mt-7 lg:mt-14">
           <SectionHeading eyebrow="From our customers" title="What people say" />
-          <motion.div {...rowMotion} className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <motion.div {...rowMotion} className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 lg:mx-0 lg:gap-5 lg:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {reviews.map((review, index) => (
-              <motion.div key={`${review.name}-${index}`} {...cardMotion} className="w-[262px] shrink-0 snap-start rounded-2xl border border-slate-100 bg-white p-4 shadow-[0_6px_18px_rgba(15,23,42,0.05)]">
+              <motion.div key={`${review.name}-${index}`} {...cardMotion} className="w-[262px] lg:w-[340px] shrink-0 snap-start rounded-2xl border border-slate-100 bg-white p-4 shadow-[0_6px_18px_rgba(15,23,42,0.05)] lg:border-[var(--dh-border,#eceef1)] lg:bg-[var(--dh-surface,#ffffff)]">
                 <Quote size={18} className="text-[#F5B700]" />
-                <p className="mt-2 text-[13.5px] font-medium leading-[1.5] text-slate-700">{review.quote}</p>
+                <p className="mt-2 text-[13.5px] font-medium leading-[1.5] text-slate-700 lg:text-[var(--dh-text,#0f172a)]">{review.quote}</p>
                 <div className="mt-3 flex items-center gap-2.5 border-t border-slate-50 pt-3">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100">
                     {review.image ? (
@@ -218,7 +218,7 @@ const HomeContentSections = () => {
                     )}
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[13px] font-bold text-slate-800">{review.name}</span>
+                    <span className="block truncate text-[13px] font-bold text-slate-800 lg:text-[var(--dh-text,#0f172a)]">{review.name}</span>
                     {review.city ? <span className="block truncate text-[12px] text-slate-500">{review.city}</span> : null}
                   </span>
                   {Number(review.rating) > 0 ? (
