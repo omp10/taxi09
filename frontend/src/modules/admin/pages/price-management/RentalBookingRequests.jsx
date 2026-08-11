@@ -83,7 +83,14 @@ const RentalBookingRequests = () => {
     const load = async () => {
       setLoading(true);
       try {
-        const response = await adminService.getRentalBookingRequests();
+        const [response, fleetResponse] = await Promise.all([
+          adminService.getRentalBookingRequests(),
+          // The cars available to hand over. Only these can be assigned.
+          adminService.getRentalFleet({ status: 'available' }).catch(() => null),
+        ]);
+        const fleetRows =
+          fleetResponse?.data?.data?.results || fleetResponse?.data?.results || fleetResponse?.results || [];
+        setFleetUnits(fleetRows);
         const results = toRentalRequestList(response);
         if (mounted) setItems(results);
       } catch (error) {
@@ -153,6 +160,8 @@ const RentalBookingRequests = () => {
     );
   };
 
+  const [fleetUnits, setFleetUnits] = useState([]);
+
   const saveRequest = async () => {
     if (!selectedRequest) return;
 
@@ -162,6 +171,9 @@ const RentalBookingRequests = () => {
       const updated = await adminService.updateRentalBookingRequest(id, {
         status: selectedRequest.status,
         adminNote: selectedRequest.adminNote || '',
+        // Which physical car is being handed over. The server pins the booking
+        // to that car's model line and refuses anything in maintenance.
+        assignedUnitId: selectedRequest.assignedVehicle?.unitId || '',
       });
       const payload = updated?.data?.data || updated?.data || updated;
       updateLocal(id, payload);
@@ -531,6 +543,49 @@ const RentalBookingRequests = () => {
                             </option>
                           ))}
                         </select>
+                      </div>
+
+                      {/* Which actual car goes out. Until the fleet is entered
+                          there is nothing to choose, so the field says so
+                          rather than showing an empty dropdown. */}
+                      <div>
+                        <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-slate-500">
+                          Assigned Car
+                        </label>
+                        {fleetUnits.length ? (
+                          <select
+                            value={selectedRequest.assignedVehicle?.unitId || ''}
+                            onChange={(event) =>
+                              updateLocal(selectedRequest.id || selectedRequest._id, {
+                                assignedVehicle: {
+                                  ...(selectedRequest.assignedVehicle || {}),
+                                  unitId: event.target.value,
+                                  registrationNumber:
+                                    fleetUnits.find((unit) => unit.id === event.target.value)?.registrationNumber || '',
+                                },
+                              })
+                            }
+                            className={inputClass}
+                          >
+                            <option value="">Not assigned</option>
+                            {fleetUnits.map((unit) => (
+                              <option key={unit.id} value={unit.id}>
+                                {unit.registrationNumber}
+                                {unit.vehicleTypeName ? ` - ${unit.vehicleTypeName}` : ''}
+                                {unit.serviceStoreName ? ` (${unit.serviceStoreName})` : ''}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <p className="rounded-xl border border-dashed border-slate-200 px-3 py-2.5 text-sm text-slate-500">
+                            No cars in the fleet yet. Add them under Rental &rarr; Fleet.
+                          </p>
+                        )}
+                        {selectedRequest.assignedVehicle?.registrationNumber ? (
+                          <p className="mt-1.5 text-[12px] font-semibold text-emerald-600">
+                            Currently: {selectedRequest.assignedVehicle.registrationNumber}
+                          </p>
+                        ) : null}
                       </div>
 
                       <div className="flex flex-wrap gap-2">

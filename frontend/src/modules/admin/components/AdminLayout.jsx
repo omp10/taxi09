@@ -986,7 +986,7 @@ const AdminLayout = () => {
                 icon: Wallet,
             label: 'Driver Wallet',
                 subItems: [
-                  { label: 'Withdrawal Requests', path: '/admin/drivers/wallet/withdrawals', permission: 'wallet.view' },
+                  { label: 'Driver Withdrawals', path: '/admin/drivers/wallet/withdrawals', permission: 'wallet.view' },
                   { label: 'Negative Balance Drivers', path: '/admin/drivers/wallet/negative', permission: 'wallet.view' },
                 ],
               },
@@ -1114,7 +1114,7 @@ const AdminLayout = () => {
               {
                 icon: Wallet,
             label: 'Owner Wallet',
-                subItems: [{ label: 'Withdrawal Requests', path: '/admin/owners/wallet/withdrawals', permission: 'wallet.view' }],
+                subItems: [{ label: 'Owner Withdrawals', path: '/admin/owners/wallet/withdrawals', permission: 'wallet.view' }],
               },
               {
                 icon: Car,
