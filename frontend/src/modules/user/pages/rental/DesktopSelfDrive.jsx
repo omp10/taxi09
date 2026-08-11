@@ -100,8 +100,8 @@ const DesktopSelfDrive = () => {
     if (search.date) {
       const from = new Date(`${search.date}T${search.time || '10:00'}`);
       if (!Number.isNaN(from.getTime())) {
-        params.set('pickupISO', from.toISOString());
-        params.set('returnISO', new Date(from.getTime() + 24 * 60 * 60 * 1000).toISOString());
+        params.set('pickup', from.toISOString());
+        params.set('return', new Date(from.getTime() + 24 * 60 * 60 * 1000).toISOString());
       }
     }
     navigate(`/taxi/user/rental?${params.toString()}`);

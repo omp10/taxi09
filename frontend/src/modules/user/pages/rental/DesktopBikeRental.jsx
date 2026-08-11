@@ -146,8 +146,8 @@ const DesktopBikeRental = () => {
   const load = useCallback(() => {
     const params = new URLSearchParams();
     if (location.trim()) params.set('location', location.trim());
-    if (pickup) params.set('pickupISO', new Date(pickup).toISOString());
-    if (dropoff) params.set('returnISO', new Date(dropoff).toISOString());
+    if (pickup) params.set('pickup', new Date(pickup).toISOString());
+    if (dropoff) params.set('return', new Date(dropoff).toISOString());
     const query = params.toString();
 
     setLoading(true);

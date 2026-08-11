@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Fuel, Shield, ChevronRight, ChevronLeft, ChevronDown, SlidersHorizontal, ArrowDownUp, Star, Info, Car, Search, X, Bike, MapPin, MessageSquare, Calendar, User, Compass, Truck, Check, Headset, Home, Bell, Clock, Users, Percent, IndianRupee } from 'lucide-react';
 import { userService } from '../../services/userService';
@@ -199,18 +199,41 @@ const RentalSkeleton = () => (
   </div>
 );
 
-const LOCATION_SUGGESTIONS = [
+/**
+ * Shown only until the real branches load, and if that request fails. The live
+ * list comes from /users/service-stores so adding a branch in the admin panel
+ * makes it suggestable here without a code change.
+ */
+const FALLBACK_LOCATION_SUGGESTIONS = [
   "South Tukoganj, Indore",
-  "Indore Airport (IDR), Indore",
   "Vijay Nagar, Indore",
   "Palasia, Indore",
-  "Rajwada, Indore",
-  "Bhopal Junction, Bhopal"
 ];
 
 const BikeRentalHome = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const [locationSuggestions, setLocationSuggestions] = useState(FALLBACK_LOCATION_SUGGESTIONS);
+
+  useEffect(() => {
+    let cancelled = false;
+    userService
+      .getServiceStores()
+      .then((response) => {
+        if (cancelled) return;
+        const rows = response?.data?.data?.results || response?.data?.results || response?.results || [];
+        const names = [...new Set(
+          rows
+            .filter((store) => store?.active !== false && store?.status !== 'inactive')
+            .map((store) => String(store?.name || store?.store_name || '').trim())
+            .filter(Boolean),
+        )];
+        if (names.length) setLocationSuggestions(names);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
   const [selectedDuration, setSelectedDuration] = useState('Hourly');
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -361,7 +384,11 @@ const BikeRentalHome = () => {
       setLoading(true);
       setErrorMessage('');
       try {
-        const response = await userService.getRentalVehicles();
+        const response = await userService.getRentalVehicles({
+          location: searchParams.get('location') || '',
+          pickup: searchParams.get('pickup') || '',
+          return: searchParams.get('return') || '',
+        });
         const results = response?.data?.results || response?.results || [];
 
         if (!mounted) return;
@@ -384,7 +411,7 @@ const BikeRentalHome = () => {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [searchParams]);   // refetch when the search window or location changes
 
   useEffect(() => {
     let mounted = true;
@@ -1120,7 +1147,7 @@ const BikeRentalHome = () => {
     }
 
     const rentalCategories = ['Hatchback', 'Sedan', 'SUV', 'Premium'];
-    const bookingLocation = locationSearchText || selectedLocation || LOCATION_SUGGESTIONS[0] || '';
+    const bookingLocation = locationSearchText || selectedLocation || locationSuggestions[0] || '';
     const formatDisplayTime = (value) => {
       const [hourValue, minute = '00'] = String(value || '00:00').split(':');
       const hour = Number(hourValue);
@@ -1207,7 +1234,7 @@ const BikeRentalHome = () => {
                     value={locationSearchText}
                     onChange={(event) => { setLocationSearchText(event.target.value); setShowLocationSuggestions(true); }}
                     onFocus={() => setShowLocationSuggestions(true)}
-                    placeholder={selectedLocation || LOCATION_SUGGESTIONS[0] || 'Where from?'}
+                    placeholder={selectedLocation || locationSuggestions[0] || 'Where from?'}
                     className="block w-full bg-transparent text-[17px] font-semibold text-black outline-none placeholder:text-slate-400"
                   />
                 </span>
@@ -1224,7 +1251,7 @@ const BikeRentalHome = () => {
 
               {showLocationSuggestions && (
                 <div className="absolute left-0 right-0 top-[72px] z-30 overflow-hidden rounded-[14px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.16)]">
-                  {LOCATION_SUGGESTIONS.slice(0, 5).map((loc) => (
+                  {locationSuggestions.slice(0, 5).map((loc) => (
                     <button
                       key={loc}
                       type="button"
@@ -1267,7 +1294,7 @@ const BikeRentalHome = () => {
 
               {showDropSuggestions && (
                 <div className="overflow-hidden rounded-[14px] border border-slate-100 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.14)]">
-                  {LOCATION_SUGGESTIONS.slice(0, 5).map((loc) => (
+                  {locationSuggestions.slice(0, 5).map((loc) => (
                     <button
                       key={loc}
                       type="button"
@@ -1594,7 +1621,7 @@ const BikeRentalHome = () => {
             {/* Location Suggestions Dropdown */}
             {showLocationSuggestions && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-slate-100 shadow-xl z-30 max-h-60 overflow-y-auto no-scrollbar py-2">
-                {LOCATION_SUGGESTIONS
+                {locationSuggestions
                   .filter(loc => !locationSearchText || loc.toLowerCase().includes(locationSearchText.toLowerCase()))
                   .map((loc, idx) => (
                     <div
@@ -1610,7 +1637,7 @@ const BikeRentalHome = () => {
                       <span className="text-[14.5px] font-semibold text-slate-700">{loc}</span>
                     </div>
                   ))}
-                {LOCATION_SUGGESTIONS.filter(loc => !locationSearchText || loc.toLowerCase().includes(locationSearchText.toLowerCase())).length === 0 && (
+                {locationSuggestions.filter(loc => !locationSearchText || loc.toLowerCase().includes(locationSearchText.toLowerCase())).length === 0 && (
                   <div
                     onClick={() => {
                       if (locationSearchText.trim()) {

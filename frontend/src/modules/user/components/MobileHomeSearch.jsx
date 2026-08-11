@@ -58,6 +58,7 @@ export const MobileSearchCard = () => {
   const [stores, setStores] = useState([]);
   const [form, setForm] = useState({ pickup: '', pickupDate: '', pickupTime: '', returnDate: '', returnTime: '' });
   const [todayISO] = useState(() => new Date().toISOString().slice(0, 10));
+  const [error, setError] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -76,16 +77,41 @@ export const MobileSearchCard = () => {
   }, []);
 
   const active = MODES.find((item) => item.key === mode) || MODES[0];
-  const update = (key) => (event) => setForm((current) => ({ ...current, [key]: event.target.value }));
+  const update = (key) => (event) => {
+    setError('');
+    setForm((current) => ({ ...current, [key]: event.target.value }));
+  };
+
+  /**
+   * One search contract across the site: location plus an ISO pickup/return
+   * window, which is exactly what /users/rental-vehicles filters on. A date
+   * with no time is taken as the start of that day.
+   */
+  const toISO = (date, time) => {
+    if (!date) return '';
+    const parsed = new Date(`${date}T${time || '00:00'}`);
+    return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString();
+  };
 
   const submit = (event) => {
     event.preventDefault();
+
+    const pickupISO = toISO(form.pickupDate, form.pickupTime);
+    const returnISO = toISO(form.returnDate, form.returnTime);
+
+    // Without these the catalogue cannot filter on anything and every vehicle
+    // comes back "available", which is why an empty search looked broken.
+    if (!form.pickup.trim()) return setError('Enter where you want to pick the vehicle up.');
+    if (!pickupISO) return setError('Choose a pickup date.');
+    if (!returnISO) return setError('Choose a return date.');
+    if (returnISO <= pickupISO) return setError('The return has to be after the pickup.');
+
+    setError('');
     const params = new URLSearchParams({ search: 'true' });
-    if (form.pickup) params.set('location', form.pickup);
-    if (form.pickupDate) params.set('date', form.pickupDate);
-    if (form.pickupTime) params.set('time', form.pickupTime);
-    if (form.returnDate) params.set('returnDate', form.returnDate);
-    if (form.returnTime) params.set('returnTime', form.returnTime);
+    params.set('location', form.pickup.trim());
+    params.set('pickup', pickupISO);
+    params.set('return', returnISO);
+
     navigate(`${active.path}?${params.toString()}`);
   };
 
@@ -181,6 +207,10 @@ export const MobileSearchCard = () => {
           </div>
         ))}
       </div>
+
+      {error ? (
+        <p role="alert" className="mt-2 text-[12.5px] font-bold text-rose-600">{error}</p>
+      ) : null}
 
       <button
         type="submit"

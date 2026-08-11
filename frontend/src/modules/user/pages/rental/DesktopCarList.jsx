@@ -143,8 +143,8 @@ const DesktopCarList = () => {
     const params = new URLSearchParams();
     const place = searchParams.get('location');
     if (place) params.set('location', place);
-    if (searchParams.get('pickupISO')) params.set('pickup', searchParams.get('pickupISO'));
-    if (searchParams.get('returnISO')) params.set('return', searchParams.get('returnISO'));
+    if (searchParams.get('pickup')) params.set('pickup', searchParams.get('pickup'));
+    if (searchParams.get('return')) params.set('return', searchParams.get('return'));
 
     api
       .get(`/users/rental-vehicles${params.toString() ? `?${params}` : ''}`)

@@ -39,8 +39,15 @@ export const userService = {
     const response = await api.get('/users/app-modules');
     return response;
   },
-  getRentalVehicles: async () => {
-    const response = await api.get('/users/rental-vehicles');
+  /**
+   * @param {{location?: string, pickup?: string, return?: string}} params
+   * pickup/return are ISO strings; the catalogue filters availability on them.
+   */
+  getRentalVehicles: async (params = {}) => {
+    const query = new URLSearchParams(
+      Object.entries(params).filter(([, value]) => String(value || '').trim()),
+    ).toString();
+    const response = await api.get(`/users/rental-vehicles${query ? `?${query}` : ''}`);
     return response;
   },
   getRentalVehicleSubcategories: async () => {
