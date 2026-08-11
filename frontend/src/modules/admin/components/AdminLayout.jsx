@@ -866,7 +866,6 @@ const AdminLayout = () => {
             icon: FileText,
             label: 'App Content',
             subItems: [
-              { label: 'Drivers for Hire', path: '/admin/content/hire-drivers', permission: 'promotions.view' },
               { label: 'Membership', path: '/admin/content/membership', permission: 'promotions.view' },
               { label: 'Attached Vehicles', path: '/admin/content/attached-vehicles', permission: 'promotions.view' },
               { label: 'Travel Stories', path: '/admin/content/travel-stories', permission: 'promotions.view' },
@@ -979,6 +978,7 @@ const AdminLayout = () => {
             subItems: [
               { label: 'Pending Drivers', path: '/admin/drivers/pending', permission: 'drivers.view' },
               { label: 'Approved Drivers', path: '/admin/drivers', permission: 'drivers.view' },
+              { label: 'Hire Drivers', path: '/admin/content/hire-drivers', permission: 'drivers.view' },
               { label: 'Active Drivers', path: '/admin/drivers/active', permission: 'drivers.view' },
               { label: 'Subscription', path: '/admin/drivers/subscription', permission: 'drivers.view' },
               { label: 'Drivers Ratings', path: '/admin/drivers/ratings', permission: 'drivers.view' },
