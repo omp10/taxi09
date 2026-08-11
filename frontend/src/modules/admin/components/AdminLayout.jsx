@@ -867,6 +867,7 @@ const AdminLayout = () => {
             label: 'App Content',
             subItems: [
               { label: 'Homepage Sections', path: '/admin/content/homepage-sections', permission: 'promotions.view' },
+              { label: 'Blog', path: '/admin/content/blogs', permission: 'promotions.view' },
               { label: 'Membership', path: '/admin/content/membership', permission: 'promotions.view' },
               { label: 'Attached Vehicles', path: '/admin/content/attached-vehicles', permission: 'promotions.view' },
               { label: 'Travel Stories', path: '/admin/content/travel-stories', permission: 'promotions.view' },

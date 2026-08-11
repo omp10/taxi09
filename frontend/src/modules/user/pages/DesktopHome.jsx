@@ -283,7 +283,7 @@ const DesktopHome = () => {
       </section>
 
       {/* ---------------------------------------------------------- Services */}
-      <section className="mx-auto mt-12 max-w-[1728px] px-4 xl:px-6">
+      <section className="dh-mesh mx-auto mt-12 max-w-[1728px] px-4 xl:px-6">
         <div className="grid grid-cols-[300px_minmax(0,1fr)] gap-8">
           <div>
             <p className="text-[14.5px] font-black uppercase tracking-[0.12em] text-[#F5B700]">Explore Our Services</p>

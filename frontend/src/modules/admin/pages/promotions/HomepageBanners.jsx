@@ -15,7 +15,22 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const Motion = motion;
 
+/**
+ * The two artwork slots are independent: an empty one means "do not show this
+ * banner there". So which surfaces a banner reaches is simply which slots are
+ * filled, and the list says so rather than leaving the admin to guess.
+ */
+const surfaceOf = (banner) => {
+  const phone = Boolean(banner.image);
+  const desktop = Boolean(banner.desktopImage);
+  if (phone && desktop) return { label: 'Mobile + Desktop', tone: 'bg-indigo-50 text-indigo-700' };
+  if (phone) return { label: 'Mobile only', tone: 'bg-amber-50 text-amber-700' };
+  if (desktop) return { label: 'Desktop only', tone: 'bg-sky-50 text-sky-700' };
+  return { label: 'Nowhere - no artwork', tone: 'bg-rose-50 text-rose-600' };
+};
+
 const createInitialFormData = (type) => ({
+  title: '',
   image: null,
   image_url: '',
   desktopImage: null,
@@ -147,6 +162,7 @@ const HomepageBanners = ({ type = 'top', mode = 'list' }) => {
       }
 
       const payload = {
+        title: formData.title.trim(),
         image: imageData,
         desktopImage: desktopData,
         image_url: formData.image_url.trim(),
@@ -276,7 +292,9 @@ const HomepageBanners = ({ type = 'top', mode = 'list' }) => {
                 <table className="w-full text-left">
                   <thead className="bg-gray-50">
                     <tr className="text-[13px] font-bold text-gray-700">
-                      <th className="px-6 py-4">Icon / Preview</th>
+                      <th className="px-6 py-4">Banner</th>
+                      <th className="px-6 py-4">Phone</th>
+                      <th className="px-6 py-4">Desktop</th>
                       <th className="px-6 py-4">Status</th>
                       <th className="px-6 py-4">Action</th>
                     </tr>
@@ -284,13 +302,13 @@ const HomepageBanners = ({ type = 'top', mode = 'list' }) => {
                   <tbody className="divide-y divide-gray-100">
                     {loading ? (
                       <tr>
-                        <td colSpan="3" className="px-6 py-14 text-center text-sm text-gray-400">
+                        <td colSpan="5" className="px-6 py-14 text-center text-sm text-gray-400">
                           Loading banners...
                         </td>
                       </tr>
                     ) : banners.length === 0 ? (
                       <tr>
-                        <td colSpan="3" className="px-6 py-14 text-center text-sm text-gray-400">
+                        <td colSpan="5" className="px-6 py-14 text-center text-sm text-gray-400">
                           No banners found in this section.
                         </td>
                       </tr>
@@ -298,16 +316,31 @@ const HomepageBanners = ({ type = 'top', mode = 'list' }) => {
                       banners.map((item) => (
                         <tr key={item._id || item.id}>
                           <td className="px-6 py-4">
-                            <div className="h-14 w-52 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+                            <p className="text-[13.5px] font-bold text-gray-900">{item.title || 'Untitled banner'}</p>
+                            <span className={`mt-1 inline-flex rounded px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide ${surfaceOf(item).tone}`}>
+                              {surfaceOf(item).label}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="h-14 w-28 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
                               {item.image ? (
-                                <img
-                                  src={resolveImageUrl(item.image)}
-                                  alt="Banner"
-                                  className="h-full w-full object-cover"
-                                />
+                                <img src={resolveImageUrl(item.image)} alt="Phone banner" className="h-full w-full object-cover" />
                               ) : (
-                                <div className="h-full w-full flex items-center justify-center text-gray-300">
-                                  <ImageIcon size={16} />
+                                <div className="flex h-full w-full flex-col items-center justify-center gap-0.5 text-gray-300">
+                                  <ImageIcon size={14} />
+                                  <span className="text-[9.5px] font-semibold">Not set</span>
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="h-14 w-52 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+                              {item.desktopImage ? (
+                                <img src={resolveImageUrl(item.desktopImage)} alt="Desktop banner" className="h-full w-full object-cover" />
+                              ) : (
+                                <div className="flex h-full w-full flex-col items-center justify-center gap-0.5 text-gray-300">
+                                  <ImageIcon size={14} />
+                                  <span className="text-[9.5px] font-semibold">Not set</span>
                                 </div>
                               )}
                             </div>
@@ -352,15 +385,31 @@ const HomepageBanners = ({ type = 'top', mode = 'list' }) => {
             className="bg-white rounded-[22px] border border-gray-200 shadow-sm p-8"
           >
             <div className="space-y-6 max-w-3xl">
-              {/* Two equal slots. Either one on its own is a valid banner - the
-                  backend copies whichever is missing across - so neither is
-                  marked required and the copy says so plainly. */}
+              <div>
+                <label className="block text-[14px] font-semibold text-gray-900" htmlFor="banner-title">
+                  Banner name
+                </label>
+                <p className="mt-1 text-[13px] text-gray-500">
+                  Only you see this. It is how the banner is listed, so name it for the campaign.
+                </p>
+                <input
+                  id="banner-title"
+                  value={formData.title}
+                  onChange={(e) => setFormData((current) => ({ ...current, title: e.target.value }))}
+                  placeholder="Monsoon self drive offer"
+                  className="mt-3 w-full rounded-xl border border-gray-200 px-4 py-3 text-[14px] text-gray-900 outline-none focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100/60"
+                />
+              </div>
+
+              {/* Two independent slots: a banner shows on a surface only if that
+                  surface's artwork is uploaded. Neither is required on its own. */}
               <div>
                 <label className="block text-[14px] font-semibold text-gray-900">
                   Banner artwork
                 </label>
                 <p className="mt-1 text-[13px] text-gray-500">
-                  Upload one or both. If you add only one, it is used on phone and desktop.
+                  Upload one or both. A banner only appears where its artwork is uploaded - phone
+                  artwork alone means phones only, desktop artwork alone means the website only.
                 </p>
 
                 <div className="mt-4 grid gap-4 md:grid-cols-2">

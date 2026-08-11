@@ -17,6 +17,10 @@ import {
   adminCreateHireDriver,
   adminDeleteHireDriver,
   adminListHireDrivers,
+  adminListBlogs,
+  adminCreateBlog,
+  adminUpdateBlog,
+  adminDeleteBlog,
   adminToggleHireDriver,
   adminUpdateHireDriver,
   adminListMembershipPlans,
@@ -73,6 +77,12 @@ contentRouter.put('/admin/content-blocks', adminUpsertContentBlock);
 contentRouter.delete('/admin/content-blocks/:id', adminDeleteContentBlock);
 
 // Drivers available for hire (permanent / monthly / outstation)
+// Blog posts written in the admin panel
+contentRouter.get('/admin/blogs', adminListBlogs);
+contentRouter.post('/admin/blogs', adminCreateBlog);
+contentRouter.patch('/admin/blogs/:id', adminUpdateBlog);
+contentRouter.delete('/admin/blogs/:id', adminDeleteBlog);
+
 contentRouter.get('/admin/hire-drivers', adminListHireDrivers);
 contentRouter.post('/admin/hire-drivers', adminCreateHireDriver);
 contentRouter.patch('/admin/hire-drivers/:id', adminUpdateHireDriver);

@@ -550,6 +550,70 @@ body {
   }
 }
 
+/* Decorative bottom-left mesh: a soft yellow bloom with a few curved lines
+   drifting out of the corner, so the white section has some depth behind the
+   cards. Purely ornamental - it sits under the content and ignores pointers. */
+.desktop-home .dh-mesh {
+  position: relative;
+  isolation: isolate;
+}
+
+.desktop-home .dh-mesh::before,
+.desktop-home .dh-mesh::after {
+  content: '';
+  position: absolute;
+  bottom: -180px;
+  left: -120px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.desktop-home .dh-mesh::before {
+  width: 520px;
+  height: 460px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 70%, rgba(245, 183, 0, 0.16), transparent 65%);
+}
+
+/* The curves are an inline SVG rather than extra markup, so the section stays
+   a single element and the lines scale with it. */
+.desktop-home .dh-mesh::after {
+  width: 620px;
+  height: 520px;
+  opacity: 0.5;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 620 520' fill='none'%3E%3Cg stroke='%23F5B700' stroke-opacity='0.28' stroke-width='1.5'%3E%3Cpath d='M-40 520C60 400 120 300 300 250s280-60 380-170'/%3E%3Cpath d='M-40 470C70 360 140 270 320 220s270-70 370-180'/%3E%3Cpath d='M-40 420C80 320 160 240 340 190s260-80 360-190'/%3E%3Cpath d='M-40 370C90 280 180 210 360 160s250-90 350-200'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* The bloom is light on white and would glow on the neutral-black theme, so
+   it is dialled back rather than dropped - the depth is still wanted. */
+.desktop-home.theme-dark .dh-mesh::before {
+  background: radial-gradient(circle at 30% 70%, rgba(245, 183, 0, 0.1), transparent 65%);
+}
+
+.desktop-home.theme-dark .dh-mesh::after {
+  opacity: 0.28;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .desktop-home .dh-mesh::before {
+    animation: dh-mesh-breathe 14s ease-in-out infinite;
+  }
+}
+
+@keyframes dh-mesh-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.8;
+  }
+}
+
 /* Continuous marquee for the rental car strip. The track holds two copies of
    the list, so translating by half its width loops seamlessly. */
 .desktop-home .dh-marquee-track {
@@ -621,4 +685,38 @@ body {
 .desktop-home.theme-dark input[type='date'],
 .desktop-home.theme-dark input[type='time'] {
   color-scheme: dark;
+}
+
+
+/* ------------------------------------------------------------------------ */
+/* Homepage section marquee                                                   */
+/*                                                                            */
+/* The track holds the items twice, so translating it exactly -50% lands on a  */
+/* copy of the start and the loop is seamless. Duration is set per row from    */
+/* the item count, so a long row does not race a short one.                    */
+/* ------------------------------------------------------------------------ */
+@keyframes hcs-marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.hcs-marquee {
+  overflow: hidden;
+}
+
+.hcs-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: hcs-marquee-scroll var(--hcs-duration, 40s) linear infinite;
+}
+
+/* Hovering anywhere on the row stops it so a card can be read and clicked. */
+.hcs-marquee:hover .hcs-marquee-track,
+.hcs-marquee:focus-within .hcs-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hcs-marquee-track { animation: none; }
+  .hcs-marquee { overflow-x: auto; }
 }

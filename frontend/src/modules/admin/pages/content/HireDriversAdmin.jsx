@@ -11,6 +11,7 @@ const emptyForm = () => ({
   rating: 4.5,
   trips: '0',
   experience: '',
+  about: '',
   languages: '',
   vehicleName: '',
   vehiclePlate: '',
@@ -332,6 +333,16 @@ const HireDriversAdmin = () => {
               <label className="flex items-center gap-2">
                 <input type="checkbox" checked={form.verified} onChange={(e) => setForm({ ...form, verified: e.target.checked })} />
                 <span className="text-[13px] font-semibold text-slate-700">Documents verified</span>
+              </label>
+              <label className="block lg:col-span-2">
+                <span className={label}>In their words</span>
+                <textarea
+                  rows={2}
+                  className={input}
+                  value={form.about}
+                  onChange={(e) => setForm({ ...form, about: e.target.value })}
+                  placeholder="I have driven in Indore for eight years and I know every shortcut."
+                />
               </label>
               <label className="flex items-center gap-2">
                 <input type="checkbox" checked={form.available} onChange={(e) => setForm({ ...form, available: e.target.checked })} />

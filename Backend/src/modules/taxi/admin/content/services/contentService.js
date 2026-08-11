@@ -3,6 +3,7 @@ import { TravelPackage } from '../models/TravelPackage.js';
 import { Hotel } from '../models/Hotel.js';
 import { ContentBlock } from '../models/ContentBlock.js';
 import { HireDriver } from '../models/HireDriver.js';
+import { Blog } from '../models/Blog.js';
 import { MembershipPlan } from '../models/MembershipPlan.js';
 
 /**
@@ -368,6 +369,7 @@ const normalizeHireDriverPayload = (payload = {}) => {
     rating: Math.min(5, Math.max(0, toNumber(payload.rating, 0))),
     trips: clean(payload.trips) || '0',
     experience: clean(payload.experience),
+    about: clean(payload.about),
     languages: toArray(payload.languages),
     vehicleName: clean(payload.vehicleName),
     vehiclePlate: clean(payload.vehiclePlate).toUpperCase(),
@@ -388,6 +390,101 @@ const normalizeHireDriverPayload = (payload = {}) => {
     sortOrder: toNumber(payload.sortOrder, 0),
     active: payload.active !== false && payload.active !== 'false',
   };
+};
+
+const serializeBlog = (item = {}) => ({
+  id: String(item._id || ''),
+  _id: item._id,
+  slug: item.slug || '',
+  title: item.title || '',
+  excerpt: item.excerpt || '',
+  content: item.content || '',
+  coverImage: item.coverImage || '',
+  gallery: Array.isArray(item.gallery) ? item.gallery.filter(Boolean) : [],
+  author: item.author || '',
+  category: item.category || '',
+  tags: Array.isArray(item.tags) ? item.tags : [],
+  readMinutes: Number(item.readMinutes || 0),
+  status: item.status || 'draft',
+  featured: Boolean(item.featured),
+  publishedAt: item.publishedAt || null,
+  createdAt: item.createdAt,
+  updatedAt: item.updatedAt,
+});
+
+const normalizeBlogPayload = (payload = {}) => {
+  const text = (value) => String(value ?? '').trim();
+  const body = text(payload.content);
+
+  return {
+    title: text(payload.title),
+    excerpt: text(payload.excerpt),
+    content: body,
+    coverImage: text(payload.coverImage),
+    gallery: (Array.isArray(payload.gallery) ? payload.gallery : []).map(text).filter(Boolean),
+    author: text(payload.author),
+    category: text(payload.category),
+    tags: (Array.isArray(payload.tags) ? payload.tags : String(payload.tags || '').split(','))
+      .map(text)
+      .filter(Boolean),
+    // Roughly 200 words a minute, so the estimate is derived rather than typed.
+    readMinutes: Number(payload.readMinutes) > 0
+      ? Number(payload.readMinutes)
+      : Math.max(1, Math.round(body.split(/\s+/).filter(Boolean).length / 200)),
+    status: payload.status === 'published' ? 'published' : 'draft',
+    featured: Boolean(payload.featured),
+    publishedAt: payload.publishedAt ? new Date(payload.publishedAt) : new Date(),
+  };
+};
+
+/** Admin listing: everything, newest first. */
+export const listBlogs = async ({ status, search } = {}) => {
+  const filter = {};
+  if (status) filter.status = status;
+  if (String(search || '').trim()) filter.title = { $regex: String(search).trim(), $options: 'i' };
+
+  const results = await Blog.find(filter).sort({ featured: -1, publishedAt: -1 }).lean();
+  return { results: results.map(serializeBlog), total: results.length };
+};
+
+/** Public listing: published only. */
+export const listPublicBlogs = async ({ limit = 12 } = {}) => {
+  const results = await Blog.find({ status: 'published' })
+    .sort({ featured: -1, publishedAt: -1 })
+    .limit(Math.min(Number(limit) || 12, 50))
+    .lean();
+  return { results: results.map(serializeBlog), total: results.length };
+};
+
+export const getPublicBlogBySlug = async (slug) => {
+  const found = await Blog.findOne({ slug: String(slug || '').toLowerCase(), status: 'published' }).lean();
+  if (!found) throw new ApiError(404, 'Post not found');
+  return serializeBlog(found);
+};
+
+export const createBlog = async (payload) => {
+  const normalized = normalizeBlogPayload(payload);
+  if (!normalized.title) throw new ApiError(400, 'Title is required');
+
+  const slug = await ensureUniqueSlug(Blog, payload.slug || normalized.title);
+  const created = await Blog.create({ ...normalized, slug });
+  return serializeBlog(created.toObject());
+};
+
+export const updateBlog = async (id, payload) => {
+  const existing = await Blog.findById(id);
+  if (!existing) throw new ApiError(404, 'Post not found');
+
+  const normalized = normalizeBlogPayload({ ...existing.toObject(), ...payload });
+  Object.assign(existing, normalized);
+  await existing.save();
+  return serializeBlog(existing.toObject());
+};
+
+export const deleteBlog = async (id) => {
+  const removed = await Blog.findByIdAndDelete(id);
+  if (!removed) throw new ApiError(404, 'Post not found');
+  return { id: String(id) };
 };
 
 export const listHireDrivers = async ({ hireType, city, active, available } = {}) => {

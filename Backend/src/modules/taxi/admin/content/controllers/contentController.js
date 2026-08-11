@@ -551,3 +551,24 @@ export const getPlatformStats = asyncHandler(async (_req, res) => {
     cities: hotelCities.filter(Boolean).length,
   });
 });
+
+
+/* ------------------------------------------------------------------ Blogs */
+export const adminListBlogs = asyncHandler(async (req, res) =>
+  ok(res, await contentService.listBlogs(req.query)),
+);
+export const adminCreateBlog = asyncHandler(async (req, res) =>
+  ok(res, await contentService.createBlog(req.body)),
+);
+export const adminUpdateBlog = asyncHandler(async (req, res) =>
+  ok(res, await contentService.updateBlog(req.params.id, req.body)),
+);
+export const adminDeleteBlog = asyncHandler(async (req, res) =>
+  ok(res, await contentService.deleteBlog(req.params.id)),
+);
+export const getPublicBlogs = asyncHandler(async (req, res) =>
+  ok(res, await contentService.listPublicBlogs(req.query)),
+);
+export const getPublicBlog = asyncHandler(async (req, res) =>
+  ok(res, await contentService.getPublicBlogBySlug(req.params.slug)),
+);

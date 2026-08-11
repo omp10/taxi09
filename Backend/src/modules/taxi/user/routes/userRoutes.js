@@ -71,6 +71,8 @@ import {
 } from '../controllers/userController.js';
 import {
   getPublicContentBlocks,
+  getPublicBlogs,
+  getPublicBlog,
   getPublicHotelBySlug,
   quoteHotelStay,
   quoteTravelPackage,
@@ -142,6 +144,10 @@ userRouter.post('/attached-vehicles/:id/submit', authenticate(['user']), postAtt
 
 // Travel stories. Reading is public; writing and liking need a session.
 // The static segments are declared before /:slug so they cannot be shadowed.
+// Blog posts. Public reading only; writing happens in the admin panel.
+userRouter.get('/blogs', getPublicBlogs);
+userRouter.get('/blogs/:slug', getPublicBlog);
+
 userRouter.get('/travel-stories/facets', getTravelStoryFacets);
 userRouter.get('/travel-stories/pins', getTravelStoryPins);
 userRouter.get('/travel-stories/mine', authenticate(['user']), getMyTravelStories);

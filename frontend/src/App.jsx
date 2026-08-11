@@ -24,6 +24,7 @@ const UserHome = lazy(() => import('./modules/user/pages/Home'));
 const UserMembership = lazy(() => import('./modules/user/pages/membership/Membership'));
 const UserAttachCar = lazy(() => import('./modules/user/pages/attach/AttachCar'));
 const UserTravelStories = lazy(() => import('./modules/user/pages/stories/TravelStoriesRoute'));
+const UserBlog = lazy(() => import('./modules/user/pages/blog/BlogRoute'));
 const BikeRentalRoute = lazy(() => import('./modules/user/pages/rental/BikeRentalRoute'));
 const UserInternship = lazy(() => import('./modules/user/pages/internship/InternshipRoute'));
 const UserVerifyCertificate = lazy(() => import('./modules/user/pages/internship/VerifyCertificate'));
@@ -268,6 +269,7 @@ const AdminInternship = lazy(() => import('./modules/admin/pages/content/Interns
 const AdminContentBlocks = lazy(() => import('./modules/admin/pages/content/ContentBlocksAdmin'));
 const AdminHireDrivers = lazy(() => import('./modules/admin/pages/content/HireDriversAdmin'));
 const AdminHomepageSections = lazy(() => import('./modules/admin/pages/content/HomepageSections'));
+const AdminBlogs = lazy(() => import('./modules/admin/pages/content/BlogsAdmin'));
 const AdminRentalCoupons = lazy(() => import('./modules/admin/pages/promotions/RentalCoupons'));
 
 // Price Management
@@ -437,7 +439,9 @@ const MainLayout = ({ children }) => {
 
   return (
     <div className="redigo-app min-h-screen bg-gray-50/50">
-      <main className="max-w-lg md:max-w-none mx-auto md:mx-0 shadow-2xl md:shadow-none bg-white min-h-screen relative overflow-x-hidden">
+      {/* clip, not hidden: `hidden` turns this into a scroll container and any
+          sticky header inside sticks to it instead of the viewport. */}
+      <main className="max-w-lg md:max-w-none mx-auto md:mx-0 shadow-2xl md:shadow-none bg-white min-h-screen relative overflow-x-clip">
         {children}
       </main>
     </div>
@@ -504,6 +508,7 @@ const BROWSABLE_PREFIXES = [
   '/taxi/user/international',
   '/taxi/user/intercity',
   '/taxi/user/stories',
+  '/taxi/user/blog',
   '/taxi/user/internship',
   '/taxi/user/verify-certificate',
   '/taxi/user/support',
@@ -1055,6 +1060,8 @@ function App() {
               <Route path="/taxi/user/verify-certificate" element={<UserVerifyCertificate />} />
               <Route path="/taxi/user/stories/new" element={<UserCreateTravelStory />} />
               <Route path="/taxi/user/stories/:slug" element={<UserTravelStoryDetail />} />
+              <Route path="/taxi/user/blog" element={<UserBlog />} />
+              <Route path="/taxi/user/blog/:slug" element={<UserBlog />} />
               <Route path="/taxi/user/membership/checkout" element={<UserMembershipCheckout />} />
               <Route path="/taxi/user/wallet" element={<Wallet />} />
               <Route
@@ -1398,6 +1405,7 @@ function App() {
                 <Route path="content/blocks" element={<AdminContentBlocks />} />
                 <Route path="content/hire-drivers" element={<AdminHireDrivers />} />
                 <Route path="content/homepage-sections" element={<AdminHomepageSections />} />
+                <Route path="content/blogs" element={<AdminBlogs />} />
                 <Route
                   path="homepage-banners/top"
                   element={<AdminHomepageBanners type="top" mode="list" />}

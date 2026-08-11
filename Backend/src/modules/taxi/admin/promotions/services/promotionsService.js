@@ -391,7 +391,7 @@ const normalizeBannerPayload = async (payload, existing = null) => {
   const generatedTitle = `Banner ${new Date().toISOString()}`;
   const title = normalizeText(payload.title ?? existing?.title ?? generatedTitle);
   let image = normalizeText(payload.image ?? payload.image_url ?? existing?.image);
-  // Optional wide-screen artwork; blank means the phone image serves both.
+  // Optional wide-screen artwork; blank means the banner skips desktop.
   let desktopImage = normalizeText(payload.desktopImage ?? payload.desktop_image ?? existing?.desktopImage ?? '');
   const rawLinkType = normalizeText(payload.link_type ?? payload.redirect_type ?? existing?.link_type ?? 'external_link');
   const linkType = rawLinkType === 'app_route' ? 'deep_link' : rawLinkType;
@@ -400,8 +400,8 @@ const normalizeBannerPayload = async (payload, existing = null) => {
   );
   const active = normalizeBoolean(payload.active ?? payload.status, existing?.active ?? true);
   const type = normalizeText(payload.type ?? existing?.type ?? 'rental');
-  // Either artwork is enough. Whichever is missing is filled in from the other
-  // below, so a banner uploaded for one surface still renders on both.
+  // Either artwork is enough on its own, but the slots stay independent: a
+  // banner shows only on the surfaces whose artwork was uploaded.
   if (!image && !desktopImage) {
     throw new ApiError(400, 'Upload a banner image for phone or desktop');
   }

@@ -22,6 +22,8 @@ const hireDriverSchema = new mongoose.Schema(
     rating: { type: Number, default: 0, min: 0, max: 5 },
     trips: { type: String, default: '0', trim: true },
     experience: { type: String, default: '', trim: true },
+    /** A line in the driver's own words, shown on the homepage card. */
+    about: { type: String, default: '', trim: true },
     languages: { type: [String], default: [] },
 
     // Vehicle the driver brings, when they supply one.

@@ -230,6 +230,12 @@ export const adminService = {
   getRentalFleet: (params = {}) => api.get('/admin/fleet/rental-vehicle-units', { params }),
   getRentalFleetSummary: () => api.get('/admin/fleet/summary'),
   getOperationsAttention: () => api.get('/admin/operations/attention'),
+
+  // Blog posts written in the admin panel.
+  getBlogs: (params = {}) => api.get('/admin/blogs', { params }),
+  createBlog: (data) => api.post('/admin/blogs', data),
+  updateBlog: (id, data) => api.patch(`/admin/blogs/${id}`, data),
+  deleteBlog: (id) => api.delete(`/admin/blogs/${id}`),
   createRentalVehicleUnit: (data) => api.post('/admin/fleet/rental-vehicle-units', data),
   importRentalVehicleUnits: (rows) => api.post('/admin/fleet/import', { rows }),
   updateRentalVehicleUnit: (id, data) => api.patch(`/admin/fleet/rental-vehicle-units/${id}`, data),
