@@ -474,7 +474,14 @@ const normalizeDeliveryDistancePricing = (value = {}, fallback = {}) => {
 
 const BUS_DAY_OPTIONS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-const sanitizeBusText = (value = '', fallback = '') =>
+/**
+ * The `value = ''` default parameter used to fire on undefined, so `value ??
+ * fallback` could never reach the fallback and every caller's fallback was
+ * dead. A partial update therefore blanked any text field it omitted - a
+ * status-only PATCH wiped the vehicle's name. Single-argument callers are
+ * unaffected: undefined still becomes ''.
+ */
+const sanitizeBusText = (value, fallback = '') =>
   String(value ?? fallback).trim();
 
 const sanitizeBusSeatPrice = (value, fallback = 0) => {
@@ -10557,39 +10564,26 @@ export const buildDriverDutyReport = async (query = {}) => {
     tip: 'tip_setting',
   };
 
-  const generalBusinessSettingsProjection = {
-    _id: 0,
-    general: {
-      app_name: '$general.app_name',
-      contact_phone_1: '$general.contact_phone_1',
-      contact_phone_2: '$general.contact_phone_2',
-      contact_booking_number: '$general.contact_booking_number',
-      // Drives the floating WhatsApp button. Omitting it here meant the
-      // field saved and was then dropped on read, so the site never saw it.
-      whatsapp_number: '$general.whatsapp_number',
-      footer_1: '$general.footer_1',
-      footer_2: '$general.footer_2',
-      default_lat: '$general.default_lat',
-      default_lng: '$general.default_lng',
-      logo: '$general.logo',
-      favicon: '$general.favicon',
-      brand_logo: '$general.brand_logo',
-    },
-  };
-
+  /**
+   * The whole `general` object is returned.
+   *
+   * This used to be a hand-written projection listing each field, which meant
+   * any setting added to the admin form but not to that list would save and
+   * then be silently dropped on read - the field looked like it worked and
+   * changed nothing. `general` is a Mixed field, so there was nothing to
+   * project for in the first place.
+   */
   const getGeneralBusinessSettingsSection = async () => {
-    let results = await AdminBusinessSetting.aggregate([
-      { $match: { scope: 'default' } },
-      { $project: generalBusinessSettingsProjection },
-      { $limit: 1 },
-    ]);
+    const existing = await AdminBusinessSetting.findOne({ scope: 'default' })
+      .select('general')
+      .lean();
 
-    if (results.length === 0) {
+    if (!existing) {
       const created = await AdminBusinessSetting.create(createDefaultBusinessSettings());
       return created.general || {};
     }
 
-    return results[0]?.general || {};
+    return existing.general || {};
   };
 
   const getProjectedSettingsSection = async (Model, defaultFactory, key) => {
