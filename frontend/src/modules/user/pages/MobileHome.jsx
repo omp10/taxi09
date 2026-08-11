@@ -561,8 +561,8 @@ const MobileHome = () => {
                     <Icon size={17} className="text-slate-900" strokeWidth={2.1} />
                   </span>
                   <span className="min-w-0">
-                    <span className="block text-[13.5px] font-black leading-[1.15] text-slate-950">{title}</span>
-                    <span className="mt-0.5 block text-[11px] font-medium leading-tight text-slate-600">{subtitle}</span>
+                    <span className="block text-[13.5px] font-bold leading-[1.15] text-slate-950">{title}</span>
+                    <span className="mt-0.5 block text-[11px] font-semibold leading-tight text-slate-950">{subtitle}</span>
                   </span>
                 </div>
 
