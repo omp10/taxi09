@@ -406,6 +406,22 @@ const rentalBookingRequestSchema = new mongoose.Schema(
         ref: 'TaxiRentalVehicleType',
         default: null,
       },
+      /**
+       * The actual car handed over. vehicleId above is the model line, which is
+       * what the customer booked; this is which of those cars they were given.
+       * Null on bookings made before the fleet existed.
+       */
+      unitId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'TaxiRentalVehicleUnit',
+        default: null,
+      },
+      registrationNumber: {
+        type: String,
+        default: '',
+        trim: true,
+        uppercase: true,
+      },
       name: {
         type: String,
         default: '',

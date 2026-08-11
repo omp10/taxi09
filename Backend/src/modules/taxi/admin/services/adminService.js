@@ -25,6 +25,7 @@ import { RentalPackageType } from '../models/RentalPackageType.js';
 import { RentalBookingRequest } from '../models/RentalBookingRequest.js';
 import { RentalVehicleSubcategory } from '../models/RentalVehicleSubcategory.js';
 import { RentalVehicleType } from '../models/RentalVehicleType.js';
+import { RentalVehicleUnit } from '../models/RentalVehicleUnit.js';
 import { RentalQuoteRequest } from '../models/RentalQuoteRequest.js';
 import { SetPrice } from '../models/SetPrice.js';
 import { ServiceLocation } from '../models/ServiceLocation.js';
@@ -1287,6 +1288,8 @@ const serializeRentalBookingRequest = (item = {}) => ({
   kycCompleted: Boolean(item.kycCompleted),
   assignedVehicle: {
     vehicleId: item.assignedVehicle?.vehicleId ? String(item.assignedVehicle.vehicleId) : '',
+    unitId: item.assignedVehicle?.unitId ? String(item.assignedVehicle.unitId) : '',
+    registrationNumber: item.assignedVehicle?.registrationNumber || '',
     name: item.assignedVehicle?.name || '',
     vehicleCategory: item.assignedVehicle?.vehicleCategory || '',
     image: item.assignedVehicle?.image || '',
@@ -6159,11 +6162,16 @@ export const listPublicRentalVehicleCatalog = async ({
   });
 
   return items.map((item) => {
-    const state = availability.get(String(item._id)) || { available: true, availableFrom: null };
+    const state = availability.get(String(item._id))
+      || { available: true, availableFrom: null, unitsLeft: null, totalUnits: null };
     return {
       ...serializeRentalVehicleType(item),
       available: state.available,
       availableFrom: state.availableFrom,
+      // How much of the fleet is left for this window, so the UI can say
+      // "only 2 left" rather than just available/unavailable.
+      unitsLeft: state.unitsLeft ?? null,
+      totalUnits: state.totalUnits ?? null,
     };
   });
 };
@@ -8559,6 +8567,183 @@ export const updateBusService = async (id, payload = {}, options = {}) => {
     return true;
   };
 
+  /* ---------------------------------------------------------------- Fleet */
+
+  const serializeRentalVehicleUnit = (item = {}) => ({
+    id: String(item._id || item.id || ''),
+    _id: item._id,
+    vehicleTypeId: item.vehicleTypeId ? String(item.vehicleTypeId) : '',
+    vehicleTypeName: item.vehicleTypeName || '',
+    registrationNumber: item.registrationNumber || '',
+    serviceStoreId: item.serviceStoreId ? String(item.serviceStoreId) : '',
+    serviceStoreName: item.serviceStoreName || '',
+    status: item.status || 'available',
+    odometerKm: Number(item.odometerKm || 0),
+    colour: item.colour || '',
+    notes: item.notes || '',
+    blocks: (Array.isArray(item.blocks) ? item.blocks : []).map((block) => ({
+      id: String(block._id || ''),
+      from: block.from || null,
+      to: block.to || null,
+      reason: block.reason || 'other',
+      notes: block.notes || '',
+    })),
+    activeFrom: item.activeFrom || null,
+    createdAt: item.createdAt,
+    updatedAt: item.updatedAt,
+  });
+
+  /** Registration plates are the human key, so they are compared uppercased. */
+  const normalizePlate = (value) => String(value || '').trim().toUpperCase();
+
+  export const listRentalVehicleUnits = async (query = {}) => {
+    const filter = {};
+    if (query.vehicleTypeId) filter.vehicleTypeId = query.vehicleTypeId;
+    if (query.serviceStoreId) filter.serviceStoreId = query.serviceStoreId;
+    if (query.status) filter.status = query.status;
+    if (String(query.search || '').trim()) {
+      filter.registrationNumber = { $regex: String(query.search).trim(), $options: 'i' };
+    }
+
+    const units = await RentalVehicleUnit.find(filter).sort({ createdAt: -1 }).lean();
+
+    // Names are resolved here so the fleet list is readable without the client
+    // having to join three collections itself.
+    const [types, stores] = await Promise.all([
+      RentalVehicleType.find({ _id: { $in: units.map((u) => u.vehicleTypeId) } }).select('name').lean(),
+      ServiceStore.find({ _id: { $in: units.map((u) => u.serviceStoreId).filter(Boolean) } }).select('name').lean(),
+    ]);
+    const typeName = new Map(types.map((t) => [String(t._id), t.name]));
+    const storeName = new Map(stores.map((t) => [String(t._id), t.name]));
+
+    return units.map((unit) =>
+      serializeRentalVehicleUnit({
+        ...unit,
+        vehicleTypeName: typeName.get(String(unit.vehicleTypeId)) || '',
+        serviceStoreName: storeName.get(String(unit.serviceStoreId)) || '',
+      }),
+    );
+  };
+
+  export const createRentalVehicleUnit = async (payload = {}) => {
+    const registrationNumber = normalizePlate(payload.registrationNumber);
+
+    if (!registrationNumber) {
+      throw new ApiError(400, 'Registration number is required');
+    }
+    if (!payload.vehicleTypeId) {
+      throw new ApiError(400, 'A rental vehicle model is required');
+    }
+
+    const model = await RentalVehicleType.findById(payload.vehicleTypeId).select('_id').lean();
+    if (!model) {
+      throw new ApiError(404, 'Rental vehicle model not found');
+    }
+
+    const clash = await RentalVehicleUnit.findOne({ registrationNumber }).select('_id').lean();
+    if (clash) {
+      throw new ApiError(409, registrationNumber + ' is already in the fleet');
+    }
+
+    const created = await RentalVehicleUnit.create({
+      vehicleTypeId: payload.vehicleTypeId,
+      registrationNumber,
+      serviceStoreId: payload.serviceStoreId || null,
+      status: ['available', 'maintenance', 'retired'].includes(payload.status) ? payload.status : 'available',
+      odometerKm: Math.max(0, Number(payload.odometerKm || 0)),
+      colour: String(payload.colour || '').trim(),
+      notes: String(payload.notes || '').trim(),
+    });
+
+    return serializeRentalVehicleUnit(created.toObject());
+  };
+
+  export const updateRentalVehicleUnit = async (id, payload = {}) => {
+    const unit = await RentalVehicleUnit.findById(id);
+    if (!unit) {
+      throw new ApiError(404, 'Fleet vehicle not found');
+    }
+
+    if (payload.registrationNumber !== undefined) {
+      const registrationNumber = normalizePlate(payload.registrationNumber);
+      if (!registrationNumber) throw new ApiError(400, 'Registration number is required');
+
+      const clash = await RentalVehicleUnit.findOne({
+        registrationNumber,
+        _id: { $ne: unit._id },
+      }).select('_id').lean();
+      if (clash) throw new ApiError(409, registrationNumber + ' is already in the fleet');
+
+      unit.registrationNumber = registrationNumber;
+    }
+
+    if (payload.vehicleTypeId !== undefined) unit.vehicleTypeId = payload.vehicleTypeId || unit.vehicleTypeId;
+    if (payload.serviceStoreId !== undefined) unit.serviceStoreId = payload.serviceStoreId || null;
+    if (payload.status !== undefined && ['available', 'maintenance', 'retired'].includes(payload.status)) {
+      unit.status = payload.status;
+    }
+    if (payload.odometerKm !== undefined) unit.odometerKm = Math.max(0, Number(payload.odometerKm || 0));
+    if (payload.colour !== undefined) unit.colour = String(payload.colour || '').trim();
+    if (payload.notes !== undefined) unit.notes = String(payload.notes || '').trim();
+    if (Array.isArray(payload.blocks)) {
+      unit.blocks = payload.blocks
+        .filter((block) => block && block.from && block.to)
+        .map((block) => ({
+          from: new Date(block.from),
+          to: new Date(block.to),
+          reason: ['service', 'damage', 'transfer', 'other'].includes(block.reason) ? block.reason : 'other',
+          notes: String(block.notes || '').trim(),
+        }));
+    }
+
+    await unit.save();
+    return serializeRentalVehicleUnit(unit.toObject());
+  };
+
+  export const deleteRentalVehicleUnit = async (id) => {
+    const removed = await RentalVehicleUnit.findByIdAndDelete(id);
+    if (!removed) {
+      throw new ApiError(404, 'Fleet vehicle not found');
+    }
+    return { id: String(id) };
+  };
+
+  /**
+   * How many cars exist per model line. Drives the fleet summary and shows
+   * which models still have no units registered.
+   */
+  export const getRentalFleetSummary = async () => {
+    const [types, counts] = await Promise.all([
+      RentalVehicleType.find({ active: true }).select('name vehicleCategory').sort({ name: 1 }).lean(),
+      RentalVehicleUnit.aggregate([
+        { $match: { status: { $ne: 'retired' } } },
+        { $group: { _id: { type: '$vehicleTypeId', status: '$status' }, count: { $sum: 1 } } },
+      ]),
+    ]);
+
+    const byType = new Map();
+    for (const row of counts) {
+      const key = String(row._id.type);
+      const entry = byType.get(key) || { total: 0, available: 0, maintenance: 0 };
+      entry.total += row.count;
+      if (row._id.status === 'available') entry.available += row.count;
+      if (row._id.status === 'maintenance') entry.maintenance += row.count;
+      byType.set(key, entry);
+    }
+
+    return types.map((type) => {
+      const stats = byType.get(String(type._id)) || { total: 0, available: 0, maintenance: 0 };
+      return {
+        vehicleTypeId: String(type._id),
+        name: type.name,
+        vehicleCategory: type.vehicleCategory || '',
+        total: stats.total,
+        available: stats.available,
+        maintenance: stats.maintenance,
+      };
+    });
+  };
+
   export const listRentalVehicleTypes = async () => {
     const items = await RentalVehicleType.find().sort({ _id: -1 }).lean();
     return items.map((item) => serializeRentalVehicleType(item));
@@ -8822,12 +9007,57 @@ export const getRentalTrackingDashboard = async () => {
       item.status = String(payload.status);
     }
 
+    // Which physical car is handed over. Setting this also pins the booking to
+    // that car's model line, so the two can never disagree.
+    if (payload.assignedUnitId !== undefined) {
+      const assignedUnitId = String(payload.assignedUnitId || '').trim();
+
+      if (!assignedUnitId) {
+        item.assignedVehicle = {
+          ...(item.assignedVehicle?.toObject?.() || item.assignedVehicle || {}),
+          unitId: null,
+          registrationNumber: '',
+        };
+      } else {
+        const unit = await RentalVehicleUnit.findById(assignedUnitId)
+          .select('registrationNumber vehicleTypeId status')
+          .lean();
+
+        if (!unit) {
+          throw new ApiError(404, 'Fleet vehicle not found');
+        }
+        if (unit.status !== 'available') {
+          throw new ApiError(409, unit.registrationNumber + ' is ' + unit.status + ' and cannot be assigned');
+        }
+
+        const model = await RentalVehicleType.findById(unit.vehicleTypeId)
+          .select('name vehicleCategory image')
+          .lean();
+
+        item.assignedVehicle = {
+          vehicleId: unit.vehicleTypeId,
+          unitId: unit._id,
+          registrationNumber: unit.registrationNumber,
+          name: model?.name || '',
+          vehicleCategory: model?.vehicleCategory || '',
+          image: model?.image || '',
+        };
+        item.assignedAt = new Date();
+
+        if (!['end_requested', 'completed', 'cancelled'].includes(String(payload.status || item.status || ''))) {
+          item.status = 'assigned';
+        }
+      }
+    }
+
     if (payload.assignedVehicleId !== undefined) {
       const assignedVehicleId = String(payload.assignedVehicleId || '').trim();
 
       if (!assignedVehicleId) {
         item.assignedVehicle = {
           vehicleId: null,
+          unitId: null,
+          registrationNumber: '',
           name: '',
           vehicleCategory: '',
           image: '',
@@ -8844,6 +9074,10 @@ export const getRentalTrackingDashboard = async () => {
 
         item.assignedVehicle = {
           vehicleId: assignedVehicle._id,
+          // Keep any car already on the booking, so re-picking the model does
+          // not silently drop which one was handed over.
+          unitId: item.assignedVehicle?.unitId || null,
+          registrationNumber: item.assignedVehicle?.registrationNumber || '',
           name: assignedVehicle.name || '',
           vehicleCategory: assignedVehicle.vehicleCategory || '',
           image: assignedVehicle.image || '',

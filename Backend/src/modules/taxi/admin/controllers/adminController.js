@@ -1290,6 +1290,23 @@ export const cancelAdminBusBookingSeats = asyncHandler(async (req, res) => {
   });
 });
 
+/* Fleet: the individual cars behind each rental model line. */
+export const getRentalVehicleUnits = asyncHandler(async (req, res) =>
+  ok(res, { results: await adminService.listRentalVehicleUnits(req.query) }),
+);
+export const getRentalFleetSummary = asyncHandler(async (_req, res) =>
+  ok(res, { results: await adminService.getRentalFleetSummary() }),
+);
+export const createRentalVehicleUnit = asyncHandler(async (req, res) =>
+  ok(res, await adminService.createRentalVehicleUnit(req.body)),
+);
+export const updateRentalVehicleUnit = asyncHandler(async (req, res) =>
+  ok(res, await adminService.updateRentalVehicleUnit(req.params.id, req.body)),
+);
+export const deleteRentalVehicleUnit = asyncHandler(async (req, res) =>
+  ok(res, await adminService.deleteRentalVehicleUnit(req.params.id)),
+);
+
 export const getRentalVehicleTypes = asyncHandler(async (_req, res) =>
   ok(res, { results: await adminService.listRentalVehicleTypes() }),
 );

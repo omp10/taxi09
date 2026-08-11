@@ -225,6 +225,13 @@ export const adminService = {
   updateSetPrice: (id, data) => api.patch(`/admin/types/set-prices/${id}`, data),
   deleteSetPrice: (id) => api.delete(`/admin/types/set-prices/${id}`),
   getRentalVehicleTypes: () => api.get('/admin/types/rental-vehicles'),
+
+  // Fleet - the individual cars behind each rental model line.
+  getRentalFleet: (params = {}) => api.get('/admin/fleet/rental-vehicle-units', { params }),
+  getRentalFleetSummary: () => api.get('/admin/fleet/summary'),
+  createRentalVehicleUnit: (data) => api.post('/admin/fleet/rental-vehicle-units', data),
+  updateRentalVehicleUnit: (id, data) => api.patch(`/admin/fleet/rental-vehicle-units/${id}`, data),
+  deleteRentalVehicleUnit: (id) => api.delete(`/admin/fleet/rental-vehicle-units/${id}`),
   createRentalVehicleType: (data) => api.post('/admin/types/rental-vehicles', data),
   updateRentalVehicleType: (id, data) => api.patch(`/admin/types/rental-vehicles/${id}`, data),
   deleteRentalVehicleType: (id) => api.delete(`/admin/types/rental-vehicles/${id}`),

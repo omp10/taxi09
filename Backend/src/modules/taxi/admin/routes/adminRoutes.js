@@ -119,6 +119,11 @@ import {
   getRentalQuoteRequest,
   getPreferences,
   getRentalVehicleTypes,
+  getRentalVehicleUnits,
+  getRentalFleetSummary,
+  createRentalVehicleUnit,
+  updateRentalVehicleUnit,
+  deleteRentalVehicleUnit,
   getRideModules,
   getRoles,
   getReferralSettings,
@@ -334,6 +339,11 @@ adminRouter.get('/admin/bus-bookings', getAdminBusBookings);
 adminRouter.get('/admin/bus-bookings/calendar', getAdminBusBookingCalendar);
 adminRouter.post('/admin/bus-bookings/manual', createAdminBusBooking);
 adminRouter.post('/admin/bus-bookings/:id/cancel', cancelAdminBusBookingSeats);
+adminRouter.get('/admin/fleet/rental-vehicle-units', getRentalVehicleUnits);
+adminRouter.get('/admin/fleet/summary', getRentalFleetSummary);
+adminRouter.post('/admin/fleet/rental-vehicle-units', createRentalVehicleUnit);
+adminRouter.patch('/admin/fleet/rental-vehicle-units/:id', updateRentalVehicleUnit);
+adminRouter.delete('/admin/fleet/rental-vehicle-units/:id', deleteRentalVehicleUnit);
 adminRouter.get('/admin/types/rental-vehicles', getRentalVehicleTypes);
 adminRouter.post('/admin/types/rental-vehicles', createRentalVehicleType);
 adminRouter.patch('/admin/types/rental-vehicles/:id', updateRentalVehicleType);

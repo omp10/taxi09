@@ -921,6 +921,7 @@ const AdminLayout = () => {
               { label: 'Pending Service Staff', path: '/admin/pricing/service-stores/pending-staff', permission: 'service_stores.view' },
               { label: 'Rental Commission', path: '/admin/pricing/rental-commission', permission: 'rental.view' },
               { label: 'Rental Vehicles', path: '/admin/pricing/rental-vehicles', permission: 'rental.view' },
+              { label: 'Fleet (Individual Cars)', path: '/admin/pricing/rental-fleet', permission: 'rental.view' },
               { label: 'Track Vehicles', path: '/admin/pricing/rental-tracking', permission: 'rental.view' },
               { label: 'Rental Requests', path: '/admin/pricing/rental-requests', permission: 'rental.view' },
               { label: 'Rental Quote Requests', path: '/admin/pricing/rental-quotes', permission: 'rental.view' },
