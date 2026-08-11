@@ -139,6 +139,10 @@ const normalizeRentalVehicle = (item = {}, index = 0) => {
     gradientFrom,
     gradientTo,
     rawPricing: pricing,
+    addOns: Array.isArray(item.addOns) ? item.addOns.filter((addOn) => addOn?.active !== false) : [],
+    // The untouched API item, so a screen that needs a field this shape does
+    // not carry can reach it without a second request.
+    raw: item,
     gallery,
     blueprint: item.blueprint || { lowerDeck: [], upperDeck: [] },
     amenities: Array.isArray(item.amenities) ? item.amenities.filter(Boolean) : [],
@@ -208,6 +212,19 @@ const FALLBACK_LOCATION_SUGGESTIONS = [
   "Vijay Nagar, Indore",
   "Palasia, Indore",
 ];
+
+/**
+ * The package the card's headline price comes from, so the kilometres shown
+ * beside that price are the ones it actually buys.
+ */
+const headlinePackage = (vehicle) => {
+  const rows = (Array.isArray(vehicle?.pricing) ? vehicle.pricing : [])
+    .filter((row) => row?.active !== false && Number(row.price || 0) > 0);
+  if (!rows.length) return null;
+  return rows.reduce((cheapest, row) => (Number(row.price) < Number(cheapest.price) ? row : cheapest));
+};
+
+const rupees = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`;
 
 const BikeRentalHome = () => {
   const navigate = useNavigate();
@@ -552,11 +569,19 @@ const BikeRentalHome = () => {
         id: car.id,
         brand,
         name: displayName,
-        fuel: car.rawVehicle?.fuel || 'Petrol ┬╖ Manual',
+        fuel: car.fuel || '',
         capacity: car.capacity || 5,
-        price: car.prices?.Daily || 4000,
+        // No stand-in price. A card that invents one quotes a figure the
+        // vehicle does not have, which is worse than saying so.
+        price: car.prices?.Daily || 0,
         image: car.image || rentalCarImg,
-        distance: car.shortDescription || '7 km | Lake view..'
+        distance: car.shortDescription || '',
+        // Carried so the card can show the real package terms and add-ons, and
+        // so opening the detail page hands over the actual vehicle.
+        amenities: car.amenities || [],
+        pricing: car.rawPricing || [],
+        addOns: car.addOns || [],
+        raw: car.raw || null,
       };
     });
   }, [vehicles]);
@@ -822,41 +847,105 @@ const BikeRentalHome = () => {
                     <div className="min-w-0">
                       <h3 className="truncate text-[16.5px] font-black">{car.brand} {car.name}</h3>
                       <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12.5px] font-semibold text-slate-800">
-                        <span className="flex items-center gap-1"><Car size={13} />{car.body}</span>
+                        {car.body ? <span className="flex items-center gap-1"><Car size={13} />{car.body}</span> : null}
                         <span>•</span>
                         <span>{car.capacity} Seater</span>
-                        <span>•</span>
-                        <span>{car.fuel}</span>
-                        <span className="flex items-center gap-1"><SlidersHorizontal size={13} />{car.transmission}</span>
-                        <span>A/C</span>
-                        <span>Bluetooth</span>
+                        {car.fuel ? <><span>•</span><span>{car.fuel}</span></> : null}
+                        {car.transmission ? (
+                          <span className="flex items-center gap-1"><SlidersHorizontal size={13} />{car.transmission}</span>
+                        ) : null}
                       </div>
-                      <span className="mt-2 inline-flex rounded-full bg-green-100 px-2.5 py-1 text-[12px] font-bold text-green-700">
-                        Free Cancellation
-                      </span>
+
+                      {/* Amenities come from the vehicle. A/C and Bluetooth used
+                          to be printed on every card whether or not the car had
+                          them. */}
+                      {car.amenities.length > 0 && (
+                        <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] font-semibold text-slate-600">
+                          {car.amenities.slice(0, 4).map((amenity) => (
+                            <span key={amenity}>{amenity}</span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* What the price buys - the same terms the desktop list
+                          shows, taken from the same package. */}
+                      {(() => {
+                        const pack = headlinePackage(car);
+                        if (!pack) return null;
+                        return (
+                          <div className="mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[12px] font-bold text-slate-800">
+                            <span>{pack.label || `${pack.durationHours}h`}</span>
+                            <span className="text-slate-400">•</span>
+                            <span>{Number(pack.includedKm) > 0 ? `${pack.includedKm} km incl.` : 'Unlimited km'}</span>
+                            {Number(pack.extraKmPrice) > 0 && Number(pack.includedKm) > 0 ? (
+                              <span className="font-semibold text-slate-500">{rupees(pack.extraKmPrice)}/extra km</span>
+                            ) : null}
+                          </div>
+                        );
+                      })()}
+
+                      {car.addOns.length > 0 && (
+                        <div className="mt-1.5 flex flex-wrap items-center gap-1">
+                          {car.addOns
+                            .slice(0, 3)
+                            .map((addOn) => (
+                              <span
+                                key={addOn.id || addOn.label}
+                                className="rounded-full bg-slate-100 px-2 py-0.5 text-[11.5px] font-semibold text-slate-700"
+                              >
+                                {addOn.label}
+                                {Number(addOn.price) > 0 ? (
+                                  <span className="text-slate-500"> +{rupees(addOn.price)}</span>
+                                ) : null}
+                              </span>
+                            ))}
+                          {car.addOns.length > 3 && (
+                            <span className="text-[11.5px] font-semibold text-slate-500">
+                              +{car.addOns.length - 3} more
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
                     <div className="flex flex-col items-end justify-between">
-                      {/* No rating is shown: vehicles carry no rating field, so
-                          anything here would be invented. Restore this once real
-                          reviews exist to average. */}
-                      <span className="flex items-center gap-1 text-[13.5px] font-semibold text-slate-600">
-                        {car.transmission || car.fuel || ''}
-                      </span>
                       <div className="text-right">
-                        <p className="text-[18px] font-black">₹{Number(car.price || 2199).toLocaleString('en-IN')}</p>
-                        <p className="text-[12px] font-semibold">/ per day</p>
+                        {(() => {
+                          const pack = headlinePackage(car);
+                          if (Number(car.price) > 0) {
+                            return (
+                              <>
+                                <p className="text-[18px] font-black">{rupees(car.price)}</p>
+                                <p className="text-[12px] font-semibold">/ per day</p>
+                              </>
+                            );
+                          }
+                          // No daily rate configured, but the vehicle still has
+                          // a real cheapest package - quote that rather than
+                          // nothing, or worse, a made-up daily figure.
+                          if (pack) {
+                            return (
+                              <>
+                                <p className="text-[18px] font-black">{rupees(pack.price)}</p>
+                                <p className="text-[12px] font-semibold">/ {pack.label || `${pack.durationHours}h`}</p>
+                              </>
+                            );
+                          }
+                          return <p className="text-[12.5px] font-bold text-slate-500">Price on request</p>;
+                        })()}
                       </div>
                       <button
                         type="button"
                         onClick={() => {
-                          openVehicleDetail(normalizeRentalVehicle({
+                          // Hand over the real vehicle. This used to rebuild one
+                          // with a made-up 24h/120km package, so the detail page
+                          // showed terms the vehicle never had.
+                          openVehicleDetail(normalizeRentalVehicle(car.raw || {
                             id: car.id,
                             name: `${car.brand} ${car.name}`,
                             vehicleCategory: 'car',
                             coverImage: car.image,
                             fuel: car.fuel,
                             capacity: car.capacity,
-                            pricing: [{ durationHours: 24, price: car.price, includedKm: 120, active: true }],
                           }));
                         }}
                         className="rounded-[8px] bg-[#f5b700] px-3 py-2 text-[13px] font-black text-black"
