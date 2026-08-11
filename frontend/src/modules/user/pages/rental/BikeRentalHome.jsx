@@ -571,19 +571,17 @@ const BikeRentalHome = () => {
   if (selectedCategoryFilter === 'car') {
     if (isAddressEntered) {
       // 2. Render Search Results View (Indore Listing)
-      const fallbackCars = [
-        { id: 'swift-demo', brand: 'Maruti', name: 'Swift', image: rentalCarImg, fuel: 'Petrol', capacity: 5, price: 2199, badge: 'Popular', body: 'Hatchback' },
-        { id: 'city-demo', brand: 'Honda', name: 'City', image: rentalCarImg, fuel: 'Petrol', capacity: 5, price: 2599, badge: 'Best Value', body: 'Sedan' },
-        { id: 'creta-demo', brand: 'Hyundai', name: 'Creta', image: rentalCarImg, fuel: 'Diesel', capacity: 5, price: 3199, badge: 'Premium', body: 'SUV' },
-        { id: 'scorpio-demo', brand: 'Mahindra', name: 'Scorpio-N', image: rentalCarImg, fuel: 'Diesel', capacity: 7, price: 3899, badge: '', body: 'SUV' },
-      ];
-      const listingCars = (matchedCars.length ? matchedCars : fallbackCars).slice(0, 4).map((car, index) => ({
-        ...fallbackCars[index],
+      // Only real catalogue vehicles are listed. There used to be four demo
+      // cars here that stood in when nothing matched, and worse, each real car
+      // was spread over a demo one - so a vehicle missing a price or a body
+      // type silently inherited a Swift's. An empty search now shows nothing,
+      // which is the truth.
+      const listingCars = matchedCars.slice(0, 4).map((car) => ({
         ...car,
-        body: car.body || car.categoryType?.replace(/s$/, '') || fallbackCars[index]?.body || 'Hatchback',
-        badge: car.badge || fallbackCars[index]?.badge || '',
-        fuel: String(car.fuel || fallbackCars[index]?.fuel || 'Petrol').split(' ')[0],
-        transmission: car.transmission || fallbackCars[index]?.transmission || (index === 1 ? 'Auto' : 'Manual'),
+        body: car.body || car.categoryType?.replace(/s$/, '') || '',
+        badge: car.badge || '',
+        fuel: String(car.fuel || '').split(' ')[0],
+        transmission: car.transmission || '',
       }));
       const filteredListingCars = listingCars
         .filter((car) => {
