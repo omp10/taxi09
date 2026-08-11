@@ -328,7 +328,7 @@ const DesktopHome = () => {
       </section>
 
       {/* ------------------------------------------------------------- Stats */}
-      <section className="mx-auto mt-10 max-w-[1728px] px-4 pb-16 xl:px-6">
+      <section className="mx-auto mt-10 max-w-[1728px] px-4 pb-2 xl:px-6">
         <div className="rounded-[28px] bg-[var(--dh-accent-soft)] px-10 py-10">
           {/* divide-x draws the rules between tiles, so no separator elements. */}
           <div className="grid grid-cols-2 divide-y divide-[#F5B700]/25 lg:grid-cols-4 lg:divide-y-0 lg:divide-x">
@@ -352,7 +352,7 @@ const DesktopHome = () => {
         </div>
 
         {/* The reassurance line the stats are there to support. */}
-        <div className="mt-8 flex items-center gap-6">
+        <div className="mt-6 flex items-center gap-6">
           <span className="h-px flex-1 bg-[var(--dh-border)]" />
           <span className="flex items-center gap-3">
             <ShieldCheck size={30} className="shrink-0 text-[#F5B700]" strokeWidth={2.2} />
@@ -365,8 +365,10 @@ const DesktopHome = () => {
         </div>
       </section>
 
-      {/* Admin-managed: drivers, videos, reviews. Renders nothing when empty. */}
-      <section className="mx-auto max-w-[1728px] px-4 pb-4 xl:px-6">
+      {/* Admin-managed: drivers, videos, reviews. Renders nothing when empty.
+          The first row drops its own top margin here - the stats block above
+          already ends with the trust line, so both together left a dead band. */}
+      <section className="mx-auto max-w-[1728px] px-4 pb-4 xl:px-6 lg:[&>section:first-child]:mt-6">
         <HomeContentSections />
       </section>
 

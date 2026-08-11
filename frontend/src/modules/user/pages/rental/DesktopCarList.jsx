@@ -1,10 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import {
-  ArrowUp, BadgeCheck, Bluetooth, Calendar, ChevronDown, Clock, Fuel, Gauge, Heart,
-  Infinity as InfinityIcon, LayoutGrid, List, MapPin, Music, Search, Snowflake, Sparkles,
-  Star, Sun, Usb, Users, X, Zap,
-} from 'lucide-react';
+import { ArrowUp, BadgeCheck, Bluetooth, Calendar, ChevronDown, Clock, Fuel, Gauge, Heart, Infinity as InfinityIcon, LayoutGrid, List, MapPin, Music, Route, Search, Snowflake, Sparkles, Star, Sun, Usb, Users, X, Zap } from 'lucide-react';
 import api from '../../../../shared/api/axiosInstance';
 import { DesktopNav } from '../../components/desktop/DesktopChrome';
 import { openRentalVehicle, unwrapResults, useDesktopTheme } from '../../components/desktop/desktopShared';
@@ -72,6 +68,22 @@ const lowestPrice = (vehicle) => {
     .filter((value) => value > 0);
   return prices.length ? Math.min(...prices) : 0;
 };
+
+/**
+ * The package the headline price comes from.
+ *
+ * The card says "from X/day", so the kilometre allowance and the extra-km rate
+ * shown beside it have to be that same package's - quoting the cheapest price
+ * next to another package's terms would misdescribe the deal.
+ */
+const headlinePackage = (vehicle) => {
+  const rows = (Array.isArray(vehicle.pricing) ? vehicle.pricing : [])
+    .filter((item) => item?.active !== false && Number(item.price || 0) > 0);
+  if (!rows.length) return null;
+  return rows.reduce((cheapest, row) => (Number(row.price) < Number(cheapest.price) ? row : cheapest));
+};
+
+const money = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`;
 
 /** "12 Jun, 10:00 am" - when a held vehicle frees up. */
 const formatWhen = (value) => {
@@ -354,6 +366,8 @@ const DesktopCarList = () => {
                 const price = lowestPrice(vehicle);
                 const amenities = (Array.isArray(vehicle.amenities) ? vehicle.amenities : []).slice(0, 5);
                 const specs = specsOf(vehicle);
+                const pack = headlinePackage(vehicle);
+                const addOns = (Array.isArray(vehicle.addOns) ? vehicle.addOns : []).filter((a) => a?.active !== false);
                 const isSaved = saved.includes(id);
 
                 return (
@@ -419,6 +433,54 @@ const DesktopCarList = () => {
                         </div>
                       )}
 
+                      {/* What the price actually buys. These are the terms
+                          people are surprised by at the counter, so they belong
+                          on the card rather than two clicks in. */}
+                      {pack && (
+                        <div className="mt-2.5 flex flex-wrap items-center gap-x-5 gap-y-1.5">
+                          <span className="flex items-center gap-1.5 text-[14px] font-semibold text-[var(--dh-text)]">
+                            <Clock size={14} className="text-[var(--dh-muted)]" strokeWidth={2.2} />
+                            {pack.label || `${pack.durationHours}h`}
+                          </span>
+                          <span className="flex items-center gap-1.5 text-[14px] font-semibold text-[var(--dh-text)]">
+                            <Route size={14} className="text-[var(--dh-muted)]" strokeWidth={2.2} />
+                            {Number(pack.includedKm) > 0 ? `${pack.includedKm} km included` : 'Unlimited km'}
+                          </span>
+                          {Number(pack.extraKmPrice) > 0 && Number(pack.includedKm) > 0 && (
+                            <span className="text-[14px] font-semibold text-[var(--dh-muted)]">
+                              {money(pack.extraKmPrice)}/extra km
+                            </span>
+                          )}
+                          {Number(pack.extraHourPrice) > 0 && (
+                            <span className="text-[14px] font-semibold text-[var(--dh-muted)]">
+                              {money(pack.extraHourPrice)}/extra hr
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      {addOns.length > 0 && (
+                        <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+                          {addOns.slice(0, 4).map((addOn) => (
+                            <span
+                              key={addOn.id || addOn.label}
+                              title={addOn.description || ''}
+                              className="rounded-full bg-[var(--dh-chip)] px-2.5 py-1 text-[12.5px] font-semibold text-[var(--dh-text)]"
+                            >
+                              {addOn.label}
+                              {Number(addOn.price) > 0 ? (
+                                <span className="text-[var(--dh-muted)]"> +{money(addOn.price)}</span>
+                              ) : null}
+                            </span>
+                          ))}
+                          {addOns.length > 4 && (
+                            <span className="text-[12.5px] font-semibold text-[var(--dh-muted)]">
+                              +{addOns.length - 4} more
+                            </span>
+                          )}
+                        </div>
+                      )}
+
                       {/* Always occupies a row so cards with and without an
                           advance offer still line up. */}
                       <div className="mt-3 h-[30px]">
@@ -465,9 +527,9 @@ const DesktopCarList = () => {
                         </button>
                       )}
 
-                      {(vehicle.addOns || []).length > 0 && (
+                      {addOns.length > 0 && (
                         <p className="text-[13.5px] font-bold text-[var(--dh-muted)]">
-                          +{vehicle.addOns.filter((a) => a.active !== false).length} add-ons
+                          {addOns.length} add-{addOns.length === 1 ? 'on' : 'ons'} available
                         </p>
                       )}
                     </div>
