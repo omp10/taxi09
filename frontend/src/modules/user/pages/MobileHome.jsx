@@ -464,6 +464,26 @@ const MobileHome = () => {
             <span className={`rounded-lg px-2 py-1 text-[12.5px] font-black ${ATTACH_STATUS[attachedVehicle.status]?.tone || 'bg-slate-100 text-slate-600'}`}>
               {ATTACH_STATUS[attachedVehicle.status]?.chip || attachedVehicle.status}
             </span>
+            {/* Only an unsubmitted application can be abandoned from here. */}
+            {attachedVehicle.status === 'draft' ? (
+              <button
+                type="button"
+                onClick={async (event) => {
+                  event.stopPropagation();
+                  if (!window.confirm('Clear this car application? Everything you have filled in will be removed.')) return;
+                  try {
+                    await userService.clearAttachedVehicleDraft(attachedVehicle._id || attachedVehicle.id);
+                    setAttachedVehicle(null);
+                    toast.success('Application cleared');
+                  } catch (error) {
+                    toast.error(error?.response?.data?.message || error.message || 'Could not clear the application.');
+                  }
+                }}
+                className="shrink-0 rounded-lg border border-rose-200 px-2 py-1 text-[12.5px] font-black text-rose-600"
+              >
+                Clear
+              </button>
+            ) : null}
           </div>
         ) : null}
 

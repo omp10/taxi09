@@ -245,15 +245,7 @@ const AttachCar = () => {
 
     try {
       if (record?._id) {
-        await userService.updateAttachedVehicle(record._id, {
-          ...emptyForm,
-          year: undefined,
-          dailyFare: undefined,
-          securityDeposit: undefined,
-          documents: {},
-          photos: {},
-          step: 1,
-        });
+        await userService.clearAttachedVehicleDraft(record._id);
       }
 
       setForm(emptyForm);

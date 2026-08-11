@@ -140,6 +140,17 @@ export const userService = {
   createAttachedVehicle: async (payload) => api.post('/users/attached-vehicles', payload),
   updateAttachedVehicle: async (id, payload) => api.patch(`/users/attached-vehicles/${id}`, payload),
   submitAttachedVehicle: async (id) => api.post(`/users/attached-vehicles/${id}/submit`),
+  /**
+   * Empties a saved application. The record itself stays - there is no delete
+   * route - but every field it carried is cleared, so the flow reopens blank
+   * instead of resurrecting the old answers.
+   */
+  clearAttachedVehicleDraft: async (id) => api.patch(`/users/attached-vehicles/${id}`, {
+    brand: '', model: '', variant: '', year: undefined, fuelType: '', transmission: '',
+    registrationNumber: '', dailyFare: undefined, securityDeposit: undefined,
+    availability: '', city: '', preferredAreas: '',
+    documents: {}, photos: {}, step: 1,
+  }),
   uploadImage: async (dataUrl, folder = 'attached-vehicles') =>
     api.post('/common/upload/image', { image: dataUrl, folder }),
 

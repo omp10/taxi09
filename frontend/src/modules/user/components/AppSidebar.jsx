@@ -157,7 +157,7 @@ const AppSidebar = ({ open, onClose }) => {
   // staying inside that stacking context would let the bottom tab bar paint over
   // the drawer. The inner column keeps it aligned with the phone-width shell.
   return createPortal(
-    <div className={`lg:hidden fixed inset-0 z-[100] flex justify-center ${open ? '' : 'pointer-events-none'}`} aria-hidden={!open}>
+    <div className={`lg:hidden fixed inset-0 z-[120] flex justify-center ${open ? '' : 'pointer-events-none'}`} aria-hidden={!open}>
       <div
         onClick={onClose}
         className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}
