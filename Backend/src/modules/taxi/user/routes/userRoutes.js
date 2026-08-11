@@ -216,9 +216,13 @@ userRouter.post('/rental-advance/razorpay/verify', authenticate(['user']), async
 userRouter.post('/rental-advance/phonepe/order', authenticate(['user']), asyncHandler(createPhonePeRentalAdvancePaymentOrder));
 userRouter.get('/rental-advance/phonepe/status/:merchantTransactionId', authenticate(['user']), asyncHandler(verifyPhonePeRentalAdvancePayment));
 userRouter.post('/rental-advance/wallet', authenticate(['user']), asyncHandler(payRentalAdvanceWithWallet));
-userRouter.get('/buses/routes', authenticate(['user']), asyncHandler(getBusRouteSuggestions));
-userRouter.get('/buses/search', authenticate(['user']), asyncHandler(searchBuses));
-userRouter.get('/buses/:id/seats', authenticate(['user']), asyncHandler(getBusSeatLayout));
+// Public: these are the active routes on offer, with no user context - the
+// handler does not read req at all. Browsing the bus page does not require
+// signing in, and gating this made a logged-out visitor see the raw
+// "Authorization token is required" on screen.
+userRouter.get('/buses/routes', asyncHandler(getBusRouteSuggestions));
+userRouter.get('/buses/search', asyncHandler(searchBuses));
+userRouter.get('/buses/:id/seats', asyncHandler(getBusSeatLayout));
 userRouter.get('/bus-bookings', authenticate(['user']), asyncHandler(listMyBusBookings));
 userRouter.get('/bus-bookings/:id', authenticate(['user']), asyncHandler(getMyBusBookingById));
 userRouter.post('/bus-bookings/:id/review', authenticate(['user']), asyncHandler(submitMyBusBookingReview));
