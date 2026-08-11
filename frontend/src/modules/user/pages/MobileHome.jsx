@@ -12,6 +12,7 @@ import driverWithCabImg from '../../../assets/images/driver_beside_cab_white.png
 import api from '../../../shared/api/axiosInstance';
 import BottomNavbar from '../components/BottomNavbar';
 import { MobilePopularCars, MobileSearchCard } from '../components/MobileHomeSearch';
+import HomeContentSections from '../components/HomeContentSections';
 import AppHeader from '../components/AppHeader';
 import { userAuthService } from '../services/authService';
 import { userService } from '../services/userService';
@@ -532,6 +533,9 @@ const MobileHome = () => {
         </section>
 
         <MobilePopularCars />
+
+        {/* Admin-managed: drivers, videos, reviews. Renders nothing when empty. */}
+        <HomeContentSections />
 
         {/* Rental Options */}
         <section className="mt-6">
