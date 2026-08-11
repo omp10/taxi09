@@ -117,7 +117,13 @@ export const MobileSearchCard = () => {
 
 
   return (
-    <form onSubmit={submit} className="rounded-[20px] border border-slate-100 bg-white p-3 shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
+    <form
+      onSubmit={submit}
+      // The date inputs are transparent overlays, so a native validation bubble
+      // would be anchored to something invisible and the submit would just die
+      // silently. Validation is handled in submit() where it can be seen.
+      noValidate
+      className="rounded-[20px] border border-slate-100 bg-white p-3 shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
       <h2 className="text-[19px] font-extrabold leading-tight tracking-[-0.04em] text-slate-900">Where are you going?</h2>
       <p className="mt-0.5 text-[13px] font-semibold text-slate-700">Book Self Drive, Taxi or Bike in few taps</p>
 
