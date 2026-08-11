@@ -268,7 +268,8 @@ const BikeRentalHome = () => {
   const [resultSort, setResultSort] = useState('Recommended');
   const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const isAddressEntered = queryParams.get('search') === 'true';
-  const selectedLocation = queryParams.get('location') || 'South Tukoganj, Indore';
+  // Falls back to a real branch rather than a hardcoded place name.
+  const selectedLocation = queryParams.get('location') || locationSuggestions[0] || '';
   const [activeFaqIndex, setActiveFaqIndex] = useState(null);
   const [showDropSuggestions, setShowDropSuggestions] = useState(false);
   const [locationSearchText, setLocationSearchText] = useState(() => {
