@@ -122,6 +122,7 @@ import {
   getRentalVehicleUnits,
   getRentalFleetSummary,
   createRentalVehicleUnit,
+  importRentalVehicleUnits,
   updateRentalVehicleUnit,
   deleteRentalVehicleUnit,
   getRideModules,
@@ -342,6 +343,7 @@ adminRouter.post('/admin/bus-bookings/:id/cancel', cancelAdminBusBookingSeats);
 adminRouter.get('/admin/fleet/rental-vehicle-units', getRentalVehicleUnits);
 adminRouter.get('/admin/fleet/summary', getRentalFleetSummary);
 adminRouter.post('/admin/fleet/rental-vehicle-units', createRentalVehicleUnit);
+adminRouter.post('/admin/fleet/import', importRentalVehicleUnits);
 adminRouter.patch('/admin/fleet/rental-vehicle-units/:id', updateRentalVehicleUnit);
 adminRouter.delete('/admin/fleet/rental-vehicle-units/:id', deleteRentalVehicleUnit);
 adminRouter.get('/admin/types/rental-vehicles', getRentalVehicleTypes);

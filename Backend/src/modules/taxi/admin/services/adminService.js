@@ -8719,6 +8719,85 @@ export const updateBusService = async (id, payload = {}, options = {}) => {
    * How many cars exist per model line. Drives the fleet summary and shows
    * which models still have no units registered.
    */
+  /**
+   * Bulk-add cars from a pasted CSV, so a fleet of fifty is one paste rather
+   * than fifty forms.
+   *
+   * Columns: registrationNumber, model, branch, odometerKm, colour
+   * `model` and `branch` are matched by name, case-insensitively, because that
+   * is what an operator has in a spreadsheet - not our object ids.
+   *
+   * Every row is validated and reported on individually; a bad row is skipped
+   * with a reason rather than failing the whole import.
+   */
+  export const importRentalVehicleUnits = async ({ rows = [] } = {}) => {
+    if (!Array.isArray(rows) || !rows.length) {
+      throw new ApiError(400, 'Nothing to import');
+    }
+    if (rows.length > 500) {
+      throw new ApiError(400, 'Import up to 500 rows at a time');
+    }
+
+    const [models, stores, existing] = await Promise.all([
+      RentalVehicleType.find().select('name').lean(),
+      ServiceStore.find().select('name').lean(),
+      RentalVehicleUnit.find().select('registrationNumber').lean(),
+    ]);
+
+    const modelByName = new Map(models.map((m) => [String(m.name || '').trim().toLowerCase(), m._id]));
+    const storeByName = new Map(stores.map((m) => [String(m.name || '').trim().toLowerCase(), m._id]));
+    const taken = new Set(existing.map((u) => u.registrationNumber));
+
+    const created = [];
+    const skipped = [];
+
+    for (const [index, row] of rows.entries()) {
+      const line = index + 1;
+      const registrationNumber = String(row.registrationNumber || '').trim().toUpperCase();
+      const modelName = String(row.model || '').trim();
+      const branchName = String(row.branch || '').trim();
+
+      if (!registrationNumber) {
+        skipped.push({ line, registrationNumber: '', reason: 'No registration number' });
+        continue;
+      }
+      if (taken.has(registrationNumber)) {
+        skipped.push({ line, registrationNumber, reason: 'Already in the fleet' });
+        continue;
+      }
+      const vehicleTypeId = modelByName.get(modelName.toLowerCase());
+      if (!vehicleTypeId) {
+        skipped.push({ line, registrationNumber, reason: `No rental model named "${modelName}"` });
+        continue;
+      }
+      if (branchName && !storeByName.has(branchName.toLowerCase())) {
+        skipped.push({ line, registrationNumber, reason: `No branch named "${branchName}"` });
+        continue;
+      }
+
+      created.push({
+        vehicleTypeId,
+        registrationNumber,
+        serviceStoreId: branchName ? storeByName.get(branchName.toLowerCase()) : null,
+        status: 'available',
+        odometerKm: Math.max(0, Number(row.odometerKm || 0)),
+        colour: String(row.colour || '').trim(),
+      });
+      // Guard against the same plate appearing twice inside one paste.
+      taken.add(registrationNumber);
+    }
+
+    if (created.length) {
+      await RentalVehicleUnit.insertMany(created);
+    }
+
+    return {
+      added: created.length,
+      skipped,
+      registrations: created.map((c) => c.registrationNumber),
+    };
+  };
+
   export const getRentalFleetSummary = async () => {
     const [types, counts] = await Promise.all([
       RentalVehicleType.find({ active: true }).select('name vehicleCategory').sort({ name: 1 }).lean(),

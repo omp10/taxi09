@@ -1297,6 +1297,9 @@ export const getRentalVehicleUnits = asyncHandler(async (req, res) =>
 export const getRentalFleetSummary = asyncHandler(async (_req, res) =>
   ok(res, { results: await adminService.getRentalFleetSummary() }),
 );
+export const importRentalVehicleUnits = asyncHandler(async (req, res) =>
+  ok(res, await adminService.importRentalVehicleUnits(req.body)),
+);
 export const createRentalVehicleUnit = asyncHandler(async (req, res) =>
   ok(res, await adminService.createRentalVehicleUnit(req.body)),
 );

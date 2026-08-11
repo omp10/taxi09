@@ -230,6 +230,7 @@ export const adminService = {
   getRentalFleet: (params = {}) => api.get('/admin/fleet/rental-vehicle-units', { params }),
   getRentalFleetSummary: () => api.get('/admin/fleet/summary'),
   createRentalVehicleUnit: (data) => api.post('/admin/fleet/rental-vehicle-units', data),
+  importRentalVehicleUnits: (rows) => api.post('/admin/fleet/import', { rows }),
   updateRentalVehicleUnit: (id, data) => api.patch(`/admin/fleet/rental-vehicle-units/${id}`, data),
   deleteRentalVehicleUnit: (id) => api.delete(`/admin/fleet/rental-vehicle-units/${id}`),
   createRentalVehicleType: (data) => api.post('/admin/types/rental-vehicles', data),

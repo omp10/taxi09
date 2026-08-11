@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Car, ChevronRight, Plus, Trash2, Wrench } from 'lucide-react';
+import { Car, ChevronRight, Plus, Trash2, Upload, Wrench } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { adminService } from '../../services/adminService';
 
@@ -51,6 +51,10 @@ const RentalFleet = () => {
   const [draft, setDraft] = useState(emptyDraft);
   const [editingId, setEditingId] = useState('');
   const [filter, setFilter] = useState({ vehicleTypeId: '', status: '', search: '' });
+  const [importOpen, setImportOpen] = useState(false);
+  const [importText, setImportText] = useState('');
+  const [importResult, setImportResult] = useState(null);
+  const [importing, setImporting] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -142,6 +146,47 @@ const RentalFleet = () => {
     }
   };
 
+  /**
+   * Parses pasted CSV. A header row is optional; if the first line mentions
+   * "registration" it is treated as one. Columns, in order:
+   *   registration, model, branch, odometer, colour
+   */
+  const parseCsv = (text) => {
+    const lines = String(text || '')
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    if (!lines.length) return [];
+    if (/registration/i.test(lines[0])) lines.shift();
+
+    return lines.map((line) => {
+      const [registrationNumber = '', model = '', branch = '', odometerKm = '', colour = ''] =
+        line.split(',').map((cell) => cell.trim());
+      return { registrationNumber, model, branch, odometerKm, colour };
+    });
+  };
+
+  const runImport = async () => {
+    const rows = parseCsv(importText);
+    if (!rows.length) return toast.error('Paste at least one row first');
+
+    setImporting(true);
+    setImportResult(null);
+    try {
+      const response = await adminService.importRentalVehicleUnits(rows);
+      const result = response?.data?.data || response?.data || {};
+      setImportResult(result);
+      if (result.added) toast.success(`${result.added} car${result.added === 1 ? '' : 's'} added`);
+      if (!result.added) toast.error('Nothing was added - see the reasons below');
+      await load();
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message || 'Could not import.');
+    } finally {
+      setImporting(false);
+    }
+  };
+
   const update = (key) => (event) => setDraft((current) => ({ ...current, [key]: event.target.value }));
 
   return (
@@ -187,6 +232,76 @@ const RentalFleet = () => {
           having one car each, so a single booking still blocks them. Add their real cars below to fix that.
         </div>
       ) : null}
+
+      {/* ------------------------------------------------------------ Import */}
+      <div className="mb-6 rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-slate-900">Import a fleet</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Paste rows from a spreadsheet instead of filling the form once per car.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setImportOpen((current) => !current)}
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+          >
+            <Upload size={16} />
+            {importOpen ? 'Close' : 'Paste CSV'}
+          </button>
+        </div>
+
+        {importOpen ? (
+          <div className="mt-4">
+            <p className="mb-2 text-[12px] font-bold text-slate-700">
+              registration, model, branch, odometer, colour
+              <span className="ml-2 font-medium text-slate-400">
+                - one car per line. A header row is optional. Model and branch are matched by name.
+              </span>
+            </p>
+            <textarea
+              value={importText}
+              onChange={(event) => setImportText(event.target.value)}
+              rows={7}
+              spellCheck={false}
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 font-mono text-[13px] text-slate-800 outline-none focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100/60"
+              placeholder={"MP09AB1234, Maruti Baleno 2024-25, Vijay Nagar Indore, 41250, White\nMP09AB1235, Maruti Baleno 2024-25, Vijay Nagar Indore, 12900, Red"}
+            />
+            <div className="mt-3 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={runImport}
+                disabled={importing}
+                className="inline-flex items-center gap-2 rounded-xl bg-[#2e3c78] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#24305f] disabled:opacity-60"
+              >
+                <Upload size={16} />
+                {importing ? 'Importing...' : `Import ${parseCsv(importText).length || ''} rows`.trim()}
+              </button>
+              <span className="text-xs text-slate-400">Up to 500 rows at a time</span>
+            </div>
+
+            {importResult ? (
+              <div className="mt-4 rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
+                <p className="text-sm font-bold text-slate-900">
+                  {importResult.added} added
+                  {importResult.skipped?.length ? `, ${importResult.skipped.length} skipped` : ''}
+                </p>
+                {importResult.skipped?.length ? (
+                  <ul className="mt-2 space-y-1">
+                    {importResult.skipped.map((row) => (
+                      <li key={`${row.line}-${row.registrationNumber}`} className="text-[13px] text-rose-600">
+                        Line {row.line}
+                        {row.registrationNumber ? ` (${row.registrationNumber})` : ''}: {row.reason}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
 
       {/* ------------------------------------------------------------ Editor */}
       <div className="mb-6 rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
