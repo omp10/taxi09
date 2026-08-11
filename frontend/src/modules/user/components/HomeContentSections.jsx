@@ -59,11 +59,21 @@ const HomeContentSections = () => {
     ]).then(([blockRes, driverRes]) => {
       if (cancelled) return;
 
-      const blocks = unwrap(blockRes);
+      // The public feed returns { blocks: { 'home.videos': {...} } } - keyed,
+      // not a list. The admin feed returns a list, hence both shapes here.
+      const raw = blockRes?.data?.data?.blocks ?? blockRes?.data?.blocks ?? blockRes?.blocks ?? unwrap(blockRes);
       const byKey = {};
-      (Array.isArray(blocks) ? blocks : []).forEach((block) => { byKey[block.key] = block; });
+      if (Array.isArray(raw)) {
+        raw.forEach((block) => { byKey[block.key] = block; });
+      } else if (raw && typeof raw === 'object') {
+        Object.assign(byKey, raw);
+      }
 
-      const asItems = (key) => (Array.isArray(byKey[key]?.items) ? byKey[key].items : []);
+      const asItems = (key) => {
+        const block = byKey[key];
+        if (Array.isArray(block)) return block;
+        return Array.isArray(block?.items) ? block.items : [];
+      };
       setReviews(asItems('home.testimonials').filter((item) => String(item?.quote || '').trim()));
       setVideos(asItems('home.videos').filter((item) => youtubeIdOf(item?.youtubeUrl)));
       setDrivers(unwrap(driverRes).filter((driver) => driver?.active !== false).slice(0, 8));
