@@ -514,13 +514,31 @@ const BROWSABLE_PREFIXES = [
   '/taxi/user/support',
   '/taxi/user/membership',
   '/taxi/user/with-driver',
+  // Only the fare screen. /ride/searching dispatches a real request to drivers,
+  // so it stays private and is where the sign-in prompt lands.
+  '/taxi/user/ride/book',
 ];
 
-const matchesPrefix = (pathname, prefixes) =>
-  prefixes.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+/** Length of the longest prefix in the list that covers this path, or 0. */
+const prefixMatchLength = (pathname, prefixes) =>
+  prefixes.reduce(
+    (longest, prefix) =>
+      pathname === prefix || pathname.startsWith(`${prefix}/`)
+        ? Math.max(longest, prefix.length)
+        : longest,
+    0,
+  );
 
-export const isBrowsableWithoutLogin = (pathname) =>
-  !matchesPrefix(pathname, ACCOUNT_ONLY_PREFIXES) && matchesPrefix(pathname, BROWSABLE_PREFIXES);
+/**
+ * The more specific list wins, so a public branch can sit under a private
+ * parent and a private leaf under a public parent - /taxi/user/ride is private
+ * while /taxi/user/ride/book is public, the same way /taxi/user/stories is
+ * public while /taxi/user/stories/new is not.
+ */
+export const isBrowsableWithoutLogin = (pathname) => {
+  const browsable = prefixMatchLength(pathname, BROWSABLE_PREFIXES);
+  return browsable > 0 && browsable > prefixMatchLength(pathname, ACCOUNT_ONLY_PREFIXES);
+};
 
 const UserProtectedRoute = () => {
   const location = useLocation();

@@ -15,7 +15,9 @@ import { openRentalVehicle, unwrapResults } from './desktop/desktopShared';
 
 const MODES = [
   { key: 'self-drive', label: 'Self Drive', icon: Car, path: '/taxi/user/rental', cta: 'Search Cars' },
-  { key: 'with-driver', label: 'With Driver', icon: UserCheck, path: '/taxi/user/with-driver', cta: 'Search Rides' },
+  // A ride, not a rental: no return leg, and the booking page owns the drop,
+  // the live fare and the dispatch to drivers.
+  { key: 'with-driver', label: 'With Driver', icon: UserCheck, path: '/taxi/user/ride/book', cta: 'Search Rides', ride: true },
   { key: 'bike', label: 'Bike Rental', icon: Bike, path: '/taxi/user/rental/bike-categories', cta: 'Search Bikes' },
 ];
 
@@ -100,9 +102,20 @@ export const MobileSearchCard = () => {
     const pickupISO = toISO(form.pickupDate, form.pickupTime);
     const returnISO = toISO(form.returnDate, form.returnTime);
 
+    if (!form.pickup.trim()) return setError('Enter where you want to pick the vehicle up.');
+
+    // A ride has no return leg. The booking page takes the drop, works out the
+    // distance-based fare and sends the request to nearby drivers, so all this
+    // card has to do is hand over what was already typed.
+    if (active.ride) {
+      setError('');
+      const rideParams = new URLSearchParams({ pickup: form.pickup.trim() });
+      if (pickupISO) rideParams.set('when', pickupISO);
+      return navigate(`${active.path}?${rideParams.toString()}`);
+    }
+
     // Without these the catalogue cannot filter on anything and every vehicle
     // comes back "available", which is why an empty search looked broken.
-    if (!form.pickup.trim()) return setError('Enter where you want to pick the vehicle up.');
     if (!pickupISO) return setError('Choose a pickup date.');
     if (!returnISO) return setError('Choose a return date.');
     if (returnISO <= pickupISO) return setError('The return has to be after the pickup.');
@@ -172,10 +185,12 @@ export const MobileSearchCard = () => {
         </span>
       </label>
 
-      <div className="mt-2.5 grid grid-cols-2 gap-2">
+      {/* A ride has no return leg, so that field is dropped rather than left
+          to be filled in and ignored. */}
+      <div className={`mt-2.5 grid gap-2 ${active.ride ? 'grid-cols-1' : 'grid-cols-2'}`}>
         {[
           { label: 'Pickup', dateKey: 'pickupDate', timeKey: 'pickupTime' },
-          { label: 'Return', dateKey: 'returnDate', timeKey: 'returnTime' },
+          ...(active.ride ? [] : [{ label: 'Return', dateKey: 'returnDate', timeKey: 'returnTime' }]),
         ].map(({ label, dateKey, timeKey }) => (
           <div key={dateKey} className="rounded-xl border border-slate-200 px-2.5 py-1.5">
             <span className="flex items-center gap-1 text-[12px] font-bold text-slate-950">

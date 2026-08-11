@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, ArrowDownUp, Calendar, Car, ChevronDown, Clock, Headset, IndianRupee, MapPin, Shield, User } from 'lucide-react';
 import api from '../../../../shared/api/axiosInstance';
 import BottomNavbar from '../../components/BottomNavbar';
@@ -46,6 +46,7 @@ const formatDisplayTime = (value) => {
 
 const TaxiBookNow = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [fareCategories, setFareCategories] = useState([]);
   const [places, setPlaces] = useState(FALLBACK_PLACES);
@@ -155,6 +156,42 @@ const TaxiBookNow = () => {
     return `${String(soon.getHours()).padStart(2, '0')}:${String(soon.getMinutes()).padStart(2, '0')}`;
   });
   const [error, setError] = useState('');
+
+  /**
+   * Prefill from the home search card, so what was typed there is not typed
+   * again here.
+   *
+   * A label alone cannot price a ride - the estimate needs coordinates - so a
+   * pickup that matches a service store is filled in complete with its coords,
+   * and anything else is left as text for the user to confirm against a
+   * suggestion. A `when` in the future switches the page to Schedule.
+   */
+  useEffect(() => {
+    const label = String(searchParams.get('pickup') || '').trim();
+    const dropLabel = String(searchParams.get('drop') || '').trim();
+    const when = String(searchParams.get('when') || '').trim();
+
+    if (label) {
+      const store = places.find((place) => place.name.toLowerCase() === label.toLowerCase());
+      setPickup((current) => (current.label ? current : { label, coords: store?.coords || null }));
+    }
+    if (dropLabel) {
+      const store = places.find((place) => place.name.toLowerCase() === dropLabel.toLowerCase());
+      setDrop((current) => (current.label ? current : { label: dropLabel, coords: store?.coords || null }));
+    }
+
+    const scheduled = when ? new Date(when) : null;
+    if (scheduled && !Number.isNaN(scheduled.getTime()) && scheduled.getTime() > Date.now()) {
+      setRideMode('schedule');
+      setScheduleDate(toDateInputValue(scheduled));
+      setScheduleTime(
+        `${String(scheduled.getHours()).padStart(2, '0')}:${String(scheduled.getMinutes()).padStart(2, '0')}`,
+      );
+    }
+    // `places` arrives after the first render, so this reruns once it lands and
+    // upgrades a text-only pickup to one that carries coordinates.
+  }, [searchParams, places]);
+
   // Ticks so a schedule time that slips into the past disables the button on its own.
   const [now, setNow] = useState(() => Date.now());
 
