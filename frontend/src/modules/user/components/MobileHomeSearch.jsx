@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Bike, Calendar, Car, MapPin, Star, UserCheck } from 'lucide-react';
 import api from '../../../shared/api/axiosInstance';
 import { openRentalVehicle, unwrapResults } from './desktop/desktopShared';
@@ -117,7 +118,10 @@ export const MobileSearchCard = () => {
 
 
   return (
-    <form
+    <motion.form
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: 'spring', stiffness: 240, damping: 24 }}
       onSubmit={submit}
       // The date inputs are transparent overlays, so a native validation bubble
       // would be anchored to something invisible and the submit would just die
@@ -134,6 +138,10 @@ export const MobileSearchCard = () => {
             type="button"
             onClick={() => setMode(key)}
             aria-pressed={mode === key}
+            style={{ transition: 'transform 120ms ease' }}
+            onPointerDown={(event) => { event.currentTarget.style.transform = 'scale(0.96)'; }}
+            onPointerUp={(event) => { event.currentTarget.style.transform = ''; }}
+            onPointerLeave={(event) => { event.currentTarget.style.transform = ''; }}
             className={`flex flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2.5 text-[13px] font-semibold transition-colors ${
               mode === key
                 ? 'border-transparent bg-[#F5B700] text-slate-950'
@@ -227,12 +235,13 @@ export const MobileSearchCard = () => {
           <ArrowRight size={16} strokeWidth={2.6} />
         </span>
       </button>
-    </form>
+    </motion.form>
   );
 };
 
 export const MobilePopularCars = () => {
   const navigate = useNavigate();
+  const reduceMotion = useReducedMotion();
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -276,10 +285,15 @@ export const MobilePopularCars = () => {
           ? [0, 1, 2].map((key) => (
               <div key={key} className="h-[196px] w-[172px] shrink-0 animate-pulse rounded-2xl bg-slate-100" />
             ))
-          : popular.map((car) => (
-              <button
+          : popular.map((car, index) => (
+              <motion.button
                 key={car.id || car._id}
                 type="button"
+                // Cars rise in as the catalogue lands, in order, so a slow
+                // network reads as arriving rather than stalling.
+                initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+                animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                transition={{ delay: Math.min(index * 0.06, 0.4), type: 'spring', stiffness: 260, damping: 26 }}
                 onClick={() => openRentalVehicle(navigate, car)}
                 className="flex w-[172px] shrink-0 snap-start flex-col rounded-2xl border border-slate-100 bg-white p-3 text-left shadow-[0_6px_18px_rgba(15,23,42,0.05)]"
               >
@@ -310,7 +324,7 @@ export const MobilePopularCars = () => {
                   {car.capacity || 4} seats
                   {car.transmission ? ` · ${car.transmission}` : ''}
                 </span>
-              </button>
+              </motion.button>
             ))}
       </div>
     </section>

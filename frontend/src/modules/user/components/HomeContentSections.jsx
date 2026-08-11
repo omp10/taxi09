@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Play, Quote, Star } from 'lucide-react';
 import api from '../../../shared/api/axiosInstance';
 
@@ -27,6 +28,24 @@ const youtubeIdOf = (value) => {
   return match ? match[1] : '';
 };
 
+/**
+ * Cards rise in as their row scrolls into view, one after another. Uses
+ * framer-motion, which the app already ships - GSAP would be a second
+ * animation system for the same effect.
+ *
+ * `once: true` means a section animates on first sight only; re-running it on
+ * every scroll past turns pleasant into irritating.
+ */
+const listVariants = {
+  hidden: {},
+  shown: { transition: { staggerChildren: 0.07, delayChildren: 0.04 } },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 18 },
+  shown: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 260, damping: 26 } },
+};
+
 const SectionHeading = ({ eyebrow, title, action, onAction }) => (
   <div className="mb-3 flex items-end justify-between gap-3 px-1">
     <div>
@@ -49,6 +68,13 @@ const HomeContentSections = () => {
   const [videos, setVideos] = useState([]);
   const [drivers, setDrivers] = useState([]);
   const [playing, setPlaying] = useState('');
+  const reduceMotion = useReducedMotion();
+
+  // Someone who has asked for less motion gets the content, not the movement.
+  const rowMotion = reduceMotion
+    ? {}
+    : { variants: listVariants, initial: 'hidden', whileInView: 'shown', viewport: { once: true, amount: 0.2 } };
+  const cardMotion = reduceMotion ? {} : { variants: cardVariants };
 
   useEffect(() => {
     let cancelled = false;
@@ -95,9 +121,9 @@ const HomeContentSections = () => {
             action="See all"
             onAction={() => navigate('/taxi/user/with-driver')}
           />
-          <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <motion.div {...rowMotion} className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {drivers.map((driver) => (
-              <button
+              <motion.button {...cardMotion}
                 key={driver.id || driver._id || driver.name}
                 type="button"
                 onClick={() => navigate('/taxi/user/with-driver')}
@@ -122,22 +148,22 @@ const HomeContentSections = () => {
                     {Number(driver.rating).toFixed(1)}
                   </span>
                 ) : null}
-              </button>
+              </motion.button>
             ))}
-          </div>
+          </motion.div>
         </section>
       ) : null}
 
       {videos.length ? (
         <section className="mt-7">
           <SectionHeading eyebrow="Watch" title="How it works" />
-          <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <motion.div {...rowMotion} className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {videos.map((video) => {
               const id = youtubeIdOf(video.youtubeUrl);
               const isPlaying = playing === id;
 
               return (
-                <div key={id} className="w-[248px] shrink-0 snap-start overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-[0_6px_18px_rgba(15,23,42,0.05)]">
+                <motion.div key={id} {...cardMotion} className="w-[248px] shrink-0 snap-start overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-[0_6px_18px_rgba(15,23,42,0.05)]">
                   <div className="relative aspect-video bg-slate-900">
                     {isPlaying ? (
                       // Only loaded once tapped, so the homepage does not pull
@@ -166,19 +192,19 @@ const HomeContentSections = () => {
                       <p className="mt-0.5 text-[12px] font-semibold text-slate-500">{video.caption}</p>
                     ) : null}
                   </div>
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </section>
       ) : null}
 
       {reviews.length ? (
         <section className="mt-7">
           <SectionHeading eyebrow="From our customers" title="What people say" />
-          <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <motion.div {...rowMotion} className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {reviews.map((review, index) => (
-              <div key={`${review.name}-${index}`} className="w-[262px] shrink-0 snap-start rounded-2xl border border-slate-100 bg-white p-4 shadow-[0_6px_18px_rgba(15,23,42,0.05)]">
+              <motion.div key={`${review.name}-${index}`} {...cardMotion} className="w-[262px] shrink-0 snap-start rounded-2xl border border-slate-100 bg-white p-4 shadow-[0_6px_18px_rgba(15,23,42,0.05)]">
                 <Quote size={18} className="text-[#F5B700]" />
                 <p className="mt-2 text-[13.5px] font-medium leading-[1.5] text-slate-700">{review.quote}</p>
                 <div className="mt-3 flex items-center gap-2.5 border-t border-slate-50 pt-3">
@@ -202,9 +228,9 @@ const HomeContentSections = () => {
                     </span>
                   ) : null}
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </section>
       ) : null}
     </>
