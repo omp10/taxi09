@@ -121,15 +121,15 @@ const HomeContentSections = () => {
             action="See all"
             onAction={() => navigate('/taxi/user/with-driver')}
           />
-          <motion.div {...rowMotion} className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 lg:mx-0 lg:gap-5 lg:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <motion.div {...rowMotion} className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 lg:mx-0 lg:grid lg:grid-cols-5 xl:grid-cols-6 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {drivers.map((driver) => (
               <motion.button {...cardMotion}
                 key={driver.id || driver._id || driver.name}
                 type="button"
                 onClick={() => navigate('/taxi/user/with-driver')}
-                className="w-[132px] lg:w-[168px] shrink-0 snap-start rounded-2xl border border-slate-100 bg-white p-3 text-left shadow-[0_6px_18px_rgba(15,23,42,0.05)] lg:border-[var(--dh-border,#eceef1)] lg:bg-[var(--dh-surface,#ffffff)]"
+                className="w-[132px] lg:w-auto shrink-0 lg:shrink snap-start rounded-2xl border border-slate-100 bg-white p-3 lg:p-5 text-left shadow-[0_6px_18px_rgba(15,23,42,0.05)] lg:border-[var(--dh-border,#eceef1)] lg:bg-[var(--dh-surface,#ffffff)]"
               >
-                <span className="mx-auto flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-slate-100">
+                <span className="mx-auto flex h-16 w-16 lg:h-24 lg:w-24 items-center justify-center overflow-hidden rounded-full bg-slate-100">
                   {driver.photo || driver.image ? (
                     <img src={driver.photo || driver.image} alt={driver.name} className="h-full w-full object-cover" />
                   ) : (
@@ -138,7 +138,7 @@ const HomeContentSections = () => {
                     </span>
                   )}
                 </span>
-                <span className="mt-2 block truncate text-center text-[13.5px] font-bold text-slate-800 lg:text-[var(--dh-text,#0f172a)]">{driver.name}</span>
+                <span className="mt-2 block truncate text-center text-[13.5px] font-bold text-slate-800 lg:text-[16px] lg:text-[var(--dh-text,#0f172a)]">{driver.name}</span>
                 {driver.city ? (
                   <span className="block truncate text-center text-[12px] font-semibold text-slate-500">{driver.city}</span>
                 ) : null}
@@ -157,13 +157,13 @@ const HomeContentSections = () => {
       {videos.length ? (
         <section className="mt-7 lg:mt-14">
           <SectionHeading eyebrow="Watch" title="How it works" />
-          <motion.div {...rowMotion} className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 lg:mx-0 lg:gap-5 lg:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <motion.div {...rowMotion} className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {videos.map((video) => {
               const id = youtubeIdOf(video.youtubeUrl);
               const isPlaying = playing === id;
 
               return (
-                <motion.div key={id} {...cardMotion} className="w-[248px] lg:w-[320px] shrink-0 snap-start overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-[0_6px_18px_rgba(15,23,42,0.05)] lg:border-[var(--dh-border,#eceef1)] lg:bg-[var(--dh-surface,#ffffff)]">
+                <motion.div key={id} {...cardMotion} className="w-[248px] lg:w-auto shrink-0 lg:shrink snap-start overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-[0_6px_18px_rgba(15,23,42,0.05)] lg:border-[var(--dh-border,#eceef1)] lg:bg-[var(--dh-surface,#ffffff)]">
                   <div className="relative aspect-video bg-slate-900">
                     {isPlaying ? (
                       // Only loaded once tapped, so the homepage does not pull
@@ -186,7 +186,7 @@ const HomeContentSections = () => {
                       </button>
                     )}
                   </div>
-                  <div className="p-3">
+                  <div className="p-3 lg:p-4">
                     <p className="text-[13.5px] font-bold leading-tight text-slate-800 lg:text-[var(--dh-text,#0f172a)]">{video.title}</p>
                     {video.caption ? (
                       <p className="mt-0.5 text-[12px] font-semibold text-slate-500">{video.caption}</p>
@@ -202,11 +202,11 @@ const HomeContentSections = () => {
       {reviews.length ? (
         <section className="mt-7 lg:mt-14">
           <SectionHeading eyebrow="From our customers" title="What people say" />
-          <motion.div {...rowMotion} className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 lg:mx-0 lg:gap-5 lg:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <motion.div {...rowMotion} className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {reviews.map((review, index) => (
-              <motion.div key={`${review.name}-${index}`} {...cardMotion} className="w-[262px] lg:w-[340px] shrink-0 snap-start rounded-2xl border border-slate-100 bg-white p-4 shadow-[0_6px_18px_rgba(15,23,42,0.05)] lg:border-[var(--dh-border,#eceef1)] lg:bg-[var(--dh-surface,#ffffff)]">
+              <motion.div key={`${review.name}-${index}`} {...cardMotion} className="w-[262px] lg:w-auto shrink-0 lg:shrink snap-start rounded-2xl border border-slate-100 bg-white p-4 lg:p-6 shadow-[0_6px_18px_rgba(15,23,42,0.05)] lg:border-[var(--dh-border,#eceef1)] lg:bg-[var(--dh-surface,#ffffff)]">
                 <Quote size={18} className="text-[#F5B700]" />
-                <p className="mt-2 text-[13.5px] font-medium leading-[1.5] text-slate-700 lg:text-[var(--dh-text,#0f172a)]">{review.quote}</p>
+                <p className="mt-2 text-[13.5px] lg:text-[15.5px] font-medium leading-[1.5] text-slate-700 lg:text-[var(--dh-text,#0f172a)]">{review.quote}</p>
                 <div className="mt-3 flex items-center gap-2.5 border-t border-slate-50 pt-3">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100">
                     {review.image ? (
