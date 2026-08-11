@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ArrowRight, ArrowUpDown, CalendarDays, Car, Clock, Headphones, Image as ImageIcon, MapPin, Users,
+  ArrowRight, ArrowUpDown, CalendarDays, Car, Clock, Headphones, Image as ImageIcon, MapPin,
+  ShieldCheck, Users,
 } from 'lucide-react';
 import api from '../../../shared/api/axiosInstance';
 import {
@@ -27,13 +28,26 @@ import {
  */
 const buildStats = (stats) =>
   [
-    { icon: Users, value: stats.customers, label: stats.customers === 1 ? 'Customer' : 'Customers' },
-    { icon: Car, value: stats.rentalVehicles, label: 'Cars for hire' },
-    { icon: MapPin, value: stats.cities, label: stats.cities === 1 ? 'City covered' : 'Cities covered' },
+    {
+      icon: Users,
+      value: stats.customers,
+      label: stats.customers === 1 ? 'Customer' : 'Customers',
+      note: 'Happy customers trusting us',
+    },
+    { icon: Car, value: stats.rentalVehicles, label: 'Cars for hire', note: 'Wide range of cars ready for you' },
+    {
+      icon: MapPin,
+      value: stats.cities,
+      label: stats.cities === 1 ? 'City covered' : 'Cities covered',
+      note: 'Expanding to more cities every day',
+    },
   ]
     .filter((item) => Number(item.value) > 0)
-    .map((item) => ({ ...item, value: Number(item.value).toLocaleString('en-IN') }))
-    .concat([{ icon: Headphones, value: '24/7', label: 'Customer support' }]);
+    // The "+" is honest here: these are live counts that only ever grow.
+    .map((item) => ({ ...item, value: `${Number(item.value).toLocaleString('en-IN')}+` }))
+    .concat([
+      { icon: Headphones, value: '24/7', label: 'Customer support', note: "We're here to help you anytime" },
+    ]);
 
 const DesktopHome = () => {
   const navigate = useNavigate();
@@ -315,20 +329,39 @@ const DesktopHome = () => {
 
       {/* ------------------------------------------------------------- Stats */}
       <section className="mx-auto mt-10 max-w-[1728px] px-4 pb-16 xl:px-6">
-        <div className="flex flex-wrap justify-between gap-6 rounded-[20px] bg-[var(--dh-accent-soft)] px-10 py-7">
-          {buildStats(platformStats || {}).map(({ icon: Icon, value, label }) => (
-            <div key={label} className="flex items-center gap-4">
-              <Icon size={34} className="shrink-0 text-[#F5B700]" strokeWidth={2} />
-              <div>
-                {platformStats ? (
-                  <p className="text-[25px] font-black leading-none tracking-[-0.03em] text-[var(--dh-text)]">{value}</p>
-                ) : (
-                  <span className="block h-[25px] w-20 rounded-md dh-skeleton" />
-                )}
-                <p className="mt-1.5 text-[15px] font-semibold text-[var(--dh-muted)]">{label}</p>
+        <div className="rounded-[28px] bg-[var(--dh-accent-soft)] px-10 py-10">
+          {/* divide-x draws the rules between tiles, so no separator elements. */}
+          <div className="grid grid-cols-2 divide-y divide-[#F5B700]/25 lg:grid-cols-4 lg:divide-y-0 lg:divide-x">
+            {buildStats(platformStats || {}).map(({ icon: Icon, value, label, note }) => (
+              <div key={label} className="flex items-start gap-4 px-4 py-5 lg:px-8 lg:py-0">
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#F5B700]/15">
+                  <Icon size={26} className="text-[#F5B700]" strokeWidth={2.1} />
+                </span>
+                <div className="min-w-0">
+                  {platformStats ? (
+                    <p className="text-[30px] font-black leading-none tracking-[-0.03em] text-[var(--dh-text)]">{value}</p>
+                  ) : (
+                    <span className="block h-[30px] w-24 rounded-md dh-skeleton" />
+                  )}
+                  <p className="mt-1.5 text-[16px] font-bold text-[var(--dh-text)]">{label}</p>
+                  <p className="mt-1 text-[14px] font-medium leading-[1.45] text-[var(--dh-muted)]">{note}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+
+        {/* The reassurance line the stats are there to support. */}
+        <div className="mt-8 flex items-center gap-6">
+          <span className="h-px flex-1 bg-[var(--dh-border)]" />
+          <span className="flex items-center gap-3">
+            <ShieldCheck size={30} className="shrink-0 text-[#F5B700]" strokeWidth={2.2} />
+            <span>
+              <span className="block text-[17px] font-bold text-[var(--dh-text)]">Vetted &amp; Verified Drivers</span>
+              <span className="block text-[15px] font-medium text-[var(--dh-muted)]">Your safety is our top priority</span>
+            </span>
+          </span>
+          <span className="h-px flex-1 bg-[var(--dh-border)]" />
         </div>
       </section>
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Bike, Bell, Car, ChevronRight, FileCheck, Headset, Menu, ShieldCheck, UserCheck } from 'lucide-react';
+import { ArrowRight, Bike, Bell, Car, ChevronRight, FileCheck, GraduationCap, Headset, Menu, ShieldCheck, UserCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import carIcon from '../../../assets/icons/car.png';
 import bikeIcon from '../../../assets/icons/bike.png';
@@ -340,6 +340,9 @@ const MobileHome = () => {
     { iconImage: '/taxi09_service_travel.svg', label: 'International\nTrips', path: '/taxi/user/international' },
     { iconImage: '/taxi09_service_driver.png', label: 'Driver\nRegistration', path: '/taxi/driver/login' },
     { iconImage: '/taxi09_service_attach_car.png', label: 'Attach\nYour Car', path: '/taxi/user/attach-car' },
+    // No illustration for this one - the internship art is all photography,
+    // which reads wrong at 32px next to the flat icons.
+    { icon: GraduationCap, label: 'Internship\nProgram', path: '/taxi/user/internship' },
   ];
 
   // The owner's own car listing, so the homepage can show where it stands.
@@ -585,13 +588,17 @@ const MobileHome = () => {
           <h2 className="mb-4 px-1 text-[24px] font-black tracking-[-0.05em] text-slate-950">More Services</h2>
 
           <div className="grid grid-cols-3 gap-3">
-            {moreServices.map(({ iconImage, label, path }) => (
+            {moreServices.map(({ iconImage, icon: Icon, label, path }) => (
               <button
                 key={label}
                 onClick={() => openService(path)}
                 className="relative flex min-h-[84px] items-center gap-1.5 overflow-hidden rounded-[20px] border border-[#f1ede6] bg-white pl-2 pr-1 py-3 text-left shadow-[0_10px_24px_rgba(15,23,42,0.06)] active:scale-[0.97] transition-transform"
               >
-                <img src={iconImage} alt="" className="h-8 w-8 shrink-0 object-contain" draggable={false} />
+                {Icon ? (
+                  <Icon size={26} strokeWidth={2.1} className="h-8 w-8 shrink-0 text-[#F5B700]" />
+                ) : (
+                  <img src={iconImage} alt="" className="h-8 w-8 shrink-0 object-contain" draggable={false} />
+                )}
                 <span className="min-w-0 break-words text-[12px] font-extrabold leading-[1.2] whitespace-pre-line text-slate-950">
                   {label}
                 </span>
