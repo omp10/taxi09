@@ -1734,18 +1734,9 @@ const RentalVehicleDetail = () => {
           </section>
 
           <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
-            <div className="mb-2 flex items-center justify-between">
-              <div>
-                <h3 className="text-[14.5px] lg:text-[16.5px] font-black">Add-ons (Optional)</h3>
-                <p className="text-[12px] font-semibold text-slate-600">Customize your trip</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowAddOnsPanel(true)}
-                className="rounded-[8px] border border-slate-200 px-3 py-1.5 text-[13px] font-bold"
-              >
-                View All
-              </button>
+            <div className="mb-2">
+              <h3 className="text-[14.5px] lg:text-[16.5px] font-bold">Add-ons (Optional)</h3>
+              <p className="text-[12px] font-semibold text-slate-600">Customize your trip</p>
             </div>
             <div className="grid grid-cols-5 gap-1.5">
               {addOns.map(({ id, label, price, icon: Icon }) => {
