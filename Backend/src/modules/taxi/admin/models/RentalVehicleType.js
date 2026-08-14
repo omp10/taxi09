@@ -297,6 +297,18 @@ const rentalVehicleTypeSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    /**
+     * What the rental price covers - insurance, FASTag, toll and so on.
+     *
+     * Free text per vehicle rather than a fixed list, because what is bundled
+     * differs by vehicle and by city. Empty means the customer page shows no
+     * "Package Includes" section, which is the honest state for a vehicle
+     * nobody has filled this in for.
+     */
+    packageIncludes: {
+      type: [String],
+      default: [],
+    },
     serviceStoreIds: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'TaxiServiceStore',

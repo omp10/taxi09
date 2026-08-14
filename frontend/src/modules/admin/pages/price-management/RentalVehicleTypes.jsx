@@ -256,6 +256,7 @@ const buildDefaultForm = () => {
     capacity: 0,
     luggageCapacity: 2,
     amenities: [],
+    packageIncludes: [],
     serviceStoreIds: [],
     poolingEnabled: false,
     addOns: [],
@@ -417,6 +418,7 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
               capacity: Number(selected.capacity || countSeats(selected.blueprint)),
               luggageCapacity: Number(selected.luggageCapacity || 0),
               amenities: Array.isArray(selected.amenities) ? selected.amenities : [],
+              packageIncludes: Array.isArray(selected.packageIncludes) ? selected.packageIncludes : [],
               serviceStoreIds: Array.isArray(selected.serviceStoreIds) ? selected.serviceStoreIds.map(String) : [],
               poolingEnabled: Boolean(selected.poolingEnabled),
               addOns: normalizeAddOns(selected.addOns),
@@ -769,6 +771,9 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
         amenities: (Array.isArray(formData.amenities) ? formData.amenities : [])
           .map((item) => String(item).trim())
           .filter(Boolean),
+        packageIncludes: (Array.isArray(formData.packageIncludes) ? formData.packageIncludes : [])
+          .map((item) => String(item).trim())
+          .filter(Boolean),
         pricing: (Array.isArray(formData.pricing) ? formData.pricing : []).map((item) => ({
           ...item,
           durationHours: toNumberOrZero(item.durationHours),
@@ -863,6 +868,7 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
         ...item,
         capacity: Number(item.capacity || countSeats(item.blueprint)),
         amenities: Array.isArray(item.amenities) ? item.amenities : [],
+        packageIncludes: Array.isArray(item.packageIncludes) ? item.packageIncludes : [],
         pricing: normalizePricing(item.pricing),
         active: nextActive,
         status: nextActive ? 'active' : 'inactive',
@@ -902,6 +908,7 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
         active: item.active !== false,
         status: item.active !== false ? 'active' : 'inactive',
         amenities: Array.isArray(item.amenities) ? item.amenities : [],
+        packageIncludes: Array.isArray(item.packageIncludes) ? item.packageIncludes : [],
         pricing: normalizePricing(item.pricing),
       };
 
@@ -1678,6 +1685,30 @@ const RentalVehicleTypes = ({ mode: propMode }) => {
                 placeholder="AC, GPS, Charging Port"
               />
               <p className="mt-2 text-xs text-slate-500">Use comma separated amenities for quick admin setup.</p>
+            </div>
+
+            <div>
+              <label className={labelClass}>Package includes</label>
+              <input
+                type="text"
+                value={(formData.packageIncludes || []).join(', ')}
+                onChange={(event) =>
+                  updateForm(
+                    'packageIncludes',
+                    event.target.value
+                      .split(',')
+                      .map((item) => item.trim())
+                      .filter(Boolean),
+                  )
+                }
+                className={inputClass}
+                placeholder="Insurance, Roadside 24x7, FASTag, Toll Tax"
+              />
+              <p className="mt-2 text-xs text-slate-500">
+                What the rental price already covers. Shown as the &ldquo;Package Includes&rdquo; row on the
+                vehicle page - leave it empty and that row is hidden rather than claiming cover this
+                vehicle does not have.
+              </p>
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-white p-4">

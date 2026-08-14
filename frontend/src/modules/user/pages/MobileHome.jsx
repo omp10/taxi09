@@ -442,7 +442,7 @@ const MobileHome = () => {
             </div>
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-md font-black text-slate-800">{scheduledCountdown}</p>
+                <p className="text-md font-bold text-slate-800">{scheduledCountdown}</p>
                 <p className="text-[13.5px] leading-[18px] text-slate-400 font-semibold">{scheduledDateLabel}</p>
               </div>
               <img src={currentRideIcon} className="h-12 w-12 object-contain" alt="" />
@@ -458,14 +458,14 @@ const MobileHome = () => {
           >
             <img src="/taxi09_service_attach_car.png" alt="" className="h-10 w-10 object-contain" />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[14.5px] font-black text-slate-900">
+              <p className="truncate text-[14.5px] font-bold text-slate-900">
                 {[attachedVehicle.brand, attachedVehicle.model].filter(Boolean).join(' ') || 'Your car listing'}
               </p>
               <p className="text-[13.5px] text-slate-500">
                 {attachedVehicle.reference} · {ATTACH_STATUS[attachedVehicle.status]?.label || attachedVehicle.status}
               </p>
             </div>
-            <span className={`rounded-lg px-2 py-1 text-[12.5px] font-black ${ATTACH_STATUS[attachedVehicle.status]?.tone || 'bg-slate-100 text-slate-600'}`}>
+            <span className={`rounded-lg px-2 py-1 text-[12.5px] font-bold ${ATTACH_STATUS[attachedVehicle.status]?.tone || 'bg-slate-100 text-slate-600'}`}>
               {ATTACH_STATUS[attachedVehicle.status]?.chip || attachedVehicle.status}
             </span>
             {/* Only an unsubmitted application can be abandoned from here. */}
@@ -483,7 +483,7 @@ const MobileHome = () => {
                     toast.error(error?.response?.data?.message || error.message || 'Could not clear the application.');
                   }
                 }}
-                className="shrink-0 rounded-lg border border-rose-200 px-2 py-1 text-[12.5px] font-black text-rose-600"
+                className="shrink-0 rounded-lg border border-rose-200 px-2 py-1 text-[12.5px] font-bold text-rose-600"
               >
                 Clear
               </button>
@@ -599,7 +599,7 @@ const MobileHome = () => {
                 ) : (
                   <img src={iconImage} alt="" className="h-8 w-8 shrink-0 object-contain" draggable={false} />
                 )}
-                <span className="min-w-0 break-words text-[12px] font-extrabold leading-[1.2] whitespace-pre-line text-slate-950">
+                <span className="min-w-0 break-words text-[12px] font-semibold leading-[1.2] whitespace-pre-line text-slate-950">
                   {label}
                 </span>
                 <span className="absolute bottom-1.5 right-1 flex h-[22px] w-[22px] items-center justify-center rounded-full border border-[#f5b700]/35 bg-white shadow-[0_2px_6px_rgba(0,0,0,0.05)]">
@@ -659,7 +659,7 @@ const MobileHome = () => {
             {trustPoints.map(({ icon: Icon, label }) => (
               <div key={label} className="flex min-w-0 flex-col items-center justify-center gap-2 px-2 text-center">
                 <Icon size={22} className="shrink-0 text-[#F5B700]" strokeWidth={2.2} />
-                <span className="whitespace-pre-line text-[11px] font-black leading-[1.25] tracking-tight text-slate-800">{label}</span>
+                <span className="whitespace-pre-line text-[11px] font-bold leading-[1.25] tracking-tight text-slate-800">{label}</span>
               </div>
             ))}
           </div>

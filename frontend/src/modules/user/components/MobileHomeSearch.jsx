@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight, Bike, Calendar, Car, MapPin, Star, UserCheck } from 'lucide-react';
+import { ArrowRight, Bike, Calendar, Car, Clock, MapPin, Star, UserCheck } from 'lucide-react';
 import api from '../../../shared/api/axiosInstance';
 import { openRentalVehicle, unwrapResults } from './desktop/desktopShared';
 
@@ -141,7 +141,7 @@ export const MobileSearchCard = () => {
       // silently. Validation is handled in submit() where it can be seen.
       noValidate
       className="rounded-[20px] border border-slate-100 bg-white p-3 shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
-      <h2 className="text-[19px] font-extrabold leading-tight tracking-[-0.04em] text-slate-900">Where are you going?</h2>
+      <h2 className="text-[19px] font-semibold leading-tight tracking-[-0.04em] text-slate-900">Where are you going?</h2>
       <p className="mt-0.5 text-[13px] font-semibold text-slate-700">Book Self Drive, Taxi or Bike in few taps</p>
 
       <div className="mt-3 grid grid-cols-3 gap-2">
@@ -198,12 +198,13 @@ export const MobileSearchCard = () => {
               {label}
             </span>
 
-            {/* Date and time share one line - the field label already says
-                "Date & Time", so stacking two more captions repeated it. Each
-                native control is laid transparently over its own value, so a
-                tap opens the real picker instead of the dd/mm/yyyy skeleton. */}
-            <span className="mt-0.5 flex items-baseline gap-2 text-[13px] font-semibold">
-              <span className="relative">
+            {/* Date over time rather than side by side: two dates and two
+                times on one row read as four values with no obvious pairing.
+                Each native control is laid transparently over its own value, so
+                a tap opens the real picker instead of the dd/mm/yyyy skeleton. */}
+            <span className="mt-0.5 flex flex-col items-start gap-0.5 text-[13px] font-semibold leading-[1.35]">
+              <span className="relative flex items-center gap-1.5">
+                <Calendar size={12} className="shrink-0 text-slate-400" strokeWidth={2.4} />
                 <span className={form[dateKey] ? 'text-slate-950' : 'text-slate-800'}>
                   {formatDateLabel(form[dateKey])}
                 </span>
@@ -218,9 +219,8 @@ export const MobileSearchCard = () => {
                 />
               </span>
 
-              <span className="text-slate-700">&middot;</span>
-
-              <span className="relative">
+              <span className="relative flex items-center gap-1.5">
+                <Clock size={12} className="shrink-0 text-slate-400" strokeWidth={2.4} />
                 <span className={form[timeKey] ? 'text-slate-950' : 'text-slate-800'}>
                   {formatTimeLabel(form[timeKey])}
                 </span>
@@ -243,7 +243,7 @@ export const MobileSearchCard = () => {
 
       <button
         type="submit"
-        className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-[#F5B700] py-3 text-[15px] font-black text-slate-950 active:scale-[0.99] transition-transform"
+        className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-[#F5B700] py-3 text-[15px] font-bold text-slate-950 active:scale-[0.99] transition-transform"
       >
         {active.cta}
         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-950 text-white">
@@ -285,7 +285,7 @@ export const MobilePopularCars = () => {
   return (
     <section className="mt-6">
       <div className="mb-3 flex items-end justify-between px-1">
-        <h2 className="text-[20px] font-extrabold tracking-[-0.03em] text-slate-900">Popular Cars</h2>
+        <h2 className="text-[20px] font-semibold tracking-[-0.03em] text-slate-900">Popular Cars</h2>
         <button
           type="button"
           onClick={() => navigate('/taxi/user/rental')}

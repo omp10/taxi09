@@ -58,7 +58,7 @@ export const DesktopNav = ({ activePath, theme, onToggleTheme, loading = false }
                   {label}
                   {badge ? (
                     <span
-                      className={`ml-1.5 rounded-md px-1.5 py-[2px] text-[10px] font-black ${
+                      className={`ml-1.5 rounded-md px-1.5 py-[2px] text-[10px] font-bold ${
                         isActive ? 'bg-slate-950 text-[#F5B700]' : 'bg-[#F5B700] text-slate-950'
                       }`}
                     >
@@ -134,7 +134,7 @@ export const LiveFleetPanel = ({ fleet, className = '' }) => {
     <div className={`w-[230px] rounded-[18px] bg-[var(--dh-surface)] p-4 shadow-[0_18px_44px_rgba(15,23,42,0.16)] ${className}`}>
       <div className="flex items-center gap-2">
         <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-        <span className="text-[15.5px] font-black text-[var(--dh-text)]">Live Booking</span>
+        <span className="text-[15.5px] font-bold text-[var(--dh-text)]">Live Booking</span>
       </div>
       <p className="mt-1 text-[14px] font-semibold text-[var(--dh-muted)]">Available now</p>
 
@@ -151,7 +151,7 @@ export const LiveFleetPanel = ({ fleet, className = '' }) => {
               className="h-9 w-12 shrink-0 rounded-[6px] object-cover"
             />
             <span className="min-w-0">
-              <span className="block truncate text-[14px] font-black text-[var(--dh-text)]">{vehicle.name}</span>
+              <span className="block truncate text-[14px] font-bold text-[var(--dh-text)]">{vehicle.name}</span>
               <span className="block truncate text-[13px] font-semibold text-[var(--dh-muted)]">
                 {vehicle.vehicleCategory || 'Car'}
               </span>
@@ -176,12 +176,12 @@ export const ServiceCard = ({ title, copy, image, path, badge, highlighted }) =>
       }`}
     >
       {badge && (
-        <span className="absolute left-0 top-0 rounded-br-[12px] bg-[#F5B700] px-2.5 py-1 text-[12.5px] font-black text-slate-950">
+        <span className="absolute left-0 top-0 rounded-br-[12px] bg-[#F5B700] px-2.5 py-1 text-[12.5px] font-bold text-slate-950">
           {badge}
         </span>
       )}
       <img src={image} alt="" className="h-[92px] w-full object-contain" />
-      <span className="mt-2.5 block min-h-[40px] text-[16.5px] font-black leading-[1.3] tracking-[-0.02em] text-[var(--dh-text)]">{title}</span>
+      <span className="mt-2.5 block min-h-[40px] text-[16.5px] font-bold leading-[1.3] tracking-[-0.02em] text-[var(--dh-text)]">{title}</span>
       <span className="mt-1.5 block min-h-[78px] text-[16px] font-medium leading-[1.45] text-[var(--dh-muted)]">{copy}</span>
       <span className="mt-auto flex h-8 w-8 items-center justify-center self-end rounded-full border border-[#F5B700] mt-3 text-[#F5B700] transition-colors group-hover:bg-[#F5B700] group-hover:text-slate-950">
         <ArrowRight size={15} strokeWidth={2.8} />
@@ -248,7 +248,7 @@ export const DesktopFooter = ({ locations = [] }) => {
           </div>
 
           <div>
-            <p className="text-[13.5px] font-black uppercase tracking-[0.12em] text-[var(--dh-text)]">Services</p>
+            <p className="text-[13.5px] font-bold uppercase tracking-[0.12em] text-[var(--dh-text)]">Services</p>
             <ul className="mt-4 space-y-2.5">
               {SERVICES.map((service) => (
                 <li key={service.title}>
@@ -261,7 +261,7 @@ export const DesktopFooter = ({ locations = [] }) => {
           </div>
 
           <div>
-            <p className="text-[13.5px] font-black uppercase tracking-[0.12em] text-[var(--dh-text)]">Company</p>
+            <p className="text-[13.5px] font-bold uppercase tracking-[0.12em] text-[var(--dh-text)]">Company</p>
             <ul className="mt-4 space-y-2.5">
               {company.map((link) => (
                 <li key={link.label}>
@@ -275,7 +275,7 @@ export const DesktopFooter = ({ locations = [] }) => {
 
           {locations.length ? (
             <div>
-              <p className="text-[13.5px] font-black uppercase tracking-[0.12em] text-[var(--dh-text)]">Where We Operate</p>
+              <p className="text-[13.5px] font-bold uppercase tracking-[0.12em] text-[var(--dh-text)]">Where We Operate</p>
               <ul className="mt-4 space-y-2.5">
                 {locations.map((name) => (
                   <li key={name} className="flex items-start gap-2 text-[14.5px] font-medium text-[var(--dh-muted)]">

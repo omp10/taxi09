@@ -515,6 +515,21 @@ const readStoredUserInfo = () => {
   }
 };
 
+/**
+ * Icons for the common inclusions. Anything an admin types that is not in here
+ * falls back to a tick, so a new inclusion never renders blank.
+ */
+const PACKAGE_INCLUDE_ICONS = {
+  insurance: Shield,
+  'roadside 24x7': Users,
+  'roadside assistance': Users,
+  fastag: Tag,
+  'toll tax': Building2,
+  toll: Building2,
+  'state tax': ReceiptText,
+  tax: ReceiptText,
+};
+
 const RentalVehicleDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -534,11 +549,19 @@ const RentalVehicleDetail = () => {
   const [selectedImage, setSelectedImage] = useState(
     vehicle?.gallery?.[0] || vehicle?.galleryImages?.[0] || vehicle?.coverImage || vehicle?.image || '',
   );
+  const packageIncludes = useMemo(
+    () => (Array.isArray(vehicle?.packageIncludes) ? vehicle.packageIncludes.filter(Boolean) : []),
+    [vehicle],
+  );
   const [showQuoteForm, setShowQuoteForm] = useState(false);
   const [selectedPackageId, setSelectedPackageId] = useState('');
   const [selectionStep, setSelectionStep] = useState('package');
   const [serviceLocations, setServiceLocations] = useState([]);
   const [selectedServiceLocationId, setSelectedServiceLocationId] = useState('');
+  // Where this booking starts and ends. Empty until chosen - the page used to
+  // assert a city and a date that had nothing to do with the search.
+  const [tripPickupLabel, setTripPickup] = useState('');
+  const [tripDropLabel, setTripDrop] = useState('');
   const [locationsLoading, setLocationsLoading] = useState(false);
   const [locationError, setLocationError] = useState('');
   const [userCoordinates, setUserCoordinates] = useState(null);
@@ -798,6 +821,30 @@ const RentalVehicleDetail = () => {
     });
     return best;
   }, [serviceLocations, userCoordinates]);
+
+  /** Branches this vehicle can actually be collected from. */
+  const branchOptions = useMemo(
+    () => [...new Set(
+      (serviceLocations || [])
+        .flatMap((item) => [item.name, ...(item.pickupPoints || []).map((point) => point.name)])
+        .map((name) => String(name || '').trim())
+        .filter(Boolean),
+    )],
+    [serviceLocations],
+  );
+
+  /** Whatever the customer searched, formatted for the trip strip. */
+  const formatTripWhen = (value) => {
+    if (!value) return '';
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return '';
+    return parsed.toLocaleString('en-IN', {
+      day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit',
+    });
+  };
+
+  const tripPickupWhen = formatTripWhen(quoteForm.pickupDateTime);
+  const tripDropWhen = formatTripWhen(quoteForm.returnDateTime);
 
   const selectedServiceLocation = useMemo(
     () =>
@@ -1572,26 +1619,68 @@ const RentalVehicleDetail = () => {
             </div>
           </section>
 
-          <section className="grid grid-cols-[1fr_auto_1fr] items-center rounded-[13px] border border-slate-100 bg-white p-3 shadow-[0_4px_14px_rgba(15,23,42,0.05)]">
-            <div className="flex gap-2">
-              <span className="mt-5 h-3 w-3 rounded-full bg-green-500" />
-              <div>
-                <p className="text-[12px] font-semibold text-slate-500">Pickup</p>
-                <p className="text-[13.5px] font-black">Bhubaneswar</p>
-                <p className="text-[12px] font-semibold text-slate-600">26 Jun, 06:00 PM</p>
+          {/* Pickup and drop are the customer's, not a fixed pair. They were
+              hardcoded to Bhubaneswar with June dates, which contradicted
+              whatever had actually been searched. Both are chosen from the
+              branches this vehicle can be collected from, and stay empty until
+              one is picked rather than defaulting to somewhere plausible. */}
+          <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-[0_4px_14px_rgba(15,23,42,0.05)]">
+            <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-2">
+              <div className="flex gap-2">
+                <span className="mt-1.5 h-3 w-3 shrink-0 rounded-full bg-green-500" />
+                <div className="min-w-0">
+                  <p className="text-[12px] font-semibold text-slate-500">Pickup</p>
+                  <p className="truncate text-[13.5px] font-bold">
+                    {tripPickupLabel || <span className="font-semibold text-slate-400">Select a branch</span>}
+                  </p>
+                  <p className="text-[12px] font-semibold text-slate-600">
+                    {tripPickupWhen || 'Choose a date'}
+                  </p>
+                </div>
+              </div>
+              <span className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-[0_5px_14px_rgba(15,23,42,0.12)]">
+                <Navigation size={15} />
+              </span>
+              <div className="flex gap-2">
+                <span className="mt-1.5 h-3 w-3 shrink-0 rounded-full bg-red-500" />
+                <div className="min-w-0">
+                  <p className="text-[12px] font-semibold text-slate-500">Drop-off</p>
+                  <p className="truncate text-[13.5px] font-bold">
+                    {tripDropLabel || <span className="font-semibold text-slate-400">Same as pickup</span>}
+                  </p>
+                  <p className="text-[12px] font-semibold text-slate-600">
+                    {tripDropWhen || 'Choose a date'}
+                  </p>
+                </div>
               </div>
             </div>
-            <button className="mx-2 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-[0_5px_14px_rgba(15,23,42,0.12)]">
-              <Navigation size={15} />
-            </button>
-            <div className="flex gap-2">
-              <span className="mt-5 h-3 w-3 rounded-full bg-red-500" />
-              <div>
-                <p className="text-[12px] font-semibold text-slate-500">Drop-off</p>
-                <p className="text-[13.5px] font-black">Bhubaneswar</p>
-                <p className="text-[12px] font-semibold text-slate-600">27 Jun, 04:00 PM</p>
+
+            {branchOptions.length > 0 && (
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <label className="block">
+                  <span className="mb-1 block text-[11px] font-bold text-slate-500">Pick up from</span>
+                  <select
+                    value={tripPickupLabel}
+                    onChange={(event) => setTripPickup(event.target.value)}
+                    className="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-[12.5px] font-semibold text-slate-900 outline-none"
+                  >
+                    <option value="">Select a branch</option>
+                    {branchOptions.map((name) => <option key={name} value={name}>{name}</option>)}
+                  </select>
+                </label>
+                <label className="block">
+                  <span className="mb-1 block text-[11px] font-bold text-slate-500">Return to</span>
+                  <select
+                    value={tripDropLabel}
+                    onChange={(event) => setTripDrop(event.target.value)}
+                    className="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-[12.5px] font-semibold text-slate-900 outline-none"
+                  >
+                    <option value="">Same as pickup</option>
+                    {branchOptions.map((name) => <option key={name} value={name}>{name}</option>)}
+                  </select>
+                </label>
               </div>
-            </div>
+            )}
           </section>
 
           <section>
@@ -1684,24 +1773,26 @@ const RentalVehicleDetail = () => {
             </div>
           </section>
 
-          <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
-            <h3 className="text-[14.5px] lg:text-[16.5px] font-black">Package Includes</h3>
-            <div className="mt-3 grid grid-cols-5 gap-2 text-center">
-              {[
-                ['Insurance', Shield],
-                ['Roadside 24x7', Users],
-                ['FASTag', Tag],
-                ['Toll Tax', Building2],
-                ['State Tax', ReceiptText],
-              ].map(([label, Icon]) => (
-                <div key={label} className="text-[10.5px] font-bold leading-tight">
-                  <Icon className="mx-auto mb-1" size={17} />
-                  {label}
-                  <p className="text-green-600">Included</p>
-                </div>
-              ))}
-            </div>
-          </section>
+          {/* Admin-entered per vehicle. Previously five fixed claims printed on
+              every vehicle - a scooter advertising FASTag and state tax. An
+              empty list hides the section rather than promising cover. */}
+          {packageIncludes.length > 0 && (
+            <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
+              <h3 className="text-[14.5px] lg:text-[16.5px] font-bold">Package Includes</h3>
+              <div className="mt-3 grid grid-cols-5 gap-2 text-center">
+                {packageIncludes.map((label) => {
+                  const Icon = PACKAGE_INCLUDE_ICONS[label.toLowerCase()] || CheckCircle2;
+                  return (
+                    <div key={label} className="text-[10.5px] font-bold leading-tight">
+                      <Icon className="mx-auto mb-1" size={17} />
+                      {label}
+                      <p className="text-green-600">Included</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
 
           <section className="rounded-[13px] border border-slate-100 bg-white p-3 shadow-sm">
             <h3 className="text-[14.5px] lg:text-[16.5px] font-black">Rental Information</h3>

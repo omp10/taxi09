@@ -166,12 +166,12 @@ const SectionHeading = ({ eyebrow, icon: Icon, title, subtitle, action, onAction
   <div className="mb-3 flex items-end justify-between gap-3 px-1 lg:mb-5">
     <div>
       {eyebrow ? (
-        <p className="flex items-center gap-1.5 text-[11.5px] font-black uppercase tracking-[0.14em] text-[#F5B700]">
+        <p className="flex items-center gap-1.5 text-[11.5px] font-bold uppercase tracking-[0.14em] text-[#F5B700]">
           {Icon ? <Icon size={13} strokeWidth={2.6} /> : null}
           {eyebrow}
         </p>
       ) : null}
-      <h2 className="mt-0.5 text-[21px] lg:text-[30px] font-bold lg:font-extrabold tracking-[-0.03em] text-slate-950 lg:text-[var(--dh-text,#0f172a)]">{title}</h2>
+      <h2 className="mt-0.5 text-[21px] lg:text-[30px] font-bold lg:font-semibold tracking-[-0.03em] text-slate-950 lg:text-[var(--dh-text,#0f172a)]">{title}</h2>
       {subtitle ? (
         <p className="mt-0.5 text-[12.5px] lg:text-[14.5px] font-medium text-slate-500 lg:text-[var(--dh-muted,#64748b)]">{subtitle}</p>
       ) : null}
@@ -248,11 +248,11 @@ const HomeContentSections = () => {
         <section className="mt-7 lg:mt-14">
           <div className="mb-3 flex items-end justify-between gap-4 lg:mb-5">
             <div>
-              <p className="flex items-center gap-1.5 text-[10.5px] lg:text-[11.5px] font-black uppercase tracking-[0.16em] text-[#F5B700]">
+              <p className="flex items-center gap-1.5 text-[10.5px] lg:text-[11.5px] font-bold uppercase tracking-[0.16em] text-[#F5B700]">
                 <ShieldCheck size={13} strokeWidth={2.6} />
                 Vetted &amp; verified drivers
               </p>
-              <h2 className="mt-1 text-[21px] lg:text-[30px] font-bold lg:font-black leading-tight tracking-[-0.03em] text-slate-950 lg:text-[var(--dh-text,#0f172a)]">
+              <h2 className="mt-1 text-[21px] lg:text-[30px] font-bold lg:font-bold leading-tight tracking-[-0.03em] text-slate-950 lg:text-[var(--dh-text,#0f172a)]">
                 Meet our drivers
               </h2>
               <p className="mt-0.5 text-[12.5px] lg:text-[14.5px] font-medium text-slate-500 lg:text-[var(--dh-muted,#64748b)]">
@@ -283,7 +283,7 @@ const HomeContentSections = () => {
                       {driver.photo || driver.image ? (
                         <img src={driver.photo || driver.image} alt={driver.name} className="h-full w-full object-cover" />
                       ) : (
-                        <span className="text-[20px] font-black text-slate-400">
+                        <span className="text-[20px] font-bold text-slate-400">
                           {String(driver.name || '?').trim().charAt(0).toUpperCase()}
                         </span>
                       )}
@@ -359,10 +359,10 @@ const HomeContentSections = () => {
             return (
               <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-[1fr_1.05fr] lg:gap-10">
                 <div>
-                  <p className="text-[10.5px] lg:text-[11.5px] font-black uppercase tracking-[0.16em] text-[#F5B700]">
+                  <p className="text-[10.5px] lg:text-[11.5px] font-bold uppercase tracking-[0.16em] text-[#F5B700]">
                     How it works
                   </p>
-                  <h2 className="mt-1 text-[21px] lg:text-[32px] font-bold lg:font-black leading-tight tracking-[-0.03em] text-slate-950 lg:text-[var(--dh-text,#0f172a)]">
+                  <h2 className="mt-1 text-[21px] lg:text-[32px] font-bold lg:font-bold leading-tight tracking-[-0.03em] text-slate-950 lg:text-[var(--dh-text,#0f172a)]">
                     {current.title}
                   </h2>
                   {current.caption ? (
@@ -379,7 +379,7 @@ const HomeContentSections = () => {
                         <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F5B700]/15 text-[#c99400]">
                           <step.icon size={22} strokeWidth={2.2} />
                         </span>
-                        <span className="mt-2 text-[11px] font-black text-[#F5B700]">
+                        <span className="mt-2 text-[11px] font-bold text-[#F5B700]">
                           {String(index + 1).padStart(2, '0')}
                         </span>
                         <span className="mt-0.5 text-[13px] font-bold text-slate-900 lg:text-[var(--dh-text,#0f172a)]">
@@ -435,7 +435,7 @@ const HomeContentSections = () => {
                     <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F5B700]/20 text-[#F5B700]">
                       <Play size={16} fill="currentColor" />
                     </span>
-                    <p className="text-[16px] font-black leading-tight text-white">
+                    <p className="text-[16px] font-bold leading-tight text-white">
                       See how easy it is with Taxi09
                     </p>
                     <p className="text-[12.5px] font-medium leading-[1.5] text-white/60">
@@ -480,7 +480,7 @@ const HomeContentSections = () => {
                     {review.image ? (
                       <img src={review.image} alt="" loading="lazy" className="h-full w-full object-cover" />
                     ) : (
-                      <span className="text-[14px] font-black text-slate-400">
+                      <span className="text-[14px] font-bold text-slate-400">
                         {String(review.name || '?').trim().charAt(0).toUpperCase()}
                       </span>
                     )}
@@ -533,10 +533,10 @@ const HomeContentSections = () => {
                     // Date as a tab on the corner, so the headline below stays clean.
                     <span className="absolute left-3 top-0 flex flex-col items-center rounded-b-lg bg-[#F5B700] px-2 pb-1.5 pt-1 text-center leading-none text-slate-900">
                       <Calendar size={10} strokeWidth={2.6} className="mb-0.5" />
-                      <span className="text-[13px] font-black">
+                      <span className="text-[13px] font-bold">
                         {new Date(story.publishedAt).toLocaleDateString('en-IN', { day: '2-digit' })}
                       </span>
-                      <span className="text-[8.5px] font-black uppercase tracking-wide">
+                      <span className="text-[8.5px] font-bold uppercase tracking-wide">
                         {new Date(story.publishedAt).toLocaleDateString('en-IN', { month: 'short' })}
                       </span>
                       <span className="text-[8.5px] font-bold">
@@ -545,7 +545,7 @@ const HomeContentSections = () => {
                     </span>
                   ) : null}
                   {story.category ? (
-                    <span className="absolute bottom-3 left-3 rounded-md bg-slate-900/85 px-2 py-1 text-[9.5px] font-black uppercase tracking-[0.08em] text-white">
+                    <span className="absolute bottom-3 left-3 rounded-md bg-slate-900/85 px-2 py-1 text-[9.5px] font-bold uppercase tracking-[0.08em] text-white">
                       {story.category}
                     </span>
                   ) : null}

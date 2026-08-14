@@ -1111,6 +1111,11 @@ const normalizeRentalVehiclePayload = (payload = {}, existing = {}) => {
       : Array.isArray(existing.amenities)
         ? existing.amenities
         : [],
+    packageIncludes: Array.isArray(payload.packageIncludes)
+      ? payload.packageIncludes.map((item) => sanitizeBusText(item)).filter(Boolean)
+      : Array.isArray(existing.packageIncludes)
+        ? existing.packageIncludes
+        : [],
     serviceStoreIds: Array.isArray(payload.serviceStoreIds)
       ? payload.serviceStoreIds.map((item) => String(item || '').trim()).filter(Boolean)
       : Array.isArray(existing.serviceStoreIds)
@@ -1171,6 +1176,7 @@ export const serializeRentalVehicleType = (item = {}) => ({
   ),
   luggageCapacity: sanitizeBusSeatPrice(item.luggageCapacity, 0),
   amenities: Array.isArray(item.amenities) ? item.amenities : [],
+  packageIncludes: Array.isArray(item.packageIncludes) ? item.packageIncludes : [],
   serviceStoreIds: Array.isArray(item.serviceStoreIds)
     ? item.serviceStoreIds.map((storeId) => String(storeId))
     : [],

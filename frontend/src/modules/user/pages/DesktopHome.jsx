@@ -300,8 +300,8 @@ const DesktopHome = () => {
       <section className="dh-mesh mx-auto mt-12 max-w-[1728px] px-4 xl:px-6">
         <div className="grid grid-cols-[300px_minmax(0,1fr)] gap-8">
           <div>
-            <p className="text-[14.5px] font-black uppercase tracking-[0.12em] text-[#F5B700]">Explore Our Services</p>
-            <h2 className="mt-3 text-[34px] font-black leading-[1.15] tracking-[-0.035em] text-[var(--dh-text)]">
+            <p className="text-[14.5px] font-bold uppercase tracking-[0.12em] text-[#F5B700]">Explore Our Services</p>
+            <h2 className="mt-3 text-[34px] font-bold leading-[1.15] tracking-[-0.035em] text-[var(--dh-text)]">
               All Your Travel Needs,
               <br />
               <span className="text-[#F5B700]">One Trusted Platform.</span>
@@ -339,7 +339,7 @@ const DesktopHome = () => {
                 </span>
                 <div className="min-w-0">
                   {platformStats ? (
-                    <p className="text-[30px] font-black leading-none tracking-[-0.03em] text-[var(--dh-text)]">{value}</p>
+                    <p className="text-[30px] font-bold leading-none tracking-[-0.03em] text-[var(--dh-text)]">{value}</p>
                   ) : (
                     <span className="block h-[30px] w-24 rounded-md dh-skeleton" />
                   )}
