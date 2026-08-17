@@ -572,3 +572,18 @@ export const getPublicBlogs = asyncHandler(async (req, res) =>
 export const getPublicBlog = asyncHandler(async (req, res) =>
   ok(res, await contentService.getPublicBlogBySlug(req.params.slug)),
 );
+
+
+/* ---------------------------------------------------------------- Reviews */
+export const adminListReviews = asyncHandler(async (req, res) =>
+  ok(res, await contentService.listReviews(req.query)),
+);
+export const adminModerateReview = asyncHandler(async (req, res) =>
+  ok(res, await contentService.moderateReview(req.params.id, req.body)),
+);
+export const getPublicReviews = asyncHandler(async (req, res) =>
+  ok(res, await contentService.listPublicReviews(req.query)),
+);
+export const postReview = asyncHandler(async (req, res) =>
+  ok(res, await contentService.createReview(req.user?.id || req.user?._id, req.user?.name, req.body), 201),
+);

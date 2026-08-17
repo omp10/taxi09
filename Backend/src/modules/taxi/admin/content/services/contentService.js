@@ -4,6 +4,8 @@ import { Hotel } from '../models/Hotel.js';
 import { ContentBlock } from '../models/ContentBlock.js';
 import { HireDriver } from '../models/HireDriver.js';
 import { Blog } from '../models/Blog.js';
+import { Review } from '../models/Review.js';
+import { RentalBookingRequest } from '../../models/RentalBookingRequest.js';
 import { MembershipPlan } from '../models/MembershipPlan.js';
 
 /**
@@ -485,6 +487,137 @@ export const deleteBlog = async (id) => {
   const removed = await Blog.findByIdAndDelete(id);
   if (!removed) throw new ApiError(404, 'Post not found');
   return { id: String(id) };
+};
+
+const serializeReview = (item = {}) => ({
+  id: String(item._id || ''),
+  rating: Number(item.rating || 0),
+  title: item.title || '',
+  comment: item.comment || '',
+  images: Array.isArray(item.images) ? item.images.filter(Boolean) : [],
+  userName: item.userName || 'Verified customer',
+  vehicleId: item.vehicleId ? String(item.vehicleId) : null,
+  bookingType: item.bookingType || '',
+  status: item.status || 'pending',
+  response: item.response || '',
+  respondedAt: item.respondedAt || null,
+  createdAt: item.createdAt,
+  // Always true on a stored review: one cannot be created without a completed
+  // booking of the reviewer's own. Sent so the UI does not have to infer it.
+  verified: true,
+});
+
+/**
+ * Confirm this booking is the reviewer's and is actually finished.
+ *
+ * This is what "verified" means here. Only rentals are wired up: the other
+ * booking types have their own models and lifecycles, and pretending to check
+ * one it cannot see would make the badge a lie.
+ */
+const assertReviewableBooking = async ({ bookingId, bookingType, userId }) => {
+  if (bookingType !== 'rental') {
+    throw new ApiError(400, 'Reviews are only open on rental bookings at the moment');
+  }
+
+  const booking = await RentalBookingRequest.findById(bookingId).lean();
+  if (!booking) throw new ApiError(404, 'Booking not found');
+  if (String(booking.userId) !== String(userId)) {
+    throw new ApiError(403, 'You can only review your own booking');
+  }
+  if (booking.status !== 'completed') {
+    throw new ApiError(400, 'You can review a booking once the trip is complete');
+  }
+  return booking;
+};
+
+export const createReview = async (userId, userName, payload = {}) => {
+  const rating = Number(payload.rating);
+  if (!Number.isFinite(rating) || rating < 1 || rating > 5) {
+    throw new ApiError(400, 'Give a rating between 1 and 5');
+  }
+
+  const bookingId = String(payload.bookingId || '').trim();
+  if (!bookingId) throw new ApiError(400, 'A booking is required to leave a review');
+
+  const bookingType = String(payload.bookingType || 'rental').trim();
+  const booking = await assertReviewableBooking({ bookingId, bookingType, userId });
+
+  // The unique index on bookingId is the real guard; this only turns the
+  // duplicate-key error into a message worth reading.
+  if (await Review.exists({ bookingId })) {
+    throw new ApiError(409, 'You have already reviewed this booking');
+  }
+
+  const created = await Review.create({
+    userId,
+    userName: String(userName || '').trim(),
+    bookingId,
+    bookingType,
+    vehicleId: booking.vehicleId || booking.rentalVehicleId || null,
+    rating: Math.round(rating),
+    title: String(payload.title || '').trim(),
+    comment: String(payload.comment || '').trim(),
+    images: (Array.isArray(payload.images) ? payload.images : []).map((i) => String(i).trim()).filter(Boolean),
+    status: 'pending',
+  });
+
+  return serializeReview(created.toObject());
+};
+
+/**
+ * Published reviews plus the average, computed at read time rather than kept
+ * on the vehicle - a stored average goes stale the moment one is hidden.
+ */
+export const listPublicReviews = async ({ vehicleId, limit = 20 } = {}) => {
+  const filter = { status: 'published' };
+  if (vehicleId) filter.vehicleId = vehicleId;
+
+  const results = await Review.find(filter)
+    .sort({ createdAt: -1 })
+    .limit(Math.min(Number(limit) || 20, 100))
+    .lean();
+
+  const total = await Review.countDocuments(filter);
+  const sum = results.reduce((running, item) => running + Number(item.rating || 0), 0);
+
+  return {
+    results: results.map(serializeReview),
+    total,
+    // Null rather than 0 when there is nothing to average: "no rating yet" and
+    // "rated zero" are different things and must not render the same.
+    average: results.length ? Number((sum / results.length).toFixed(1)) : null,
+  };
+};
+
+export const listReviews = async ({ status, vehicleId } = {}) => {
+  const filter = {};
+  if (status) filter.status = status;
+  if (vehicleId) filter.vehicleId = vehicleId;
+
+  const results = await Review.find(filter).sort({ createdAt: -1 }).lean();
+  return { results: results.map(serializeReview), total: results.length };
+};
+
+export const moderateReview = async (id, payload = {}) => {
+  const review = await Review.findById(id);
+  if (!review) throw new ApiError(404, 'Review not found');
+
+  if (payload.status) {
+    if (!['pending', 'published', 'rejected'].includes(payload.status)) {
+      throw new ApiError(400, 'Status must be pending, published or rejected');
+    }
+    review.status = payload.status;
+  }
+  if (payload.moderationNote !== undefined) {
+    review.moderationNote = String(payload.moderationNote || '').trim();
+  }
+  if (payload.response !== undefined) {
+    review.response = String(payload.response || '').trim();
+    review.respondedAt = review.response ? new Date() : null;
+  }
+
+  await review.save();
+  return serializeReview(review.toObject());
 };
 
 export const listHireDrivers = async ({ hireType, city, active, available } = {}) => {

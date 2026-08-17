@@ -18,6 +18,8 @@ import {
   adminDeleteHireDriver,
   adminListHireDrivers,
   adminListBlogs,
+  adminListReviews,
+  adminModerateReview,
   adminCreateBlog,
   adminUpdateBlog,
   adminDeleteBlog,
@@ -78,6 +80,10 @@ contentRouter.delete('/admin/content-blocks/:id', adminDeleteContentBlock);
 
 // Drivers available for hire (permanent / monthly / outstation)
 // Blog posts written in the admin panel
+// Customer reviews - moderation queue
+contentRouter.get('/admin/reviews', adminListReviews);
+contentRouter.patch('/admin/reviews/:id', adminModerateReview);
+
 contentRouter.get('/admin/blogs', adminListBlogs);
 contentRouter.post('/admin/blogs', adminCreateBlog);
 contentRouter.patch('/admin/blogs/:id', adminUpdateBlog);

@@ -72,6 +72,8 @@ import {
 import {
   getPublicContentBlocks,
   getPublicBlogs,
+  getPublicReviews,
+  postReview,
   getPublicBlog,
   getPublicHotelBySlug,
   quoteHotelStay,
@@ -146,6 +148,9 @@ userRouter.post('/attached-vehicles/:id/submit', authenticate(['user']), postAtt
 // The static segments are declared before /:slug so they cannot be shadowed.
 // Blog posts. Public reading only; writing happens in the admin panel.
 userRouter.get('/blogs', getPublicBlogs);
+// Reviews: reading is public, writing needs the account that made the booking.
+userRouter.get('/reviews', asyncHandler(getPublicReviews));
+userRouter.post('/reviews', authenticate(['user']), asyncHandler(postReview));
 userRouter.get('/blogs/:slug', getPublicBlog);
 
 userRouter.get('/travel-stories/facets', getTravelStoryFacets);
