@@ -209,7 +209,8 @@ const HomeContentSections = () => {
       api.get('/users/content-blocks').catch(() => null),
       api.get('/users/hire-drivers').catch(() => null),
       api.get('/users/blogs?limit=10').catch(() => null),
-    ]).then(([blockRes, driverRes, storyRes]) => {
+      api.get('/users/reviews?limit=12').catch(() => null),
+    ]).then(([blockRes, driverRes, storyRes, reviewRes]) => {
       if (cancelled) return;
 
       // The public feed returns { blocks: { 'home.videos': {...} } } - keyed,
@@ -227,7 +228,21 @@ const HomeContentSections = () => {
         if (Array.isArray(block)) return block;
         return Array.isArray(block?.items) ? block.items : [];
       };
-      setReviews(asItems('home.testimonials').filter((item) => String(item?.quote || '').trim()));
+      // Real reviews, each tied to a booking that completed, replacing the
+      // admin-written testimonials that used to sit here. Only published ones
+      // come back, and a review with no words to read is not worth a card.
+      setReviews(
+        unwrap(reviewRes)
+          .filter((review) => String(review?.comment || '').trim())
+          .map((review) => ({
+            name: review.userName || 'Verified customer',
+            quote: review.comment,
+            rating: review.rating,
+            city: '',
+            image: '',
+            verified: true,
+          })),
+      );
       setVideos(asItems('home.videos').filter((item) => youtubeIdOf(item?.youtubeUrl)));
       // The rail scrolls, so the cap is only there to keep a large roster from
       // rendering in full on the homepage.
