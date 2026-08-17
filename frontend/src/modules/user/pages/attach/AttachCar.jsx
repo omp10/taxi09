@@ -248,10 +248,14 @@ const AttachCar = () => {
         await userService.clearAttachedVehicleDraft(record._id);
       }
 
+      // The record has to go too, or the next save reattaches to the row that
+      // was just deleted and the draft reappears on refresh.
+      setRecord(null);
       setForm(emptyForm);
       setDocuments({});
       setPhotos({});
       setStep(0);
+      toast.success('Application cleared');
       window.scrollTo({ top: 0 });
     } catch (error) {
       toast.error(error?.response?.data?.message || error.message || 'Could not clear the application.');

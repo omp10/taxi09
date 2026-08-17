@@ -262,6 +262,11 @@ export const patchAttachedVehicle = asyncHandler(async (req, res) => {
   ok(res, await saveAttachedVehicle({ userId: req.auth?.sub, id: req.params.id, payload: req.body || {} }));
 });
 
+export const removeAttachedVehicle = asyncHandler(async (req, res) => {
+  const { deleteAttachedVehicle } = await attachedVehicleService();
+  ok(res, await deleteAttachedVehicle({ userId: req.auth?.sub, id: req.params.id }));
+});
+
 export const postAttachedVehicleSubmit = asyncHandler(async (req, res) => {
   const { submitAttachedVehicle } = await attachedVehicleService();
   ok(res, await submitAttachedVehicle({ userId: req.auth?.sub, id: req.params.id }));

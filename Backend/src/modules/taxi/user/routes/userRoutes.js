@@ -90,6 +90,7 @@ import {
   getMyAttachedVehicle,
   postAttachedVehicle,
   patchAttachedVehicle,
+  removeAttachedVehicle,
   postAttachedVehicleSubmit,
   getPublicTravelStories,
   getPublicTravelStoryBySlug,
@@ -143,6 +144,7 @@ userRouter.get('/attached-vehicles', authenticate(['user']), getMyAttachedVehicl
 userRouter.get('/attached-vehicles/:id', authenticate(['user']), getMyAttachedVehicle);
 userRouter.post('/attached-vehicles', authenticate(['user']), postAttachedVehicle);
 userRouter.patch('/attached-vehicles/:id', authenticate(['user']), patchAttachedVehicle);
+userRouter.delete('/attached-vehicles/:id', authenticate(['user']), removeAttachedVehicle);
 userRouter.post('/attached-vehicles/:id/submit', authenticate(['user']), postAttachedVehicleSubmit);
 
 // Travel stories. Reading is public; writing and liking need a session.

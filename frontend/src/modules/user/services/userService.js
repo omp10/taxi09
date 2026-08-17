@@ -152,12 +152,10 @@ export const userService = {
    * route - but every field it carried is cleared, so the flow reopens blank
    * instead of resurrecting the old answers.
    */
-  clearAttachedVehicleDraft: async (id) => api.patch(`/users/attached-vehicles/${id}`, {
-    brand: '', model: '', variant: '', year: undefined, fuelType: '', transmission: '',
-    registrationNumber: '', dailyFare: undefined, securityDeposit: undefined,
-    availability: '', city: '', preferredAreas: '',
-    documents: {}, photos: {}, step: 1,
-  }),
+  // Deletes the row rather than blanking its fields. Blanking left an empty
+  // draft behind, which survived a refresh and kept the homepage offering to
+  // resume an application with nothing in it.
+  clearAttachedVehicleDraft: async (id) => api.delete(`/users/attached-vehicles/${id}`),
   uploadImage: async (dataUrl, folder = 'attached-vehicles') =>
     api.post('/common/upload/image', { image: dataUrl, folder }),
 

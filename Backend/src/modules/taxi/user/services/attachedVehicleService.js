@@ -154,6 +154,25 @@ export const saveAttachedVehicle = async ({ userId, id, payload = {} }) => {
   return doc.toObject();
 };
 
+/**
+ * Remove an application the owner has abandoned.
+ *
+ * Clearing used to blank every field and keep the row, so an empty draft
+ * survived a refresh and the homepage kept offering to resume it. Only a
+ * draft or a rejected one can go: deleting a submitted or approved
+ * application would destroy the record of something the business acted on.
+ */
+export const deleteAttachedVehicle = async ({ userId, id }) => {
+  const doc = await loadOwned({ id, userId });
+
+  if (!['draft', 'rejected'].includes(doc.status)) {
+    throw new ApiError(400, 'A submitted application cannot be deleted. Contact support instead.');
+  }
+
+  await doc.deleteOne();
+  return { id: String(id), deleted: true };
+};
+
 export const submitAttachedVehicle = async ({ userId, id }) => {
   const doc = await loadOwned({ id, userId });
 
