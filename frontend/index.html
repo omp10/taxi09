@@ -4,7 +4,31 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="data:," />
     <link rel="shortcut icon" href="data:," />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <!-- user-scalable=no blocks pinch zoom, which fails WCAG 1.4.4 and hurts
+         anyone who needs to enlarge text. Removed deliberately. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Baseline metadata. This is a single-page app, so these are the tags a
+         crawler sees before any JavaScript runs, and the only ones link
+         unfurlers (WhatsApp, Facebook) ever read. Per-route overrides still
+         need either SSR or prerendering to be visible to them. -->
+    <meta name="description" content="Self drive car and bike rental in Indore. Transparent pricing with kilometre limits shown up front, verified vehicles, and doorstep delivery. Book online in minutes with Taxi09." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#F5B700" />
+    <link rel="canonical" href="https://taxi09.com/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Taxi09" />
+    <meta property="og:title" content="Taxi09 - Self Drive Car &amp; Bike Rental in Indore" />
+    <meta property="og:description" content="Transparent pricing, verified vehicles, doorstep delivery. Book a self drive car or hire a driver in Indore." />
+    <meta property="og:url" content="https://taxi09.com/" />
+    <meta property="og:image" content="https://taxi09.com/taxi09_home_top_banner.png" />
+    <meta property="og:locale" content="en_IN" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Taxi09 - Self Drive Car &amp; Bike Rental in Indore" />
+    <meta name="twitter:description" content="Transparent pricing, verified vehicles, doorstep delivery. Book online in minutes." />
+    <meta name="twitter:image" content="https://taxi09.com/taxi09_home_top_banner.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -12,7 +36,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Work+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
     <!-- Material Symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <title>Taxi09 - Premium Mobility</title>
+    <title>Taxi09 - Self Drive Car &amp; Bike Rental in Indore</title>
+
+    <!-- LocalBusiness so the brand can earn a knowledge panel and show hours,
+         area served and contact without a click. Keep this in step with the
+         real business details; wrong hours here are worse than none. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "AutoRental",
+        "name": "Taxi09",
+        "description": "Self drive car and bike rental with transparent pricing in Indore, Madhya Pradesh.",
+        "url": "https://taxi09.com/",
+        "telephone": "+919753000064",
+        "areaServed": { "@type": "City", "name": "Indore" },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Indore",
+          "addressRegion": "Madhya Pradesh",
+          "addressCountry": "IN"
+        },
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+          "opens": "00:00",
+          "closes": "23:59"
+        }
+      }
+    </script>
     <style>
       body {
         font-family: 'Plus Jakarta Sans', sans-serif;

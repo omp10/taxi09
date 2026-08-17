@@ -1,0 +1,22 @@
+# Taxi09 - self drive car rental, Indore
+#
+# Everything a visitor can browse without signing in is crawlable. Account,
+# booking and portal paths are disallowed: they need a session, so a crawler
+# only ever reaches a login redirect, which wastes budget and indexes nothing.
+
+User-agent: *
+Allow: /
+
+Disallow: /admin
+Disallow: /owner
+Disallow: /taxi/driver
+Disallow: /taxi/user/profile
+Disallow: /taxi/user/activity
+Disallow: /taxi/user/wallet
+Disallow: /taxi/user/notifications
+Disallow: /taxi/user/ride/searching
+Disallow: /taxi/user/attach-car
+Disallow: /taxi/user/login
+Disallow: /api/
+
+Sitemap: https://taxi09.com/sitemap.xml
