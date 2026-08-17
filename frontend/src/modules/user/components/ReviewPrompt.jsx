@@ -47,8 +47,14 @@ const ReviewPrompt = ({ bookingId, bookingType = 'rental', vehicleName = '', onS
       setDone(true);
       onSubmitted?.();
     } catch (error) {
-      // The server owns the rules - an incomplete booking, someone else's
-      // booking, or one already reviewed all come back with a real reason.
+      // 409 means this booking was already reviewed, which is not a failure
+      // worth a red toast - it is the finished state, reached on a device that
+      // did not see the first submission. Anything else is a real error and
+      // the server's own reason is more useful than a generic one.
+      if (error?.response?.status === 409) {
+        setDone(true);
+        return;
+      }
       toast.error(error?.response?.data?.message || 'Could not send your review.');
     } finally {
       setSaving(false);

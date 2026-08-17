@@ -23,6 +23,7 @@ import api from '../../../shared/api/axiosInstance';
 import userBusService from '../services/busService';
 import { userService } from '../services/userService';
 import { normalizeBusBooking, normalizeRentalBooking, normalizeRide, PAGE_SIZE } from '../components/activity/activityHelpers';
+import ReviewPrompt from '../components/ReviewPrompt';
 
 const AGGREGATE_FETCH_LIMIT = 60;
 const VISIBLE_TABS = ['All', 'Rides', 'Parcels', 'Rental', 'Bus'];
@@ -372,11 +373,23 @@ const Activity = ({ embedded = false }) => {
         ) : (
           <div className="space-y-2.5 pb-5">
             {visibleActivities.map((activity) => (
-              <ActivityBookingCard
-                key={activity.id}
-                activity={activity}
-                onClick={() => handleItemClick(activity)}
-              />
+              /* The prompt sits below the card rather than inside it: the card
+                 is a button, and nesting the star buttons in it would be
+                 invalid markup with the clicks fighting each other. */
+              <div key={activity.id} className="space-y-2">
+                <ActivityBookingCard
+                  activity={activity}
+                  onClick={() => handleItemClick(activity)}
+                />
+                {activity.type === 'rental'
+                  && String(activity.status || '').toLowerCase() === 'completed' ? (
+                    <ReviewPrompt
+                      bookingId={activity.id}
+                      bookingType="rental"
+                      vehicleName={activity.vehicleName || activity.title || ''}
+                    />
+                  ) : null}
+              </div>
             ))}
             <ActivityPager
               pagination={pagination}
