@@ -270,6 +270,7 @@ const AdminContentBlocks = lazy(() => import('./modules/admin/pages/content/Cont
 const AdminHireDrivers = lazy(() => import('./modules/admin/pages/content/HireDriversAdmin'));
 const AdminHomepageSections = lazy(() => import('./modules/admin/pages/content/HomepageSections'));
 const AdminBlogs = lazy(() => import('./modules/admin/pages/content/BlogsAdmin'));
+const AdminReviews = lazy(() => import('./modules/admin/pages/content/ReviewsAdmin'));
 const AdminRentalCoupons = lazy(() => import('./modules/admin/pages/promotions/RentalCoupons'));
 
 // Price Management
@@ -1424,6 +1425,7 @@ function App() {
                 <Route path="content/hire-drivers" element={<AdminHireDrivers />} />
                 <Route path="content/homepage-sections" element={<AdminHomepageSections />} />
                 <Route path="content/blogs" element={<AdminBlogs />} />
+                <Route path="content/reviews" element={<AdminReviews />} />
                 <Route
                   path="homepage-banners/top"
                   element={<AdminHomepageBanners type="top" mode="list" />}

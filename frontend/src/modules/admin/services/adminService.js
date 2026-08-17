@@ -236,6 +236,10 @@ export const adminService = {
   createBlog: (data) => api.post('/admin/blogs', data),
   updateBlog: (id, data) => api.patch(`/admin/blogs/${id}`, data),
   deleteBlog: (id) => api.delete(`/admin/blogs/${id}`),
+
+  // Customer reviews. Moderation only - reviews are written by customers.
+  getReviews: (params = {}) => api.get('/admin/reviews', { params }),
+  moderateReview: (id, data) => api.patch(`/admin/reviews/${id}`, data),
   createRentalVehicleUnit: (data) => api.post('/admin/fleet/rental-vehicle-units', data),
   importRentalVehicleUnits: (rows) => api.post('/admin/fleet/import', { rows }),
   updateRentalVehicleUnit: (id, data) => api.patch(`/admin/fleet/rental-vehicle-units/${id}`, data),
