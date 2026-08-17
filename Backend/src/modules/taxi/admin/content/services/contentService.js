@@ -589,6 +589,19 @@ export const listPublicReviews = async ({ vehicleId, limit = 20 } = {}) => {
   };
 };
 
+/**
+ * Which of this user's bookings already carry a review.
+ *
+ * Returns ids only - the booking list needs to know which prompts to hide,
+ * not what anyone wrote. Its own authenticated endpoint rather than a flag on
+ * the public feed, so there is no query parameter that turns a public read
+ * into a personal one.
+ */
+export const listMyReviewedBookings = async (userId) => {
+  const rows = await Review.find({ userId }).select('bookingId').lean();
+  return { bookingIds: rows.map((row) => String(row.bookingId)) };
+};
+
 export const listReviews = async ({ status, vehicleId } = {}) => {
   const filter = {};
   if (status) filter.status = status;

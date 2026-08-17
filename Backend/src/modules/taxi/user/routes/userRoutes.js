@@ -72,6 +72,7 @@ import {
 import {
   getPublicContentBlocks,
   getPublicBlogs,
+  getMyReviewedBookings,
   getPublicReviews,
   postReview,
   getPublicBlog,
@@ -149,6 +150,7 @@ userRouter.post('/attached-vehicles/:id/submit', authenticate(['user']), postAtt
 // Blog posts. Public reading only; writing happens in the admin panel.
 userRouter.get('/blogs', getPublicBlogs);
 // Reviews: reading is public, writing needs the account that made the booking.
+userRouter.get('/reviews/mine', authenticate(['user']), asyncHandler(getMyReviewedBookings));
 userRouter.get('/reviews', asyncHandler(getPublicReviews));
 userRouter.post('/reviews', authenticate(['user']), asyncHandler(postReview));
 userRouter.get('/blogs/:slug', getPublicBlog);

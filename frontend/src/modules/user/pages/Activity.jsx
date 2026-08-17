@@ -317,6 +317,23 @@ const Activity = ({ embedded = false }) => {
       navigate(`${routePrefix}/ride/detail/${item.id}`, { state: { ride: item.ride } });
     }
   };
+  // Bookings this user has already reviewed, so a finished one is not asked
+  // twice. A failure here leaves the set empty, which shows the prompt - the
+  // server still rejects a duplicate, so the worst case is a wasted tap.
+  const [reviewedBookings, setReviewedBookings] = useState(() => new Set());
+
+  useEffect(() => {
+    let cancelled = false;
+    api.get('/users/reviews/mine')
+      .then((response) => {
+        if (cancelled) return;
+        const ids = response?.data?.data?.bookingIds || response?.data?.bookingIds || [];
+        setReviewedBookings(new Set(ids.map(String)));
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+
   const helperText = useMemo(() => getHelperText(activeTab), [activeTab]);
   const visibleActivities = activities;
 
@@ -382,7 +399,8 @@ const Activity = ({ embedded = false }) => {
                   onClick={() => handleItemClick(activity)}
                 />
                 {activity.type === 'rental'
-                  && String(activity.status || '').toLowerCase() === 'completed' ? (
+                  && String(activity.status || '').toLowerCase() === 'completed'
+                  && !reviewedBookings.has(String(activity.id)) ? (
                     <ReviewPrompt
                       bookingId={activity.id}
                       bookingType="rental"

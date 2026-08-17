@@ -587,3 +587,7 @@ export const getPublicReviews = asyncHandler(async (req, res) =>
 export const postReview = asyncHandler(async (req, res) =>
   ok(res, await contentService.createReview(req.user?.id || req.user?._id, req.user?.name, req.body), 201),
 );
+
+export const getMyReviewedBookings = asyncHandler(async (req, res) =>
+  ok(res, await contentService.listMyReviewedBookings(req.user?.id || req.user?._id)),
+);
