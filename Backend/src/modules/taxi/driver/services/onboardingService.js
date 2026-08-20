@@ -7,6 +7,7 @@ import { Driver } from '../models/Driver.js';
 import { DriverRegistrationSession } from '../models/DriverRegistrationSession.js';
 import { Owner } from '../../admin/models/Owner.js';
 import { ServiceLocation } from '../../admin/models/ServiceLocation.js';
+import { listRentalCities, cityKey } from '../../admin/services/rentalCityService.js';
 import { Vehicle } from '../../admin/models/Vehicle.js';
 import { AdminBusinessSetting } from '../../admin/models/AdminBusinessSetting.js';
 import {
@@ -713,6 +714,7 @@ export const saveDriverVehicle = async ({
   }
 
   const isOwner = String(session.role || '').toLowerCase() === 'owner';
+  let ownerCity = null;
   const requiredFieldMap = await getRequiredVehicleFieldMap(session.role);
   const normalizedYear = String(year || '').trim();
   const normalizedNumber = String(number || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase();
@@ -748,6 +750,24 @@ export const saveDriverVehicle = async ({
     requireField('city', city, 'City');
     requireField('postalCode', normalizedPostalCode, 'Postal code');
     requireField('taxNumber', taxNumber, 'Tax number');
+
+    // An owner's city is what attaches their vehicles to a branch, and a branch
+    // is what puts them in a customer's search results. Free text here would be
+    // accepted, match no branch, and leave every vehicle they add invisible with
+    // no error anywhere - so only a city that has a branch is allowed.
+    if (String(city || '').trim()) {
+      const available = await listRentalCities();
+      ownerCity = available.find((item) => item.key === cityKey(city)) || null;
+
+      if (!ownerCity) {
+        throw new ApiError(
+          400,
+          available.length
+            ? `We do not operate in ${String(city).trim()} yet. Available cities: ${available.map((item) => item.label).join(', ')}.`
+            : 'No cities are open for owner registration yet. Please contact support.',
+        );
+      }
+    }
 
     if (normalizedPostalCode && !/^\d{6}$/.test(normalizedPostalCode)) {
       throw new ApiError(400, 'Postal code must be a 6 digit number');
@@ -830,7 +850,8 @@ export const saveDriverVehicle = async ({
     color: String(color || '').trim(),
     companyName: String(companyName || '').trim(),
     companyAddress: String(companyAddress || '').trim(),
-    city: String(city || selectedLocation).trim(),
+    city: ownerCity ? ownerCity.label : String(city || selectedLocation).trim(),
+    cityKey: ownerCity ? ownerCity.key : '',
     postalCode: normalizedPostalCode,
     taxNumber: String(taxNumber || '').trim().toUpperCase(),
     customFields: normalizedCustomFields,
@@ -1012,6 +1033,7 @@ export const completeDriverOnboarding = async ({ registrationId, phone, document
       address: String(session.vehicle.companyAddress || '').trim() || null,
       postal_code: String(session.vehicle.postalCode || '').trim() || null,
       city: String(session.vehicle.city || session.vehicle.locationName || '').trim() || null,
+      cities: session.vehicle.cityKey ? [session.vehicle.cityKey] : [],
       tax_number: String(session.vehicle.taxNumber || '').trim() || null,
       active: true,
       approve: false,

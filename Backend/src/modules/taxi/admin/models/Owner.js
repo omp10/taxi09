@@ -85,6 +85,21 @@ const ownerSchema = new mongoose.Schema(
       default: null,
       trim: true,
     },
+    /**
+     * Cities this owner may list rental vehicles in, as lower-case keys from
+     * listRentalCities(). Their vehicles' serviceStoreIds are derived from this,
+     * which is what puts a car into a user's search results.
+     *
+     * An array even though the UI offers a single choice today: multi-city is
+     * the stated goal, and widening a scalar later is a migration across every
+     * owner and every vehicle. `city` above stays as the free-text label the
+     * admin screens already display.
+     */
+    cities: {
+      type: [String],
+      default: [],
+      index: true,
+    },
     expiry_date: {
       type: Date,
       default: null,

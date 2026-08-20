@@ -63,6 +63,10 @@ const driverRegistrationSessionSchema = new mongoose.Schema(
       companyName: { type: String, default: '' },
       companyAddress: { type: String, default: '' },
       city: { type: String, default: '' },
+      // Lower-case key of the city above, matched against a real service branch.
+      // Owner vehicles derive their branches from this, so it is what actually
+      // decides whether their cars show up in a customer's search.
+      cityKey: { type: String, default: '' },
       postalCode: { type: String, default: '' },
       taxNumber: { type: String, default: '' },
       customFields: {

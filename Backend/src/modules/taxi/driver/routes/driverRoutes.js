@@ -86,6 +86,11 @@ import {
   deleteOwnerBusService,
   getOwnerFleetVehicles,
   deleteOwnerFleetVehicle,
+  getRentalCities,
+  getOwnerRentalVehicles,
+  createOwnerRentalVehicle,
+  updateOwnerRentalVehicle,
+  deleteOwnerRentalVehicle,
   updateCurrentDriverDocument,
 } from "../controllers/driverController.js";
 import { triggerDriverSosAlert } from '../../safety/controllers/safetyController.js';
@@ -361,6 +366,26 @@ driverRouter.delete(
   asyncHandler(deleteOwnerFleetVehicle),
 );
 driverRouter.get(
+  "/fleet/rental-vehicles",
+  authenticate(["owner"]),
+  asyncHandler(getOwnerRentalVehicles),
+);
+driverRouter.post(
+  "/fleet/rental-vehicles",
+  authenticate(["owner"]),
+  asyncHandler(createOwnerRentalVehicle),
+);
+driverRouter.patch(
+  "/fleet/rental-vehicles/:vehicleId",
+  authenticate(["owner"]),
+  asyncHandler(updateOwnerRentalVehicle),
+);
+driverRouter.delete(
+  "/fleet/rental-vehicles/:vehicleId",
+  authenticate(["owner"]),
+  asyncHandler(deleteOwnerRentalVehicle),
+);
+driverRouter.get(
   "/service-center/staff",
   authenticate(["service_center"]),
   asyncHandler(getServiceCenterStaffMembers),
@@ -446,6 +471,8 @@ driverRouter.delete(
   asyncHandler(deleteServiceCenterVehicle),
 );
 driverRouter.get("/service-locations", asyncHandler(getServiceLocations));
+// Public: owner registration needs the city list before an account exists.
+driverRouter.get("/rental-cities", asyncHandler(getRentalCities));
 driverRouter.get(
   "/document-templates",
   asyncHandler(getDriverDocumentTemplates),

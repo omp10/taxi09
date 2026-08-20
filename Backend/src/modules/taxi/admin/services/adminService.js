@@ -32,6 +32,9 @@ import { SetPrice } from '../models/SetPrice.js';
 import { ServiceLocation } from '../models/ServiceLocation.js';
 import { ServiceCenterStaff } from '../models/ServiceCenterStaff.js';
 import { ServiceStore } from '../models/ServiceStore.js';
+import { listRentalCities, resolveServiceStoreIdsForCities, cityKey } from './rentalCityService.js';
+
+export { listRentalCities } from './rentalCityService.js';
 import { Vehicle } from '../models/Vehicle.js';
 import { Driver } from '../../driver/models/Driver.js';
 import { BusDriver } from '../../driver/models/BusDriver.js';
@@ -1056,6 +1059,23 @@ const normalizeRentalSubscription = (value = {}, existing = {}) => {
   };
 };
 
+const RENTAL_VEHICLE_STATUSES = ['active', 'inactive', 'pending', 'rejected'];
+
+/**
+ * 'pending' and 'rejected' are moderation states, not visibility toggles, so an
+ * edit that does not mention status must not quietly approve the listing.
+ */
+const normalizeRentalVehicleStatus = (payload = {}, existing = {}) => {
+  const requested = String(payload.status || '').trim().toLowerCase();
+  if (RENTAL_VEHICLE_STATUSES.includes(requested)) return requested;
+  if (payload.status) return 'active';
+
+  const current = String(existing.status || '').trim().toLowerCase();
+  if (current === 'pending' || current === 'rejected') return current;
+
+  return normalizeBoolean(payload.active ?? existing.active ?? true) ? 'active' : 'inactive';
+};
+
 const normalizeRentalVehiclePayload = (payload = {}, existing = {}) => {
   const fallbackBlueprint = existing.blueprint?.lowerDeck?.length
     ? {
@@ -1143,11 +1163,8 @@ const normalizeRentalVehiclePayload = (payload = {}, existing = {}) => {
       payload.subscription,
       existing.subscription,
     ),
-    status: payload.status
-      ? (payload.status === 'inactive' ? 'inactive' : 'active')
-      : normalizeBoolean(payload.active ?? existing.active ?? true)
-        ? 'active'
-        : 'inactive',
+    status: normalizeRentalVehicleStatus(payload, existing),
+    moderationReason: sanitizeBusText(payload.moderationReason, existing.moderationReason || ''),
   active: normalizeBoolean(payload.active ?? existing.active ?? true),
   };
 };
@@ -1180,6 +1197,9 @@ export const serializeRentalVehicleType = (item = {}) => ({
   serviceStoreIds: Array.isArray(item.serviceStoreIds)
     ? item.serviceStoreIds.map((storeId) => String(storeId))
     : [],
+  ownerId: item.ownerId ? String(item.ownerId?._id || item.ownerId) : '',
+  ownerName: item.ownerId?.company_name || item.ownerId?.owner_name || item.ownerId?.name || '',
+  moderationReason: item.moderationReason || '',
   poolingEnabled: Boolean(item.poolingEnabled),
   addOns: normalizeRentalAddOns(item.addOns),
   advancePayment: normalizeRentalAdvancePayment(item.advancePayment),
@@ -1193,7 +1213,7 @@ export const serializeRentalVehicleType = (item = {}) => ({
     ? item.pricing.map((price, index) => normalizeRentalPricingItem(price, index))
     : DEFAULT_RENTAL_PRICING.map((price, index) => normalizeRentalPricingItem(price, index)),
   status: item.status || 'active',
-  active: item.active !== false && item.status !== 'inactive',
+  active: item.active !== false && item.status === 'active',
   createdAt: item.createdAt,
   updatedAt: item.updatedAt,
 });
@@ -2284,6 +2304,7 @@ const serializeOwner = (owner) => {
     address: owner.address ?? null,
     postal_code: owner.postal_code ?? null,
     city: owner.city ?? null,
+    cities: Array.isArray(owner.cities) ? owner.cities : [],
     expiry_date: owner.expiry_date ?? null,
     no_of_vehicles: Number(owner.no_of_vehicles || 0),
     tax_number: owner.tax_number ?? null,
@@ -7062,6 +7083,14 @@ export const approveOwnerSignupFromDriver = async (driverId) => {
     throw new ApiError(400, 'Owner password is missing');
   }
 
+  // A converted signup keeps whatever city it carried if a branch still covers
+  // it. An unmatched one is left blank rather than blocking the approval - the
+  // owner is approved as a person here, and adding a vehicle without a city
+  // fails with a clear message of its own.
+  const convertedCities = await resolveOwnerCitiesLeniently(
+    company.city || driver.city || company.serviceLocationName,
+  );
+
   const owner = await Owner.create({
     company_name: companyName,
     name: String(driver.name || companyName).trim(),
@@ -7073,7 +7102,8 @@ export const approveOwnerSignupFromDriver = async (driverId) => {
     transport_type: String(company.registerFor || driver.registerFor || 'taxi').trim().toLowerCase(),
     address: String(company.address || '').trim() || null,
     postal_code: String(company.postalCode || '').trim() || null,
-    city: String(company.city || driver.city || company.serviceLocationName || '').trim() || null,
+    city: convertedCities.label || String(company.city || driver.city || '').trim() || null,
+    cities: convertedCities.keys,
     tax_number: String(company.taxNumber || '').trim() || null,
     active: true,
     approve: true,
@@ -7158,6 +7188,8 @@ export const getOwnerById = async (id, currentAdmin = null) => {
       throw new ApiError(409, 'Owner with this email or mobile already exists');
     }
 
+    const ownerCities = await normalizeOwnerCities(payload);
+
     const owner = await Owner.create({
       company_name: String(payload.company_name).trim(),
       owner_name: payload.owner_name ? String(payload.owner_name).trim() : null,
@@ -7172,7 +7204,8 @@ export const getOwnerById = async (id, currentAdmin = null) => {
       phone: payload.phone || null,
       address: payload.address || null,
       postal_code: payload.postal_code || null,
-      city: payload.city || null,
+      city: ownerCities.label,
+      cities: ownerCities.keys,
       tax_number: payload.tax_number || null,
       active: normalizeBoolean(payload.active ?? true),
       approve: normalizeBoolean(payload.approve ?? false),
@@ -7187,6 +7220,61 @@ export const getOwnerById = async (id, currentAdmin = null) => {
       .lean();
 
     return serializeOwner(populatedOwner);
+  };
+
+  /**
+   * Moving an owner to a different city has to move their vehicles too. Without
+   * this the cars keep the branches of the old city and go on showing up there,
+   * while the owner's new city shows nothing.
+   */
+  const repointOwnerRentalVehicles = async (owner) => {
+    const serviceStoreIds = await resolveServiceStoreIdsForCities(
+      owner.cities?.length ? owner.cities : [owner.city].filter(Boolean),
+    );
+
+    const result = await RentalVehicleType.updateMany(
+      { ownerId: owner._id },
+      { $set: { serviceStoreIds: serviceStoreIds.map((value) => toObjectId(value)) } },
+    );
+
+    return result.modifiedCount || 0;
+  };
+
+  /** Keeps a city only if a branch covers it; never throws. */
+  const resolveOwnerCitiesLeniently = async (value) => {
+    const key = cityKey(value);
+    if (!key) return { keys: [], label: null };
+
+    const match = (await listRentalCities()).find((city) => city.key === key);
+    return match ? { keys: [match.key], label: match.label } : { keys: [], label: null };
+  };
+
+  /**
+   * The city an owner is assigned to, validated against branches that exist.
+   * Free text here is the failure the marketplace is built to avoid: a typo
+   * matches no branch, and every vehicle the owner adds is invisible for ever
+   * with nothing reporting an error.
+   */
+  const normalizeOwnerCities = async (payload) => {
+    const requested = payload.cities !== undefined
+      ? (Array.isArray(payload.cities) ? payload.cities : [payload.cities])
+      : [payload.city];
+
+    const keys = [...new Set(requested.map(cityKey).filter(Boolean))];
+    if (!keys.length) return { keys: [], label: null };
+
+    const available = await listRentalCities();
+    const byKey = new Map(available.map((city) => [city.key, city]));
+    const unknown = keys.filter((key) => !byKey.has(key));
+
+    if (unknown.length) {
+      throw new ApiError(
+        400,
+        `No branch covers ${unknown.join(', ')}. Pick a city that has a service store, or add a store there first.`,
+      );
+    }
+
+    return { keys, label: byKey.get(keys[0]).label };
   };
 
   export const updateOwner = async (id, payload) => {
@@ -7259,11 +7347,22 @@ export const getOwnerById = async (id, currentAdmin = null) => {
     if (payload.phone !== undefined) owner.phone = payload.phone || null;
     if (payload.address !== undefined) owner.address = payload.address || null;
     if (payload.postal_code !== undefined) owner.postal_code = payload.postal_code || null;
-    if (payload.city !== undefined) owner.city = payload.city || null;
+    let cityChanged = false;
+    if (payload.city !== undefined || payload.cities !== undefined) {
+      const { keys, label } = await normalizeOwnerCities(payload);
+      cityChanged =
+        keys.join('|') !== (Array.isArray(owner.cities) ? owner.cities : []).join('|');
+      owner.cities = keys;
+      owner.city = label;
+    }
     if (payload.tax_number !== undefined) owner.tax_number = payload.tax_number || null;
     if (payload.no_of_vehicles !== undefined) owner.no_of_vehicles = Number(payload.no_of_vehicles || 0);
 
     await owner.save();
+
+    if (cityChanged) {
+      await repointOwnerRentalVehicles(owner);
+    }
 
     const populatedOwner = await Owner.findById(owner._id)
       .populate(
@@ -8910,13 +9009,52 @@ export const updateBusService = async (id, payload = {}, options = {}) => {
     });
   };
 
-  export const listRentalVehicleTypes = async () => {
-    const items = await RentalVehicleType.find().sort({ _id: -1 }).lean();
+  export const listRentalVehicleTypes = async ({ status = '', ownerId = null } = {}) => {
+    const query = {};
+    if (status) query.status = status;
+    if (ownerId) query.ownerId = toObjectId(ownerId);
+
+    const items = await RentalVehicleType.find(query)
+      .populate('ownerId', 'company_name owner_name name mobile city cities')
+      .sort({ _id: -1 })
+      .lean();
+
     return items.map((item) => serializeRentalVehicleType(item));
   };
 
-  export const createRentalVehicleType = async (payload = {}) => {
-    const normalizedPayload = normalizeRentalVehiclePayload(payload);
+  /**
+   * An owner's listing never chooses its own branches. They come from the cities
+   * the owner is assigned to, which is the only thing that puts the vehicle into
+   * a customer's search results.
+   *
+   * A city that covers no branch fails loudly here. The alternative - saving a
+   * vehicle with no branches - is the silent failure this whole design exists to
+   * prevent: the owner sees a saved vehicle that no customer can ever find.
+   */
+  const applyOwnerServiceStores = async (normalizedPayload, ownerId) => {
+    if (!ownerId) return normalizedPayload;
+
+    const owner = await Owner.findById(ownerId).select('cities city company_name').lean();
+    if (!owner) throw new ApiError(404, 'Owner not found');
+
+    const cities = owner.cities?.length ? owner.cities : [owner.city].filter(Boolean);
+    const serviceStoreIds = await resolveServiceStoreIdsForCities(cities);
+
+    if (!serviceStoreIds.length) {
+      throw new ApiError(
+        400,
+        'This owner has no city that a branch covers, so the vehicle could never appear in search. Assign the owner a city first.',
+      );
+    }
+
+    return { ...normalizedPayload, serviceStoreIds };
+  };
+
+  export const createRentalVehicleType = async (payload = {}, { ownerId = null } = {}) => {
+    const normalizedPayload = await applyOwnerServiceStores(
+      normalizeRentalVehiclePayload(payload),
+      ownerId,
+    );
 
     if (!normalizedPayload.name) {
       throw new ApiError(400, 'Rental vehicle name is required');
@@ -8946,6 +9084,7 @@ export const updateBusService = async (id, payload = {}, options = {}) => {
 
     const item = await RentalVehicleType.create({
       ...normalizedPayload,
+      ownerId: ownerId ? toObjectId(ownerId) : null,
       rentalSubcategoryId: normalizedPayload.rentalSubcategoryId
         ? toObjectId(normalizedPayload.rentalSubcategoryId)
         : null,
@@ -8963,7 +9102,12 @@ export const updateBusService = async (id, payload = {}, options = {}) => {
       throw new ApiError(404, 'Rental vehicle type not found');
     }
 
-    const normalizedPayload = normalizeRentalVehiclePayload(payload, existingItem.toObject());
+    // Ownership is never transferred by an edit, and an owned listing re-derives
+    // its branches so an admin moving the owner's city cannot leave it stranded.
+    const normalizedPayload = await applyOwnerServiceStores(
+      normalizeRentalVehiclePayload(payload, existingItem.toObject()),
+      existingItem.ownerId,
+    );
 
     if (!normalizedPayload.name) {
       throw new ApiError(400, 'Rental vehicle name is required');
@@ -9002,6 +9146,53 @@ export const updateBusService = async (id, payload = {}, options = {}) => {
     await existingItem.save();
 
     return serializeRentalVehicleType(existingItem.toObject());
+  };
+
+  /**
+   * Approve or reject an owner-submitted listing.
+   *
+   * Approval is what makes it visible: the public catalogue queries
+   * { active: true, status: 'active' }, so nothing in the search path needs to
+   * know moderation exists. Approving also re-derives the branches, in case the
+   * owner's city changed while the listing sat in the queue.
+   */
+  export const moderateRentalVehicleType = async (id, payload = {}) => {
+    const item = await RentalVehicleType.findById(id);
+    if (!item) throw new ApiError(404, 'Rental vehicle type not found');
+
+    const decision = String(payload.decision || payload.status || '').trim().toLowerCase();
+    if (!['approved', 'active', 'rejected', 'pending'].includes(decision)) {
+      throw new ApiError(400, 'Decision must be approved, rejected or pending');
+    }
+
+    const status = decision === 'approved' ? 'active' : decision;
+
+    if (status === 'rejected' && !String(payload.reason || '').trim()) {
+      throw new ApiError(400, 'A reason is required when rejecting a listing');
+    }
+
+    if (status === 'active' && item.ownerId) {
+      const owner = await Owner.findById(item.ownerId).select('cities city').lean();
+      const serviceStoreIds = await resolveServiceStoreIdsForCities(
+        owner?.cities?.length ? owner.cities : [owner?.city].filter(Boolean),
+      );
+
+      if (!serviceStoreIds.length) {
+        throw new ApiError(
+          400,
+          "This owner has no city that a branch covers, so approving would publish a vehicle no customer can find. Set the owner's city first.",
+        );
+      }
+
+      item.serviceStoreIds = serviceStoreIds.map((value) => toObjectId(value));
+    }
+
+    item.status = status;
+    item.active = status === 'active';
+    item.moderationReason = status === 'rejected' ? String(payload.reason).trim() : '';
+    await item.save();
+
+    return serializeRentalVehicleType(item.toObject());
   };
 
   export const deleteRentalVehicleType = async (id) => {

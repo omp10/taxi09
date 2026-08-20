@@ -50,6 +50,8 @@ import {
   deleteRole,
   deletePaymentMethod,
   deleteRentalVehicleType,
+  moderateRentalVehicleType,
+  getRentalCities,
   deleteSetPrice,
   deleteServiceLocation,
   deleteServiceStore,
@@ -352,6 +354,8 @@ adminRouter.get('/admin/types/rental-vehicles', getRentalVehicleTypes);
 adminRouter.post('/admin/types/rental-vehicles', createRentalVehicleType);
 adminRouter.patch('/admin/types/rental-vehicles/:id', updateRentalVehicleType);
 adminRouter.delete('/admin/types/rental-vehicles/:id', deleteRentalVehicleType);
+adminRouter.patch('/admin/types/rental-vehicles/:id/moderate', moderateRentalVehicleType);
+adminRouter.get('/admin/rental-cities', getRentalCities);
 adminRouter.get('/admin/types/rental-vehicle-subcategories', getRentalVehicleSubcategories);
 adminRouter.post('/admin/types/rental-vehicle-subcategories', createRentalVehicleSubcategory);
 adminRouter.patch('/admin/types/rental-vehicle-subcategories/:id', updateRentalVehicleSubcategory);

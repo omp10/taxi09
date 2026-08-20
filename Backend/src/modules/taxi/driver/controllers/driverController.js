@@ -63,6 +63,7 @@ import {
   updateBusService,
   updateRentalVehicleType,
 } from "../../admin/services/adminService.js";
+import { listRentalCities } from "../../admin/services/rentalCityService.js";
 import { resolveConfiguredGatewayCredentials } from "../../services/paymentGatewayService.js";
 import { assignPushTokenToEntity } from "../../services/pushTokenService.js";
 import {
@@ -3170,6 +3171,123 @@ export const updateServiceCenterVehicle = async (req, res) => {
     success: true,
     data: updated,
   });
+};
+
+
+/**
+ * The cities an owner may register in.
+ *
+ * Public because registration needs it before an account exists. This is the
+ * only list the owner registration form may offer: it is derived from the
+ * service branches that actually exist, and the same function derives the
+ * branches an owner's vehicles get attached to. A city that cannot be picked
+ * cannot be stored, so an owner's cars can never end up in a city with no
+ * branch to surface them.
+ */
+export const getRentalCities = async (req, res) => {
+  const cities = await listRentalCities();
+
+  res.json({
+    success: true,
+    data: {
+      results: cities.map(({ key, label }) => ({ key, label })),
+    },
+  });
+};
+
+const requireOwner = async (req) => {
+  const owner = await resolveAuthenticatedOwner(req);
+
+  if (!owner?._id) {
+    throw new ApiError(403, "Rental listings are only available for owner accounts");
+  }
+
+  return owner;
+};
+
+const requireOwnedRentalVehicle = async (req, owner) => {
+  const vehicle = await RentalVehicleType.findById(req.params.vehicleId).lean();
+
+  if (!vehicle) {
+    throw new ApiError(404, "Rental vehicle not found");
+  }
+
+  if (String(vehicle.ownerId || "") !== String(owner._id)) {
+    throw new ApiError(403, "You can only manage vehicles you listed");
+  }
+
+  return vehicle;
+};
+
+/** The owner's own listings, plus the city context they are fixed to. */
+export const getOwnerRentalVehicles = async (req, res) => {
+  const owner = await requireOwner(req);
+  const results = await listRentalVehicleTypes({ ownerId: owner._id });
+  const cities = await listRentalCities();
+  const ownerCityKeys = owner.cities?.length ? owner.cities : [];
+
+  res.json({
+    success: true,
+    data: {
+      results,
+      // Fixed context, not a choice: the owner cannot move their own listings
+      // between cities, only an admin can.
+      cities: cities
+        .filter((city) => ownerCityKeys.includes(city.key))
+        .map(({ key, label }) => ({ key, label })),
+      cityLabel: owner.city || "",
+    },
+  });
+};
+
+export const createOwnerRentalVehicle = async (req, res) => {
+  const owner = await requireOwner(req);
+
+  const created = await createRentalVehicleType(
+    {
+      ...req.body,
+      transport_type: "rental",
+      // Branches come from the owner's city, never from the request body.
+      serviceStoreIds: undefined,
+      status: "pending",
+    },
+    { ownerId: owner._id },
+  );
+
+  res.status(201).json({
+    success: true,
+    message: "Vehicle submitted and waiting for approval",
+    data: created,
+  });
+};
+
+export const updateOwnerRentalVehicle = async (req, res) => {
+  const owner = await requireOwner(req);
+  await requireOwnedRentalVehicle(req, owner);
+
+  // An edit goes back through moderation. Approving a listing once cannot be a
+  // licence to change it into something else afterwards.
+  const updated = await updateRentalVehicleType(req.params.vehicleId, {
+    ...req.body,
+    transport_type: "rental",
+    serviceStoreIds: undefined,
+    status: "pending",
+    moderationReason: "",
+  });
+
+  res.json({
+    success: true,
+    message: "Vehicle updated and waiting for approval",
+    data: updated,
+  });
+};
+
+export const deleteOwnerRentalVehicle = async (req, res) => {
+  const owner = await requireOwner(req);
+  await requireOwnedRentalVehicle(req, owner);
+  await deleteRentalVehicleType(req.params.vehicleId);
+
+  res.json({ success: true, data: true });
 };
 
 export const getServiceCenterStaffMembers = async (req, res) => {

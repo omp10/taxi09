@@ -1313,8 +1313,19 @@ export const deleteRentalVehicleUnit = asyncHandler(async (req, res) =>
   ok(res, await adminService.deleteRentalVehicleUnit(req.params.id)),
 );
 
-export const getRentalVehicleTypes = asyncHandler(async (_req, res) =>
-  ok(res, { results: await adminService.listRentalVehicleTypes() }),
+export const getRentalVehicleTypes = asyncHandler(async (req, res) =>
+  ok(res, {
+    results: await adminService.listRentalVehicleTypes({
+      status: String(req.query?.status || '').trim(),
+      ownerId: String(req.query?.ownerId || '').trim() || null,
+    }),
+  }),
+);
+export const moderateRentalVehicleType = asyncHandler(async (req, res) =>
+  ok(res, await adminService.moderateRentalVehicleType(req.params.id, req.body)),
+);
+export const getRentalCities = asyncHandler(async (_req, res) =>
+  ok(res, { results: await adminService.listRentalCities() }),
 );
 export const createRentalVehicleType = asyncHandler(async (req, res) =>
   ok(res, await adminService.createRentalVehicleType(req.body)),

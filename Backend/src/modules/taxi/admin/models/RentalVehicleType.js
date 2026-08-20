@@ -314,6 +314,17 @@ const rentalVehicleTypeSchema = new mongoose.Schema(
       ref: 'TaxiServiceStore',
       default: [],
     },
+    /**
+     * The marketplace owner who listed this vehicle. Null means admin created it
+     * directly. Owner listings never choose their own branches: serviceStoreIds
+     * above is derived from the owner's cities on every save.
+     */
+    ownerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'TaxiOwner',
+      default: null,
+      index: true,
+    },
     poolingEnabled: {
       type: Boolean,
       default: false,
@@ -358,10 +369,21 @@ const rentalVehicleTypeSchema = new mongoose.Schema(
         plans: [],
       }),
     },
+    /**
+     * 'pending' and 'rejected' are moderation states for owner-submitted
+     * listings. The public catalogue already queries { active: true,
+     * status: 'active' }, so an unapproved listing is invisible to customers
+     * without touching the search path at all.
+     */
     status: {
       type: String,
-      enum: ['active', 'inactive'],
+      enum: ['active', 'inactive', 'pending', 'rejected'],
       default: 'active',
+    },
+    moderationReason: {
+      type: String,
+      default: '',
+      trim: true,
     },
     active: {
       type: Boolean,
