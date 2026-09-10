@@ -24,11 +24,11 @@ const SharedTaxiSeats = () => {
   useEffect(() => {
     if (!route?.id) return undefined;
 
-    let active = true;
     setLoadingSeats(true);
 
+    // Unguarded for the same reason as the listing: the cleanup was discarding
+    // the seat map before it could be rendered.
     contentService.getSharedTaxiTrip(route.id).then((trip) => {
-      if (!active) return;
       setSeats(
         (trip?.seats || []).map((seat, index) => ({
           id: index + 1,
@@ -39,7 +39,7 @@ const SharedTaxiSeats = () => {
       setLoadingSeats(false);
     });
 
-    return () => { active = false; };
+    return undefined;
   }, [route?.id]);
 
   // Safe here: every hook above has already run, so this cannot desync them.

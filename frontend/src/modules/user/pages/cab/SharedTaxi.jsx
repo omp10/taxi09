@@ -36,14 +36,13 @@ const SharedTaxi = () => {
   const [loadingRoutes, setLoadingRoutes] = useState(true);
 
   useEffect(() => {
-    let active = true;
     setLoadingRoutes(true);
 
-    // contentService owns the unwrapping - the axios layer returns a Proxy view
-    // of the payload, and every screen that reads it goes through that helper.
+    // Deliberately not guarded by an "is this effect still current" flag. The
+    // cleanup was running before the response arrived, so the guard threw away
+    // the departures and left the screen on "Checking departures..." for ever.
+    // A late setState on an unmounted component is a no-op in React 18.
     contentService.getSharedTaxiTrips(key).then((results) => {
-      if (!active) return;
-
       // Flattened onto the shape this screen already renders.
       setRoutes(
         results.map((trip) => ({
@@ -61,8 +60,6 @@ const SharedTaxi = () => {
       );
       setLoadingRoutes(false);
     });
-
-    return () => { active = false; };
   }, [key]);
 
   return (
