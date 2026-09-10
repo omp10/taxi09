@@ -3,18 +3,40 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Users, ChevronRight, Calendar, Clock, MapPin } from 'lucide-react';
 import { getRideFares } from '../../services/userService';
+import contentService from '../../services/contentService';
 
 const SpiritualTripVehicle = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
-  const { isSpiritualTrip, trip } = location.state || {};
+  // The location picker navigates away and back, so the rest of the step is
+  // carried through it and restored here rather than being re-entered.
+  const incoming = location.state || {};
+  const { isSpiritualTrip, trip } = incoming;
 
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
+  const [date, setDate] = useState(incoming.date || '');
+  const [time, setTime] = useState(incoming.time || '');
   const [vehicles, setVehicles] = useState([]);
   const [vehicle, setVehicle] = useState('');
-  const [seats, setSeats] = useState(2);
+  const [seats, setSeats] = useState(incoming.seats || 2);
+  const [pickup, setPickup] = useState(incoming.pickup || '');
+  const [pickupCoords, setPickupCoords] = useState(incoming.pickupCoords || null);
+  const [destinationPoint, setDestinationPoint] = useState(null);
+
+  // The destination's coordinates. A ride cannot be created without them, so a
+  // destination missing from cab.locations is shown as unbookable rather than
+  // being dispatched to the wrong place.
+  useEffect(() => {
+    let cancelled = false;
+    contentService.getContentBlocks('cab.locations', {}).then((blocks) => {
+      if (cancelled) return;
+      const items = blocks['cab.locations'];
+      if (Array.isArray(items) && trip?.id) {
+        setDestinationPoint(items.find((item) => item.id === trip.id) || null);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [trip?.id]);
 
   useEffect(() => {
     let cancelled = false;
@@ -51,17 +73,41 @@ const SpiritualTripVehicle = () => {
   const multiplier = trip.dist.includes('km') ? parseInt(trip.dist) / 50 : 1;
   const estimatedFare = Math.round(selectedVehicle.baseFare * multiplier);
 
+  const openPickupSearch = () => {
+    navigate(`${routePrefix}/ride/select-location`, {
+      state: {
+        flow: 'spiritual-trip',
+        returnTo: `${routePrefix}/cab/spiritual-vehicle`,
+        activeInput: 'pickup',
+        trip,
+        isSpiritualTrip: true,
+        pickup,
+        pickupCoords,
+        date,
+        time,
+        seats,
+      },
+    });
+  };
+
+  const canBook = Boolean(pickupCoords && destinationPoint?.lng && destinationPoint?.lat);
+
   const handleContinue = () => {
+    if (!pickup || !pickupCoords) return alert('Please choose your pickup location');
     if (!date || !time) return alert("Please select date and time");
     
     navigate(`${routePrefix}/cab/spiritual-confirm`, {
-      state: { 
-        isSpiritualTrip: true, 
+      state: {
+        isSpiritualTrip: true,
         trip: { ...trip, fare: `₹${estimatedFare.toLocaleString()}` },
         vehicle: selectedVehicle,
         seats,
         date,
-        time
+        time,
+        pickup,
+        pickupCoords,
+        destinationPoint,
+        estimatedFare,
       },
     });
   };
@@ -82,6 +128,31 @@ const SpiritualTripVehicle = () => {
           </div>
         </div>
       </header>
+
+      {/* Pickup: a ride cannot be created without a real pickup point, and this
+          flow previously never asked for one. */}
+      <div className="px-5 pt-4">
+        <label className="text-[12px] font-black uppercase tracking-[0.22em] text-slate-400 ml-1 mb-1.5 block">
+          Pickup Location
+        </label>
+        <button
+          type="button"
+          onClick={openPickupSearch}
+          className="w-full flex items-center gap-3 rounded-[16px] border-2 border-slate-100 bg-white/90 px-4 py-3.5 text-left"
+        >
+          <MapPin size={17} className="text-purple-500 shrink-0" strokeWidth={2.5} />
+          <span className="flex-1 text-[15px] font-bold text-slate-900">
+            {pickup || <span className="text-slate-400">Where should we pick you up?</span>}
+          </span>
+        </button>
+
+        {!destinationPoint ? (
+          <p className="mt-2 rounded-[14px] border border-amber-100 bg-amber-50 px-4 py-2.5 text-[12.5px] font-bold text-amber-800">
+            {trip?.name} has no location set yet, so it cannot be booked. Add its coordinates under
+            the cab.locations content block.
+          </p>
+        ) : null}
+      </div>
 
       <div className="px-5 pt-4 space-y-4">
         {/* Route Card */}

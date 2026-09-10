@@ -172,8 +172,10 @@ const SelectLocation = () => {
   const isSelectionReturnFlow = isParcelFlow
     || routeState.flow === 'hire-driver'
     || routeState.flow === 'airport-cab'
+    || routeState.flow === 'spiritual-trip'
     || returnToPath.includes('/with-driver/details')
-    || returnToPath.includes('/cab/airport');
+    || returnToPath.includes('/cab/airport')
+    || returnToPath.includes('/cab/spiritual-vehicle');
   const savedLocation = getSavedLocation();
   const savedPickupLabel = String(savedLocation?.address || '').trim();
   const savedPickupCoords = getSavedLocationCoords();

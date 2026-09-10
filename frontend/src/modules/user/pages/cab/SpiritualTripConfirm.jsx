@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import api from '../../../../shared/api/axiosInstance';
 import { CheckCircle2, ChevronRight, MapPin, Calendar, User, ArrowLeft, Star } from 'lucide-react';
 
 const SpiritualTripConfirm = () => {
@@ -12,12 +13,59 @@ const SpiritualTripConfirm = () => {
   const state = location.state || {};
   const [mounted, setMounted] = useState(false);
 
+  // This screen used to render "Confirmed" on arrival without contacting the
+  // server, so the rider was told a trip was booked when no record existed.
+  const [status, setStatus] = useState('submitting'); // submitting | confirmed | error
+  const [error, setError] = useState('');
+  const submitted = useRef(false);
+
   useEffect(() => {
     setMounted(true);
-    if (!state.trip) {
-      navigate(`${routePrefix}/cab/spiritual`);
+    if (!state.trip) navigate(`${routePrefix}/cab/spiritual`, { replace: true });
+  }, [navigate, routePrefix, state.trip]);
+
+  useEffect(() => {
+    if (submitted.current || !state.trip) return;
+
+    const { pickupCoords, destinationPoint } = state;
+
+    if (!pickupCoords || !destinationPoint?.lng || !destinationPoint?.lat) {
+      setStatus('error');
+      setError('We could not resolve the pickup or destination location. Please start again.');
+      return;
     }
-  }, [navigate, state.trip]);
+
+    // Guarded so a re-render cannot create two rides for one confirmation.
+    submitted.current = true;
+
+    api
+      .post('/rides', {
+        pickup: pickupCoords,
+        drop: [destinationPoint.lng, destinationPoint.lat],
+        pickupAddress: state.pickup,
+        dropAddress: destinationPoint.label || state.trip?.name || '',
+        fare: Number(state.estimatedFare || 0),
+        vehicleTypeId: state.vehicle?.id || '',
+        paymentMethod: 'Cash',
+        serviceType: 'spiritual',
+        transport_type: 'taxi',
+        spiritual: {
+          destination: state.trip?.name || '',
+          packageLabel: state.trip?.subtitle || '',
+          travelDate: state.date,
+          travelTime: state.time,
+          passengers: Number(state.seats || 1),
+        },
+      })
+      .then(() => setStatus('confirmed'))
+      .catch((requestError) => {
+        setStatus('error');
+        setError(
+          requestError?.response?.data?.message ||
+            'Could not book this trip. Please try again.',
+        );
+      });
+  }, [state]);
 
   if (!state.trip) return null;
   const { trip, vehicle, seats, date, time } = state;
@@ -35,10 +83,25 @@ const SpiritualTripConfirm = () => {
           </button>
           <div className="flex-1">
             <p className="text-[11px] font-black uppercase tracking-[0.26em] text-slate-400">Tour Booking</p>
-            <h1 className="text-[20px] font-black tracking-tight text-slate-900">Confirmed</h1>
+            <h1 className="text-[20px] font-black tracking-tight text-slate-900">
+              {status === 'confirmed' ? 'Confirmed' : status === 'error' ? 'Not booked' : 'Confirming...'}
+            </h1>
           </div>
         </div>
       </header>
+
+      {status === 'error' ? (
+        <div className="mx-5 mt-4 rounded-[16px] border border-red-100 bg-red-50 px-4 py-3">
+          <p className="text-[13px] font-bold text-red-700">{error}</p>
+          <button
+            type="button"
+            onClick={() => navigate(`${routePrefix}/cab/spiritual`)}
+            className="mt-2 text-[13px] font-black text-red-700 underline"
+          >
+            Back to destinations
+          </button>
+        </div>
+      ) : null}
 
       <div className="px-5 pt-6 flex flex-col items-center">
         <motion.div 

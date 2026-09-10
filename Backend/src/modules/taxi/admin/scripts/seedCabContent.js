@@ -41,6 +41,13 @@ const BLOCKS = [
       { id: 'omkareshwar', label: 'Omkareshwar', lng: 76.1511, lat: 22.2444 },
       { id: 'bhopal', label: 'Bhopal', lng: 77.4126, lat: 23.2599 },
       { id: 'dewas', label: 'Dewas', lng: 76.0534, lat: 22.9676 },
+      // The remaining pilgrimage destinations offered by spiritual.destinations.
+      // These are approximate town-centre coordinates and should be checked
+      // against the actual pickup point before the first live booking.
+      { id: 'maheshwar', label: 'Maheshwar', lng: 75.5885, lat: 22.1766 },
+      { id: 'amarkantak', label: 'Amarkantak', lng: 81.7550, lat: 22.6764 },
+      { id: 'orchha', label: 'Orchha', lng: 78.6407, lat: 25.3518 },
+      { id: 'pitambara', label: 'Pitambara Peeth (Datia)', lng: 78.4600, lat: 25.6660 },
     ],
   },
 ];
@@ -49,16 +56,41 @@ export const seedCabContent = async () => {
   console.log('Seeding cab content blocks...');
 
   let created = 0;
+  let merged = 0;
+
   for (const block of BLOCKS) {
     const result = await ContentBlock.updateOne(
       { key: block.key },
       { $setOnInsert: { ...block, active: true } },
       { upsert: true },
     );
-    if (result.upsertedCount) created += 1;
+
+    if (result.upsertedCount) {
+      created += 1;
+      continue;
+    }
+
+    // The block already exists. For the location table, add any entry whose id
+    // is missing - a new destination must reach it - but leave every existing
+    // entry exactly as the admin left it.
+    if (block.key !== 'cab.locations') continue;
+
+    const existing = await ContentBlock.findOne({ key: block.key }).lean();
+    const known = new Set((existing?.items || []).map((item) => String(item?.id || '')));
+    const additions = block.items.filter((item) => !known.has(String(item.id)));
+
+    if (additions.length) {
+      await ContentBlock.updateOne(
+        { key: block.key },
+        { $push: { items: { $each: additions } } },
+      );
+      merged += additions.length;
+    }
   }
 
-  console.log(`Cab content blocks: ${created} created, ${BLOCKS.length - created} already present`);
+  console.log(
+    `Cab content blocks: ${created} created, ${BLOCKS.length - created} already present, ${merged} location(s) added`,
+  );
   return true;
 };
 
