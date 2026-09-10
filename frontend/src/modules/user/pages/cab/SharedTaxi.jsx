@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import contentService from '../../services/contentService';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowLeft, MapPin, Clock, Users, ChevronRight, Star, Zap, Shield } from 'lucide-react';
 
 const DAYS = 7;
@@ -112,9 +112,12 @@ const SharedTaxi = () => {
       </motion.header>
 
       <div className="px-5 pt-4 space-y-3">
-        <AnimatePresence mode="wait">
+        {/* Deliberately not wrapped in AnimatePresence. Its exit animation never
+            completed here, which left the empty state mounted on top of the
+            loaded departures. The two branches are mutually exclusive, so they
+            just swap - they keep their enter animation, but no exit. */}
           {routes.length === 0 ? (
-            <motion.div key="empty" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            <motion.div key="empty" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
               className="flex flex-col items-center justify-center py-16 gap-3">
               <div className="w-14 h-14 rounded-[18px] bg-white/90 border border-white/80 shadow-[0_4px_14px_rgba(15,23,42,0.05)] flex items-center justify-center">
                 <Clock size={24} className="text-slate-300" strokeWidth={1.5} />
@@ -128,7 +131,7 @@ const SharedTaxi = () => {
               <p className="text-[13px] font-bold text-slate-400">Try selecting a different date</p>
             </motion.div>
           ) : (
-            <motion.div key={key} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            <motion.div key={key} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
               className="space-y-3">
               <div>
                 <p className="text-[12px] font-black uppercase tracking-[0.26em] text-slate-400">{routes.length} routes found</p>
@@ -185,7 +188,6 @@ const SharedTaxi = () => {
               ))}
             </motion.div>
           )}
-        </AnimatePresence>
 
         {/* Safety note */}
         <div className="flex items-center gap-3 rounded-[16px] border border-white/80 bg-white/90 px-4 py-3 shadow-[0_2px_8px_rgba(15,23,42,0.04)] mt-2">
