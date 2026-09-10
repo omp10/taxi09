@@ -861,6 +861,7 @@ const AdminLayout = () => {
               { label: 'Travel Packages', path: '/admin/content/travel-packages', permission: 'promotions.view' },
               { label: 'Package Bookings', path: '/admin/bookings/packages', permission: 'promotions.view' },
               { label: 'Driver Engagements', path: '/admin/bookings/driver-engagements', permission: 'promotions.view' },
+              { label: 'Shared Taxi Bookings', path: '/admin/bookings/shared-taxi', permission: 'promotions.view' },
             ],
           },
           {

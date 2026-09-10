@@ -270,6 +270,7 @@ const AdminContentBlocks = lazy(() => import('./modules/admin/pages/content/Cont
 const AdminHireDrivers = lazy(() => import('./modules/admin/pages/content/HireDriversAdmin'));
 const AdminSharedTaxi = lazy(() => import('./modules/admin/pages/content/SharedTaxiAdmin'));
 const AdminHireDriverBookings = lazy(() => import('./modules/admin/pages/bookings/HireDriverBookings'));
+const AdminSharedTaxiBookings = lazy(() => import('./modules/admin/pages/bookings/SharedTaxiBookings'));
 const AdminHomepageSections = lazy(() => import('./modules/admin/pages/content/HomepageSections'));
 const AdminBlogs = lazy(() => import('./modules/admin/pages/content/BlogsAdmin'));
 const AdminReviews = lazy(() => import('./modules/admin/pages/content/ReviewsAdmin'));
@@ -1427,6 +1428,7 @@ function App() {
                 <Route path="content/hire-drivers" element={<AdminHireDrivers />} />
                 <Route path="content/shared-taxi" element={<AdminSharedTaxi />} />
                 <Route path="bookings/driver-engagements" element={<AdminHireDriverBookings />} />
+                <Route path="bookings/shared-taxi" element={<AdminSharedTaxiBookings />} />
                 <Route path="content/homepage-sections" element={<AdminHomepageSections />} />
                 <Route path="content/blogs" element={<AdminBlogs />} />
                 <Route path="content/reviews" element={<AdminReviews />} />

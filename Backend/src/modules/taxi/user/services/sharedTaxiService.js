@@ -157,5 +157,43 @@ export const createSharedTaxiBooking = async ({ userId, payload = {} }) => {
   }
 };
 
+/**
+ * Admin status change. Cancelling has to hand the seats back: they were flipped
+ * to 'booked' against this booking's reference, and leaving them held would
+ * quietly shrink the trip every time a booking is cancelled.
+ */
+export const updateSharedTaxiBookingStatus = async (bookingId, { status, paid } = {}) => {
+  if (!mongoose.Types.ObjectId.isValid(clean(bookingId))) {
+    throw new ApiError(400, 'A valid booking must be selected');
+  }
+
+  const booking = await SharedTaxiBooking.findById(bookingId);
+  if (!booking) {
+    throw new ApiError(404, 'Booking not found');
+  }
+
+  const nextStatus = clean(status);
+  const isCancelling = nextStatus === 'cancelled' && booking.status !== 'cancelled';
+
+  if (nextStatus) booking.status = nextStatus;
+  if (typeof paid === 'boolean') booking.paid = paid;
+  await booking.save();
+
+  if (isCancelling) {
+    await SharedTaxiTrip.updateOne(
+      { _id: booking.tripId },
+      {
+        $set: {
+          'seats.$[held].status': 'available',
+          'seats.$[held].bookingReference': '',
+        },
+      },
+      { arrayFilters: [{ 'held.bookingReference': booking.bookingReference }] },
+    );
+  }
+
+  return booking.toObject();
+};
+
 export const listMySharedTaxiBookings = async (userId) =>
   SharedTaxiBooking.find({ userId }).sort({ createdAt: -1 }).lean();

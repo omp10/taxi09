@@ -18,6 +18,7 @@ import {
   getSharedTaxiTrip,
   listMySharedTaxiBookings,
   listSharedTaxiTrips,
+  updateSharedTaxiBookingStatus,
 } from '../../../user/services/sharedTaxiService.js';
 import { SharedTaxiBooking } from '../models/SharedTaxiBooking.js';
 import { SharedTaxiTrip } from '../models/SharedTaxiTrip.js';
@@ -127,16 +128,13 @@ export const adminUpdateHireDriverBooking = asyncHandler(async (req, res) => {
   );
 });
 
-export const adminUpdateSharedTaxiBooking = asyncHandler(async (req, res) => {
-  const update = {};
-  if (req.body?.status) update.status = String(req.body.status).trim();
-  if (typeof req.body?.paid === 'boolean') update.paid = req.body.paid;
-
-  ok(
-    res,
-    await SharedTaxiBooking.findByIdAndUpdate(req.params.id, { $set: update }, { new: true }).lean(),
-  );
-});
+// Delegated so cancelling releases the seats - see the service for why.
+export const adminUpdateSharedTaxiBooking = asyncHandler(async (req, res) =>
+  ok(res, await updateSharedTaxiBookingStatus(req.params.id, {
+    status: req.body?.status,
+    paid: req.body?.paid,
+  })),
+);
 
 export const adminListHireDriverBookings = asyncHandler(async (req, res) => {
   const query = {};
