@@ -55,7 +55,13 @@ const SharedTaxiSeats = () => {
   const selected = seats.filter(s => s.status === 'selected');
   const total = selected.length * Number(route?.price || 0);
 
-  const rows = [[seats[0],seats[1]],[seats[2],seats[3]],[seats[4],seats[5]],[seats[6],seats[7]]];
+  // Derived from the seats the trip actually has, two per row. This used to
+  // index a fixed eight-seat layout, which produced undefined entries - and a
+  // crash on `seat.status` - for any trip with fewer than eight seats, and on
+  // the first render before the seat map had loaded.
+  const rows = Array.from({ length: Math.ceil(seats.length / 2) }, (_, index) =>
+    seats.slice(index * 2, index * 2 + 2),
+  );
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#F8FAFC_0%,#F3F4F6_38%,#EEF2F7_100%)] max-w-lg mx-auto font-sans pb-28 relative overflow-hidden">
@@ -130,6 +136,11 @@ const SharedTaxiSeats = () => {
           </div>
 
           {/* Seats */}
+          {seats.length === 0 ? (
+            <p className="py-10 text-center text-[14px] font-bold text-slate-400">
+              {loadingSeats ? 'Loading seat map...' : 'No seats available on this departure.'}
+            </p>
+          ) : null}
           <div className="space-y-2.5">
             {rows.map((row, ri) => (
               <div key={ri} className="flex items-center justify-center gap-2">
