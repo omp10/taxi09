@@ -2191,13 +2191,12 @@ const ActiveTrip = () => {
             </div>
 
             <div className="absolute bottom-0 left-0 right-0 z-40">
-                <AnimatePresence mode="wait">
+                <AnimatePresence>
                     {phase === 'to_pickup' && (
                         <Motion.div
                             key="to_pickup"
                             initial={{ y: '100%' }}
                             animate={{ y: 0 }}
-                            exit={{ y: '100%' }}
                             className="bg-white rounded-t-[2.5rem] p-5 pb-8 shadow-2xl border-t border-slate-100 max-h-[88vh] overflow-y-auto overscroll-contain touch-pan-y"
                         >
                             <div className="flex items-center justify-between mb-6">
