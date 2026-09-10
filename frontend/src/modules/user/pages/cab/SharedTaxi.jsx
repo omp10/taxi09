@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import api from '../../../../shared/api/axiosInstance';
+import contentService from '../../services/contentService';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, MapPin, Clock, Users, ChevronRight, Star, Zap, Shield } from 'lucide-react';
 
@@ -39,29 +39,28 @@ const SharedTaxi = () => {
     let active = true;
     setLoadingRoutes(true);
 
-    api
-      .get('/users/shared-taxi-trips', { params: { travelDate: key } })
-      .then((response) => {
-        if (!active) return;
-        const results = response?.data?.data?.results || response?.data?.results || [];
-        // Flattened onto the shape this screen already renders.
-        setRoutes(
-          results.map((trip) => ({
-            id: trip._id,
-            from: trip.fromLabel,
-            to: trip.toLabel,
-            departure: trip.departure,
-            duration: trip.duration,
-            price: trip.pricePerSeat,
-            seats: trip.seatsAvailable,
-            vehicle: trip.vehicleName,
-            driver: trip.driverName,
-            rating: String(trip.rating ?? ''),
-          })),
-        );
-      })
-      .catch(() => { if (active) setRoutes([]); })
-      .finally(() => { if (active) setLoadingRoutes(false); });
+    // contentService owns the unwrapping - the axios layer returns a Proxy view
+    // of the payload, and every screen that reads it goes through that helper.
+    contentService.getSharedTaxiTrips(key).then((results) => {
+      if (!active) return;
+
+      // Flattened onto the shape this screen already renders.
+      setRoutes(
+        results.map((trip) => ({
+          id: trip._id,
+          from: trip.fromLabel,
+          to: trip.toLabel,
+          departure: trip.departure,
+          duration: trip.duration,
+          price: trip.pricePerSeat,
+          seats: trip.seatsAvailable,
+          vehicle: trip.vehicleName,
+          driver: trip.driverName,
+          rating: String(trip.rating ?? ''),
+        })),
+      );
+      setLoadingRoutes(false);
+    });
 
     return () => { active = false; };
   }, [key]);

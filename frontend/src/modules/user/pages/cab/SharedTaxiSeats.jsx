@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import api from '../../../../shared/api/axiosInstance';
+import contentService from '../../services/contentService';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, MapPin, Clock, Users, ChevronRight, Star } from 'lucide-react';
 
@@ -27,21 +27,17 @@ const SharedTaxiSeats = () => {
     let active = true;
     setLoadingSeats(true);
 
-    api
-      .get(`/users/shared-taxi-trips/${route.id}`)
-      .then((response) => {
-        if (!active) return;
-        const trip = response?.data?.data || response?.data || {};
-        setSeats(
-          (trip.seats || []).map((seat, index) => ({
-            id: index + 1,
-            label: seat.label,
-            status: seat.status === 'available' ? 'available' : 'booked',
-          })),
-        );
-      })
-      .catch(() => { if (active) setSeats([]); })
-      .finally(() => { if (active) setLoadingSeats(false); });
+    contentService.getSharedTaxiTrip(route.id).then((trip) => {
+      if (!active) return;
+      setSeats(
+        (trip?.seats || []).map((seat, index) => ({
+          id: index + 1,
+          label: seat.label,
+          status: seat.status === 'available' ? 'available' : 'booked',
+        })),
+      );
+      setLoadingSeats(false);
+    });
 
     return () => { active = false; };
   }, [route?.id]);

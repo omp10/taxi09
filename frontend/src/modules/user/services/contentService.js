@@ -43,6 +43,33 @@ export const contentService = {
     }
   },
 
+  /**
+   * Shared taxi departures. Spread into a plain array because the axios layer
+   * hands back a Proxy view of the payload, and React state is happier with a
+   * real array than with a proxied one.
+   */
+  getSharedTaxiTrips: async (travelDate = '', fallback = []) => {
+    try {
+      const response = await api.get('/users/shared-taxi-trips', {
+        params: travelDate ? { travelDate } : {},
+      });
+      const results = unwrap(response)?.results;
+      return Array.isArray(results) ? [...results] : fallback;
+    } catch {
+      return fallback;
+    }
+  },
+
+  getSharedTaxiTrip: async (tripId) => {
+    try {
+      const response = await api.get(`/users/shared-taxi-trips/${tripId}`);
+      const trip = unwrap(response);
+      return trip && trip.seats ? { ...trip, seats: [...trip.seats] } : null;
+    } catch {
+      return null;
+    }
+  },
+
   getContentBlocks: async (keys = '', fallback = {}) => {
     try {
       const response = await api.get('/users/content-blocks', { params: keys ? { keys } : {} });
