@@ -1024,11 +1024,11 @@ const SearchingDriver = () => {
 
       {/* Bottom card */}
       <div className="absolute bottom-8 left-4 right-4 z-20">
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
 
           {/* Searching */}
           {isSearching && (
-            <motion.div key="searching" initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }}
+            <motion.div key="searching" initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
               className="rounded-[32px] border border-white/80 bg-white/95 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] px-6 pt-3 pb-6 space-y-5">
               
               <div className="w-10 h-1.5 bg-slate-100 rounded-full mx-auto mb-2" />
