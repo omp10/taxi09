@@ -20,6 +20,8 @@ import {
   Venus,
 } from 'lucide-react';
 import api from '../../../shared/api/axiosInstance';
+import contentService from '../services/contentService';
+import { iconByName } from '../utils/contentIcons';
 
 const serviceConfig = {
   'Local (Hourly)': {
@@ -51,20 +53,20 @@ const serviceConfig = {
   },
 };
 
-const preferenceOptions = [
+const fallbackPreferenceOptions = [
   { label: 'Male Driver', icon: Mars },
   { label: 'Female Driver', icon: Venus },
   { label: 'No Preference', icon: UserRoundCheck, recommended: true },
 ];
 
-const journeyOptions = [
+const fallbackJourneyOptions = [
   { key: 'night', label: 'Night Journey', icon: Moon, cost: 500 },
   { key: 'hill', label: 'Hill Driving', icon: Mountain, cost: 300 },
   { key: 'luggage', label: 'Extra Luggage', icon: Briefcase, cost: 150 },
   { key: 'stops', label: 'Multiple Stops', icon: Map, cost: 250 },
 ];
 
-const trustItems = [
+const fallbackTrustItems = [
   { label: 'GPS Tracked\nDrivers', icon: MapPin },
   { label: 'Live\nSupport', icon: Headphones },
   { label: 'Digital\nDuty Slip', icon: CalendarDays },
@@ -77,7 +79,20 @@ const destinationOptions = {
   Outstation: ['Ujjain, Madhya Pradesh', 'Bhopal, Madhya Pradesh', 'Dewas, Madhya Pradesh', 'Omkareshwar, Madhya Pradesh'],
   'Outstation Drop': ['Bhopal, Madhya Pradesh', 'Ujjain, Madhya Pradesh', 'Dewas, Madhya Pradesh', 'Ratlam, Madhya Pradesh'],
 };
-const dateOptions = ['30 Jul 2026', '31 Jul 2026', '01 Aug 2026', '02 Aug 2026'];
+/**
+ * The booking dates used to be a hardcoded list, which silently went stale and
+ * offered riders dates in the past. Generated from today instead.
+ */
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+const buildDateOptions = (count = 30) =>
+  // Formatted by hand rather than via Intl: en-GB renders September as "Sept",
+  // which sits inconsistently beside the three-letter months in the same list.
+  Array.from({ length: count }, (_, index) => {
+    const date = new Date();
+    date.setDate(date.getDate() + index);
+    return `${String(date.getDate()).padStart(2, '0')} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
+  });
 const timeOptions = ['09:00 AM', '11:30 AM', '02:00 PM', '06:00 PM', '09:00 PM'];
 const coordsByPlace = {
   'Indore, Madhya Pradesh': [75.8577, 22.7196],
@@ -120,20 +135,65 @@ const WithDriverBooking = () => {
   const [drop, setDrop] = useState(state?.drop || config.destination);
   const [pickupCoords, setPickupCoords] = useState(state?.pickupCoords || coordsByPlace[state?.pickup] || coordsByPlace['Indore, Madhya Pradesh']);
   const [dropCoords, setDropCoords] = useState(state?.dropCoords || coordsByPlace[state?.drop] || coordsByPlace[config.destination]);
-  const [journeyDate, setJourneyDate] = useState('30 Jul 2026');
+  const dateOptions = useMemo(() => buildDateOptions(), []);
+  const [journeyDate, setJourneyDate] = useState(() => buildDateOptions(1)[0]);
   const [pickupTime, setPickupTime] = useState('09:00 AM');
   const [returnDate, setReturnDate] = useState('Select date');
   const [returnTime, setReturnTime] = useState('Select time');
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [vehicle, setVehicle] = useState(null);
   const [isVehicleLoading, setIsVehicleLoading] = useState(true);
+  const [preferenceOptions, setPreferenceOptions] = useState(fallbackPreferenceOptions);
+  const [journeyOptions, setJourneyOptions] = useState(fallbackJourneyOptions);
+  const [trustItems, setTrustItems] = useState(fallbackTrustItems);
+
+  // The add-on prices shown here must be the ones the server charges, so both
+  // read the same `hireDriver.journeyOptions` block. The client still sends
+  // only which options were ticked - never an amount.
+  useEffect(() => {
+    let active = true;
+
+    contentService
+      .getContentBlocks('hireDriver.journeyOptions,hireDriver.preferences,hireDriver.bookingTrust')
+      .then((blocks) => {
+        if (!active) return;
+
+        const journey = blocks?.['hireDriver.journeyOptions'];
+        if (Array.isArray(journey) && journey.length) {
+          setJourneyOptions(
+            journey.map((item) => ({
+              key: item.key,
+              label: item.label,
+              cost: Number(item.price || 0),
+              icon: iconByName(item.icon),
+            })),
+          );
+        }
+
+        const preferences = blocks?.['hireDriver.preferences'];
+        if (Array.isArray(preferences) && preferences.length) {
+          setPreferenceOptions(
+            preferences.map((item) => ({ ...item, icon: iconByName(item.icon) })),
+          );
+        }
+
+        const trust = blocks?.['hireDriver.bookingTrust'];
+        if (Array.isArray(trust) && trust.length) {
+          setTrustItems(trust.map((item) => ({ ...item, icon: iconByName(item.icon) })));
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const optionTotal = useMemo(
     () =>
       journeyOptions.reduce((total, option) => {
         return total + (enabledOptions[option.key] ? option.cost : 0);
       }, 0),
-    [enabledOptions]
+    [enabledOptions, journeyOptions]
   );
   const estimatedTotal = config.baseFare + optionTotal;
   const dropOptions = destinationOptions[serviceType] || destinationOptions.Outstation;

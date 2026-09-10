@@ -22,11 +22,11 @@ import {
 import api from '../../../shared/api/axiosInstance';
 import userBusService from '../services/busService';
 import { userService } from '../services/userService';
-import { normalizeBusBooking, normalizeRentalBooking, normalizeRide, PAGE_SIZE } from '../components/activity/activityHelpers';
+import { normalizeBusBooking, normalizeHireDriverBooking, normalizeRentalBooking, normalizeRide, PAGE_SIZE } from '../components/activity/activityHelpers';
 import ReviewPrompt from '../components/ReviewPrompt';
 
 const AGGREGATE_FETCH_LIMIT = 60;
-const VISIBLE_TABS = ['All', 'Rides', 'Parcels', 'Rental', 'Bus'];
+const VISIBLE_TABS = ['All', 'Rides', 'Parcels', 'Rental', 'Bus', 'Drivers'];
 
 const getPayload = (response) => response?.data?.data || response?.data || response || {};
 
@@ -63,6 +63,7 @@ const getHelperText = (tab) => {
   if (tab === 'Support') return 'Tickets and help requests';
   if (tab === 'Rental') return 'Your rental bookings, pickup schedule, and booking status';
   if (tab === 'Bus') return 'Your bus tickets, travel timings, and operator details';
+  if (tab === 'Drivers') return 'Drivers you have hired, their plan, and engagement status';
   if (tab === 'Outstation') return 'Long-distance trips and outstation deliveries';
   if (tab === 'Scheduled') return 'Bookings reserved for a later pickup time';
   return 'Your recent trips, deliveries, and bookings';
@@ -205,8 +206,20 @@ const Activity = ({ embedded = false }) => {
           const bookings = Array.isArray(payload?.results) ? payload.results : [];
           nextActivities = bookings.map(normalizeBusBooking).filter((item) => item.id);
           nextPagination = payload?.pagination || null;
+        } else if (activeTab === 'Drivers') {
+          const response = await api
+            .get('/users/hire-driver-bookings')
+            .catch(() => ({ data: { results: [] } }));
+          const payload = getPayload(response);
+          const bookings = Array.isArray(payload?.results) ? payload.results : [];
+          const merged = sortLatestFirst(
+            bookings.map(normalizeHireDriverBooking).filter((item) => item.id),
+          );
+          const localPage = buildLocalPagination(merged, currentPage);
+          nextActivities = localPage.results;
+          nextPagination = localPage.pagination;
         } else if (activeTab === 'All') {
-          const [ridesResponse, rentalResponse, busResponse] = await Promise.all([
+          const [ridesResponse, rentalResponse, busResponse, hireDriverResponse] = await Promise.all([
             api.get('/rides', {
               params: {
                 limit: AGGREGATE_FETCH_LIMIT,
@@ -230,6 +243,10 @@ const Activity = ({ embedded = false }) => {
               console.log('Failed to fetch bus bookings in aggregate:', err);
               return { data: { results: [] } };
             }),
+            api.get('/users/hire-driver-bookings').catch((err) => {
+              console.log('Failed to fetch hire-driver bookings in aggregate:', err);
+              return { data: { results: [] } };
+            }),
           ]);
 
           const ridePayload = getPayload(ridesResponse);
@@ -238,10 +255,15 @@ const Activity = ({ embedded = false }) => {
           const rides = Array.isArray(ridePayload?.results) ? ridePayload.results : [];
           const rentalBookings = Array.isArray(rentalPayload?.results) ? rentalPayload.results : [];
           const bookings = Array.isArray(busPayload?.results) ? busPayload.results : [];
+          const hireDriverPayload = getPayload(hireDriverResponse);
+          const hireDriverBookings = Array.isArray(hireDriverPayload?.results)
+            ? hireDriverPayload.results
+            : [];
           const merged = sortLatestFirst([
             ...rides.map(normalizeRide).filter((item) => item.id),
             ...rentalBookings.map(normalizeRentalBooking).filter((item) => item.id),
             ...bookings.map(normalizeBusBooking).filter((item) => item.id),
+            ...hireDriverBookings.map(normalizeHireDriverBooking).filter((item) => item.id),
           ]);
           const localPage = buildLocalPagination(merged, currentPage);
           nextActivities = localPage.results;

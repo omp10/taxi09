@@ -7,6 +7,8 @@ import {
 } from 'lucide-react';
 import api from '../../../../shared/api/axiosInstance';
 import { DesktopNav } from '../../components/desktop/DesktopChrome';
+import contentService from '../../services/contentService';
+import { iconByName } from '../../utils/contentIcons';
 import { unwrapResults, useDesktopTheme } from '../../components/desktop/desktopShared';
 
 /**
@@ -24,14 +26,14 @@ const HERO_BADGES = [
   { icon: BadgeCheck, title: 'Safe & Secure', copy: 'Your Safety First' },
 ];
 
-const PROMISES = [
+const FALLBACK_PROMISES = [
   { icon: BadgeCheck, label: 'Best Price Guarantee' },
   { icon: CheckCircle2, label: 'No Hidden Charges' },
   { icon: Clock, label: 'On Time Pickup' },
   { icon: CreditCard, label: 'Multiple Payment Options' },
 ];
 
-const FOOTER_NOTES = [
+const FALLBACK_FOOTER_NOTES = [
   { icon: Ticket, title: 'Free Cancellation', copy: 'Cancel till 30 mins before pickup' },
   { icon: MapPin, title: 'Live Tracking', copy: 'Share your ride with friends & family' },
   { icon: ShieldCheck, title: 'Verified Drivers', copy: 'All drivers are background verified' },
@@ -60,6 +62,32 @@ const DesktopWithDriver = () => {
   const [quote, setQuote] = useState(null);
   const [quoteError, setQuoteError] = useState('');
   const [sort, setSort] = useState('recommended');
+  const [promises, setPromises] = useState(FALLBACK_PROMISES);
+  const [footerNotes, setFooterNotes] = useState(FALLBACK_FOOTER_NOTES);
+
+  // Marketing copy is admin-managed; the bundled arrays render if the API is
+  // unreachable so the page never comes up half-empty.
+  useEffect(() => {
+    let cancelled = false;
+
+    contentService
+      .getContentBlocks('hireDriver.desktopPromises,hireDriver.desktopFooter')
+      .then((blocks) => {
+        if (cancelled) return;
+
+        const nextPromises = blocks?.['hireDriver.desktopPromises'];
+        if (Array.isArray(nextPromises) && nextPromises.length) {
+          setPromises(nextPromises.map((item) => ({ ...item, icon: iconByName(item.icon) })));
+        }
+
+        const nextFooter = blocks?.['hireDriver.desktopFooter'];
+        if (Array.isArray(nextFooter) && nextFooter.length) {
+          setFooterNotes(nextFooter.map((item) => ({ ...item, icon: iconByName(item.icon) })));
+        }
+      });
+
+    return () => { cancelled = true; };
+  }, []);
 
   const [trip, setTrip] = useState({ pickup: '', drop: '', date: '', time: '' });
 
@@ -206,7 +234,7 @@ const DesktopWithDriver = () => {
             </div>
 
             <div className="mt-3 grid grid-cols-4 gap-3 rounded-[12px] bg-[#FFFBEC] py-2.5">
-              {PROMISES.map(({ icon: Icon, label }) => (
+              {promises.map(({ icon: Icon, label }) => (
                 <span key={label} className="flex items-center justify-center gap-2 text-[14px] font-bold text-slate-800">
                   <Icon size={15} className="shrink-0 text-[#F5B700]" strokeWidth={2.4} /> {label}
                 </span>
@@ -356,7 +384,7 @@ const DesktopWithDriver = () => {
           </div>
 
           <div className="grid grid-cols-4 gap-4 border-t border-[var(--dh-border)] px-6 py-5">
-            {FOOTER_NOTES.map(({ icon: Icon, title, copy }) => (
+            {footerNotes.map(({ icon: Icon, title, copy }) => (
               <div key={title} className="flex items-center gap-3">
                 <Icon size={22} className="shrink-0 text-[#F5B700]" strokeWidth={2} />
                 <span>

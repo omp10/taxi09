@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import api from '../../../shared/api/axiosInstance';
+import contentService from '../services/contentService';
+import { iconByName } from '../utils/contentIcons';
 import {
   ArrowLeft,
   BadgeCheck,
@@ -34,7 +37,9 @@ const fallbackDriver = {
   plate: 'MP09 AB 1234',
 };
 
-const detailItems = [
+// Bundled defaults; the live copy comes from the `hireDriver.confirmDetails`
+// and `hireDriver.safety` content blocks.
+const fallbackDetailItems = [
   { icon: BadgeCheck, title: 'Driving License', sub: 'Verified' },
   { icon: UserCheck, title: 'Aadhaar', sub: 'Verified' },
   { icon: CircleSlash, title: 'No Smoking', sub: 'Driver' },
@@ -43,7 +48,7 @@ const detailItems = [
   { icon: Car, title: 'Luxury Vehicle', sub: 'Experience' },
 ];
 
-const safetyItems = [
+const fallbackSafetyItems = [
   { icon: MapPin, label: 'Live GPS\nTracking' },
   { icon: Siren, label: 'SOS\nSupport' },
   { icon: Sparkles, label: 'Share Live\nTrip' },
@@ -52,12 +57,121 @@ const safetyItems = [
   { icon: Bell, label: 'Emergency\nContact' },
 ];
 
+/** Admin items carry an icon name; the bundled fallbacks already hold components. */
+const withIcons = (items) =>
+  items.map((item) => ({
+    ...item,
+    icon: typeof item.icon === 'string' ? iconByName(item.icon) : item.icon,
+  }));
+
+const inr = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`;
+
 const PermanentDriverConfirm = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const driver = state?.driver || fallbackDriver;
   const driverImage = state?.driverImage || '/taxi09_driver_d3.jpg';
   const [instructions, setInstructions] = useState('');
+  const [detailItems, setDetailItems] = useState(fallbackDetailItems);
+  const [safetyItems, setSafetyItems] = useState(fallbackSafetyItems);
+
+  // The fare is quoted by the server from the driver's own profile plus the
+  // admin-managed allowance block, so what is shown here is what gets charged.
+  const [quote, setQuote] = useState(null);
+  const [quoteError, setQuoteError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  const hireDriverId = driver?._id || driver?.id || '';
+  const plan = state?.plan || state?.hireDriverType || 'permanent';
+
+  useEffect(() => {
+    let active = true;
+
+    contentService
+      .getContentBlocks('hireDriver.confirmDetails,hireDriver.safety')
+      .then((blocks) => {
+        if (!active) return;
+
+        const details = blocks?.['hireDriver.confirmDetails'];
+        if (Array.isArray(details) && details.length) setDetailItems(withIcons(details));
+
+        const safety = blocks?.['hireDriver.safety'];
+        if (Array.isArray(safety) && safety.length) setSafetyItems(withIcons(safety));
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    // No id means we are rendering the bundled sample driver, not a real
+    // listing - there is nothing to quote or book against.
+    if (!hireDriverId) {
+      setQuote(null);
+      setQuoteError('');
+      return undefined;
+    }
+
+    api
+      .post('/users/hire-driver-bookings/quote', { hireDriverId, plan })
+      .then((response) => {
+        if (!active) return;
+        setQuote(response?.data?.data || response?.data || null);
+        setQuoteError('');
+      })
+      .catch((error) => {
+        if (!active) return;
+        setQuote(null);
+        setQuoteError(
+          error?.response?.data?.message || 'We could not price this driver right now.',
+        );
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [hireDriverId, plan]);
+
+  const fareLines = useMemo(() => {
+    if (!quote) return [];
+    return [
+      { label: 'Driver Charges', value: inr(quote.driverCharges) },
+      ...(quote.allowances || []).map((item) => ({
+        label: item.label,
+        value: inr(item.amount),
+      })),
+    ];
+  }, [quote]);
+
+  const confirmBooking = async () => {
+    if (!hireDriverId || !quote || submitting) return;
+
+    setSubmitting(true);
+    try {
+      const response = await api.post('/users/hire-driver-bookings', {
+        hireDriverId,
+        plan,
+        instructions,
+        driverPreference: state?.driverPreference || '',
+        startDate: state?.startDate || '',
+      });
+
+      const booking = response?.data?.data || response?.data || {};
+      // Land on the Drivers tab so the booking just made is the first thing
+      // visible, rather than buried in the combined activity feed.
+      navigate('/taxi/user/activity', {
+        state: { tab: 'Drivers', hireDriverBookingReference: booking.bookingReference || '' },
+      });
+    } catch (error) {
+      setQuoteError(
+        error?.response?.data?.message || 'We could not confirm this booking. Please try again.',
+      );
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen max-w-lg mx-auto bg-[#f7f8fb] text-slate-950 font-sans pb-28 shadow-2xl border-x border-slate-100">
@@ -174,14 +288,22 @@ const PermanentDriverConfirm = () => {
           <h2 className="text-[15.5px] font-bold">Fare Summary</h2>
           <div className="mt-2 grid grid-cols-[1fr_118px] gap-4">
             <div className="space-y-1.5 text-[12px] font-semibold text-slate-600">
-              <div className="flex justify-between"><span>Driver Charges</span><span className="text-slate-950">₹2,500</span></div>
-              <div className="flex justify-between"><span>Night Allowance</span><span className="text-slate-950">₹500</span></div>
-              <div className="flex justify-between"><span>Toll & Parking</span><span className="text-slate-950">Actual</span></div>
-              <div className="flex justify-between"><span>GST (0%)</span><span className="text-slate-950">Included</span></div>
+              {quote ? (
+                fareLines.map(({ label, value }) => (
+                  <div key={label} className="flex justify-between">
+                    <span>{label}</span>
+                    <span className="text-slate-950">{value}</span>
+                  </div>
+                ))
+              ) : (
+                <p className="text-[12px] font-semibold text-slate-500">
+                  {quoteError || 'Fetching the latest rate for this driver...'}
+                </p>
+              )}
             </div>
             <div className="rounded-[14px] bg-[#fff8df] p-3 text-center">
               <p className="text-[11px] font-semibold text-slate-600">Estimated Total</p>
-              <p className="text-[25px] font-extrabold">₹3,000</p>
+              <p className="text-[25px] font-extrabold">{quote ? inr(quote.totalAmount) : '--'}</p>
               <p className="mt-1 rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-bold text-emerald-700">All inclusive of taxes</p>
             </div>
           </div>
@@ -221,10 +343,17 @@ const PermanentDriverConfirm = () => {
         <div className="grid grid-cols-[104px_1fr] gap-3">
           <button type="button" className="rounded-[13px] bg-slate-50 px-3 py-2 text-left">
             <span className="block text-[11px] font-semibold text-slate-500">Estimated Total</span>
-            <span className="flex items-center gap-1 text-[19px] font-extrabold">₹3,000 <ChevronDown size={14} /></span>
+            <span className="flex items-center gap-1 text-[19px] font-extrabold">
+              {quote ? inr(quote.totalAmount) : '--'} <ChevronDown size={14} />
+            </span>
           </button>
-          <button type="button" className="flex items-center justify-center gap-3 rounded-[13px] bg-[#f5b700] text-[16.5px] font-bold text-black shadow-[0_8px_18px_rgba(245,183,0,0.24)]">
-            Confirm Booking
+          <button
+            type="button"
+            onClick={confirmBooking}
+            disabled={!quote || submitting}
+            className="flex items-center justify-center gap-3 rounded-[13px] bg-[#f5b700] text-[16.5px] font-bold text-black shadow-[0_8px_18px_rgba(245,183,0,0.24)] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {submitting ? 'Confirming...' : 'Confirm Booking'}
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-white">→</span>
           </button>
         </div>

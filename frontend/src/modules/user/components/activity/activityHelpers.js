@@ -224,6 +224,39 @@ export const normalizeBusBooking = (booking) => {
   };
 };
 
+/**
+ * A "hire a driver" engagement. These are not Rides - they are booked against
+ * one curated driver profile and fulfilled by ops - so they arrive from
+ * /users/hire-driver-bookings and are flattened onto the same activity shape
+ * every other card uses.
+ */
+export const normalizeHireDriverBooking = (booking) => {
+  const status = formatStatus(booking?.status || 'requested');
+  const driverName = pickFirstString(booking?.hireDriverName, 'Assigned driver');
+  const planLabel = pickFirstString(booking?.plan, 'permanent');
+
+  return {
+    id: booking?.id || booking?._id,
+    type: 'hire_driver',
+    title: `Driver on Hire - ${driverName}`,
+    address: pickFirstString(booking?.vehicleName, 'Driver brings no vehicle'),
+    pickup: `${planLabel.charAt(0).toUpperCase()}${planLabel.slice(1)} engagement`,
+    drop: pickFirstString(booking?.startDate, 'Start date to be confirmed'),
+    date: formatRideDate(booking?.createdAt),
+    time: formatRideTime(booking?.createdAt),
+    status,
+    statusTone: getStatusTone(status),
+    price: Number(booking?.totalAmount || 0).toFixed(0),
+    driverName,
+    eyebrow: pickFirstString(booking?.bookingReference, 'Driver on hire'),
+    registration: pickFirstString(booking?.vehiclePlate, ''),
+    driverImage: pickFirstString(booking?.hireDriverPhoto, buildAvatarFallback(driverName)),
+    vehicleImage: carIcon,
+    booking,
+    sortTimestamp: toTimestamp(booking?.updatedAt || booking?.createdAt),
+  };
+};
+
 export const normalizeRentalBooking = (booking) => {
   const status = formatStatus(booking?.status || 'pending');
   const locationName = pickFirstString(

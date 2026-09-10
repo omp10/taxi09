@@ -48,6 +48,7 @@ import {
   adminListCertificates,
 } from '../controllers/contentController.js';
 import {
+  adminListHireDriverBookings,
   getAdminAllBookings,
   getAdminHotelBookings,
   getAdminPackageBookings,
@@ -94,6 +95,9 @@ contentRouter.post('/admin/hire-drivers', adminCreateHireDriver);
 contentRouter.patch('/admin/hire-drivers/:id', adminUpdateHireDriver);
 contentRouter.patch('/admin/hire-drivers/:id/toggle', adminToggleHireDriver);
 contentRouter.delete('/admin/hire-drivers/:id', adminDeleteHireDriver);
+
+// Engagements riders have requested against those curated profiles.
+contentRouter.get('/admin/hire-driver-bookings', adminListHireDriverBookings);
 
 contentRouter.get('/admin/hotel-bookings', getAdminHotelBookings);
 contentRouter.patch('/admin/hotel-bookings/:id', updateAdminHotelBooking);

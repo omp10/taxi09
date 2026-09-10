@@ -6,7 +6,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "seed:hire-driver": "node src/modules/taxi/admin/scripts/seedHireDriverContent.js"
   },
   "dependencies": {
     "@phonepe-pg/pg-sdk-node": "^2.0.6",

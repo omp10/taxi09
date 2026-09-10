@@ -4,6 +4,7 @@ import { normalizePoint, toPoint } from '../../../utils/geo.js';
 import { uploadDataUrlToCloudinary } from '../../../utils/cloudinaryUpload.js';
 import { RIDE_LIVE_STATUS, RIDE_STATUS } from '../constants/index.js';
 import { AdminBusinessSetting } from '../admin/models/AdminBusinessSetting.js';
+import { ContentBlock } from '../admin/content/models/ContentBlock.js';
 import { SetPrice } from '../admin/models/SetPrice.js';
 import { Vehicle } from '../admin/models/Vehicle.js';
 import { Driver } from '../driver/models/Driver.js';
@@ -90,6 +91,11 @@ const normalizeServiceType = (serviceType) => {
  * Server-authoritative surcharges for the "hire a driver" flow. The client
  * sends only which options the rider ticked - never the price - so a tampered
  * payload cannot change what is charged.
+ *
+ * Admins edit the live catalogue in the `hireDriver.journeyOptions` content
+ * block. This map is the fallback used when that block is missing or empty, so
+ * an unseeded install still books instead of silently pricing every option at
+ * zero.
  */
 const HIRE_DRIVER_JOURNEY_OPTIONS = {
   night: { label: 'Night Journey', price: 500 },
@@ -98,7 +104,31 @@ const HIRE_DRIVER_JOURNEY_OPTIONS = {
   stops: { label: 'Multiple Stops', price: 250 },
 };
 
-const normalizeHireDriver = (input) => {
+const loadJourneyOptionCatalogue = async () => {
+  try {
+    const block = await ContentBlock.findOne({
+      key: 'hireDriver.journeyOptions',
+      active: true,
+    }).lean();
+
+    const catalogue = (Array.isArray(block?.items) ? block.items : []).reduce((map, item) => {
+      const key = String(item?.key || '').trim();
+      if (key) {
+        map[key] = {
+          label: String(item?.label || '').trim(),
+          price: Math.max(0, Number(item?.price || 0)),
+        };
+      }
+      return map;
+    }, {});
+
+    return Object.keys(catalogue).length ? catalogue : HIRE_DRIVER_JOURNEY_OPTIONS;
+  } catch {
+    return HIRE_DRIVER_JOURNEY_OPTIONS;
+  }
+};
+
+const normalizeHireDriver = async (input) => {
   if (!input || typeof input !== 'object') return null;
 
   // Accept either { night: true } or ['night'] - the booking screen tracks the
@@ -110,9 +140,10 @@ const normalizeHireDriver = (input) => {
         .filter(([, enabled]) => Boolean(enabled))
         .map(([key]) => key);
 
+  const catalogue = await loadJourneyOptionCatalogue();
   const journeyOptions = selectedKeys
-    .filter((key) => Object.hasOwn(HIRE_DRIVER_JOURNEY_OPTIONS, key))
-    .map((key) => ({ key, ...HIRE_DRIVER_JOURNEY_OPTIONS[key] }));
+    .filter((key) => Object.hasOwn(catalogue, key))
+    .map((key) => ({ key, ...catalogue[key] }));
 
   return {
     hireType: String(input.hireType || input.hireDriverType || '').trim(),
@@ -936,7 +967,7 @@ export const createRideRecord = async ({
   }
 
   const normalizedHireDriver =
-    normalizeServiceType(serviceType) === 'hire_driver' ? normalizeHireDriver(hireDriver) : null;
+    normalizeServiceType(serviceType) === 'hire_driver' ? await normalizeHireDriver(hireDriver) : null;
 
   // The client's fare covers the base ride only; hire-driver surcharges are
   // added from the server catalogue so every downstream consumer (bidding,

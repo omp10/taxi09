@@ -16,10 +16,29 @@ export const normalizeAssetUrl = (url = '') => {
   return `${BACKEND_ORIGIN}${url.startsWith('/') ? '' : '/'}${url}`;
 };
 
+// Routes that scripts/prerender-meta.mjs gives their own <title>. Keep this in
+// step with the route table there.
+const PRERENDERED_TITLE_PATHS = new Set([
+  '/',
+  '/taxi/user',
+  '/taxi/user/rental',
+  '/taxi/user/with-driver',
+  '/taxi/user/rental/bike-categories',
+  '/taxi/user/tours',
+  '/taxi/user/hotel',
+  '/taxi/user/bus',
+  '/taxi/user/blog',
+  '/taxi/user/stories',
+  '/taxi/user/internship',
+]);
+
+const hasPrerenderedTitle = (pathname = '') =>
+  PRERENDERED_TITLE_PATHS.has(pathname.replace(/\/+$/, '') || '/');
+
 const DEFAULT_SETTINGS_CONTEXT = {
   settings: {
     general: {
-      app_name: 'Taxi09 Trawler',
+      app_name: 'Taxi09',
       logo: '',
       favicon: '',
     },
@@ -252,8 +271,13 @@ export const SettingsProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    const appName = settings.general?.app_name || 'Taxi09 Trawler';
-    document.title = appName;
+    const appName = settings.general?.app_name || 'Taxi09';
+    // Public marketing routes ship a real <title> in their prerendered HTML.
+    // Replacing it with the bare app name loses the SEO title and makes the
+    // tab flicker as settings load.
+    if (!hasPrerenderedTitle(window.location.pathname)) {
+      document.title = appName;
+    }
 
     const favicon = settings.general?.favicon || settings.customization?.favicon;
     if (favicon) {

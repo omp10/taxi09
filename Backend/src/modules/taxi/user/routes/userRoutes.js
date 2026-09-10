@@ -61,6 +61,9 @@ import {
   getMyHotelBookings,
   postPackageBooking,
   getMyPackageBookings,
+  postHireDriverQuote,
+  postHireDriverBooking,
+  getMyHireDriverBookings,
   postBookingPaymentOrder,
   postBookingPaymentVerify,
 } from '../../admin/content/controllers/bookingController.js';
@@ -133,6 +136,13 @@ userRouter.get('/travel-packages/:slug', getPublicTravelPackageBySlug);
 userRouter.post('/hotel-bookings', authenticate(['user']), postHotelBooking);
 userRouter.get('/hotel-bookings', authenticate(['user']), getMyHotelBookings);
 userRouter.post('/package-bookings', authenticate(['user']), postPackageBooking);
+
+// Engaging one curated driver from the "hire a driver" listing. Quote and
+// booking are priced from the same service, so the summary the rider confirms
+// is the amount that gets written.
+userRouter.post('/hire-driver-bookings/quote', authenticate(['user']), postHireDriverQuote);
+userRouter.post('/hire-driver-bookings', authenticate(['user']), postHireDriverBooking);
+userRouter.get('/hire-driver-bookings', authenticate(['user']), getMyHireDriverBookings);
 
 // Membership: plans are public, buying and reading your own needs a session.
 userRouter.get('/membership-plans', getPublicMembershipPlans);

@@ -40,7 +40,7 @@ const legalContent = {
     title: 'Refund & Cancellation Policy',
     icon: ReceiptText,
     intro:
-      'This page explains refund eligibility, cancellation timelines, and indicative prices for the main vehicle types available on the Taxi09  Trawler platform. Refunds are reviewed based on service status, time of cancellation, and payment mode.',
+      'This page explains refund eligibility, cancellation timelines, and indicative prices for the main vehicle types available on the Taxi09 platform. Refunds are reviewed based on service status, time of cancellation, and payment mode.',
     sections: [
       {
         title: 'When refunds may be approved',
@@ -54,7 +54,7 @@ const legalContent = {
       {
         title: 'Refund policy overview',
         body:
-          'Taxi09  Trawler reviews refund requests on a case-by-case basis to confirm whether the booking was completed, cancelled before service, cancelled after dispatch, or affected by a technical or payment issue. Approved refunds are returned only after internal verification of ride logs, payment status, and service records.',
+          'Taxi09 reviews refund requests on a case-by-case basis to confirm whether the booking was completed, cancelled before service, cancelled after dispatch, or affected by a technical or payment issue. Approved refunds are returned only after internal verification of ride logs, payment status, and service records.',
       },
       {
         title: 'Cancellation rules',
@@ -103,7 +103,7 @@ const legalContent = {
         bullets: [
           'Raise the issue through the support team with your booking ID, payment details, and reason for the request.',
           'Submit the request as early as possible after the cancelled or affected booking.',
-          'Taxi09   Trawler may ask for screenshots, transaction references, or additional verification before approval.',
+          'Taxi09 may ask for screenshots, transaction references, or additional verification before approval.',
         ],
       },
       {
@@ -122,7 +122,7 @@ const legalContent = {
     title: 'Cancellation Policy',
     icon: Scale,
     intro:
-      'This page summarizes how cancellations are handled across Taxi09  Trawler booking categories.',
+      'This page summarizes how cancellations are handled across Taxi09 booking categories.',
     sections: [
       {
         title: 'General policy',

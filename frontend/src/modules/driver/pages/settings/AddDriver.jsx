@@ -341,14 +341,14 @@ const AddDriver = () => {
                                 {error ? (
                                     <p className="text-[11px] font-bold text-rose-500">{error}</p>
                                 ) : null}
-                                {/* Adhaar Card */}
+                                {/* Aadhaar Card */}
                                 <div className="space-y-3">
-                                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest pl-1">Aadhar Card</label>
+                                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest pl-1">Aadhaar Card</label>
                                     <div className="relative border-2 border-dashed border-slate-200 rounded-2xl p-6 flex items-center justify-between hover:border-slate-900 transition-colors bg-slate-50/50">
                                         <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleFileUpload('adhaarFile', e)} />
                                         <div className="flex items-center gap-3">
                                             <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-300"><Upload size={18} /></div>
-                                            <p className="text-[12px] font-black text-slate-900 uppercase">{formData.adhaarFile ? 'Aadhar Attached' : 'Select File'}</p>
+                                            <p className="text-[12px] font-black text-slate-900 uppercase">{formData.adhaarFile ? 'Aadhaar Attached' : 'Select File'}</p>
                                         </div>
                                         {formData.adhaarFile && <ShieldCheck size={18} className="text-emerald-500" />}
                                     </div>

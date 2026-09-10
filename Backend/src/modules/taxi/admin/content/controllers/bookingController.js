@@ -1,4 +1,5 @@
 import { asyncHandler } from '../../../../../utils/asyncHandler.js';
+import { HireDriverBooking } from '../models/HireDriverBooking.js';
 import { HotelBooking } from '../models/HotelBooking.js';
 import { PackageBooking } from '../models/PackageBooking.js';
 import {
@@ -7,6 +8,11 @@ import {
   listMyHotelBookings,
   listMyPackageBookings,
 } from '../../../user/services/bookingService.js';
+import {
+  createHireDriverBooking,
+  listMyHireDriverBookings,
+  quoteHireDriver,
+} from '../../../user/services/hireDriverBookingService.js';
 import {
   createBookingPaymentOrder,
   verifyBookingPayment,
@@ -31,6 +37,40 @@ export const postPackageBooking = asyncHandler(async (req, res) =>
 export const getMyPackageBookings = asyncHandler(async (req, res) =>
   ok(res, { results: await listMyPackageBookings(req.auth?.sub) }),
 );
+
+/* ---------------------------------------------------------- hire a driver */
+
+// Quote first, book second: the confirmation screen renders this quote so the
+// rider sees the same figure the booking is later written with.
+export const postHireDriverQuote = asyncHandler(async (req, res) => {
+  const { profile, ...quote } = await quoteHireDriver({
+    hireDriverId: req.body?.hireDriverId,
+    plan: req.body?.plan,
+  });
+
+  ok(res, {
+    ...quote,
+    driverName: profile?.name || '',
+    vehicleName: profile?.vehicleName || '',
+  });
+});
+
+export const postHireDriverBooking = asyncHandler(async (req, res) =>
+  ok(res, await createHireDriverBooking({ userId: req.auth?.sub, payload: req.body || {} }), 201),
+);
+
+export const getMyHireDriverBookings = asyncHandler(async (req, res) =>
+  ok(res, { results: await listMyHireDriverBookings(req.auth?.sub) }),
+);
+
+export const adminListHireDriverBookings = asyncHandler(async (req, res) => {
+  const query = {};
+  if (req.query.status) query.status = String(req.query.status).trim();
+
+  ok(res, {
+    results: await HireDriverBooking.find(query).sort({ createdAt: -1 }).limit(200).lean(),
+  });
+});
 
 /* --------------------------------------------------------------- payment */
 

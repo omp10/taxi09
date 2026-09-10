@@ -1,5 +1,5 @@
 export const SUPPORT_INFO = {
-  companyName: 'Taxi09 Trawler',
+  companyName: 'Taxi09',
   ownerName: 'Sandeep Kumar',
   phone: '93893 94808',
   phoneHref: '91-93-911-911',

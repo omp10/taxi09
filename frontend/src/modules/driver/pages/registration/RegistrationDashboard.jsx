@@ -29,6 +29,21 @@ const RegistrationDashboard = () => {
     const routePrefix = location.pathname.startsWith('/taxi/owner') ? '/taxi/owner' : '/taxi/driver';
     const storedSession = getStoredDriverRegistrationSession();
 
+    // What this registration actually signs the person up for. These are the
+    // driver-side service categories only (StepVehicle writes them) - rider
+    // services like hotel or bus booking are deliberately not listed here.
+    const SERVICE_LABELS = {
+        taxi: 'City Taxi Rides',
+        outstation: 'Outstation Trips',
+        delivery: 'Parcel Delivery',
+    };
+
+    const isOwner = routePrefix === '/taxi/owner';
+    const roleLabel = isOwner ? 'Fleet Owner' : 'Driver Partner';
+    const selectedServices = (storedSession?.serviceCategories || [])
+        .map((service) => SERVICE_LABELS[String(service || '').trim().toLowerCase()])
+        .filter(Boolean);
+
     const steps = [
         { id: 'personal', title: 'Personal Information', sub: 'ID & Profile', icon: <User size={18} /> },
         { id: 'vehicle', title: 'Vehicle Information', sub: 'Fleet & RC', icon: <Car size={18} /> },
@@ -67,6 +82,40 @@ const RegistrationDashboard = () => {
                         Start Your <br/> <span className="text-orange-500">Journey</span>
                     </h1>
                     <p className="text-[14px] font-bold text-slate-400">Complete these 4 simple steps to join the Elite Driver network and start earning today.</p>
+                </motion.div>
+
+                {/* Spells out what the applicant is signing up for, so nobody
+                    completes four steps unsure what they just registered as. */}
+                <motion.div
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                    className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm"
+                >
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                        You are registering as
+                    </p>
+                    <p className="mt-1 text-[17px] font-black text-taxi-text tracking-tight">{roleLabel}</p>
+
+                    <p className="mt-3 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                        Services you will receive
+                    </p>
+                    {selectedServices.length ? (
+                        <div className="mt-2 flex flex-wrap gap-2">
+                            {selectedServices.map((service) => (
+                                <span
+                                    key={service}
+                                    className="flex items-center gap-1.5 rounded-full border border-emerald-500/10 bg-emerald-500/10 px-3 py-1 text-[11px] font-black text-emerald-600"
+                                >
+                                    <CheckCircle2 size={12} strokeWidth={3} /> {service}
+                                </span>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="mt-1 text-[12.5px] font-bold text-slate-400">
+                            You will choose these in the Vehicle Information step.
+                        </p>
+                    )}
                 </motion.div>
             </header>
 

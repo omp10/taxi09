@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
@@ -12,9 +12,14 @@ import {
   UserCheck,
 } from 'lucide-react';
 import BottomNavbar from '../components/BottomNavbar';
+import contentService from '../services/contentService';
+import { iconByName } from '../utils/contentIcons';
 import driverWithCabImg from '../../../assets/images/driver_beside_cab_white.png';
 
-const serviceCards = [
+// Bundled defaults. The live copy comes from the `hireDriver.services` and
+// `hireDriver.trust` content blocks; these render when the API is unreachable
+// so the screen never comes up blank.
+const fallbackServiceCards = [
   {
     title: 'Local (Hourly)',
     subtitle: 'Hire a driver for local city rides by the hour.',
@@ -45,22 +50,55 @@ const serviceCards = [
   },
 ];
 
-const trustItems = [
+const fallbackTrustItems = [
   { icon: ShieldCheck, label: 'Police Verified\nDrivers' },
   { icon: Star, label: 'Experienced &\nTrained' },
   { icon: Headset, label: '24x7\nSupport' },
   { icon: CalendarDays, label: 'Transparent\nPricing' },
 ];
 
+/** Admin items carry an icon name; the bundled fallbacks already hold components. */
+const withIcons = (items) =>
+  items.map((item) => ({
+    ...item,
+    icon: typeof item.icon === 'string' ? iconByName(item.icon) : item.icon,
+  }));
+
 const WithDriverHome = () => {
   const navigate = useNavigate();
-  const openDriverService = (title) => {
-    if (title === 'Permanent Driver') {
-      navigate('/taxi/user/with-driver/permanent', { state: { hireDriverType: title } });
-      return;
-    }
+  const [serviceCards, setServiceCards] = useState(fallbackServiceCards);
+  const [trustItems, setTrustItems] = useState(fallbackTrustItems);
 
-    navigate('/taxi/user/with-driver/details', { state: { hireDriverType: title } });
+  useEffect(() => {
+    let active = true;
+
+    contentService
+      .getContentBlocks('hireDriver.services,hireDriver.trust')
+      .then((blocks) => {
+        if (!active) return;
+
+        const services = blocks?.['hireDriver.services'];
+        if (Array.isArray(services) && services.length) setServiceCards(services);
+
+        const trust = blocks?.['hireDriver.trust'];
+        if (Array.isArray(trust) && trust.length) setTrustItems(withIcons(trust));
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+  // Routing keys off `key`, not the title, so renaming a card in the admin
+  // panel cannot silently drop riders into the wrong flow. Cards seeded before
+  // `key` existed still work via the original title match.
+  const openDriverService = (card) => {
+    const isPermanent =
+      String(card?.key || '').trim().toLowerCase() === 'permanent' ||
+      card?.title === 'Permanent Driver';
+
+    navigate(isPermanent ? '/taxi/user/with-driver/permanent' : '/taxi/user/with-driver/details', {
+      state: { hireDriverType: card?.title },
+    });
   };
 
   return (
@@ -134,25 +172,25 @@ const WithDriverHome = () => {
         </section>
 
         <section className="mt-3 grid grid-cols-2 gap-3">
-          {serviceCards.map(({ title, subtitle, color, action, image }) => (
+          {serviceCards.map((card) => (
             <button
-              key={title}
+              key={card.title}
               type="button"
-              onClick={() => openDriverService(title)}
+              onClick={() => openDriverService(card)}
               className="overflow-hidden rounded-[14px] border border-slate-100 bg-white text-left shadow-[0_6px_16px_rgba(15,23,42,0.06)]"
             >
-              <div className={`relative h-[105px] bg-gradient-to-br ${color}`}>
+              <div className={`relative h-[105px] bg-gradient-to-br ${card.color}`}>
                 <img
-                  src={image}
-                  alt={title}
+                  src={card.image}
+                  alt={card.title}
                   className="h-full w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/10" />
               </div>
               <div className="relative min-h-[78px] px-3 pb-3 pt-2">
-                <h3 className="text-[14.5px] font-black">{title}</h3>
-                <p className="mt-1 pr-8 text-[11.5px] font-bold leading-4 text-slate-700">{subtitle}</p>
-                <span className={`absolute bottom-3 right-3 flex h-7 w-7 items-center justify-center rounded-full ${action}`}>
+                <h3 className="text-[14.5px] font-black">{card.title}</h3>
+                <p className="mt-1 pr-8 text-[11.5px] font-bold leading-4 text-slate-700">{card.subtitle}</p>
+                <span className={`absolute bottom-3 right-3 flex h-7 w-7 items-center justify-center rounded-full ${card.action}`}>
                   <ArrowRight size={15} className="text-white" strokeWidth={3} />
                 </span>
               </div>
