@@ -860,6 +860,7 @@ const AdminLayout = () => {
             subItems: [
               { label: 'Travel Packages', path: '/admin/content/travel-packages', permission: 'promotions.view' },
               { label: 'Package Bookings', path: '/admin/bookings/packages', permission: 'promotions.view' },
+              { label: 'Driver Engagements', path: '/admin/bookings/driver-engagements', permission: 'promotions.view' },
             ],
           },
           {

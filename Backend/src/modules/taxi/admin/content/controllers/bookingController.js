@@ -112,6 +112,32 @@ export const adminListSharedTaxiBookings = asyncHandler(async (req, res) =>
   ok(res, { results: await SharedTaxiBooking.find().sort({ createdAt: -1 }).limit(300).lean() }),
 );
 
+/**
+ * Ops fulfilment: move an engagement through its lifecycle, and mark it paid.
+ * Only admin may set `paid` - a booking is always created unpaid.
+ */
+export const adminUpdateHireDriverBooking = asyncHandler(async (req, res) => {
+  const update = {};
+  if (req.body?.status) update.status = String(req.body.status).trim();
+  if (typeof req.body?.paid === 'boolean') update.paid = req.body.paid;
+
+  ok(
+    res,
+    await HireDriverBooking.findByIdAndUpdate(req.params.id, { $set: update }, { new: true }).lean(),
+  );
+});
+
+export const adminUpdateSharedTaxiBooking = asyncHandler(async (req, res) => {
+  const update = {};
+  if (req.body?.status) update.status = String(req.body.status).trim();
+  if (typeof req.body?.paid === 'boolean') update.paid = req.body.paid;
+
+  ok(
+    res,
+    await SharedTaxiBooking.findByIdAndUpdate(req.params.id, { $set: update }, { new: true }).lean(),
+  );
+});
+
 export const adminListHireDriverBookings = asyncHandler(async (req, res) => {
   const query = {};
   if (req.query.status) query.status = String(req.query.status).trim();
@@ -218,12 +244,14 @@ export const getAdminAllBookings = asyncHandler(async (req, res) => {
     createdAt, customer: customer || '',
   });
 
-  const [hotels, packages, rides, buses, rentals] = await Promise.all([
+  const [hotels, packages, rides, buses, rentals, hireDrivers, sharedTaxis] = await Promise.all([
     HotelBooking.find().populate('userId', 'name phone').sort({ createdAt: -1 }).limit(limit).lean(),
     PackageBooking.find().populate('userId', 'name phone').sort({ createdAt: -1 }).limit(limit).lean(),
     Ride.find().select('rideCode fare status paymentStatus createdAt pickupAddress dropAddress serviceType').sort({ createdAt: -1 }).limit(limit).lean().catch(() => []),
     BusBooking.find().sort({ createdAt: -1 }).limit(limit).lean().catch(() => []),
     RentalBookingRequest.find().sort({ createdAt: -1 }).limit(limit).lean().catch(() => []),
+    HireDriverBooking.find().populate('userId', 'name phone').sort({ createdAt: -1 }).limit(limit).lean().catch(() => []),
+    SharedTaxiBooking.find().populate('userId', 'name phone').sort({ createdAt: -1 }).limit(limit).lean().catch(() => []),
   ]);
 
   const rows = [
@@ -232,6 +260,8 @@ export const getAdminAllBookings = asyncHandler(async (req, res) => {
     ...rides.map((b) => asRow('Ride', b._id, b.rideCode, b.pickupAddress, b.dropAddress, b.fare, b.status, b.paymentStatus, b.createdAt, '')),
     ...buses.map((b) => asRow('Bus', b._id, b.bookingCode || b.bookingReference, b.operatorName || b.busName, `${(b.passengers || []).length || b.seatCount || 0} seat(s)`, b.totalFare ?? b.totalAmount, b.status, b.paymentStatus, b.createdAt, b.contactName)),
     ...rentals.map((b) => asRow('Rental', b._id, b.bookingReference, b.vehicleName, b.selectedPackage?.label, b.totalCost, b.status, b.paymentStatus, b.createdAt, b.customerName)),
+    ...hireDrivers.map((b) => asRow('Driver', b._id, b.bookingReference, b.hireDriverName, `${b.plan} engagement`, b.totalAmount, b.status, b.paid ? 'paid' : 'pending', b.createdAt, b.userId?.name || b.customerName)),
+    ...sharedTaxis.map((b) => asRow('Shared Taxi', b._id, b.bookingReference, `${b.fromLabel} to ${b.toLabel}`, `${(b.seatLabels || []).length} seat(s) · ${b.travelDate}`, b.totalAmount, b.status, b.paid ? 'paid' : 'pending', b.createdAt, b.userId?.name || b.passengerName)),
   ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   ok(res, { results: rows, total: rows.length });

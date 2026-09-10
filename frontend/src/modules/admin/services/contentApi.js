@@ -95,10 +95,14 @@ export const contentApi = {
   updateSharedTaxiTrip: (id, body) =>
     request(`/shared-taxi-trips/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
   deleteSharedTaxiTrip: (id) => request(`/shared-taxi-trips/${id}`, { method: 'DELETE' }),
-  listSharedTaxiBookings: () => request('/shared-taxi-bookings'),
+  listSharedTaxiBookings: (params = '') => request(`/shared-taxi-bookings${params}`),
+  updateSharedTaxiBooking: (id, body) =>
+    request(`/shared-taxi-bookings/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
 
   // Engagements booked against curated hire-driver profiles
-  listHireDriverBookings: () => request('/hire-driver-bookings'),
+  listHireDriverBookings: (params = '') => request(`/hire-driver-bookings${params}`),
+  updateHireDriverBooking: (id, body) =>
+    request(`/hire-driver-bookings/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
 
   // Content blocks
   listBlocks: () => request('/content-blocks'),

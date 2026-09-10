@@ -21,6 +21,8 @@ export const STATUS_TONES = {
   completed: 'bg-emerald-50 text-emerald-700',
   paid: 'bg-emerald-50 text-emerald-700',
   pending: 'bg-amber-50 text-amber-700',
+  requested: 'bg-amber-50 text-amber-700',
+  active: 'bg-sky-50 text-sky-700',
   cancelled: 'bg-rose-50 text-rose-700',
   failed: 'bg-rose-50 text-rose-700',
   refunded: 'bg-sky-50 text-sky-700',
@@ -33,6 +35,8 @@ export const PRODUCT_TONES = {
   Ride: 'bg-amber-50 text-amber-700',
   Bus: 'bg-orange-50 text-orange-700',
   Rental: 'bg-indigo-50 text-indigo-700',
+  Driver: 'bg-purple-50 text-purple-700',
+  'Shared Taxi': 'bg-teal-50 text-teal-700',
 };
 
 export const inputClass =
