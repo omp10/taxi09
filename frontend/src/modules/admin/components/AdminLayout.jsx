@@ -982,6 +982,7 @@ const AdminLayout = () => {
               { label: 'Pending Drivers', path: '/admin/drivers/pending', permission: 'drivers.view' },
               { label: 'Approved Drivers', path: '/admin/drivers', permission: 'drivers.view' },
               { label: 'Hire Drivers', path: '/admin/content/hire-drivers', permission: 'drivers.view' },
+              { label: 'Shared Taxi', path: '/admin/content/shared-taxi', permission: 'drivers.view' },
               { label: 'Active Drivers', path: '/admin/drivers/active', permission: 'drivers.view' },
               { label: 'Subscription', path: '/admin/drivers/subscription', permission: 'drivers.view' },
               { label: 'Drivers Ratings', path: '/admin/drivers/ratings', permission: 'drivers.view' },

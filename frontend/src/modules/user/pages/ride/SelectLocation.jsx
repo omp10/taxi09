@@ -167,7 +167,13 @@ const SelectLocation = () => {
     : 'drop';
   const returnToPath = String(routeState.returnTo || '');
   const isParcelFlow = routeState.flow === 'parcel' || returnToPath.includes('/parcel/details');
-  const isSelectionReturnFlow = isParcelFlow || routeState.flow === 'hire-driver' || returnToPath.includes('/with-driver/details');
+  // Flows that just want a location handed back, rather than continuing into
+  // the ride booking flow themselves.
+  const isSelectionReturnFlow = isParcelFlow
+    || routeState.flow === 'hire-driver'
+    || routeState.flow === 'airport-cab'
+    || returnToPath.includes('/with-driver/details')
+    || returnToPath.includes('/cab/airport');
   const savedLocation = getSavedLocation();
   const savedPickupLabel = String(savedLocation?.address || '').trim();
   const savedPickupCoords = getSavedLocationCoords();

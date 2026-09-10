@@ -3,20 +3,45 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, MapPin, Calendar, Clock, ChevronRight, AlertCircle, Plane } from 'lucide-react';
 import { getRideFares } from '../../services/userService';
+import contentService from '../../services/contentService';
 
-const TERMINALS = ['T1', 'T2', 'T3'];
+// Used only until the admin-managed `cab.locations` block loads.
+const FALLBACK_TERMINALS = ['T1', 'T2', 'T3'];
 
 const AirportCab = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
-  const [pickup,   setPickup]   = useState('');
-  const [terminal, setTerminal] = useState('');
-  const [date,     setDate]     = useState('');
-  const [time,     setTime]     = useState('');
+
+  // The location picker navigates away and back, so the rest of the form is
+  // carried through it and restored here rather than being retyped.
+  const incoming = location.state || {};
+
+  const [pickup,   setPickup]   = useState(incoming.pickup || '');
+  const [pickupCoords, setPickupCoords] = useState(incoming.pickupCoords || null);
+  const [terminal, setTerminal] = useState(incoming.terminal || '');
+  const [date,     setDate]     = useState(incoming.date || '');
+  const [time,     setTime]     = useState(incoming.time || '');
   const [vehicles, setVehicles] = useState([]);
   const [vehicle,  setVehicle]  = useState('');
   const [errors,   setErrors]   = useState({});
+  const [airport,  setAirport]  = useState(null);
+
+  // The airport's own coordinates - without them the booking cannot be created,
+  // since a ride needs a drop point.
+  useEffect(() => {
+    let cancelled = false;
+    contentService.getContentBlocks('cab.locations', {}).then((blocks) => {
+      if (cancelled) return;
+      const items = blocks['cab.locations'];
+      if (Array.isArray(items)) {
+        setAirport(items.find((item) => item.id === 'airport') || null);
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  const terminals = airport?.terminals?.length ? airport.terminals : FALLBACK_TERMINALS;
 
   const selectedVehicle = vehicles.find(v => v.id === vehicle) || vehicles[0];
 
@@ -30,9 +55,26 @@ const AirportCab = () => {
     return () => { cancelled = true; };
   }, []);
 
+  // Opens the shared location picker. The whole form travels with it so the
+  // rider does not lose their terminal, date and time by picking an address.
+  const openPickupSearch = () => {
+    navigate(`${routePrefix}/ride/select-location`, {
+      state: {
+        flow: 'airport-cab',
+        returnTo: `${routePrefix}/cab/airport`,
+        activeInput: 'pickup',
+        pickup,
+        pickupCoords,
+        terminal,
+        date,
+        time,
+      },
+    });
+  };
+
   const validate = () => {
     const e = {};
-    if (!pickup.trim()) e.pickup   = 'Pickup address is required';
+    if (!pickup.trim() || !pickupCoords) e.pickup = 'Choose your pickup location';
     if (!terminal)      e.terminal = 'Select a terminal';
     if (!date)          e.date     = 'Select travel date';
     if (!time)          e.time     = 'Select travel time';
@@ -43,7 +85,17 @@ const AirportCab = () => {
   const handleBook = () => {
     if (!validate()) return;
     navigate(`${routePrefix}/cab/airport-confirm`, {
-      state: { isAirport: true, pickup, terminal, date, time, vehicle: selectedVehicle, fare: selectedVehicle?.fare },
+      state: {
+        isAirport: true,
+        pickup,
+        pickupCoords,
+        terminal,
+        date,
+        time,
+        vehicle: selectedVehicle,
+        fare: selectedVehicle?.fare,
+        airport,
+      },
     });
   };
 
@@ -83,9 +135,13 @@ const AirportCab = () => {
           <label className="text-[12px] font-black uppercase tracking-[0.22em] text-slate-400 ml-1 mb-1.5 block">Pickup Address</label>
           <div className={`flex items-center gap-3 rounded-[16px] px-4 py-3.5 border-2 transition-all ${errors.pickup ? 'border-red-200 bg-red-50' : 'border-slate-100 bg-white/90'}`}>
             <MapPin size={16} className="text-slate-400 shrink-0" strokeWidth={2} />
-            <input type="text" value={pickup} onChange={e => { setPickup(e.target.value); setErrors(p => ({ ...p, pickup: '' })); }}
-              placeholder="Your pickup location"
-              className="flex-1 bg-transparent border-none text-[15.5px] font-bold text-slate-900 focus:outline-none placeholder:text-slate-300" />
+            <button
+              type="button"
+              onClick={openPickupSearch}
+              className="flex-1 text-left text-[15px] font-bold outline-none bg-transparent"
+            >
+              {pickup || <span className="text-slate-400">Your pickup location</span>}
+            </button>
           </div>
           {errors.pickup && <p className="text-[13px] font-black text-red-500 ml-1 mt-1 flex items-center gap-1"><AlertCircle size={11} strokeWidth={3} />{errors.pickup}</p>}
         </div>
@@ -94,7 +150,7 @@ const AirportCab = () => {
         <div>
           <label className="text-[12px] font-black uppercase tracking-[0.22em] text-slate-400 ml-1 mb-1.5 block">Terminal</label>
           <div className="flex gap-2">
-            {TERMINALS.map(t => (
+            {terminals.map(t => (
               <button key={t} onClick={() => { setTerminal(t); setErrors(p => ({ ...p, terminal: '' })); }}
                 className={`flex-1 py-3 rounded-[14px] text-[14.5px] font-black uppercase tracking-widest border-2 transition-all ${
                   terminal === t ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white/90 text-slate-600 border-slate-100'
