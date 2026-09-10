@@ -69,7 +69,7 @@ const rideSchema = new mongoose.Schema(
     },
     serviceType: {
       type: String,
-      enum: ['ride', 'parcel', 'intercity', 'hire_driver'],
+      enum: ['ride', 'parcel', 'intercity', 'hire_driver', 'airport', 'spiritual'],
       default: 'ride',
       lowercase: true,
       trim: true,
@@ -93,6 +93,29 @@ const rideSchema = new mongoose.Schema(
       travelTime: { type: String, default: '', trim: true },
       returnDate: { type: String, default: '', trim: true },
       returnTime: { type: String, default: '', trim: true },
+    },
+    // Airport transfers. Dispatched like any other ride - the terminal and
+    // direction are what the driver needs beyond pickup/drop.
+    airport: {
+      terminal: { type: String, default: '', trim: true },
+      direction: {
+        type: String,
+        enum: ['to_airport', 'from_airport', ''],
+        default: '',
+      },
+      flightNumber: { type: String, default: '', trim: true },
+      travelDate: { type: String, default: '', trim: true },
+      travelTime: { type: String, default: '', trim: true },
+      passengers: { type: Number, default: 1, min: 1 },
+    },
+    // Temple / pilgrimage trips, chosen from the admin-managed destination
+    // catalogue rather than a free-text drop.
+    spiritual: {
+      destination: { type: String, default: '', trim: true },
+      packageLabel: { type: String, default: '', trim: true },
+      travelDate: { type: String, default: '', trim: true },
+      travelTime: { type: String, default: '', trim: true },
+      passengers: { type: Number, default: 1, min: 1 },
     },
     intercity: {
       bookingId: {

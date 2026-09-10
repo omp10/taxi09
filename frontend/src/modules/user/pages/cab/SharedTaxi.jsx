@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import api from '../../../../shared/api/axiosInstance';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, MapPin, Clock, Users, ChevronRight, Star, Zap, Shield } from 'lucide-react';
 
@@ -18,21 +19,9 @@ const getDates = () => {
 const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-const ROUTES = {
-  '2026-04-05': [
-    { id:'T1', from:'Indore (Vijay Nagar)', to:'Bhopal (MP Nagar)', departure:'07:30 AM', duration:'3h 15m', price:249, seats:5, vehicle:'Toyota Innova', driver:'Rahul Patel', rating:'4.9' },
-    { id:'T2', from:'Indore (Rajwada)', to:'Ujjain (Mahakal)', departure:'09:00 AM', duration:'1h 10m', price:119, seats:3, vehicle:'Maruti Ertiga', driver:'Kishan Sharma', rating:'4.7' },
-    { id:'T3', from:'Indore (Palasia)', to:'Dewas', departure:'11:30 AM', duration:'45m', price:79, seats:6, vehicle:'Swift Dzire', driver:'Amit Verma', rating:'4.8' },
-  ],
-  '2026-04-06': [
-    { id:'T4', from:'Indore (Vijay Nagar)', to:'Bhopal (MP Nagar)', departure:'08:00 AM', duration:'3h 15m', price:249, seats:4, vehicle:'Toyota Innova', driver:'Sunil Patel', rating:'4.6' },
-    { id:'T5', from:'Indore (Rajwada)', to:'Omkareshwar', departure:'06:00 AM', duration:'2h 30m', price:199, seats:2, vehicle:'Maruti Ertiga', driver:'Ravi Sharma', rating:'4.9' },
-  ],
-  '2026-04-07': [
-    { id:'T6', from:'Indore (Palasia)', to:'Ujjain (Mahakal)', departure:'07:00 AM', duration:'1h 10m', price:119, seats:7, vehicle:'Swift Dzire', driver:'Deepak Joshi', rating:'4.8' },
-  ],
-};
-
+// Departures come from the admin-managed shared-taxi inventory. This used to be
+// a table hardcoded to April 2026, which meant ROUTES[today] was undefined and
+// the screen showed "No routes available" on every real date.
 const fmtKey = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 
 const SharedTaxi = () => {
@@ -43,7 +32,39 @@ const SharedTaxi = () => {
   const [selectedDate, setSelectedDate] = useState(dates[1]); // default tomorrow
 
   const key = fmtKey(selectedDate);
-  const routes = ROUTES[key] || [];
+  const [routes, setRoutes] = useState([]);
+  const [loadingRoutes, setLoadingRoutes] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    setLoadingRoutes(true);
+
+    api
+      .get('/users/shared-taxi-trips', { params: { travelDate: key } })
+      .then((response) => {
+        if (!active) return;
+        const results = response?.data?.data?.results || response?.data?.results || [];
+        // Flattened onto the shape this screen already renders.
+        setRoutes(
+          results.map((trip) => ({
+            id: trip._id,
+            from: trip.fromLabel,
+            to: trip.toLabel,
+            departure: trip.departure,
+            duration: trip.duration,
+            price: trip.pricePerSeat,
+            seats: trip.seatsAvailable,
+            vehicle: trip.vehicleName,
+            driver: trip.driverName,
+            rating: String(trip.rating ?? ''),
+          })),
+        );
+      })
+      .catch(() => { if (active) setRoutes([]); })
+      .finally(() => { if (active) setLoadingRoutes(false); });
+
+    return () => { active = false; };
+  }, [key]);
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#F8FAFC_0%,#F3F4F6_38%,#EEF2F7_100%)] max-w-lg mx-auto font-sans pb-12 relative overflow-hidden">
@@ -102,7 +123,9 @@ const SharedTaxi = () => {
               <div className="w-14 h-14 rounded-[18px] bg-white/90 border border-white/80 shadow-[0_4px_14px_rgba(15,23,42,0.05)] flex items-center justify-center">
                 <Clock size={24} className="text-slate-300" strokeWidth={1.5} />
               </div>
-              <p className="text-[15.5px] font-black text-slate-700">No routes available</p>
+              <p className="text-[15.5px] font-black text-slate-700">
+                {loadingRoutes ? 'Checking departures...' : 'No routes available'}
+              </p>
               <p className="text-[13.5px] font-bold text-slate-400">
                 for {DAY_NAMES[selectedDate.getDay()]}, {selectedDate.getDate()} {MONTH_NAMES[selectedDate.getMonth()]} {selectedDate.getFullYear()}
               </p>

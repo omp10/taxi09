@@ -1,29 +1,53 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import api from '../../../../shared/api/axiosInstance';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, MapPin, Clock, Users, ChevronRight, Star } from 'lucide-react';
-
-const INIT_SEATS = [
-  { id:1, label:'A1', status:'booked'    },
-  { id:2, label:'A2', status:'available' },
-  { id:3, label:'B1', status:'available' },
-  { id:4, label:'B2', status:'booked'    },
-  { id:5, label:'C1', status:'available' },
-  { id:6, label:'C2', status:'available' },
-  { id:7, label:'D1', status:'available' },
-  { id:8, label:'D2', status:'booked'    },
-];
 
 const SharedTaxiSeats = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
   const { route, date } = location.state || {};
-  if (!route) { navigate(`${routePrefix}/cab/shared`); return null; }
 
-  const [seats, setSeats] = useState(
-    Array.isArray(route.seats) ? route.seats.map(s => ({ ...s })) : INIT_SEATS.map(s => ({ ...s }))
-  );
+  const [seats, setSeats] = useState([]);
+  const [loadingSeats, setLoadingSeats] = useState(true);
+
+  // Redirect from an effect rather than returning early: bailing out above the
+  // hooks below would change hook order between renders.
+  useEffect(() => {
+    if (!route) navigate(`${routePrefix}/cab/shared`, { replace: true });
+  }, [route, navigate, routePrefix]);
+
+  // The seat map is read live from the trip and never carried in navigation
+  // state - another rider may have taken a seat while this one was deciding.
+  useEffect(() => {
+    if (!route?.id) return undefined;
+
+    let active = true;
+    setLoadingSeats(true);
+
+    api
+      .get(`/users/shared-taxi-trips/${route.id}`)
+      .then((response) => {
+        if (!active) return;
+        const trip = response?.data?.data || response?.data || {};
+        setSeats(
+          (trip.seats || []).map((seat, index) => ({
+            id: index + 1,
+            label: seat.label,
+            status: seat.status === 'available' ? 'available' : 'booked',
+          })),
+        );
+      })
+      .catch(() => { if (active) setSeats([]); })
+      .finally(() => { if (active) setLoadingSeats(false); });
+
+    return () => { active = false; };
+  }, [route?.id]);
+
+  // Safe here: every hook above has already run, so this cannot desync them.
+  if (!route) return null;
 
   const toggle = (id) => setSeats(prev =>
     prev.map(s => s.id === id && s.status !== 'booked'
@@ -33,7 +57,7 @@ const SharedTaxiSeats = () => {
   );
 
   const selected = seats.filter(s => s.status === 'selected');
-  const total = selected.length * route.price;
+  const total = selected.length * Number(route?.price || 0);
 
   const rows = [[seats[0],seats[1]],[seats[2],seats[3]],[seats[4],seats[5]],[seats[6],seats[7]]];
 

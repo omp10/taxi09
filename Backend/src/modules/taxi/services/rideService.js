@@ -84,7 +84,9 @@ const normalizeRidePaymentMethod = (paymentMethod) => (
 
 const normalizeServiceType = (serviceType) => {
   const normalized = String(serviceType || 'ride').trim().toLowerCase();
-  return ['parcel', 'intercity', 'hire_driver'].includes(normalized) ? normalized : 'ride';
+  return ['parcel', 'intercity', 'hire_driver', 'airport', 'spiritual'].includes(normalized)
+    ? normalized
+    : 'ride';
 };
 
 /**
@@ -436,6 +438,32 @@ const normalizeParcelPayload = (parcel = {}) => ({
   senderMobile: String(parcel.senderMobile || '').trim(),
   receiverName: String(parcel.receiverName || '').trim(),
   receiverMobile: String(parcel.receiverMobile || '').trim(),
+});
+
+/**
+ * Airport transfers and pilgrimage trips are ordinary dispatched rides with a
+ * little extra context for the driver. Nothing here is priced - the fare comes
+ * from the same catalogue every other ride uses.
+ */
+const normalizeAirportPayload = (airport = {}) => {
+  const direction = String(airport.direction || '').trim().toLowerCase();
+
+  return {
+    terminal: String(airport.terminal || '').trim(),
+    direction: ['to_airport', 'from_airport'].includes(direction) ? direction : '',
+    flightNumber: String(airport.flightNumber || '').trim(),
+    travelDate: String(airport.travelDate || airport.date || '').trim(),
+    travelTime: String(airport.travelTime || airport.time || '').trim(),
+    passengers: Math.max(Number(airport.passengers || 1), 1),
+  };
+};
+
+const normalizeSpiritualPayload = (spiritual = {}) => ({
+  destination: String(spiritual.destination || '').trim(),
+  packageLabel: String(spiritual.packageLabel || '').trim(),
+  travelDate: String(spiritual.travelDate || spiritual.date || '').trim(),
+  travelTime: String(spiritual.travelTime || spiritual.time || '').trim(),
+  passengers: Math.max(Number(spiritual.passengers || 1), 1),
 });
 
 const normalizeIntercityPayload = (intercity = {}) => ({
@@ -940,6 +968,8 @@ export const createRideRecord = async ({
   serviceType,
   parcel,
   intercity,
+  airport,
+  spiritual,
   hireDriver,
   promo_code,
   zone_id,
@@ -1180,6 +1210,8 @@ export const createRideRecord = async ({
       pricingSnapshot,
       parcel: normalizeParcelPayload(parcel),
       intercity: normalizeIntercityPayload(intercity),
+      airport: normalizeAirportPayload(airport),
+      spiritual: normalizeSpiritualPayload(spiritual),
       hireDriver: normalizedHireDriver || undefined,
       scheduledAt: normalizedScheduledAt,
       status: RIDE_STATUS.SEARCHING,
@@ -1236,6 +1268,8 @@ export const createRideRecord = async ({
             pricingSnapshot,
             parcel: normalizeParcelPayload(parcel),
             intercity: normalizeIntercityPayload(intercity),
+            airport: normalizeAirportPayload(airport),
+            spiritual: normalizeSpiritualPayload(spiritual),
             hireDriver: normalizedHireDriver || undefined,
             scheduledAt: normalizedScheduledAt,
             status: RIDE_STATUS.SEARCHING,

@@ -14,6 +14,14 @@ import {
   quoteHireDriver,
 } from '../../../user/services/hireDriverBookingService.js';
 import {
+  createSharedTaxiBooking,
+  getSharedTaxiTrip,
+  listMySharedTaxiBookings,
+  listSharedTaxiTrips,
+} from '../../../user/services/sharedTaxiService.js';
+import { SharedTaxiBooking } from '../models/SharedTaxiBooking.js';
+import { SharedTaxiTrip } from '../models/SharedTaxiTrip.js';
+import {
   createBookingPaymentOrder,
   verifyBookingPayment,
 } from '../../../user/services/bookingPaymentService.js';
@@ -61,6 +69,47 @@ export const postHireDriverBooking = asyncHandler(async (req, res) =>
 
 export const getMyHireDriverBookings = asyncHandler(async (req, res) =>
   ok(res, { results: await listMyHireDriverBookings(req.auth?.sub) }),
+);
+
+/* ------------------------------------------------------------ shared taxi */
+
+export const getPublicSharedTaxiTrips = asyncHandler(async (req, res) =>
+  ok(res, { results: await listSharedTaxiTrips({ travelDate: req.query.travelDate }) }),
+);
+
+// Seat maps are read live rather than carried in navigation state, so a rider
+// who lingers on the listing does not pick from a stale map.
+export const getPublicSharedTaxiTrip = asyncHandler(async (req, res) =>
+  ok(res, await getSharedTaxiTrip(req.params.id)),
+);
+
+export const postSharedTaxiBooking = asyncHandler(async (req, res) =>
+  ok(res, await createSharedTaxiBooking({ userId: req.auth?.sub, payload: req.body || {} }), 201),
+);
+
+export const getMySharedTaxiBookings = asyncHandler(async (req, res) =>
+  ok(res, { results: await listMySharedTaxiBookings(req.auth?.sub) }),
+);
+
+export const adminListSharedTaxiTrips = asyncHandler(async (req, res) =>
+  ok(res, { results: await SharedTaxiTrip.find().sort({ travelDate: -1 }).limit(300).lean() }),
+);
+
+export const adminCreateSharedTaxiTrip = asyncHandler(async (req, res) =>
+  ok(res, await SharedTaxiTrip.create(req.body || {}), 201),
+);
+
+export const adminUpdateSharedTaxiTrip = asyncHandler(async (req, res) =>
+  ok(res, await SharedTaxiTrip.findByIdAndUpdate(req.params.id, req.body || {}, { new: true })),
+);
+
+export const adminDeleteSharedTaxiTrip = asyncHandler(async (req, res) => {
+  await SharedTaxiTrip.findByIdAndDelete(req.params.id);
+  ok(res, { deleted: true });
+});
+
+export const adminListSharedTaxiBookings = asyncHandler(async (req, res) =>
+  ok(res, { results: await SharedTaxiBooking.find().sort({ createdAt: -1 }).limit(300).lean() }),
 );
 
 export const adminListHireDriverBookings = asyncHandler(async (req, res) => {

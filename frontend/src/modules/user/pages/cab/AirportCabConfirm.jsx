@@ -5,8 +5,10 @@ import { CheckCircle2, ChevronRight, MapPin, Calendar, Clock, Plane, ArrowLeft }
 
 const AirportCabConfirm = () => {
   const navigate = useNavigate();
-  const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
+  // `location` must be declared before it is read; the previous order touched
+  // it inside the temporal dead zone and threw on render.
   const location = useLocation();
+  const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
   const state = location.state || {};
   const [mounted, setMounted] = useState(false);
 

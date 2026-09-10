@@ -64,6 +64,10 @@ import {
   postHireDriverQuote,
   postHireDriverBooking,
   getMyHireDriverBookings,
+  getPublicSharedTaxiTrips,
+  getPublicSharedTaxiTrip,
+  postSharedTaxiBooking,
+  getMySharedTaxiBookings,
   postBookingPaymentOrder,
   postBookingPaymentVerify,
 } from '../../admin/content/controllers/bookingController.js';
@@ -143,6 +147,14 @@ userRouter.post('/package-bookings', authenticate(['user']), postPackageBooking)
 userRouter.post('/hire-driver-bookings/quote', authenticate(['user']), postHireDriverQuote);
 userRouter.post('/hire-driver-bookings', authenticate(['user']), postHireDriverBooking);
 userRouter.get('/hire-driver-bookings', authenticate(['user']), getMyHireDriverBookings);
+
+// Shared taxi: browsing departures is public, holding a seat needs a session.
+// The single-trip route is declared after the collection so the dynamic
+// segment cannot shadow it.
+userRouter.get('/shared-taxi-trips', getPublicSharedTaxiTrips);
+userRouter.get('/shared-taxi-trips/:id', getPublicSharedTaxiTrip);
+userRouter.post('/shared-taxi-bookings', authenticate(['user']), postSharedTaxiBooking);
+userRouter.get('/shared-taxi-bookings', authenticate(['user']), getMySharedTaxiBookings);
 
 // Membership: plans are public, buying and reading your own needs a session.
 userRouter.get('/membership-plans', getPublicMembershipPlans);

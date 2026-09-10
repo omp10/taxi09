@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import api from '../../../../shared/api/axiosInstance';
 import { ArrowLeft, MapPin, Clock, Users, CheckCircle2, CreditCard, Banknote, Smartphone, ChevronRight } from 'lucide-react';
 
 const PAYMENT_METHODS = [
@@ -11,21 +12,56 @@ const PAYMENT_METHODS = [
 
 const SharedTaxiConfirm = () => {
   const navigate = useNavigate();
-  const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
+  // `location` is declared before it is read: the previous order referenced it
+  // in the temporal dead zone and would throw on render.
   const location = useLocation();
+  const routePrefix = location.pathname.startsWith('/taxi/user') ? '/taxi/user' : '';
   const { route, date, seats, total } = location.state || {};
-  if (!route) { navigate(`${routePrefix}/cab/shared`); return null; }
 
   const [method, setMethod] = useState('upi');
   const [paying, setPaying] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [bookingId, setBookingId] = useState('');
+  const [error, setError] = useState('');
 
-  const bookingId = `SHR-${Math.random().toString(36).slice(2,8).toUpperCase()}`;
+  // Redirect from an effect so the hooks above always run in the same order.
+  useEffect(() => {
+    if (!route) navigate(`${routePrefix}/cab/shared`, { replace: true });
+  }, [route, navigate, routePrefix]);
 
-  const handlePay = () => {
+  /**
+   * Books the seats for real. This used to be a setTimeout that flipped to a
+   * confirmation screen without contacting the server, so a rider could believe
+   * they held a seat that was never reserved. The server re-prices the booking
+   * and rejects seats another rider has since taken.
+   */
+  const handlePay = async () => {
+    if (paying || !route?.id) return;
+
     setPaying(true);
-    setTimeout(() => { setPaying(false); setConfirmed(true); }, 1800);
+    setError('');
+
+    try {
+      const response = await api.post('/users/shared-taxi-bookings', {
+        tripId: route.id,
+        seatLabels: (seats || []).map((seat) => seat.label).filter(Boolean),
+        paymentMethod: method,
+      });
+
+      const booking = response?.data?.data || response?.data || {};
+      setBookingId(booking.bookingReference || '');
+      setConfirmed(true);
+    } catch (requestError) {
+      setError(
+        requestError?.response?.data?.message ||
+          'Could not confirm these seats. Please try again.',
+      );
+    } finally {
+      setPaying(false);
+    }
   };
+
+  if (!route) return null;
 
   if (confirmed) {
     return (
@@ -144,6 +180,11 @@ const SharedTaxiConfirm = () => {
 
       {/* CTA */}
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg px-5 pb-6 pt-3 bg-gradient-to-t from-[#EEF2F7] via-[#F3F4F6]/95 to-transparent pointer-events-none z-30">
+        {error ? (
+          <p className="pointer-events-auto mb-2 rounded-[14px] border border-red-100 bg-red-50 px-4 py-2.5 text-[13px] font-bold text-red-700">
+            {error}
+          </p>
+        ) : null}
         <motion.button whileTap={{ scale: 0.98 }} onClick={handlePay} disabled={paying}
           className="pointer-events-auto w-full bg-slate-900 py-4 rounded-[18px] text-[16.5px] font-black text-white shadow-[0_8px_24px_rgba(15,23,42,0.18)] flex items-center justify-center gap-2">
           {paying

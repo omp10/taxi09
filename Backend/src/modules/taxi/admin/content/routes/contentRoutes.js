@@ -49,6 +49,11 @@ import {
 } from '../controllers/contentController.js';
 import {
   adminListHireDriverBookings,
+  adminListSharedTaxiTrips,
+  adminCreateSharedTaxiTrip,
+  adminUpdateSharedTaxiTrip,
+  adminDeleteSharedTaxiTrip,
+  adminListSharedTaxiBookings,
   getAdminAllBookings,
   getAdminHotelBookings,
   getAdminPackageBookings,
@@ -98,6 +103,13 @@ contentRouter.delete('/admin/hire-drivers/:id', adminDeleteHireDriver);
 
 // Engagements riders have requested against those curated profiles.
 contentRouter.get('/admin/hire-driver-bookings', adminListHireDriverBookings);
+
+// Shared taxi departures are inventory, so admin owns creating and editing them.
+contentRouter.get('/admin/shared-taxi-trips', adminListSharedTaxiTrips);
+contentRouter.post('/admin/shared-taxi-trips', adminCreateSharedTaxiTrip);
+contentRouter.patch('/admin/shared-taxi-trips/:id', adminUpdateSharedTaxiTrip);
+contentRouter.delete('/admin/shared-taxi-trips/:id', adminDeleteSharedTaxiTrip);
+contentRouter.get('/admin/shared-taxi-bookings', adminListSharedTaxiBookings);
 
 contentRouter.get('/admin/hotel-bookings', getAdminHotelBookings);
 contentRouter.patch('/admin/hotel-bookings/:id', updateAdminHotelBooking);
