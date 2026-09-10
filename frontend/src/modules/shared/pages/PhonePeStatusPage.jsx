@@ -181,13 +181,17 @@ const PhonePeStatusPage = () => {
 
         <div className="relative z-10">
           <div className="mb-8 flex justify-center">
-            <AnimatePresence mode="wait">
+            {/* No exit animation on the outgoing child: AnimatePresence holds the
+              incoming one until the outgoing has finished exiting, and exits are
+              driven by requestAnimationFrame, which is throttled to a standstill
+              while the tab is hidden. This swap is driven by a background update,
+              so it has to land even when nobody is looking at the tab. */}
+            <AnimatePresence>
               {status === 'verifying' && (
                 <motion.div
                   key="verifying"
                   initial={{ scale: 0.5, rotate: 0 }}
                   animate={{ scale: 1, rotate: 360 }}
-                  exit={{ scale: 0.5, opacity: 0 }}
                   transition={{ rotate: { duration: 2, repeat: Infinity, ease: 'linear' } }}
                   className="w-20 h-20 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center shadow-inner"
                 >
@@ -231,9 +235,9 @@ const PhonePeStatusPage = () => {
             </AnimatePresence>
           </div>
 
-          <AnimatePresence mode="wait">
+          <AnimatePresence>
             {status === 'verifying' && (
-              <motion.div key="text-verifying" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <motion.div key="text-verifying" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                 <h1 className="text-2xl font-black text-slate-800 mb-2 uppercase tracking-tight">Verifying Payment</h1>
                 <p className="text-slate-500 text-sm font-medium">Please wait while we confirm your transaction with PhonePe. Do not refresh or go back.</p>
                 <div className="mt-6 flex justify-center gap-1">

@@ -184,7 +184,7 @@ const IncomingRideRequest = ({
       : 'shadow-[0_12px_24px_rgba(16,185,129,0.3)]';
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence>
       <Motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
