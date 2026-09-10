@@ -5,8 +5,8 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
-    "start": "node server.js",
+    "dev": "node api.js && nodemon server.js",
+    "start": "node api.js && node server.js",
     "seed:hire-driver": "node src/modules/taxi/admin/scripts/seedHireDriverContent.js",
     "seed:cab": "node src/modules/taxi/admin/scripts/seedCabContent.js",
     "seed:shared-taxi-test": "node src/modules/taxi/admin/scripts/seedSharedTaxiTestTrips.js"
